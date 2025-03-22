@@ -1,5 +1,13 @@
 # @microfox/youtube-sdk
 
+## 1.0.2
+
+### Patch Changes
+
+- 938fa50: update package
+- Updated dependencies [938fa50]
+  - @microfox/google-sdk@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

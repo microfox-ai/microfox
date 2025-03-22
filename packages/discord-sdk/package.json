@@ -1,6 +1,6 @@
 {
   "name": "@microfox/discord-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Discord SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
