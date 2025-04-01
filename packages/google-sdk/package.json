@@ -1,6 +1,6 @@
 {
   "name": "@microfox/google-sdk",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Google SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

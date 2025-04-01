@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.1.0
+
+### Minor Changes
+
+- 6e73c2c: github defaulted to octokit repo
+
 ## 1.0.7
 
 ### Patch Changes

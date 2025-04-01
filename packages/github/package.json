@@ -1,6 +1,6 @@
 {
   "name": "@microfox/github",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "GitHub SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
