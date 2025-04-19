@@ -2,15 +2,17 @@
   "name": "microfox-scripts",
   "version": "1.0.0",
   "description": "Scripts for Microfox package documentation updates",
-  "main": "dist/update-readme.js",
   "scripts": {
     "build": "tsc",
-    "dev:readme": "ts-node src/update-readme.ts",
-    "dev:sdk": "ts-node src/generate-sdk.ts",
-    "dev:package-list": "ts-node src/update-package-list.ts",
-    "dev:package-info": "ts-node src/update-package-info.ts",
-    "dev:package": "npm run dev:package-list && npm run dev:package-info",
-    "dev:ext-sdk": "ts-node src/generate-ext-sdk.ts"
+    "scrape:pkg-urls": "ts-node src/scrapeUrls.ts",
+    "gen:pkg": "ts-node src/genPackage.ts",
+    "gen:pkg-oauth": "ts-node src/genOAuthPackage.ts",
+    "gen:ext-pkgs": "ts-node src/genExtPackage.ts",
+    "update:readme": "ts-node src/updateReadme.ts",
+    "gen:docs": "ts-node src/genDocs.ts",
+    "update:package-list": "ts-node src/updateRootPackageList.ts",
+    "update:package-info": "ts-node src/updatePackageInfo.ts",
+    "update:package": "npm run update:package-list && npm run update:package-info"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",
@@ -21,9 +23,12 @@
     "ai": "^4.2.0",
     "dedent": "^1.5.3",
     "dotenv": "^16.4.5",
+    "jsdom": "^26.1.0",
+    "puppeteer": "^24.6.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^20.11.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

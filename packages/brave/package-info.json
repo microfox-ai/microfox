@@ -1,0 +1,102 @@
+{
+  "name": "@microfox/brave",
+  "title": "Brave TypeScript SDK",
+  "description": "TypeScript SDK for the Brave search API, providing functions for web search, summarizer search, image search, video search, news search, suggestions, and spellcheck.",
+  "path": "packages/brave",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/brave",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg",
+  "readme_map": {
+    "title": "@microfox/@microfox/brave README",
+    "description": "The full README for the Brave TypeScript SDK",
+    "path": "/README.md",
+    "constructors": [
+      {
+        "name": "createBraveSDK",
+        "description": "The documentation for the constructor createBraveSDK that initializes this SDK.",
+        "path": "/docs/createBraveSDK.md"
+      }
+    ],
+    "functionalities": [
+      {
+        "name": "webSearch",
+        "description": "The documentation for the webSearch function.",
+        "path": "/docs/webSearch.md"
+      },
+      {
+        "name": "imageSearch",
+        "description": "The documentation for the imageSearch function.",
+        "path": "/docs/imageSearch.md"
+      },
+      {
+        "name": "videoSearch",
+        "description": "The documentation for the videoSearch function.",
+        "path": "/docs/videoSearch.md"
+      },
+      {
+        "name": "newsSearch",
+        "description": "The documentation for the newsSearch function.",
+        "path": "/docs/newsSearch.md"
+      },
+      {
+        "name": "getSuggestions",
+        "description": "The documentation for the getSuggestions function.",
+        "path": "/docs/getSuggestions.md"
+      },
+      {
+        "name": "spellcheck",
+        "description": "The documentation for the spellcheck function.",
+        "path": "/docs/spellcheck.md"
+      },
+      {
+        "name": "summarizerSearch",
+        "description": "The documentation for the summarizerSearch function.",
+        "path": "/docs/summarizerSearch.md"
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "createBraveSDK",
+      "description": "Create a new Brave TypeScript SDK client through which you can interact with the API",
+      "auth": "apiKey",
+      "authSdk": "",
+      "outputKeys": [],
+      "requiredKeys": [
+        {
+          "key": "BRAVE_API_KEY",
+          "displayName": "Brave Search API Key",
+          "description": "The API key required to authenticate requests to the Brave Search API. You can obtain this key from the Brave Search API dashboard."
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "webSearch",
+        "imageSearch",
+        "videoSearch",
+        "newsSearch",
+        "getSuggestions",
+        "spellcheck",
+        "summarizerSearch"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "BRAVE_API_KEY",
+      "constructors": [
+        "createBraveSDK"
+      ],
+      "description": "The API key required to authenticate requests to the Brave Search API. You can obtain this key from the Brave Search API dashboard.",
+      "required": true
+    }
+  ],
+  "extraInfo": [
+    "Use the `createBraveSDK` constructor to create a new client."
+  ]
+}

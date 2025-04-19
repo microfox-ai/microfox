@@ -59,7 +59,7 @@ const RANGE = 'A1:B10'; // The range of cells you want to work with
 // Combine them for use in the SDK
 const sheetReference = {
   sheetId: SHEET_ID,
-  range: `${SHEET_NAME}!${RANGE}` // Format: "SheetName!Range"
+  range: `${SHEET_NAME}!${RANGE}`, // Format: "SheetName!Range"
 };
 ```
 
@@ -144,7 +144,7 @@ const RANGE = 'A1:B10';
 // Create the range object
 const range = {
   sheetId: SHEET_ID,
-  range: `${SHEET_NAME}!${RANGE}`
+  range: `${SHEET_NAME}!${RANGE}`,
 };
 
 // Get the values
@@ -164,7 +164,7 @@ const RANGE = 'A1:B2';
 const updateInput = {
   range: {
     sheetId: SHEET_ID,
-    range: `${SHEET_NAME}!${RANGE}`
+    range: `${SHEET_NAME}!${RANGE}`,
   },
   values: [
     ['New Value 1', 'New Value 2'],
@@ -189,7 +189,7 @@ const RANGE = 'A:B'; // Append to columns A and B
 const appendInput = {
   range: {
     sheetId: SHEET_ID,
-    range: `${SHEET_NAME}!${RANGE}`
+    range: `${SHEET_NAME}!${RANGE}`,
   },
   values: [['Appended Value 1', 'Appended Value 2']],
 };
@@ -210,7 +210,7 @@ const RANGE = 'A1:B10';
 // Create the clear input
 const clearInput = {
   sheetId: SHEET_ID,
-  range: `${SHEET_NAME}!${RANGE}`
+  range: `${SHEET_NAME}!${RANGE}`,
 };
 
 // Clear the values
