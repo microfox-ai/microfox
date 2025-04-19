@@ -1,0 +1,173 @@
+{
+  "name": "@microfox/x-oauth",
+  "title": "Microfox X OAuth SDK",
+  "description": "Microfox X OAuth SDK for TypeScript",
+  "path": "packages/x-oauth",
+  "dependencies": ["zod"],
+  "status": "stable",
+  "authEndpoint": "/connect/x",
+  "oauth2Scopes": [
+    "tweet.read",
+    "tweet.write",
+    "tweet.moderate.write",
+    "users.email",
+    "users.read",
+    "follows.read",
+    "follows.write",
+    "offline.access",
+    "space.read",
+    "mute.read",
+    "mute.write",
+    "like.read",
+    "like.write",
+    "list.read",
+    "list.write",
+    "block.read",
+    "block.write",
+    "bookmark.read",
+    "bookmark.write",
+    "media.write"
+  ],
+  "documentation": "https://www.npmjs.com/package/@microfox/x-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/x.svg",
+  "readme_map": {
+    "title": "@microfox/@microfox/x-oauth README",
+    "description": "The full README for the Microfox X OAuth SDK",
+    "path": "/README.md",
+    "constructors": [
+      {
+        "name": "XOAuthSdk",
+        "description": "The documentation for the constructor XOAuthSdk that initializes this SDK.",
+        "path": "/docs/XOAuthSdk.md"
+      }
+    ],
+    "functionalities": [
+      {
+        "name": "generateState",
+        "description": "The documentation for the generateState function.",
+        "path": "/docs/generateState.md"
+      },
+      {
+        "name": "generateCodeChallenge",
+        "description": "The documentation for the generateCodeChallenge function.",
+        "path": "/docs/generateCodeChallenge.md"
+      },
+      {
+        "name": "getAuthUrl",
+        "description": "The documentation for the getAuthUrl function.",
+        "path": "/docs/getAuthUrl.md"
+      },
+      {
+        "name": "exchangeCodeForTokens",
+        "description": "The documentation for the exchangeCodeForTokens function.",
+        "path": "/docs/exchangeCodeForTokens.md"
+      },
+      {
+        "name": "refreshAccessToken",
+        "description": "The documentation for the refreshAccessToken function.",
+        "path": "/docs/refreshAccessToken.md"
+      },
+      {
+        "name": "revokeToken",
+        "description": "The documentation for the revokeToken function.",
+        "path": "/docs/revokeToken.md"
+      },
+      {
+        "name": "validateAccessToken",
+        "description": "The documentation for the validateAccessToken function.",
+        "path": "/docs/validateAccessToken.md"
+      },
+      {
+        "name": "getClientCredentials",
+        "description": "The documentation for the getClientCredentials function.",
+        "path": "/docs/getClientCredentials.md"
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "XOAuthSdk",
+      "description": "Create a new Microfox X OAuth SDK client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/x",
+      "outputKeys": [],
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "X_CLIENT_ID",
+          "displayName": "X Client ID",
+          "description": "Your X application's Client ID."
+        },
+        {
+          "key": "X_CLIENT_SECRET",
+          "displayName": "X Client Secret",
+          "description": "Your X application's Client Secret."
+        },
+        {
+          "key": "X_REDIRECT_URI",
+          "displayName": "X Redirect URI",
+          "description": "Your application's redirect URI."
+        }
+      ],
+      "functionalities": [
+        "generateState",
+        "generateCodeChallenge",
+        "getAuthUrl",
+        "exchangeCodeForTokens",
+        "refreshAccessToken",
+        "revokeToken",
+        "validateAccessToken",
+        "getClientCredentials"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "X_CLIENT_ID",
+      "constructors": ["XOAuthSdk"],
+      "description": "Your X application's Client ID.",
+      "required": true
+    },
+    {
+      "key": "X_CLIENT_SECRET",
+      "constructors": ["XOAuthSdk"],
+      "description": "Your X application's Client Secret.",
+      "required": true
+    },
+    {
+      "key": "X_REDIRECT_URI",
+      "constructors": ["XOAuthSdk"],
+      "description": "Your application's redirect URI.",
+      "required": true
+    }
+  ],
+  "extraInfo": [
+    "To use this X OAuth SDK, you need to obtain OAuth credentials from the X Developer Portal (https://developer.x.com):",
+    "1. Create a new application or use an existing one",
+    "2. Navigate to the 'Keys and Tokens' section",
+    "3. Note down your Client ID and Client Secret",
+    "4. Add your application's redirect URI in the 'User authentication settings' section",
+    "Environment variables:",
+    "- X_CLIENT_ID: Your X application's Client ID",
+    "- X_CLIENT_SECRET: Your X application's Client Secret",
+    "- X_REDIRECT_URI: Your application's redirect URI",
+    "To use the SDK, create an instance with your credentials:",
+    "const xOAuth = createXOAuth({",
+    "  clientId: process.env.X_CLIENT_ID!,",
+    "  clientSecret: process.env.X_CLIENT_SECRET!,",
+    "  redirectUri: process.env.X_REDIRECT_URI!",
+    "});",
+    "OAuth Flow:",
+    "1. Generate a state using xOAuth.generateState()",
+    "2. Generate a code challenge using xOAuth.generateCodeChallenge()",
+    "3. Get the authorization URL with xOAuth.getAuthUrl()",
+    "4. After user authorization, exchange the code for tokens with xOAuth.exchangeCodeForTokens()",
+    "5. Use xOAuth.refreshAccessToken() to get a new access token when it expires",
+    "6. Validate tokens with xOAuth.validateAccessToken()",
+    "7. Revoke tokens with xOAuth.revokeToken() when they're no longer needed",
+    "Rate Limits: X has rate limits on API requests. Consult the X API documentation for specific limits.",
+    "Error Handling: The SDK throws errors for HTTP errors and validation failures. Wrap API calls in try-catch blocks.",
+    "Security: Store your Client Secret securely and never expose it in client-side code.",
+    "For more details, refer to the X OAuth 2.0 documentation: https://developer.x.com/docs/authentication/oauth2"
+  ]
+}
