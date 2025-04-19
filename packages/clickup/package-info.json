@@ -1,0 +1,318 @@
+{
+  "name": "@microfox/clickup",
+  "title": "ClickUp TypeScript SDK",
+  "description": "A comprehensive TypeScript SDK for ClickUp, providing extensive functionality and handling edge cases.",
+  "path": "packages/clickup",
+  "dependencies": ["zod"],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/clickup",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/clickup.svg",
+  "readme_map": {
+    "title": "@microfox/clickup README",
+    "description": "The full README for the ClickUp TypeScript SDK",
+    "path": "/README.md",
+    "constructors": [
+      {
+        "name": "ClickUpSDK",
+        "description": "The documentation for the constructor ClickUpSDK that initializes this SDK.",
+        "path": "/docs/ClickUpSDK.md"
+      }
+    ],
+    "functionalities": [
+      {
+        "name": "getTask",
+        "description": "The documentation for the getTask function.",
+        "path": "/docs/getTask.md"
+      },
+      {
+        "name": "getTasks",
+        "description": "The documentation for the getTasks function.",
+        "path": "/docs/getTasks.md"
+      },
+      {
+        "name": "createTask",
+        "description": "The documentation for the createTask function.",
+        "path": "/docs/createTask.md"
+      },
+      {
+        "name": "updateTask",
+        "description": "The documentation for the updateTask function.",
+        "path": "/docs/updateTask.md"
+      },
+      {
+        "name": "deleteTask",
+        "description": "The documentation for the deleteTask function.",
+        "path": "/docs/deleteTask.md"
+      },
+      {
+        "name": "getList",
+        "description": "The documentation for the getList function.",
+        "path": "/docs/getList.md"
+      },
+      {
+        "name": "getLists",
+        "description": "The documentation for the getLists function.",
+        "path": "/docs/getLists.md"
+      },
+      {
+        "name": "createList",
+        "description": "The documentation for the createList function.",
+        "path": "/docs/createList.md"
+      },
+      {
+        "name": "updateList",
+        "description": "The documentation for the updateList function.",
+        "path": "/docs/updateList.md"
+      },
+      {
+        "name": "deleteList",
+        "description": "The documentation for the deleteList function.",
+        "path": "/docs/deleteList.md"
+      },
+      {
+        "name": "getFolder",
+        "description": "The documentation for the getFolder function.",
+        "path": "/docs/getFolder.md"
+      },
+      {
+        "name": "getFolders",
+        "description": "The documentation for the getFolders function.",
+        "path": "/docs/getFolders.md"
+      },
+      {
+        "name": "createFolder",
+        "description": "The documentation for the createFolder function.",
+        "path": "/docs/createFolder.md"
+      },
+      {
+        "name": "updateFolder",
+        "description": "The documentation for the updateFolder function.",
+        "path": "/docs/updateFolder.md"
+      },
+      {
+        "name": "deleteFolder",
+        "description": "The documentation for the deleteFolder function.",
+        "path": "/docs/deleteFolder.md"
+      },
+      {
+        "name": "getSpace",
+        "description": "The documentation for the getSpace function.",
+        "path": "/docs/getSpace.md"
+      },
+      {
+        "name": "getSpaces",
+        "description": "The documentation for the getSpaces function.",
+        "path": "/docs/getSpaces.md"
+      },
+      {
+        "name": "createSpace",
+        "description": "The documentation for the createSpace function.",
+        "path": "/docs/createSpace.md"
+      },
+      {
+        "name": "updateSpace",
+        "description": "The documentation for the updateSpace function.",
+        "path": "/docs/updateSpace.md"
+      },
+      {
+        "name": "deleteSpace",
+        "description": "The documentation for the deleteSpace function.",
+        "path": "/docs/deleteSpace.md"
+      },
+      {
+        "name": "getTimeEntries",
+        "description": "The documentation for the getTimeEntries function.",
+        "path": "/docs/getTimeEntries.md"
+      },
+      {
+        "name": "createTimeEntry",
+        "description": "The documentation for the createTimeEntry function.",
+        "path": "/docs/createTimeEntry.md"
+      },
+      {
+        "name": "updateTimeEntry",
+        "description": "The documentation for the updateTimeEntry function.",
+        "path": "/docs/updateTimeEntry.md"
+      },
+      {
+        "name": "deleteTimeEntry",
+        "description": "The documentation for the deleteTimeEntry function.",
+        "path": "/docs/deleteTimeEntry.md"
+      },
+      {
+        "name": "getGoal",
+        "description": "The documentation for the getGoal function.",
+        "path": "/docs/getGoal.md"
+      },
+      {
+        "name": "getGoals",
+        "description": "The documentation for the getGoals function.",
+        "path": "/docs/getGoals.md"
+      },
+      {
+        "name": "createGoal",
+        "description": "The documentation for the createGoal function.",
+        "path": "/docs/createGoal.md"
+      },
+      {
+        "name": "updateGoal",
+        "description": "The documentation for the updateGoal function.",
+        "path": "/docs/updateGoal.md"
+      },
+      {
+        "name": "deleteGoal",
+        "description": "The documentation for the deleteGoal function.",
+        "path": "/docs/deleteGoal.md"
+      },
+      {
+        "name": "getComment",
+        "description": "The documentation for the getComment function.",
+        "path": "/docs/getComment.md"
+      },
+      {
+        "name": "getComments",
+        "description": "The documentation for the getComments function.",
+        "path": "/docs/getComments.md"
+      },
+      {
+        "name": "createComment",
+        "description": "The documentation for the createComment function.",
+        "path": "/docs/createComment.md"
+      },
+      {
+        "name": "updateComment",
+        "description": "The documentation for the updateComment function.",
+        "path": "/docs/updateComment.md"
+      },
+      {
+        "name": "deleteComment",
+        "description": "The documentation for the deleteComment function.",
+        "path": "/docs/deleteComment.md"
+      },
+      {
+        "name": "getWebhook",
+        "description": "The documentation for the getWebhook function.",
+        "path": "/docs/getWebhook.md"
+      },
+      {
+        "name": "getWebhooks",
+        "description": "The documentation for the getWebhooks function.",
+        "path": "/docs/getWebhooks.md"
+      },
+      {
+        "name": "createWebhook",
+        "description": "The documentation for the createWebhook function.",
+        "path": "/docs/createWebhook.md"
+      },
+      {
+        "name": "updateWebhook",
+        "description": "The documentation for the updateWebhook function.",
+        "path": "/docs/updateWebhook.md"
+      },
+      {
+        "name": "deleteWebhook",
+        "description": "The documentation for the deleteWebhook function.",
+        "path": "/docs/deleteWebhook.md"
+      },
+      {
+        "name": "createTaskAttachment",
+        "description": "The documentation for the createTaskAttachment function.",
+        "path": "/docs/createTaskAttachment.md"
+      },
+      {
+        "name": "deleteTaskAttachment",
+        "description": "The documentation for the deleteTaskAttachment function.",
+        "path": "/docs/deleteTaskAttachment.md"
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "ClickUpSDK",
+      "description": "Create a new ClickUp TypeScript SDK client through which you can interact with the API",
+      "auth": "apiKey",
+      "authSdk": "",
+      "outputKeys": [],
+      "requiredKeys": [
+        {
+          "key": "CLICKUP_API_KEY",
+          "displayName": "ClickUp API Key",
+          "description": "Your ClickUp API key. Obtain this from your ClickUp account settings under Apps."
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "getTask",
+        "getTasks",
+        "createTask",
+        "updateTask",
+        "deleteTask",
+        "getList",
+        "getLists",
+        "createList",
+        "updateList",
+        "deleteList",
+        "getFolder",
+        "getFolders",
+        "createFolder",
+        "updateFolder",
+        "deleteFolder",
+        "getSpace",
+        "getSpaces",
+        "createSpace",
+        "updateSpace",
+        "deleteSpace",
+        "getTimeEntries",
+        "createTimeEntry",
+        "updateTimeEntry",
+        "deleteTimeEntry",
+        "getGoal",
+        "getGoals",
+        "createGoal",
+        "updateGoal",
+        "deleteGoal",
+        "getComment",
+        "getComments",
+        "createComment",
+        "updateComment",
+        "deleteComment",
+        "getWebhook",
+        "getWebhooks",
+        "createWebhook",
+        "updateWebhook",
+        "deleteWebhook",
+        "createTaskAttachment",
+        "deleteTaskAttachment"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "CLICKUP_API_KEY",
+      "constructors": ["ClickUpSDK"],
+      "description": "Your ClickUp API key. Obtain this from your ClickUp account settings under Apps.",
+      "required": true
+    }
+  ],
+  "extraInfo": [
+    "To use the ClickUp TypeScript SDK, you need to obtain an API key from ClickUp. Here's how to get one:",
+    "1. Log in to your ClickUp account",
+    "2. Go to Settings > Apps",
+    "3. Click on 'Generate' to create a new API key",
+    "4. Copy the generated API key",
+    "",
+    "Rate Limits:",
+    "ClickUp enforces rate limits on API requests. The limits vary depending on your ClickUp plan. Be sure to implement proper error handling and backoff strategies in your application to handle rate limit errors.",
+    "",
+    "File Upload Limits:",
+    "When using the createTaskAttachment method, note that the maximum file size is 1GB. If you exceed your workspace's storage limit, you'll receive a 400 error with the code GBUSED_005.",
+    "",
+    "API Versions:",
+    "This SDK uses a mix of v2 and v3 endpoints. Be aware that some terminology differs between versions (e.g., 'Team' in v2 is equivalent to 'Workspace' in v3).",
+    "",
+    "Custom Fields:",
+    "The ClickUp API supports various custom field types. When working with custom fields, make sure to provide the correct type_config parameters for each field type. Free plans have a limit of 60 uses of the 'Set Custom Field Value' endpoint."
+  ]
+}
