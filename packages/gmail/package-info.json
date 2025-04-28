@@ -1,0 +1,128 @@
+{
+  "name": "@microfox/gmail",
+  "title": "Gmail",
+  "description": "Manage gmail emails, threads, and labels.",
+  "path": "packages/gmail",
+  "dependencies": ["zod", "@microfox/google-oauth"],
+  "status": "stable",
+  "authEndpoint": "/connect/google-oauth",
+  "oauth2Scopes": [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.send",
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://www.googleapis.com/auth/gmail.compose",
+    "https://www.googleapis.com/auth/gmail.labels"
+  ],
+  "documentation": "https://www.npmjs.com/package/@microfox/gmail-sdk",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-gmail.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "title": "createGmailSdk Microfox",
+    "functionalities": [
+      "listMessages",
+      "getMessage",
+      "listThreads",
+      "getThread",
+      "listLabels",
+      "createLabel",
+      "updateLabel",
+      "deleteLabel",
+      "sendEmail",
+      "modifyMessageLabels",
+      "trashMessage",
+      "untrashMessage",
+      "validateAccessToken",
+      "refreshAccessToken"
+    ],
+    "description": "The full README for the Gmail SDK",
+    "all_readmes": []
+  },
+  "constructors": [
+    {
+      "name": "createGmailSdk",
+      "description": "Create a new Gmail SDK client through which you can interact with the Gmail API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/google-oauth",
+      "authEndpoint": "/connect/google-oauth",
+      "outputKeys": [],
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GOOGLE_CLIENT_ID",
+          "displayName": "Google Client ID",
+          "description": "The client ID for Google OAuth authentication. You can obtain this from the Google Cloud Console."
+        },
+        {
+          "key": "GOOGLE_CLIENT_SECRET",
+          "displayName": "Google Client Secret",
+          "description": "The client secret for Google OAuth authentication. You can obtain this from the Google Cloud Console."
+        },
+        {
+          "key": "GOOGLE_ACCESS_TOKEN",
+          "displayName": "Google Access Token",
+          "description": "The access token for Google OAuth authentication. This is obtained after the OAuth flow and should be kept secure."
+        },
+        {
+          "key": "GOOGLE_REFRESH_TOKEN",
+          "displayName": "Google Refresh Token",
+          "description": "The refresh token for Google OAuth authentication. This is used to obtain new access tokens when they expire."
+        },
+        {
+          "key": "SCOPES",
+          "displayName": "Scopes",
+          "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs.",
+          "defaultValue": [
+            "https://www.googleapis.com/auth/gmail.readonly",
+            "https://www.googleapis.com/auth/gmail.send",
+            "https://www.googleapis.com/auth/gmail.modify",
+            "https://www.googleapis.com/auth/gmail.compose",
+            "https://www.googleapis.com/auth/gmail.labels"
+          ]
+        }
+      ],
+      "functionalities": [
+        "listMessages",
+        "getMessage",
+        "listThreads",
+        "getThread",
+        "listLabels",
+        "createLabel",
+        "updateLabel",
+        "deleteLabel",
+        "sendEmail",
+        "modifyMessageLabels",
+        "trashMessage",
+        "untrashMessage",
+        "validateAccessToken",
+        "refreshAccessToken"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GOOGLE_CLIENT_ID",
+      "constructors": ["createGmailSdk"],
+      "description": "The client ID for Google OAuth authentication. You can obtain this from the Google Cloud Console.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_CLIENT_SECRET",
+      "constructors": ["createGmailSdk"],
+      "description": "The client secret for Google OAuth authentication. You can obtain this from the Google Cloud Console.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_ACCESS_TOKEN",
+      "constructors": ["createGmailSdk"],
+      "description": "The access token for Google OAuth authentication. This is obtained after the OAuth flow and should be kept secure.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_REFRESH_TOKEN",
+      "constructors": ["createGmailSdk"],
+      "description": "The refresh token for Google OAuth authentication. This is used to obtain new access tokens when they expire.",
+      "required": true
+    }
+  ],
+  "extraInfo": ["Use the `createGmailSdk` constructor to create a new client."]
+}
