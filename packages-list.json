@@ -54,7 +54,6 @@
     "packages/drive",
     "packages/github",
     "packages/gmail",
-    "packages/google",
     "packages/google-analytics",
     "packages/google-seo",
     "packages/google-sheets",
@@ -72,6 +71,7 @@
     "packages/youtube"
   ],
   "oauthConnectorPackages": [
+    "packages/google",
     "packages/google-oauth",
     "packages/linkedin-oauth"
   ],
@@ -79,5 +79,5 @@
     "packages/rest-sdk"
   ],
   "total": 69,
-  "generatedAt": "2025-04-28T11:20:16.294Z"
+  "generatedAt": "2025-04-29T16:28:37.792Z"
 }
