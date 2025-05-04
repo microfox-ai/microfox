@@ -1,0 +1,119 @@
+{
+  "name": "@microfox/coingecko-sdk",
+  "title": "CoinGecko SDK",
+  "description": "A TypeScript SDK providing convenient access to CoinGecko API endpoints for retrieving cryptocurrency data like price, market information, and coin listings.",
+  "path": "packages/coingecko-sdk",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/coingecko-sdk",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko-sdk.svg",
+  "readme_map": {
+    "title": "CoinGecko SDK",
+    "description": "The full README for the CoinGecko SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/README.md",
+    "functionalities": [
+      "CoinGeckoSDK",
+      "ping",
+      "checkApiUsage",
+      "getSimplePrice",
+      "getCoinsList",
+      "getCoinsMarkets"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/CoinGeckoSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "CoinGeckoSDK",
+        "description": "Constructor for the CoinGeckoSDK. Initializes the SDK with the provided API key."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/ping.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "ping",
+        "description": "Pings the CoinGecko API server to check its status."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/checkApiUsage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "checkApiUsage",
+        "description": "Checks the current API usage status."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getSimplePrice.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSimplePrice",
+        "description": "Gets the simple price of one or more coins in a given currency."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCoinsList",
+        "description": "Gets a list of all supported coins."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsMarkets.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCoinsMarkets",
+        "description": "Gets market data for one or more coins."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "CoinGeckoSDK",
+      "description": "Create a new CoinGecko SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "COINGECKO_API_KEY",
+          "displayName": "CoinGecko API Key",
+          "description": "CoinGecko API Key",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "ping",
+        "checkApiUsage",
+        "getSimplePrice",
+        "getCoinsList",
+        "getCoinsMarkets"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "COINGECKO_API_KEY",
+      "constructors": [
+        "CoinGeckoSDK"
+      ],
+      "description": "CoinGecko API Key",
+      "required": true
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the CoinGecko Pro API SDK:\n\n1. Sign up for a CoinGecko Pro API account at https://www.coingecko.com/en/api/pricing\n2. Obtain your API key from the CoinGecko Pro dashboard\n3. Install the SDK: `npm install @microfox/coingecko-sdk`\n4. Import and initialize the SDK in your project:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-sdk';\n\nconst sdk = createCoinGeckoSDK({\n  apiKey: 'YOUR_API_KEY_HERE',\n});\n```\n\n5. Use the SDK methods to interact with the CoinGecko Pro API\n\nNote: It's recommended to use environment variables to store your API key securely."
+  },
+  "extraInfo": [
+    "To use the CoinGecko Pro API SDK:\n\n1. Sign up for a CoinGecko Pro API account at https://www.coingecko.com/en/api/pricing\n2. Obtain your API key from the CoinGecko Pro dashboard\n3. Install the SDK: `npm install @microfox/coingecko-sdk`\n4. Import and initialize the SDK in your project:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-sdk';\n\nconst sdk = createCoinGeckoSDK({\n  apiKey: 'YOUR_API_KEY_HERE',\n});\n```\n\n5. Use the SDK methods to interact with the CoinGecko Pro API\n\nNote: It's recommended to use environment variables to store your API key securely."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
