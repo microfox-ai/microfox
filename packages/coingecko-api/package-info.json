@@ -1,0 +1,136 @@
+{
+  "name": "@microfox/coingecko-api",
+  "title": "CoinGecko API",
+  "description": "A comprehensive TypeScript SDK for seamless interaction with the CoinGecko API, providing convenient access to cryptocurrency market data like price, coin lists, and market details.",
+  "path": "packages/coingecko-api",
+  "dependencies": [],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/coingecko-api",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko-api.svg",
+  "readme_map": {
+    "title": "CoinGecko API",
+    "description": "The full README for the CoinGecko API",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/README.md",
+    "functionalities": [
+      "CoinGeckoSdk",
+      "ping",
+      "checkApiKeyUsage",
+      "simplePrice",
+      "coinsList",
+      "coinsMarkets",
+      "createCoinGeckoSDK",
+      "request"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/CoinGeckoSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "CoinGeckoSdk",
+        "description": "Constructor for the CoinGeckoSdk. Initializes the SDK with the provided API key."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/ping.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "ping",
+        "description": "Tests the CoinGecko API connection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/checkApiKeyUsage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "checkApiKeyUsage",
+        "description": "Checks the usage of your CoinGecko API key."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/simplePrice.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "simplePrice",
+        "description": "Fetches simple price data for specified cryptocurrencies."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/coinsList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "coinsList",
+        "description": "Lists all supported coins with their IDs, symbols, and names."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/coinsMarkets.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "coinsMarkets",
+        "description": "Fetches market data for specified cryptocurrencies."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/createCoinGeckoSDK.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createCoinGeckoSDK",
+        "description": "Creates a new CoinGeckoSdk instance."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-api/docs/request.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "request",
+        "description": "Sends an HTTP request to the CoinGecko API."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "CoinGeckoSdk",
+      "description": "Create a new CoinGecko API client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "COINGECKO_API_KEY",
+          "displayName": "CoinGecko API Key",
+          "description": "Your CoinGecko Pro API key.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "ping",
+        "checkApiKeyUsage",
+        "simplePrice",
+        "coinsList",
+        "coinsMarkets",
+        "createCoinGeckoSDK",
+        "request"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "COINGECKO_API_KEY",
+      "constructors": [
+        "CoinGeckoSdk"
+      ],
+      "description": "Your CoinGecko Pro API key.",
+      "required": true
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use this SDK, you need to obtain a CoinGecko Pro API key. Follow these steps:\n\n1. Sign up for a CoinGecko Pro account at https://www.coingecko.com/en/api/pricing\n2. Once you have an account, navigate to your dashboard and find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK, you'll need to provide your API key when creating an instance of the CoinGeckoSdk:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-api';\n\nconst sdk = createCoinGeckoSDK('YOUR_API_KEY');\n```\n\nMake sure to replace 'YOUR_API_KEY' with your actual CoinGecko Pro API key.\n\nNote: This SDK uses the CoinGecko Pro API, which is a paid service. Each API request consumes one credit. Monitor your usage via the CoinGecko developer dashboard to avoid exceeding your plan limits."
+  },
+  "extraInfo": [
+    "To use this SDK, you need to obtain a CoinGecko Pro API key. Follow these steps:\n\n1. Sign up for a CoinGecko Pro account at https://www.coingecko.com/en/api/pricing\n2. Once you have an account, navigate to your dashboard and find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK, you'll need to provide your API key when creating an instance of the CoinGeckoSdk:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-api';\n\nconst sdk = createCoinGeckoSDK('YOUR_API_KEY');\n```\n\nMake sure to replace 'YOUR_API_KEY' with your actual CoinGecko Pro API key.\n\nNote: This SDK uses the CoinGecko Pro API, which is a paid service. Each API request consumes one credit. Monitor your usage via the CoinGecko developer dashboard to avoid exceeding your plan limits."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript",
+    "zod"
+  ]
+}
