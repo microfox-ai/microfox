@@ -1,0 +1,10 @@
+{
+  "type": "bug",
+  "occurredAt": "build",
+  "error": {
+    "errno": -2,
+    "code": "ENOENT",
+    "syscall": "open",
+    "path": "/home/runner/work/microfox/microfox/scripts/packages/coingecko-api/package.json"
+  }
+}

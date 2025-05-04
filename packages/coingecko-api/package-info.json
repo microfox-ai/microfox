@@ -1,0 +1,27 @@
+{
+  "name": "@microfox/coingecko-api",
+  "title": "CoinGecko API",
+  "description": "A TypeScript SDK for interacting with the CoinGecko API.",
+  "path": "packages/coingecko-api",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/coingecko-api",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko-api.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "description": "The full README for the CoinGecko API",
+    "functionalities": []
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the CoinGecko Pro API SDK:\n\n1. Sign up for a CoinGecko Pro account at https://www.coingecko.com/en/api/pricing\n2. Once subscribed, obtain your API key from the CoinGecko dashboard\n3. Set your API key as an environment variable:\n   export COINGECKO_API_KEY=your_api_key_here\n4. Alternatively, you can pass the API key directly when initializing the SDK\n\nUsage example:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-api';\n\n// Using environment variable\nconst sdk = createCoinGeckoSDK();\n\n// Or passing the API key directly\nconst sdk = createCoinGeckoSDK({ apiKey: 'your_api_key_here' });\n\n// Make API calls\nconst bitcoinPrice = await sdk.getSimplePrice({ ids: 'bitcoin', vs_currencies: 'usd' });\nconsole.log(bitcoinPrice);\n```\n\nNote: This SDK is for the Pro API, which requires a paid subscription. Ensure you have an active subscription before using this SDK."
+  },
+  "extraInfo": []
+}
