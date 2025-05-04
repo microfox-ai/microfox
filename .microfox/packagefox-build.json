@@ -1,1 +1,11 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Youtube Reporting API",
+      "url": "https://developers.google.com/youtube/reporting/v1/reports",
+      "notes": "Add a new package for Youtube Reporting API",
+      "issueNumber": 159
+    }
+  ]
+}
