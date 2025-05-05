@@ -1,0 +1,142 @@
+{
+  "name": "@microfox/telegram-sdk",
+  "title": "Telegram SDK",
+  "description": "A TypeScript SDK providing convenient access to core Telegram API functionalities, such as messaging, authorization management, and user data retrieval.",
+  "path": "packages/telegram-sdk",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/telegram-sdk",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/telegram.svg",
+  "readme_map": {
+    "title": "Telegram SDK",
+    "description": "The full README for the Telegram SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/README.md",
+    "functionalities": [
+      "TelegramSDK",
+      "sendMessage",
+      "acceptAuthorization",
+      "changeAuthorizationSettings",
+      "changePhone",
+      "checkUsername",
+      "getUsers"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/TelegramSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "TelegramSDK",
+        "description": "Constructor for the TelegramSDK class. Initializes the SDK with API credentials and sets up the base URL for API requests."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/sendMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "sendMessage",
+        "description": "Sends a message to a chat."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/acceptAuthorization.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "acceptAuthorization",
+        "description": "Accepts an authorization request."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/changeAuthorizationSettings.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "changeAuthorizationSettings",
+        "description": "Changes the authorization settings."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/changePhone.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "changePhone",
+        "description": "Changes the phone number associated with the account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/checkUsername.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "checkUsername",
+        "description": "Checks whether a username is available."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/telegram-sdk/docs/getUsers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUsers",
+        "description": "Gets a list of users."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "TelegramSDK",
+      "description": "Create a new Telegram SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "TELEGRAM_API_ID",
+          "displayName": "Telegram API ID",
+          "description": "Your Telegram API ID.",
+          "required": true
+        },
+        {
+          "key": "TELEGRAM_API_HASH",
+          "displayName": "Telegram API Hash",
+          "description": "Your Telegram API Hash.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "sendMessage",
+        "acceptAuthorization",
+        "changeAuthorizationSettings",
+        "changePhone",
+        "checkUsername",
+        "getUsers"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "TELEGRAM_API_ID",
+      "constructors": [
+        "TelegramSDK"
+      ],
+      "description": "Your Telegram API ID.",
+      "required": true
+    },
+    {
+      "key": "TELEGRAM_API_HASH",
+      "constructors": [
+        "TelegramSDK"
+      ],
+      "description": "Your Telegram API Hash.",
+      "required": true
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Telegram SDK, you need to obtain an API key from Telegram. Follow these steps:\n\n1. Create a Telegram account if you don't have one.\n2. Visit https://my.telegram.org/auth and log in.\n3. Go to \"API development tools\" and fill out the form to create a new application.\n4. Once created, you'll receive an `api_id` and `api_hash`. These will be used as your API key.\n\nTo use the SDK, you'll need to set the following environment variables:\n- TELEGRAM_API_ID: Your API ID\n- TELEGRAM_API_HASH: Your API Hash\n\nExample usage:\n\n```typescript\nimport { createTelegramSDK } from '@microfox/telegram-sdk';\n\nconst sdk = createTelegramSDK({\n  apiId: process.env.TELEGRAM_API_ID,\n  apiHash: process.env.TELEGRAM_API_HASH,\n});\n\n// Now you can use the SDK methods\nconst result = await sdk.account.acceptAuthorization({\n  // ... parameters\n});\n```\n\nNote: This SDK uses API key authentication. Make sure to keep your API credentials secure and never share them publicly."
+  },
+  "extraInfo": [
+    "To use the Telegram SDK, you need to obtain an API key from Telegram. Follow these steps:\n\n1. Create a Telegram account if you don't have one.\n2. Visit https://my.telegram.org/auth and log in.\n3. Go to \"API development tools\" and fill out the form to create a new application.\n4. Once created, you'll receive an `api_id` and `api_hash`. These will be used as your API key.\n\nTo use the SDK, you'll need to set the following environment variables:\n- TELEGRAM_API_ID: Your API ID\n- TELEGRAM_API_HASH: Your API Hash\n\nExample usage:\n\n```typescript\nimport { createTelegramSDK } from '@microfox/telegram-sdk';\n\nconst sdk = createTelegramSDK({\n  apiId: process.env.TELEGRAM_API_ID,\n  apiHash: process.env.TELEGRAM_API_HASH,\n});\n\n// Now you can use the SDK methods\nconst result = await sdk.account.acceptAuthorization({\n  // ... parameters\n});\n```\n\nNote: This SDK uses API key authentication. Make sure to keep your API credentials secure and never share them publicly."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
