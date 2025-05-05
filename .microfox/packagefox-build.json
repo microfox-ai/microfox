@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Build a new SDK for Notion",
-      "url": "https://developers.notion.com/docs/getting-started",
-      "notes": "Build a new SDK for Notion using their developer documentation.",
-      "issueNumber": 190,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }
