@@ -1,3 +1,13 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Add support for the ClickUp API.",
+      "url": "https://developer.clickup.com/docs/index",
+      "notes": "Add a new SDK for ClickUp.",
+      "issueNumber": 198,
+      "logs": "",
+      "error": ""
+    }
+  ]
 }
