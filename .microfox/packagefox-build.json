@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Create SDK for Riverside API",
-      "url": "https://docs.riverside.fm/",
-      "notes": "Create an SDK for the Riverside.fm API.",
-      "issueNumber": 187,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }

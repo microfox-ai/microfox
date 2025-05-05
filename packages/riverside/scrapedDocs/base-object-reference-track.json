@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.riverside.fm/object-reference/track",
+  "content": "Riverside Business API Documentation home page\nSearch...\nNavigation\nObjects Reference\nTrack Object\nObjects Reference\nTrack Object\n\nA Track reflects the local recording of one individual participant, or media generated in the studio such as screenshares or sounds and videos played live using the media board.\n\nid Unique identifier for the track.\n\ntype Type of track participant screenshare media board\n\nstatus Status of the track done processing uploading stopped\n\nfiles List of files available for this type of track.\n\nRecording Object\nFile Object\nx\nlinkedin\nPowered by Mintlify",
+  "updatedAt": "2025-05-05T14:17:35.280Z"
+}

@@ -1,0 +1,76 @@
+{
+  "name": "@microfox/riverside",
+  "title": "Riverside SDK",
+  "description": "TypeScript SDK for interacting with the Riverside.fm API to manage productions.",
+  "path": "packages/riverside",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/riverside",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/riverside.svg",
+  "readme_map": {
+    "title": "Riverside SDK",
+    "description": "The full README for the Riverside SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/riverside/README.md",
+    "functionalities": [
+      "createRiversideSDK",
+      "listProductions",
+      "RIVERSIDE_API_KEY"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/riverside/docs/createRiversideSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createRiversideSDK",
+        "description": "Initializes a new instance of the RiversideSDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/riverside/docs/listProductions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listProductions",
+        "description": "Lists all productions associated with your Riverside.fm account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/riverside/docs/RIVERSIDE_API_KEY.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "RIVERSIDE_API_KEY",
+        "description": "Lists recordings based on provided criteria."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "createRiversideSDK",
+      "description": "Create a new Riverside SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [],
+      "internalKeys": [],
+      "functionalities": [
+        "listProductions",
+        "RIVERSIDE_API_KEY"
+      ]
+    }
+  ],
+  "keysInfo": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Riverside SDK, you need to obtain an API key by contacting your Riverside customer success member. Once you have the API key, you can initialize the SDK like this:\n\n```typescript\nimport { createRiversideSDK } from '@microfox/riverside';\n\nconst riversideSDK = createRiversideSDK({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\nMake sure to keep your API key secure and never expose it in client-side code.\n\nThe SDK uses the native `fetch` API available in Node.js 20+. Ensure you're using a compatible Node.js version.\n\nRate Limiting:\n- The SDK respects rate limits for each endpoint.\n- Implement retry mechanisms with exponential backoff in your application logic if needed.\n\nError Handling:\n- The SDK throws custom errors for various scenarios (network issues, API errors, etc.).\n- Always wrap SDK calls in try-catch blocks to handle potential errors.\n\nPagination:\n- For endpoints that support pagination, the SDK provides helper methods to iterate through pages.\n\nFile Downloads:\n- The SDK provides methods to download media files and transcriptions.\n- Handle the returned streams appropriately in your application.\n\nAPI Versioning:\n- The SDK uses different API versions (v1 and v2) for different endpoints as per the Riverside API.\n- This is handled internally by the SDK, but be aware of potential differences in response structures."
+  },
+  "extraInfo": [
+    "To use the Riverside SDK, you need to obtain an API key by contacting your Riverside customer success member. Once you have the API key, you can initialize the SDK like this:\n\n```typescript\nimport { createRiversideSDK } from '@microfox/riverside';\n\nconst riversideSDK = createRiversideSDK({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\nMake sure to keep your API key secure and never expose it in client-side code.\n\nThe SDK uses the native `fetch` API available in Node.js 20+. Ensure you're using a compatible Node.js version.\n\nRate Limiting:\n- The SDK respects rate limits for each endpoint.\n- Implement retry mechanisms with exponential backoff in your application logic if needed.\n\nError Handling:\n- The SDK throws custom errors for various scenarios (network issues, API errors, etc.).\n- Always wrap SDK calls in try-catch blocks to handle potential errors.\n\nPagination:\n- For endpoints that support pagination, the SDK provides helper methods to iterate through pages.\n\nFile Downloads:\n- The SDK provides methods to download media files and transcriptions.\n- Handle the returned streams appropriately in your application.\n\nAPI Versioning:\n- The SDK uses different API versions (v1 and v2) for different endpoints as per the Riverside API.\n- This is handled internally by the SDK, but be aware of potential differences in response structures."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

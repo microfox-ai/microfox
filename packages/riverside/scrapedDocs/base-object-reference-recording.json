@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.riverside.fm/object-reference/recording",
+  "content": "Riverside Business API Documentation home page\nSearch...\nNavigation\nObjects Reference\nRecording Object\nObjects Reference\nRecording Object\n\nRecordings can be recorded in the Riverside studio or uploaded to Riverside. They group together the separate tracks, transcription, and related files. Recordings often reflect a “take.”\n\nid Unique identifier for the recording.\n\nname Name of the recording.\n\ntracks List of tracks associated with the recording.\n\nstatus Status of the recording can be either uploading, processing or ready. Since recordings have multiple tracks, this status is based on the “least-baked” track contained in the recording.\n\ncreated_date Date when the recording was created.\n\ntranscription\n\nstatus either transcribing or done\nfiles list of transcription files that can be downloaded when done\nProject Object\nTrack Object\nx\nlinkedin\nPowered by Mintlify",
+  "updatedAt": "2025-05-05T14:17:30.440Z"
+}

@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.riverside.fm/endpoints-reference/delete-recording",
+  "content": "Riverside Business API Documentation home page\nSearch...\nNavigation\nEndpoints Reference\nDelete Recording\nEndpoints Reference\nDelete Recording\n\nDeletes a recording by its ID.\n\nHTTP Method: DELETE\n\nURL: /api/v1/recordings/{recording_id}\n\nAuthentication: Requires API Key in the request header.\n\nPath Parameters:\n\nrecording_id ID of the recording to retrieve. To find this value, visit the recording page and click “Copy Recording ID” in the three dots menu.\n\nResponse: None (HTTP status codes only).\n\nStatus Codes:\n\n204 No Content Recording successfully deleted.\n401 Unauthorized Authentication failed.\n404 Not Found Recording not found.\n​\nSample Request\nCopy\nDELETE /api/v1/recordings/1 HTTP/1.1\nHost: platform.riverside.fm\nAuthorization: BEARER YOUR_API_KEY\n\n​\nSample Response\nCopy\nHTTP/1.1 204 No Content\n\nDownload Transcription File\nProduction Object\nx\nlinkedin\nPowered by Mintlify",
+  "updatedAt": "2025-05-05T14:17:10.618Z"
+}

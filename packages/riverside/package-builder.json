@@ -1,0 +1,81 @@
+{
+  "sdkMetadata": {
+    "apiName": "Riverside",
+    "packageName": "@microfox/riverside",
+    "title": "Riverside SDK",
+    "description": "A TypeScript SDK for interacting with the Riverside API.",
+    "keywords": [
+      "Riverside",
+      "SDK",
+      "Typescript",
+      "API",
+      "microfox"
+    ],
+    "authType": "apikey",
+    "authSdk": "",
+    "inputArgs": {
+      "query": "Create SDK for Riverside API",
+      "url": "https://docs.riverside.fm/",
+      "isBaseUrl": true
+    }
+  },
+  "allLinks": [
+    "https://docs.riverside.fm/",
+    "https://support.riverside.fm/hc/en-us/requests/new",
+    "https://riverside.fm/dashboard",
+    "https://docs.riverside.fm/quickstart",
+    "https://support.riverside.fm/",
+    "https://docs.riverside.fm/endpoints-reference/list-workspace",
+    "https://docs.riverside.fm/endpoints-reference/list-all-recordings",
+    "https://docs.riverside.fm/endpoints-reference/get-recording",
+    "https://docs.riverside.fm/endpoints-reference/download-file",
+    "https://docs.riverside.fm/endpoints-reference/download-transcription-file",
+    "https://docs.riverside.fm/endpoints-reference/delete-recording",
+    "https://docs.riverside.fm/object-reference/production",
+    "https://docs.riverside.fm/object-reference/studio",
+    "https://docs.riverside.fm/object-reference/project",
+    "https://docs.riverside.fm/object-reference/recording",
+    "https://docs.riverside.fm/object-reference/track",
+    "https://docs.riverside.fm/object-reference/file",
+    "https://x.com/riversidedotfm",
+    "https://www.linkedin.com/company/riversidefm",
+    "https://mintlify.com/preview-request?utm_campaign=poweredBy&utm_medium=referral&utm_source=docs.riverside.fm"
+  ],
+  "filteredLinks": [
+    "https://docs.riverside.fm/",
+    "https://docs.riverside.fm/quickstart",
+    "https://docs.riverside.fm/endpoints-reference/list-workspace",
+    "https://docs.riverside.fm/endpoints-reference/list-all-recordings",
+    "https://docs.riverside.fm/endpoints-reference/get-recording",
+    "https://docs.riverside.fm/endpoints-reference/download-file",
+    "https://docs.riverside.fm/endpoints-reference/download-transcription-file",
+    "https://docs.riverside.fm/endpoints-reference/delete-recording",
+    "https://docs.riverside.fm/object-reference/production",
+    "https://docs.riverside.fm/object-reference/studio",
+    "https://docs.riverside.fm/object-reference/project",
+    "https://docs.riverside.fm/object-reference/recording",
+    "https://docs.riverside.fm/object-reference/track",
+    "https://docs.riverside.fm/object-reference/file"
+  ],
+  "linkAnalysis": {
+    "documentationLinks": [
+      "https://docs.riverside.fm/",
+      "https://docs.riverside.fm/quickstart",
+      "https://docs.riverside.fm/endpoints-reference/list-workspace",
+      "https://docs.riverside.fm/endpoints-reference/list-all-recordings",
+      "https://docs.riverside.fm/endpoints-reference/get-recording",
+      "https://docs.riverside.fm/endpoints-reference/download-file",
+      "https://docs.riverside.fm/endpoints-reference/download-transcription-file",
+      "https://docs.riverside.fm/endpoints-reference/delete-recording",
+      "https://docs.riverside.fm/object-reference/production",
+      "https://docs.riverside.fm/object-reference/studio",
+      "https://docs.riverside.fm/object-reference/project",
+      "https://docs.riverside.fm/object-reference/recording",
+      "https://docs.riverside.fm/object-reference/track",
+      "https://docs.riverside.fm/object-reference/file"
+    ],
+    "reason": "These links provide comprehensive information about the Riverside API, including quickstart guides, endpoint references, and object references.  These resources are crucial for understanding the API's functionalities, data structures, and how to interact with it programmatically.  This information is essential for building a robust and comprehensive SDK.",
+    "setupInstructionsLink": "https://docs.riverside.fm/quickstart"
+  },
+  "linksUpdatedAt": "2025-05-05T14:16:30.805Z"
+}
