@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Create a js/ts version of Agent Development Kit from the existing Python version.",
-      "url": "https://google.github.io/adk-docs/",
-      "notes": "Create a js/ts version of Agent Development Kit, starting with core functionalities.",
-      "issueNumber": 183,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }

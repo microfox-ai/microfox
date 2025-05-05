@@ -1,0 +1,138 @@
+{
+  "name": "@microfox/agent-development-kit",
+  "title": "Agent Development Kit SDK",
+  "description": "A TypeScript SDK mirroring the Python Agent Development Kit, enabling developers to create various agent types (base, LLM, sequential, parallel, loop) and tools (base, function, REST API) and execute them with a runner.",
+  "path": "packages/agent-development-kit",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/agent-development-kit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/typescript.svg",
+  "readme_map": {
+    "title": "Agent Development Kit SDK",
+    "description": "The full README for the Agent Development Kit SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/README.md",
+    "functionalities": [
+      "AgentDevelopmentKitSDK",
+      "createBaseAgent",
+      "createLlmAgent",
+      "createSequentialAgent",
+      "createParallelAgent",
+      "createLoopAgent",
+      "createBaseTool",
+      "createFunctionTool",
+      "createRestApiTool",
+      "createRunner"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/AgentDevelopmentKitSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "AgentDevelopmentKitSDK",
+        "description": "Creates a new instance of the Agent Development Kit SDK. This SDK provides methods for creating and managing agents, tools, and runners for agent execution."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createBaseAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createBaseAgent",
+        "description": "Creates a base agent with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createLlmAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createLlmAgent",
+        "description": "Creates an LLM agent with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createSequentialAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createSequentialAgent",
+        "description": "Creates a sequential agent with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createParallelAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createParallelAgent",
+        "description": "Creates a parallel agent with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createLoopAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createLoopAgent",
+        "description": "Creates a loop agent with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createBaseTool.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createBaseTool",
+        "description": "Creates a base tool with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createFunctionTool.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createFunctionTool",
+        "description": "Creates a function tool with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createRestApiTool.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createRestApiTool",
+        "description": "Creates a REST API tool with the provided configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createRunner.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createRunner",
+        "description": "Creates a runner for executing agents."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "AgentDevelopmentKitSDK",
+      "description": "Create a new Agent Development Kit SDK client through which you can interact with the API",
+      "auth": "none",
+      "requiredKeys": [],
+      "internalKeys": [],
+      "functionalities": [
+        "createBaseAgent",
+        "createLlmAgent",
+        "createSequentialAgent",
+        "createParallelAgent",
+        "createLoopAgent",
+        "createBaseTool",
+        "createFunctionTool",
+        "createRestApiTool",
+        "createRunner"
+      ]
+    }
+  ],
+  "keysInfo": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "The Agent Development Kit SDK does not require direct authentication. Instead, it provides a flexible authentication system that can be configured for various services and tools used within the SDK.\n\nTo use the SDK:\n\n1. Install the package:\n   npm install @microfox/agent-development-kit\n\n2. Import and use the SDK in your TypeScript/JavaScript project:\n   import { createAgentDevelopmentKitSDK } from '@microfox/agent-development-kit';\n\n   const sdk = createAgentDevelopmentKitSDK();\n\n3. The SDK itself doesn't require any API keys or tokens. However, when using specific tools or services within the SDK, you may need to provide authentication credentials. These should be configured on a per-tool or per-service basis.\n\n4. For tools requiring authentication, you'll typically provide the necessary credentials when creating the tool or within the ToolContext. For example:\n\n   const myAuthenticatedTool = new RestApiTool({\n     // ... other configuration ...\n     authScheme: AuthScheme.API_KEY,\n     authCredential: { apiKey: 'your-api-key' },\n   });\n\n5. The SDK provides flexible authentication handling through the AuthScheme, AuthCredential, and AuthConfig interfaces. You can use these to configure authentication for various services as needed.\n\n6. When using OAuth2 or other complex authentication flows, you may need to implement additional logic to handle token refresh and storage. The SDK provides hooks and interfaces to support this, but the specific implementation will depend on your use case and the services you're integrating with.\n\nRemember to securely manage and store any API keys, tokens, or credentials used within your application. Never hardcode sensitive information directly in your source code."
+  },
+  "extraInfo": [
+    "The Agent Development Kit SDK does not require direct authentication. Instead, it provides a flexible authentication system that can be configured for various services and tools used within the SDK.\n\nTo use the SDK:\n\n1. Install the package:\n   npm install @microfox/agent-development-kit\n\n2. Import and use the SDK in your TypeScript/JavaScript project:\n   import { createAgentDevelopmentKitSDK } from '@microfox/agent-development-kit';\n\n   const sdk = createAgentDevelopmentKitSDK();\n\n3. The SDK itself doesn't require any API keys or tokens. However, when using specific tools or services within the SDK, you may need to provide authentication credentials. These should be configured on a per-tool or per-service basis.\n\n4. For tools requiring authentication, you'll typically provide the necessary credentials when creating the tool or within the ToolContext. For example:\n\n   const myAuthenticatedTool = new RestApiTool({\n     // ... other configuration ...\n     authScheme: AuthScheme.API_KEY,\n     authCredential: { apiKey: 'your-api-key' },\n   });\n\n5. The SDK provides flexible authentication handling through the AuthScheme, AuthCredential, and AuthConfig interfaces. You can use these to configure authentication for various services as needed.\n\n6. When using OAuth2 or other complex authentication flows, you may need to implement additional logic to handle token refresh and storage. The SDK provides hooks and interfaces to support this, but the specific implementation will depend on your use case and the services you're integrating with.\n\nRemember to securely manage and store any API keys, tokens, or credentials used within your application. Never hardcode sensitive information directly in your source code."
+  ],
+  "authType": "none",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
