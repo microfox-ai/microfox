@@ -1,3 +1,13 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Create a SDK for the telegram api endpoints",
+      "url": "https://core.telegram.org/methods",
+      "notes": "Create a new SDK for interacting with the Telegram API.",
+      "issueNumber": 189,
+      "logs": "",
+      "error": ""
+    }
+  ]
 }
