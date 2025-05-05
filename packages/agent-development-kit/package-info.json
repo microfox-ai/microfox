@@ -1,0 +1,181 @@
+{
+  "name": "@microfox/agent-development-kit",
+  "title": "Agent Development Kit SDK",
+  "description": "A TypeScript SDK mirroring the Python Agent Development Kit, enabling streamlined agent creation, management, and execution, including session handling, event appending, and diverse agent type instantiation.",
+  "path": "packages/agent-development-kit",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/agent-development-kit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/typescript.svg",
+  "readme_map": {
+    "title": "Agent Development Kit SDK",
+    "description": "The full README for the Agent Development Kit SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/README.md",
+    "functionalities": [
+      "createAgentDevelopmentKitSDK",
+      "createSession",
+      "getSession",
+      "appendEvent",
+      "runAgent",
+      "runTool",
+      "requestAuth",
+      "handleAuthCallback",
+      "createLlmAgent",
+      "createSequentialAgent",
+      "createParallelAgent",
+      "createLoopAgent",
+      "createTool"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createAgentDevelopmentKitSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createAgentDevelopmentKitSDK",
+        "description": "Creates a new instance of the AgentDevelopmentKitSDK. The SDK interacts with a backend service to manage agents, sessions, and events, and provides methods for running agents and tools."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createSession.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createSession",
+        "description": "Creates a new session."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/getSession.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSession",
+        "description": "Retrieves a session by its ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/appendEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "appendEvent",
+        "description": "Appends an event to a session."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/runAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "runAgent",
+        "description": "Runs an agent within a session."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/runTool.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "runTool",
+        "description": "Runs a tool within a session."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/requestAuth.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "requestAuth",
+        "description": "Requests authentication."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/handleAuthCallback.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "handleAuthCallback",
+        "description": "Handles the authentication callback."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createLlmAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createLlmAgent",
+        "description": "Creates an LLM agent."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createSequentialAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createSequentialAgent",
+        "description": "Creates a sequential agent."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createParallelAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createParallelAgent",
+        "description": "Creates a parallel agent."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createLoopAgent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createLoopAgent",
+        "description": "Creates a loop agent."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/agent-development-kit/docs/createTool.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createTool",
+        "description": "Creates a tool."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "createAgentDevelopmentKitSDK",
+      "description": "Create a new Agent Development Kit SDK client through which you can interact with the API",
+      "auth": "none",
+      "requiredKeys": [
+        {
+          "key": "ADK_BACKEND_URL",
+          "displayName": "Backend URL",
+          "description": "The base URL of the backend service.",
+          "required": false
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "createSession",
+        "getSession",
+        "appendEvent",
+        "runAgent",
+        "runTool",
+        "requestAuth",
+        "handleAuthCallback",
+        "createLlmAgent",
+        "createSequentialAgent",
+        "createParallelAgent",
+        "createLoopAgent",
+        "createTool"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "ADK_BACKEND_URL",
+      "constructors": [
+        "createAgentDevelopmentKitSDK"
+      ],
+      "description": "The base URL of the backend service.",
+      "required": false
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "The Agent Development Kit SDK does not require authentication for its core functionality. However, it provides mechanisms for handling authentication for individual tools that may require it.\n\nTo use the SDK:\n\n1. Install the package:\n   npm install @microfox/agent-development-kit\n\n2. Import and create an instance of the SDK:\n   import { createAgentDevelopmentKitSDK } from '@microfox/agent-development-kit';\n   const adk = createAgentDevelopmentKitSDK('https://your-backend-url.com');\n\n3. The SDK assumes the existence of a backend service exposing REST endpoints for agent interaction. Make sure to provide the correct backend URL when initializing the SDK.\n\n4. For tools requiring authentication, you'll need to implement the necessary authentication flow in your application. The SDK provides helpers for managing authentication, but you'll need to handle the actual authentication process (e.g., OAuth flows) in your application.\n\n5. Environment variables:\n   - ADK_BACKEND_URL: The URL of your backend service (optional, can be passed directly to the SDK constructor)\n\nNote: This SDK is designed to work with a backend service that implements the Agent Development Kit functionality. Ensure that your backend service is properly set up and exposes the required endpoints for the SDK to function correctly."
+  },
+  "extraInfo": [
+    "The Agent Development Kit SDK does not require authentication for its core functionality. However, it provides mechanisms for handling authentication for individual tools that may require it.\n\nTo use the SDK:\n\n1. Install the package:\n   npm install @microfox/agent-development-kit\n\n2. Import and create an instance of the SDK:\n   import { createAgentDevelopmentKitSDK } from '@microfox/agent-development-kit';\n   const adk = createAgentDevelopmentKitSDK('https://your-backend-url.com');\n\n3. The SDK assumes the existence of a backend service exposing REST endpoints for agent interaction. Make sure to provide the correct backend URL when initializing the SDK.\n\n4. For tools requiring authentication, you'll need to implement the necessary authentication flow in your application. The SDK provides helpers for managing authentication, but you'll need to handle the actual authentication process (e.g., OAuth flows) in your application.\n\n5. Environment variables:\n   - ADK_BACKEND_URL: The URL of your backend service (optional, can be passed directly to the SDK constructor)\n\nNote: This SDK is designed to work with a backend service that implements the Agent Development Kit functionality. Ensure that your backend service is properly set up and exposes the required endpoints for the SDK to function correctly."
+  ],
+  "authType": "none",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
