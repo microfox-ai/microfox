@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Create a new SDK for Stripe",
-      "url": "https://docs.stripe.com/api",
-      "notes": "Create a new SDK for Stripe. Reference documentation provided.",
-      "issueNumber": 202,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }
