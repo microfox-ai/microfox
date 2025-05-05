@@ -1,3 +1,13 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "pkg-build",
+      "query": "Build SDK for Slack",
+      "url": "https://api.slack.com/apis",
+      "notes": "User requests a new SDK build for Slack.",
+      "issueNumber": 200,
+      "logs": "",
+      "error": ""
+    }
+  ]
 }
