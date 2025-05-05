@@ -1,0 +1,80 @@
+{
+  "sdkMetadata": {
+    "apiName": "Notion",
+    "packageName": "@microfox/notion",
+    "title": "Notion SDK",
+    "description": "A TypeScript SDK for integrating with the Notion API.",
+    "keywords": [
+      "notion",
+      "api",
+      "sdk",
+      "typescript",
+      "microfox"
+    ],
+    "authType": "apikey",
+    "authSdk": "",
+    "inputArgs": {
+      "query": "Build a new SDK for Notion",
+      "url": "https://developers.notion.com/docs/getting-started",
+      "isBaseUrl": true
+    }
+  },
+  "allLinks": [
+    "https://developers.notion.com/",
+    "https://developers.notion.com/docs",
+    "https://developers.notion.com/reference",
+    "https://developers.notion.com/page/changelog",
+    "https://developers.notion.com/page/examples",
+    "https://www.notion.so/my-integrations",
+    "https://developers.notion.com/docs/getting-started",
+    "https://developers.notion.com/docs/authorization",
+    "https://developers.notion.com/docs/working-with-page-content",
+    "https://developers.notion.com/docs/working-with-databases",
+    "https://developers.notion.com/docs/working-with-comments",
+    "https://developers.notion.com/docs/working-with-files-and-media",
+    "https://developers.notion.com/docs/create-a-notion-integration",
+    "https://developers.notion.com/docs/link-previews",
+    "https://developers.notion.com/docs/build-a-link-preview-integration",
+    "https://notionapi.readme.io/page/examples",
+    "https://www.postman.com/notionhq/workspace/notion-s-api-workspace",
+    "https://developers.notion.com/docs/publishing-integrations-to-notions-integration-gallery",
+    "https://developers.notion.com/docs/mcp",
+    "https://developers.notion.com/edit/getting-started",
+    "https://developers.notion.com/reference/user",
+    "https://developers.notion.com/reference/post-search",
+    "https://developers.notion.com/reference/intro",
+    "https://www.notion.so/help/add-and-manage-connections-with-the-api",
+    "https://www.notion.so/integrations/all",
+    "https://notionup.typeform.com/to/BXheLK4Z?typeform-source=developers.notion.com",
+    "https://developers.notion.com/reference/unfurl-attribute-object",
+    "https://www.notion.so/help/guides/notion-api-link-previews-feature",
+    "https://www.notion.so/help/provision-users-and-groups-with-scim",
+    "https://www.notion.so/help/saml-sso-configuration",
+    "https://github.com/makenotion/notion-sdk-js",
+    "https://www.notion.so/technology-partner-program",
+    "https://join.slack.com/t/notiondevs/shared_invite/zt-20b5996xv-DzJdLiympy6jP0GGzu3AMg",
+    "https://www.postman.com/notionhq/",
+    "https://github.com/makenotion/notion-sdk-typescript-starter",
+    "https://developers.notion.com/page/frequently-asked-questions",
+    "https://www.notion.so/28ffdd083dc3473e9c2da6ec011b58ac",
+    "https://www.notion.so/Developer-Terms-ba4131408d0844e08330da2cbb225c20",
+    "https://notion.so/product",
+    "https://notion.so/teams",
+    "https://notion.so/enterprise",
+    "https://notion.so/blog",
+    "https://notion.so/careers",
+    "https://stackoverflow.com/questions/tagged/notion-api",
+    "http://twitter.com/notionapi"
+  ],
+  "filteredLinks": [
+    "https://developers.notion.com/docs/getting-started"
+  ],
+  "linkAnalysis": {
+    "documentationLinks": [
+      "https://developers.notion.com/docs/getting-started"
+    ],
+    "reason": "This link is the official Notion API documentation, and it contains information about authentication, endpoints, and SDK examples.  It also has integration guides and is therefore suitable for creating a comprehensive SDK.",
+    "setupInstructionsLink": "https://developers.notion.com/docs/getting-started"
+  },
+  "linksUpdatedAt": "2025-05-05T20:18:54.318Z"
+}

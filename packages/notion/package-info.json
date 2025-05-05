@@ -1,0 +1,254 @@
+{
+  "name": "@microfox/notion",
+  "title": "Notion SDK",
+  "description": "The Notion SDK provides a seamless integration with the Notion API, enabling developers to programmatically create, read, update, and delete pages, databases, users, comments, and more. It also supports SCIM operations for user and group management.",
+  "path": "packages/notion",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/notion",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion.svg",
+  "readme_map": {
+    "title": "Notion SDK",
+    "description": "The full README for the Notion SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/README.md",
+    "functionalities": [
+      "createNotionSDK",
+      "retrievePage",
+      "createPage",
+      "updatePage",
+      "deletePage",
+      "retrieveDatabase",
+      "createDatabase",
+      "updateDatabase",
+      "deleteDatabase",
+      "retrieveUser",
+      "listUsers",
+      "retrieveComment",
+      "createComment",
+      "search",
+      "getLinkPreview",
+      "createSCIMUser",
+      "updateSCIMUser",
+      "deleteSCIMUser",
+      "createSCIMGroup",
+      "updateSCIMGroup",
+      "deleteSCIMGroup"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createNotionSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createNotionSDK",
+        "description": "Creates a new instance of the NotionSDK. This is the main entry point for interacting with the Notion API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/retrievePage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "retrievePage",
+        "description": "Retrieves a page from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createPage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createPage",
+        "description": "Creates a new page in Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/updatePage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updatePage",
+        "description": "Updates an existing page in Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/deletePage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deletePage",
+        "description": "Deletes a page from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/retrieveDatabase.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "retrieveDatabase",
+        "description": "Retrieves a database from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createDatabase.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createDatabase",
+        "description": "Creates a new database in Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/updateDatabase.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateDatabase",
+        "description": "Updates an existing database in Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/deleteDatabase.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteDatabase",
+        "description": "Deletes a database from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/retrieveUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "retrieveUser",
+        "description": "Retrieves a user from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/listUsers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listUsers",
+        "description": "Lists all users in the workspace."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/retrieveComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "retrieveComment",
+        "description": "Retrieves a comment from Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createComment",
+        "description": "Creates a new comment on a page in Notion."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/search.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "search",
+        "description": "Searches Notion for pages and databases matching a query."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/getLinkPreview.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getLinkPreview",
+        "description": "Gets a link preview (unfurl) for a given URL."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createSCIMUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createSCIMUser",
+        "description": "Creates a SCIM user in Notion (Enterprise plan required)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/updateSCIMUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateSCIMUser",
+        "description": "Updates a SCIM user in Notion (Enterprise plan required)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/deleteSCIMUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteSCIMUser",
+        "description": "Deletes a SCIM user in Notion (Enterprise plan required)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/createSCIMGroup.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createSCIMGroup",
+        "description": "Creates a SCIM group in Notion (Enterprise plan required)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/updateSCIMGroup.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateSCIMGroup",
+        "description": "Updates a SCIM group in Notion (Enterprise plan required)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/deleteSCIMGroup.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteSCIMGroup",
+        "description": "Deletes a SCIM group in Notion (Enterprise plan required)."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "createNotionSDK",
+      "description": "Create a new Notion SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "NOTION_API_KEY",
+          "displayName": "Notion API Key",
+          "description": "The API key for authenticating with the Notion API",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "retrievePage",
+        "createPage",
+        "updatePage",
+        "deletePage",
+        "retrieveDatabase",
+        "createDatabase",
+        "updateDatabase",
+        "deleteDatabase",
+        "retrieveUser",
+        "listUsers",
+        "retrieveComment",
+        "createComment",
+        "search",
+        "getLinkPreview",
+        "createSCIMUser",
+        "updateSCIMUser",
+        "deleteSCIMUser",
+        "createSCIMGroup",
+        "updateSCIMGroup",
+        "deleteSCIMGroup"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "NOTION_API_KEY",
+      "constructors": [
+        "createNotionSDK"
+      ],
+      "description": "The API key for authenticating with the Notion API",
+      "required": true
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Notion SDK, you need to obtain an API key from Notion. Here's how to set it up:\n\n1. Go to https://www.notion.so/my-integrations and create a new integration.\n2. Choose the appropriate capabilities for your integration (read, update, insert, etc.).\n3. Once created, you'll receive an \"Internal Integration Token\" which serves as your API key.\n4. Store this API key securely and never expose it in client-side code.\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/notion`\n2. Import the SDK in your TypeScript/JavaScript file:\n   ```typescript\n   import { createNotionSDK } from '@microfox/notion';\n   ```\n3. Create an instance of the SDK:\n   ```typescript\n   const notion = createNotionSDK({\n     apiKey: 'your-api-key-here'\n   });\n   ```\n4. You can now use the SDK to interact with the Notion API:\n   ```typescript\n   const page = await notion.pages.retrieve({ page_id: 'your-page-id' });\n   ```\n\nRemember to handle errors appropriately and never share your API key publicly."
+  },
+  "extraInfo": [
+    "To use the Notion SDK, you need to obtain an API key from Notion. Here's how to set it up:\n\n1. Go to https://www.notion.so/my-integrations and create a new integration.\n2. Choose the appropriate capabilities for your integration (read, update, insert, etc.).\n3. Once created, you'll receive an \"Internal Integration Token\" which serves as your API key.\n4. Store this API key securely and never expose it in client-side code.\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/notion`\n2. Import the SDK in your TypeScript/JavaScript file:\n   ```typescript\n   import { createNotionSDK } from '@microfox/notion';\n   ```\n3. Create an instance of the SDK:\n   ```typescript\n   const notion = createNotionSDK({\n     apiKey: 'your-api-key-here'\n   });\n   ```\n4. You can now use the SDK to interact with the Notion API:\n   ```typescript\n   const page = await notion.pages.retrieve({ page_id: 'your-page-id' });\n   ```\n\nRemember to handle errors appropriately and never share your API key publicly."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
