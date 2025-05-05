@@ -1,7 +1,7 @@
 {
   "name": "@microfox/youtube",
-  "version": "1.0.4",
-  "description": "YouTube SDK for Microfox",
+  "version": "1.0.0",
+  "description": "A TypeScript SDK for interacting with the YouTube API.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -24,18 +24,14 @@
     }
   },
   "dependencies": {
-    "@microfox/google": "*",
-    "@microfox/rest-sdk": "1.0.4",
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@microfox/google-oauth": "1.0.4",
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
     "typescript": "5.6.3"
-  },
-  "peerDependencies": {
-    "@microfox/rest-sdk": ">=1.0.4"
   },
   "publishConfig": {
     "access": "public"
@@ -52,11 +48,10 @@
     "url": "https://github.com/microfox-ai/microfox/issues"
   },
   "keywords": [
-    "microfox",
-    "aws",
-    "ses",
-    "email",
+    "youtube",
+    "api",
     "sdk",
-    "typescript"
+    "typescript",
+    "microfox"
   ]
 }
