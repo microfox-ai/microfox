@@ -1,3 +1,13 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Create new SDK for Amazon Face Rekognition",
+      "url": "https://docs.aws.amazon.com/rekognition/",
+      "notes": "Create a new SDK for Amazon Rekognition (Face Recognition).",
+      "issueNumber": 194,
+      "logs": "",
+      "error": ""
+    }
+  ]
 }
