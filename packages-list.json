@@ -50,6 +50,7 @@
   "stablePackages": [
     "packages/aws-ses",
     "packages/brave",
+    "packages/coingecko-sdk",
     "packages/discord",
     "packages/drive",
     "packages/github",
@@ -69,7 +70,8 @@
     "packages/twitter",
     "packages/whatsapp-business",
     "packages/youtube",
-    "packages/youtube-analytics"
+    "packages/youtube-analytics",
+    "packages/youtube-reporting-api"
   ],
   "oauthConnectorPackages": [
     "packages/google",
@@ -79,6 +81,6 @@
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 70,
-  "generatedAt": "2025-05-04T04:02:03.005Z"
+  "total": 72,
+  "generatedAt": "2025-05-05T01:13:14.442Z"
 }
