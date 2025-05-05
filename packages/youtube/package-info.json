@@ -1,92 +1,199 @@
 {
   "name": "@microfox/youtube",
-  "title": "YouTube Data",
-  "description": "YouTube Data v3 API SDK - Upload videos, manage playlists, add comments, search videos, list channel vidoes, get Channel details..",
+  "title": "YouTube SDK",
+  "description": "TypeScript SDK for interacting with the YouTube Data API v3, providing convenient access to features like managing user activity and captions.",
   "path": "packages/youtube",
-  "dependencies": ["@microfox/google", "@microfox/rest-sdk", "zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
-  "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
+  "oauth2Scopes": [
+    "https://www.googleapis.com/auth/youtube",
+    "https://www.googleapis.com/auth/youtube.force-ssl",
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtubepartner"
+  ],
+  "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/youtube",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube.svg",
+  "readme_map": {
+    "title": "YouTube SDK",
+    "description": "The full README for the YouTube SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/README.md",
+    "functionalities": [
+      "YouTubeSDK",
+      "validateAccessToken",
+      "refreshAccessToken",
+      "listActivities",
+      "listCaptions"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/YouTubeSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "YouTubeSDK",
+        "description": "Constructor for the YouTubeSDK class. Initializes the SDK with OAuth 2.0 credentials and other options."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the current access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/refreshAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes the current access token using the refresh token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/listActivities.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listActivities",
+        "description": "Lists activities (uploads, likes, comments, etc.) for a given channel or user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/listCaptions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listCaptions",
+        "description": "Lists captions for a given video."
+      }
+    ]
+  },
   "constructors": [
     {
-      "name": "createYouTubeSDKWithTokens",
-      "description": "Create a new YouTube client",
-      "zodSecretSchema": "YouTubeSDKOptionsSchema",
+      "name": "YouTubeSDK",
+      "description": "Create a new YouTube SDK client through which you can interact with the API",
       "auth": "oauth2",
       "authSdk": "@microfox/google-oauth",
       "authEndpoint": "/connect/google-oauth",
       "requiredKeys": [],
       "internalKeys": [
         {
-          "key": "GOOGLE_ACCESS_TOKEN",
-          "displayName": "Access Token",
-          "description": "The access token for the YouTube client"
-        },
-        {
-          "key": "GOOGLE_REFRESH_TOKEN",
-          "displayName": "Refresh Token",
-          "description": "The refresh token for the YouTube client"
-        },
-        {
           "key": "GOOGLE_CLIENT_ID",
-          "displayName": "Client ID",
-          "description": "The client ID for the YouTube client"
+          "displayName": "Google Client ID",
+          "description": "The OAuth 2.0 Client ID for authenticating with Google.",
+          "required": true
         },
         {
           "key": "GOOGLE_CLIENT_SECRET",
-          "displayName": "Client Secret",
-          "description": "The client secret for the YouTube client"
+          "displayName": "Google Client Secret",
+          "description": "The OAuth 2.0 Client Secret for authenticating with Google.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_REDIRECT_URI",
+          "displayName": "Google Redirect URI",
+          "description": "The OAuth 2.0 Redirect URI for handling the authentication redirect.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_ACCESS_TOKEN",
+          "displayName": "Google Access Token",
+          "description": "The OAuth 2.0 Access Token for authenticating requests to the YouTube Data API.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_REFRESH_TOKEN",
+          "displayName": "Google Refresh Token",
+          "description": "The OAuth 2.0 Refresh Token for refreshing the access token when it expires.",
+          "required": true
         },
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for the YouTube client",
+          "description": "The list of scopes to request during the OAuth 2.0 flow.",
+          "required": true,
           "defaultValue": [
             "https://www.googleapis.com/auth/youtube",
-            "https://www.googleapis.com/auth/youtube.readonly",
-            "https://www.googleapis.com/auth/youtube.upload",
             "https://www.googleapis.com/auth/youtube.force-ssl",
+            "https://www.googleapis.com/auth/youtube.upload",
             "https://www.googleapis.com/auth/youtubepartner"
           ]
         }
+      ],
+      "functionalities": [
+        "validateAccessToken",
+        "refreshAccessToken",
+        "listActivities",
+        "listCaptions"
       ]
     }
   ],
   "keysInfo": [
     {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The access token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The refresh token for the YouTube client",
-      "required": true
-    },
-    {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client ID for the YouTube client",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The OAuth 2.0 Client ID for authenticating with Google.",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client secret for the YouTube client",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The OAuth 2.0 Client Secret for authenticating with Google.",
       "required": true
+    },
+    {
+      "key": "GOOGLE_REDIRECT_URI",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The OAuth 2.0 Redirect URI for handling the authentication redirect.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_ACCESS_TOKEN",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The OAuth 2.0 Access Token for authenticating requests to the YouTube Data API.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_REFRESH_TOKEN",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The OAuth 2.0 Refresh Token for refreshing the access token when it expires.",
+      "required": true
+    },
+    {
+      "key": "SCOPES",
+      "constructors": [
+        "YouTubeSDK"
+      ],
+      "description": "The list of scopes to request during the OAuth 2.0 flow.",
+      "required": true,
+      "defaultValue": [
+        "https://www.googleapis.com/auth/youtube",
+        "https://www.googleapis.com/auth/youtube.force-ssl",
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtubepartner"
+      ]
     }
   ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the YouTube SDK, you need to set up a Google Cloud project and obtain OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the YouTube Data API v3 for your project.\n4. Go to the \"Credentials\" section and create an OAuth 2.0 Client ID.\n5. Set the authorized redirect URIs for your application.\n6. Note down the Client ID and Client Secret.\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your OAuth 2.0 Client ID\n- GOOGLE_CLIENT_SECRET: Your OAuth 2.0 Client Secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n\nTo use the SDK, you'll need to implement the OAuth 2.0 flow to obtain an access token and refresh token. The SDK provides methods to help with this process.\n\nExample usage:\n\n```typescript\nimport { createYouTubeSDK } from '@microfox/youtube';\n\nconst youtube = createYouTubeSDK({\n  clientId: process.env.GOOGLE_CLIENT_ID!,\n  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\n  redirectUri: process.env.GOOGLE_REDIRECT_URI!,\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n\n// Now you can use the YouTube SDK methods\nconst videos = await youtube.listVideos({ part: ['snippet'], chart: 'mostPopular' });\n```\n\nMake sure to handle token refresh and error cases in your application."
+  },
   "extraInfo": [
-    "Use the `createYouTubeSDKWithTokens` constructor to create a new YouTube client."
+    "To use the YouTube SDK, you need to set up a Google Cloud project and obtain OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the YouTube Data API v3 for your project.\n4. Go to the \"Credentials\" section and create an OAuth 2.0 Client ID.\n5. Set the authorized redirect URIs for your application.\n6. Note down the Client ID and Client Secret.\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your OAuth 2.0 Client ID\n- GOOGLE_CLIENT_SECRET: Your OAuth 2.0 Client Secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n\nTo use the SDK, you'll need to implement the OAuth 2.0 flow to obtain an access token and refresh token. The SDK provides methods to help with this process.\n\nExample usage:\n\n```typescript\nimport { createYouTubeSDK } from '@microfox/youtube';\n\nconst youtube = createYouTubeSDK({\n  clientId: process.env.GOOGLE_CLIENT_ID!,\n  clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\n  redirectUri: process.env.GOOGLE_REDIRECT_URI!,\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n\n// Now you can use the YouTube SDK methods\nconst videos = await youtube.listVideos({ part: ['snippet'], chart: 'mostPopular' });\n```\n\nMake sure to handle token refresh and error cases in your application."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  }
+  "devDependencies": [
+    "@microfox/google-oauth",
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }

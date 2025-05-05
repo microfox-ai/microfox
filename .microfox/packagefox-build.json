@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Create a new SDK for YouTube",
-      "url": "https://developers.google.com/youtube",
-      "notes": "Create a new SDK for YouTube using the provided documentation.",
-      "issueNumber": 196,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }
