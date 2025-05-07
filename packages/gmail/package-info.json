@@ -3,10 +3,8 @@
   "title": "Gmail SDK",
   "description": "TypeScript SDK for interacting with the Gmail API.",
   "path": "packages/gmail",
-  "dependencies": [
-    "zod",
-    "@microfox/google-oauth"
-  ],
+  "dependencies": ["zod", "@microfox/google-oauth"],
+  "authType": "oauth2",
   "status": "stable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
@@ -155,41 +153,31 @@
   "keysInfo": [
     {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "createGmailSDK"
-      ],
+      "constructors": ["createGmailSDK"],
       "description": "Your Google OAuth client ID",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "createGmailSDK"
-      ],
+      "constructors": ["createGmailSDK"],
       "description": "Your Google OAuth client secret",
       "required": true
     },
     {
       "key": "GOOGLE_REDIRECT_URI",
-      "constructors": [
-        "createGmailSDK"
-      ],
+      "constructors": ["createGmailSDK"],
       "description": "The redirect URI for your application",
       "required": true
     },
     {
       "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": [
-        "createGmailSDK"
-      ],
+      "constructors": ["createGmailSDK"],
       "description": "The access token for the Google OAuth application",
       "required": false
     },
     {
       "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": [
-        "createGmailSDK"
-      ],
+      "constructors": ["createGmailSDK"],
       "description": "The refresh token for the Google OAuth application",
       "required": false
     }

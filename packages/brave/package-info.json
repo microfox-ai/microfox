@@ -3,10 +3,9 @@
   "title": "Brave TypeScript SDK",
   "description": "TypeScript SDK for the Brave search API, providing functions for web search, summarizer search, image search, video search, news search, suggestions, and spellcheck.",
   "path": "packages/brave",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "stable",
+  "authType": "apikey",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/brave",
@@ -113,14 +112,10 @@
   "keysInfo": [
     {
       "key": "BRAVE_API_KEY",
-      "constructors": [
-        "createBraveSDK"
-      ],
+      "constructors": ["createBraveSDK"],
       "description": "Your Brave Search API key.  You can obtain this key from the Brave Search API developer portal.",
       "required": true
     }
   ],
-  "extraInfo": [
-    "Use the `createBraveSDK` constructor to create a new client."
-  ]
+  "extraInfo": ["Use the `createBraveSDK` constructor to create a new client."]
 }

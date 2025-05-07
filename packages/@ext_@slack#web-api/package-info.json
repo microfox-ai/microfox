@@ -17,7 +17,7 @@
     "p-retry",
     "retry"
   ],
-  "status": "semiStable",
+  "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@slack/web-api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",

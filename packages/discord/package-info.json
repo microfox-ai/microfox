@@ -3,10 +3,8 @@
   "title": "Microfox Discord SDK",
   "description": "A lightweight, type-safe SDK for interacting with the Discord API v10",
   "path": "packages/discord",
-  "dependencies": [
-    "@microfox/rest-sdk",
-    "zod"
-  ],
+  "dependencies": ["@microfox/rest-sdk", "zod"],
+  "authType": "apikey",
   "status": "stable",
   "authEndpoint": "/connect/discord",
   "documentation": "https://www.npmjs.com/package/@microfox/discord",
@@ -328,9 +326,7 @@
   "keysInfo": [
     {
       "key": "DISCORD_BOT_TOKEN",
-      "constructors": [
-        "createDiscordSdk"
-      ],
+      "constructors": ["createDiscordSdk"],
       "description": "The Discord bot token is required to authenticate with the Discord API. You can obtain this token by creating a bot application on the Discord Developer Portal.",
       "required": true
     }

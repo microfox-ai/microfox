@@ -122,7 +122,7 @@ function createPackageInfo(packageJson: any, readme: string) {
     dependencies: packageJson.dependencies
       ? Object.keys(packageJson.dependencies)
       : [],
-    status: 'semiStable',
+    status: 'external',
     authEndpoint: '',
     documentation: `https://www.npmjs.com/package/${packageName}`,
     icon: `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.split('/')[1] || packageName}-icon.svg`,

@@ -4,7 +4,7 @@
   "description": "Official Notion API client for managing pages, databases, blocks, and users.",
   "path": "packages/@ext_@notionhq#client",
   "dependencies": ["@types/node-fetch", "node-fetch"],
-  "status": "semiStable",
+  "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@notionhq/client",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion.svg",

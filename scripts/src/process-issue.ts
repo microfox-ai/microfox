@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { generateObject } from 'ai';
 import { models } from './ai/models'; // Assuming you have a models setup like in genPackage.ts
 import dedent from 'dedent';
-import { logUsage } from './octokit/usageLogger'; // Assuming usage logging is desired
+import { logUsage } from './ai/usage/usageLogger'; // Assuming usage logging is desired
 
 // --- Schemas ---
 

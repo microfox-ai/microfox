@@ -3,11 +3,9 @@
   "title": "Google Analytics SDK",
   "description": "A TypeScript SDK for interacting with the Google Analytics API.",
   "path": "packages/google-analytics",
-  "dependencies": [
-    "@microfox/google-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "stable",
+  "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
     "https://www.googleapis.com/auth/analytics.readonly",
@@ -266,33 +264,25 @@
   "keysInfo": [
     {
       "key": "GOOGLE_ANALYTICS_CLIENT_ID",
-      "constructors": [
-        "GoogleAnalyticsSDK"
-      ],
+      "constructors": ["GoogleAnalyticsSDK"],
       "description": "The client ID for your Google Cloud project.",
       "required": true
     },
     {
       "key": "GOOGLE_ANALYTICS_CLIENT_SECRET",
-      "constructors": [
-        "GoogleAnalyticsSDK"
-      ],
+      "constructors": ["GoogleAnalyticsSDK"],
       "description": "The client secret for your Google Cloud project.",
       "required": true
     },
     {
       "key": "GOOGLE_ANALYTICS_REDIRECT_URI",
-      "constructors": [
-        "GoogleAnalyticsSDK"
-      ],
+      "constructors": ["GoogleAnalyticsSDK"],
       "description": "The redirect URI for your OAuth 2.0 credentials.",
       "required": true
     },
     {
       "key": "GOOGLE_ANALYTICS_ACCESS_TOKEN",
-      "constructors": [
-        "GoogleAnalyticsSDK"
-      ],
+      "constructors": ["GoogleAnalyticsSDK"],
       "description": "The access token for authenticating with the Google Analytics Data API.",
       "required": true
     }

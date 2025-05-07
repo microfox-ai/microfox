@@ -10,8 +10,28 @@ permissions:
   issues: write # To write issue data
 
 jobs:
+  initial_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add initial comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueTitle = context.payload.issue.title;
+            if (issueTitle.includes('packagefox:')) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: '👋 Thank you for your contribution! This issue needs to be approved by a maintainer before proceeding. A maintainer can approve this issue by commenting `/approve` on this issue.'
+              });
+            }
+
   process_issue:
-    if: contains(github.event.issue.title, 'packagefox:')
+    needs: initial_comment
+    if: |
+      contains(github.event.issue.title, 'packagefox:') && 
+      needs.initial_comment.outputs.is_maintainer == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -95,7 +115,7 @@ jobs:
           # base: main # Specify base branch if not the default checkout branch
           labels: |
             automated-pr
-            from-issue-${{ github.event.issue.number }}
+            from-issues
           assignees: ${{ github.actor }}
           # Optional: Add reviewers
           # reviewers: user1,user2

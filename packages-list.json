@@ -1,84 +1,51 @@
 {
-  "semiStablePackages": [
+  "externalPackages": [
     "packages/@ext_@notionhq#client",
     "packages/@ext_@slack#web-api"
-  ],
-  "partialPackages": [
-    "packages/ai-sdk",
-    "packages/apollo",
-    "packages/bing",
-    "packages/calculator",
-    "packages/clearbit",
-    "packages/core",
-    "packages/dexa",
-    "packages/dexter",
-    "packages/diffbot",
-    "packages/e2b",
-    "packages/exa",
-    "packages/firecrawl",
-    "packages/genkit",
-    "packages/gravatar",
-    "packages/hacker-news",
-    "packages/hunter",
-    "packages/jigsawstack",
-    "packages/jina",
-    "packages/langchain",
-    "packages/leadmagic",
-    "packages/llamaindex",
-    "packages/mastra",
-    "packages/midjourney",
-    "packages/novu",
-    "packages/people-data-labs",
-    "packages/perigon",
-    "packages/polygon",
-    "packages/predict-leads",
-    "packages/proxycurl",
-    "packages/rocketreach",
-    "packages/searxng",
-    "packages/serpapi",
-    "packages/serper",
-    "packages/social-data",
-    "packages/stdlib",
-    "packages/tavily",
-    "packages/twilio",
-    "packages/weather",
-    "packages/wikidata",
-    "packages/wikipedia",
-    "packages/wolfram-alpha",
-    "packages/zoominfo"
   ],
   "stablePackages": [
     "packages/aws-ses",
     "packages/brave",
+    "packages/coingecko-sdk",
     "packages/discord",
-    "packages/drive",
-    "packages/github",
     "packages/gmail",
     "packages/google-analytics",
     "packages/google-seo",
     "packages/google-sheets",
     "packages/instagram",
-    "packages/instagram-business-oauth",
     "packages/instagram-fb",
-    "packages/instagram-fb-business-oauth",
     "packages/linkedin-member-data-portability",
     "packages/linkedin-share",
     "packages/reddit",
-    "packages/reddit-oauth",
     "packages/slack-web-tiny",
-    "packages/twitter",
     "packages/whatsapp-business",
     "packages/youtube",
-    "packages/youtube-analytics"
+    "packages/youtube-analytics",
+    "packages/youtube-reporting-api"
+  ],
+  "partialPackages": [
+    "packages/core",
+    "packages/gravatar",
+    "packages/stdlib",
+    "packages/twitter"
+  ],
+  "semiStablePackages": [
+    "packages/drive"
   ],
   "oauthConnectorPackages": [
     "packages/google",
     "packages/google-oauth",
-    "packages/linkedin-oauth"
+    "packages/instagram-business-oauth",
+    "packages/instagram-fb-business-oauth",
+    "packages/linkedin-oauth",
+    "packages/reddit-oauth"
+  ],
+  "unknownPackages": [
+    "packages/google-sdk"
   ],
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 70,
-  "generatedAt": "2025-05-04T04:02:03.005Z"
+  "total": 33,
+  "generatedAt": "2025-05-05T17:10:43.491Z"
 }

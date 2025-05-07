@@ -18,9 +18,11 @@ function validatePackageInfo(filePath: string): ValidationError | null {
     // First check if the file has a valid status field
     if (
       content.status &&
-      (content.status === 'semiStable' || content.status === 'stable')
+      (content.status === 'external' ||
+        content.status === 'stable' ||
+        content.status === 'semiStable')
     ) {
-      // Only perform full validation for semiStable or stable packages
+      // Only perform full validation for external or stable packages
       const result = PackageInfo.safeParse(content);
 
       if (!result.success) {

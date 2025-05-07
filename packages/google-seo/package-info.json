@@ -3,11 +3,9 @@
   "title": "Google Search Console",
   "description": "A TypeScript SDK for interacting with the Google Search Console API.",
   "path": "packages/google-seo",
-  "dependencies": [
-    "@microfox/google-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "stable",
+  "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
     "https://www.googleapis.com/auth/webmasters",
@@ -176,33 +174,25 @@
   "keysInfo": [
     {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "GoogleSearchConsoleSDK"
-      ],
+      "constructors": ["GoogleSearchConsoleSDK"],
       "description": "Your Google OAuth 2.0 client ID. Obtain this value from the Google Cloud Console.",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "GoogleSearchConsoleSDK"
-      ],
+      "constructors": ["GoogleSearchConsoleSDK"],
       "description": "Your Google OAuth 2.0 client secret. Obtain this value from the Google Cloud Console.",
       "required": true
     },
     {
       "key": "GOOGLE_REDIRECT_URI",
-      "constructors": [
-        "GoogleSearchConsoleSDK"
-      ],
+      "constructors": ["GoogleSearchConsoleSDK"],
       "description": "The redirect URI you specified in your Google Cloud Console.",
       "required": true
     },
     {
       "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": [
-        "GoogleSearchConsoleSDK"
-      ],
+      "constructors": ["GoogleSearchConsoleSDK"],
       "description": "Your Google OAuth 2.0 access token. Obtain this value through the OAuth 2.0 flow.",
       "required": true
     }

@@ -6,8 +6,9 @@ import { models } from './ai/models';
 import dedent from 'dedent';
 import * as diff from 'diff'; // Import the diff library
 import { error } from 'console';
-import { prCommentor, updateBuildReport } from './octokit/octokit';
-import { logUsage } from './octokit/usageLogger';
+import { prCommentor } from './octokit/octokit';
+import { updateBuildReport } from './octokit/commentReports';
+import { logUsage } from './ai/usage/usageLogger';
 
 // Schema for the .foxes file content
 const FoxFileSchema = z.object({

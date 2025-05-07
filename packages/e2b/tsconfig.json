@@ -1,8 +1,0 @@
-{
-  "extends": "@microfox/tsconfig/base.json",
-  "compilerOptions": {
-    "noImplicitAny": false
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
-}

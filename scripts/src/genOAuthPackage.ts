@@ -11,7 +11,7 @@ import {
   analyzeLinks,
   extractContentFromUrls,
 } from './utils/webScraper';
-import { logUsage } from './octokit/usageLogger';
+import { logUsage } from './ai/usage/usageLogger';
 import { PackageFoxRequest } from './process-issue';
 
 // Schema for OAuth package generation arguments

@@ -5,8 +5,8 @@ import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
 import { PackageInfo } from '../types';
-import { updateResearchReport } from '../octokit/octokit';
-import { logUsage } from '../octokit/usageLogger';
+import { updateResearchReport } from '../octokit/commentReports';
+import { logUsage } from '../ai/usage/usageLogger';
 // User agents to rotate
 const USER_AGENTS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',

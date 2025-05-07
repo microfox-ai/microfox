@@ -191,7 +191,14 @@ export const PackageInfo = z
       .array(z.string())
       .describe('The dependencies of the package'),
     status: z
-      .enum(['stable', 'semiStable', 'unstable', 'oauthConnector', 'internal'])
+      .enum([
+        'stable',
+        'external',
+        'semiStable',
+        'unstable',
+        'oauthConnector',
+        'internal',
+      ])
       .describe('The status of the package'),
     documentation: z.string().describe('The documentation of the package'),
     icon: z
@@ -217,7 +224,7 @@ export const PackageInfo = z
   .refine(
     data => {
       // If all_readmes is not provided, validation passes
-      if (data.status === 'semiStable') {
+      if (data.status === 'external') {
         // data.path must start with packages/ext_
         if (!data.path.startsWith('packages/@ext_')) {
           return false;
@@ -232,13 +239,13 @@ export const PackageInfo = z
       return true;
     },
     {
-      message: `The path of the package must start with packages/@ext_ for semiStable packages and packages/ for stable packages`,
+      message: `The path of the package must start with packages/@ext_ for external packages and packages/ for stable packages`,
       path: ['path'],
     },
   )
   .refine(
     data => {
-      if (data.status !== 'stable' && data.status !== 'semiStable') return true;
+      if (data.status !== 'stable' && data.status !== 'external') return true;
       // If the icon is a GitHub raw URL from our repository
       if (
         data.icon.includes('raw.githubusercontent.com/microfox-ai/microfox')

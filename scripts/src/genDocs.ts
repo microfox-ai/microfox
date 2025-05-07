@@ -1,17 +1,14 @@
+import { CoreTool, generateObject, generateText, tool } from 'ai';
+import { exec } from 'child_process';
+import dedent from 'dedent';
 import fs from 'fs';
 import path from 'path';
-import { z } from 'zod';
-import { exec } from 'child_process';
 import { promisify } from 'util';
-import { generateObject, generateText } from 'ai';
+import { z } from 'zod';
 import { models } from './ai/models';
-import dedent from 'dedent';
-import { buildPackage } from './utils/execCommands';
-import { updateDocReport } from './octokit/octokit';
-import { logUsage } from './octokit/usageLogger';
+import { logUsage } from './ai/usage/usageLogger';
+import { updateDocReport } from './octokit/commentReports';
 import { inMemoryStore } from './utils/InMemoryStore';
-import { tool } from 'ai';
-import { CoreTool } from 'ai';
 
 const execAsync = promisify(exec);
 

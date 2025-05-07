@@ -1,198 +1,108 @@
 # Microfox
 
+> Code that writes code that writes code
 
+Microfox is an ambitious open-source project that combines microservices architecture with deep coding principles. It's designed to be the foundation for the next generation of AI-powered development tools and agents.
 
-## 🚀 Getting Started
+Microfox is built on two core philosophies:
 
-This repository uses npm workspaces and Turborepo for managing multiple packages. Each package in the `packages` directory is published to npm under the `@microfox` scope.
+1. **Microservices Architecture**: Breaking down complex systems into small, independent services
+2. **Deep Coding**: Creating code that writes code that writes code - enabling AI agents to build and maintain software
 
-### Prerequisites
+Software should never be a MOAT, and we promise that all the SDKs here will be continously mainteained, tested & free for everyone to use.
 
-- Node.js >= 18
-- npm >= 10.2.4
+### All our SDKs are:
 
-### Installation
+- Open source and free to use
+- Published under the `@microfox` scope on npm
+- Bytesized to support serverless environments
+- Automatic version tracking and updates
 
-1. Clone the repository:
+### SDK automation with packagefox:
 
-```bash
-git clone https://github.com/microfox-ai/microfox.git
-cd microfox
-```
+Our automated SDK creation system that:
 
-2. Install dependencies:
+- Automatically generates TypeScript SDKs from API documentation
+- Supports REST, GraphQL, OAUTH2 and other API types
+- Generates comprehensive documentation and examples
+- Generates embeddings for better AI agent integration
+- Built with Zod for type safety and validation
+- Does compile testing & auto fix any issues if detected
+- Example-based documentation for improved code generation
 
-```bash
-npm install
-```
+📦 Roadmap
 
-3. Build all packages:
+- **_Packagefox as MCP_** Imagine the ability to easily integrate any platform in your application
+- **_Testfox_** Auto create unit tests & e2e tests for all packages
+- **_VersionTracking_** Auto updates for any API migrations of existing packages
+- **_Support for Python->Typscript workflow_** a template flow inside packagefox for supportting migrations of python -> typescript packages
 
-```bash
-npm run build
-```
+<!-- STABLE_PACKAGES_TABLE_START -->
 
-## 🛠️ Development
+### Stable Packages
 
-### Commands
+| Package                                                                                                                                                                                                                | Links                                                                                                                                                                                                                                                                                                                                                    | Stats                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/aws-ses.svg" alt="Microfox AWS SES logo" width="16" height="16"> Microfox AWS SES                                               | [![npm version](https://img.shields.io/npm/v/@microfox/aws-ses.svg)](https://www.npmjs.com/package/@microfox/aws-ses) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/README.md)                                                                            | 2 envs, 3 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg)  |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg" alt="Brave TypeScript SDK logo" width="16" height="16"> Brave TypeScript SDK                                         | [![npm version](https://img.shields.io/npm/v/@microfox/brave.svg)](https://www.npmjs.com/package/@microfox/brave) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/brave/README.md)                                                                                  | 1 envs, 8 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg)  |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko.svg" alt="CoinGecko SDK logo" width="16" height="16"> CoinGecko SDK                                                   | [![npm version](https://img.shields.io/npm/v/@microfox/coingecko-sdk.svg)](https://www.npmjs.com/package/@microfox/coingecko-sdk) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/README.md)                                                          | 1 envs, 14 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/discord-icon.svg" alt="Microfox Discord SDK logo" width="16" height="16"> Microfox Discord SDK                                  | [![npm version](https://img.shields.io/npm/v/@microfox/discord.svg)](https://www.npmjs.com/package/@microfox/discord) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/discord/README.md)                                                                            | 1 envs, 32 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-gmail.svg" alt="Gmail SDK logo" width="16" height="16"> Gmail SDK                                                        | [![npm version](https://img.shields.io/npm/v/@microfox/gmail.svg)](https://www.npmjs.com/package/@microfox/gmail) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://raw.githubusercontent.com/microfox-ai/microfox/main/README.md)                                                                                       | 5 envs, 11 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-analytics.svg" alt="Google Analytics SDK logo" width="16" height="16"> Google Analytics SDK                              | [![npm version](https://img.shields.io/npm/v/@microfox/google-analytics.svg)](https://www.npmjs.com/package/@microfox/google-analytics) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-analytics/README.md)                                                 | 4 envs, 23 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-search-console.svg" alt="Google Search Console logo" width="16" height="16"> Google Search Console                       | [![npm version](https://img.shields.io/npm/v/@microfox/google-seo.svg)](https://www.npmjs.com/package/@microfox/google-seo) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/README.md)                                                                   | 4 envs, 13 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-sheets-icon.svg" alt="Google Sheets SDK logo" width="16" height="16"> Google Sheets SDK                                  | [![npm version](https://img.shields.io/npm/v/@microfox/google-sheets.svg)](https://www.npmjs.com/package/@microfox/google-sheets) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/README.md)                                                          | 4 envs, 10 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram SDK logo" width="16" height="16"> Microfox Instagram SDK                            | [![npm version](https://img.shields.io/npm/v/@microfox/instagram.svg)](https://www.npmjs.com/package/@microfox/instagram) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/instagram/README.md)                                                                      | 5 envs, 15 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Instagram SDK logo" width="16" height="16"> Instagram SDK                                              | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-fb.svg)](https://www.npmjs.com/package/@microfox/instagram-fb) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/README.md)                                                             | 4 envs, 16 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/linkedin-icon.svg" alt="LinkedIn Member Data Portability SDK logo" width="16" height="16"> LinkedIn Member Data Portability SDK | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-member-data-portability.svg)](https://www.npmjs.com/package/@microfox/linkedin-member-data-portability) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/README.md) | 6 envs, 7 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)         |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/packages/linkedin-share/icon.svg" alt="LinkedIn Share logo" width="16" height="16"> LinkedIn Share                                    | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-share.svg)](https://www.npmjs.com/package/@microfox/linkedin-share) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md)                                                       | 1 envs, 3 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)         |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg" alt="Reddit TypeScript SDK logo" width="16" height="16"> Reddit TypeScript SDK                                 | [![npm version](https://img.shields.io/npm/v/@microfox/reddit.svg)](https://www.npmjs.com/package/@microfox/reddit) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/reddit/README.md)                                                                               | 6 envs, 26 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg" alt="Microfox Slack Web Tiny logo" width="16" height="16"> Microfox Slack Web Tiny                              | [![npm version](https://img.shields.io/npm/v/@microfox/slack-web-tiny.svg)](https://www.npmjs.com/package/@microfox/slack-web-tiny) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/README.md)                                                       | 1 envs, 4 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg)  |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg" alt="Whatsapp Business logo" width="16" height="16"> Whatsapp Business                                       | [![npm version](https://img.shields.io/npm/v/@microfox/whatsapp-business.svg)](https://www.npmjs.com/package/@microfox/whatsapp-business) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                                                                                                                          | 5 envs, 36 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg" alt="YouTube Data logo" width="16" height="16"> YouTube Data                                                  | [![npm version](https://img.shields.io/npm/v/@microfox/youtube.svg)](https://www.npmjs.com/package/@microfox/youtube) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                                                                                                                                              | 4 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)                |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg" alt="Youtube Analytics V3 logo" width="16" height="16"> Youtube Analytics V3                                  | [![npm version](https://img.shields.io/npm/v/@microfox/youtube-analytics.svg)](https://www.npmjs.com/package/@microfox/youtube-analytics) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/README.md)                                              | 6 envs, 11 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube.svg" alt="YouTube Reporting API logo" width="16" height="16"> YouTube Reporting API                                     | [![npm version](https://img.shields.io/npm/v/@microfox/youtube-reporting-api.svg)](https://www.npmjs.com/package/@microfox/youtube-reporting-api) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/README.md)                                  | 6 envs, 6 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)         |
 
-- `npm run build` - Build all packages
-- `npm run dev` - Start development mode for all packages
-- `npm run test` - Run tests across all packages
-- `npm run lint` - Run ESLint across all packages
-- `npm run clean` - Clean all build outputs
-- `npm run type-check` - Run TypeScript type checking
+<!-- STABLE_PACKAGES_TABLE_END -->
 
-### Project Structure
+<!-- OAUTH_CONNECTORS_TABLE_START -->
 
-```
-microfox/
-├── packages/           # Core packages
-├── examples/          # Example projects
-├── tools/            # Development tools and configs
-└── package.json      # Root package.json
-```
+### OAuth Connectors
 
-Each package in the `packages` directory:
+| Package                                                                                                                                                                                                                 | Links                                                                                                                                                                                                                                               | Stats                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google.svg" alt="Microfox Google SDK logo" width="16" height="16"> Microfox Google SDK                                           | [![npm version](https://img.shields.io/npm/v/@microfox/google.svg)](https://www.npmjs.com/package/@microfox/google) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                                           | 5 envs                                                                   |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg" alt="Microfox Google OAuth SDK logo" width="16" height="16"> Microfox Google OAuth SDK                          | [![npm version](https://img.shields.io/npm/v/@microfox/google-oauth.svg)](https://www.npmjs.com/package/@microfox/google-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                               | 5 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram Business OAuth logo" width="16" height="16"> Microfox Instagram Business OAuth       | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-business-oauth.svg)](https://www.npmjs.com/package/@microfox/instagram-business-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)       | 6 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram FB Business OAuth logo" width="16" height="16"> Microfox Instagram FB Business OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-fb-business-oauth.svg)](https://www.npmjs.com/package/@microfox/instagram-fb-business-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 6 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/packages/linkedin-oauth/icon.svg" alt="LinkedIn OAuth logo" width="16" height="16"> LinkedIn OAuth                                     | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-oauth.svg)](https://www.npmjs.com/package/@microfox/linkedin-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                           | 5 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg)        |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg" alt="Microfox Reddit OAuth logo" width="16" height="16"> Microfox Reddit OAuth                                  | [![npm version](https://img.shields.io/npm/v/@microfox/reddit-oauth.svg)](https://www.npmjs.com/package/@microfox/reddit-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md)                               | 3 envs, 6 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
 
-- Is published under the `@microfox` scope
-- Has its own documentation
-- Contains example usage in the `examples` directory
-- Follows our standard development practices
+<!-- OAUTH_CONNECTORS_TABLE_END -->
 
-### Branch Structure
+<!-- SEMI_STABLE_PACKAGES_TABLE_START -->
 
-We follow a three-tier branching strategy for organized development and deployment:
+### Semi-Stable Packages
 
-#### Main Branch (`main`)
+| Package                                                                                                                                                                           | Links                                                                                                                                                                                                   | Stats  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg" alt="Microfox Drive SDK logo" width="16" height="16"> Microfox Drive SDK | [![npm version](https://img.shields.io/npm/v/@microfox/drive.svg)](https://www.npmjs.com/package/@microfox/drive) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs |
 
-- The production-ready branch
-- Contains stable, tested code
-- All releases are tagged from this branch
-- Protected branch - requires pull request and review
-- Direct commits are not allowed
+<!-- SEMI_STABLE_PACKAGES_TABLE_END -->
 
-#### Staging Branches (`staging/*`)
+### 🤝 Contributing
 
-- Integration branches for feature testing
-- Named as `staging/feature-group` (e.g., `staging/messaging-sdks`)
-- Used for testing multiple related features together
-- Merged into `main` after thorough testing
-- QA and integration testing happens here
-- Example: `staging/email-providers`, `staging/chat-platforms`
+Microfox represents a new paradigm in software development:
 
-#### Development Branches (`dev/*`)
+Here's how you can help:
 
-- Feature development branches
-- Named as `dev/feature-name` (e.g., `dev/slack-sdk`)
-- Created from `main` or relevant `staging` branch
-- Merged into appropriate `staging` branch when complete
-- Used for individual feature development
-- Example: `dev/discord-webhooks`, `dev/sendgrid-integration`
+1. **_Coding Agents_** Check for issues labeled with Coding Agents (Build or Fix the core generation scripts)
+2. **_SDK Design_** Good SDKs are built on top of good design standards (create a new vision for a different kind of packages)
+3. **Request New SDKs**: Create an issue with the API documentation URL (to autobuild start issue title with `packagefox: TITLE`)
+4. **Report Issues**: Help us improve by reporting bugs or suggesting improvements (to autofix the issue title with `packagefox: TITLE`)
 
-### Branch Workflow
+5. Fork the repository
+6. Create your feature branch (`git checkout -b dev/amazing-feature`)
+7. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+8. Open a Pull Request to staging (`git push origin staging/feature-group`)
 
-1. Create a development branch:
-
-```bash
-git checkout main
-git pull
-git checkout -b dev/slack-sdk
-```
-
-2. Develop and test your feature:
-
-```bash
-# Make changes
-npm test
-npm run build
-git commit -m "feat: add slack sdk"
-```
-
-3. Push to staging:
-
-```bash
-git checkout staging/messaging-sdks
-git merge dev/slack-sdk
-# Run integration tests
-```
-
-4. Create release:
-
-```bash
-# Once staging is stable
-git checkout main
-git merge staging/messaging-sdks
-npm run changeset
-```
-
-### Adding a New Package
-
-When adding a new SDK or utility package, follow these naming and structure conventions:
-
-1. Create a new development branch:
-
-```bash
-git checkout main
-git pull
-git checkout -b dev/slack-sdk
-```
-
-2. Create the package structure:
-
-```bash
-mkdir packages/slack-sdk
-cd packages/slack-sdk
-npm init -y
-```
-
-3. Set up the standard package files:
-
-```
-slack-sdk/
-├── src/              # Source code
-│   ├── index.ts      # Main entry point
-│   ├── client.ts     # SDK client implementation
-│   └── types.ts      # Type definitions
-├── README.md         # Package documentation
-├── tsconfig.json     # TypeScript config
-└── package.json      # Package config
-```
-
-4. Create example implementation:
-
-```bash
-mkdir examples/slack-sdk-example
-cd examples/slack-sdk-example
-```
-
-5. Set up example project structure:
-
-```
-slack-sdk-example/
-├── src/
-│   ├── index.ts              # Main example implementation
-│   └── __tests__/           # Integration tests
-│       └── slack.test.ts
-├── README.md                 # Example documentation
-├── tsconfig.json            # TypeScript config
-└── package.json             # Example project config
-```
-
-4. Follow the development workflow in the Contributing section for next steps.
-
-## 📝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b dev/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to staging (`git push origin staging/feature-group`)
-5. Open a Pull Request to `main` when ready
-
-### Development Workflow
-
-1. Make changes in the relevant package(s)
-2. Run tests: `npm test`
-3. Build packages: `npm run build`
-4. Create a changeset: `npm run changeset`
-5. Commit and push your changes
+Join us in building the future of software development!

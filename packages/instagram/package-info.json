@@ -3,10 +3,7 @@
   "title": "Microfox Instagram SDK",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
-  "dependencies": [
-    "@microfox/instagram-business-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/instagram-business-oauth", "zod"],
   "status": "stable",
   "authEndpoint": "/connect/instagram-business-oauth",
   "oauth2Scopes": [
@@ -15,6 +12,7 @@
     "instagram_manage_comments",
     "instagram_manage_insights"
   ],
+  "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/instagram",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "readme_map": {
@@ -201,41 +199,31 @@
   "keysInfo": [
     {
       "key": "INSTAGRAM_CLIENT_ID",
-      "constructors": [
-        "InstagramSDK"
-      ],
+      "constructors": ["InstagramSDK"],
       "description": "Your Instagram app's Client ID. Obtain this from your app's settings on the Facebook Developer platform.",
       "required": true
     },
     {
       "key": "INSTAGRAM_CLIENT_SECRET",
-      "constructors": [
-        "InstagramSDK"
-      ],
+      "constructors": ["InstagramSDK"],
       "description": "Your Instagram app's Client Secret. Obtain this from your app's settings on the Facebook Developer platform. Keep this value secure.",
       "required": true
     },
     {
       "key": "INSTAGRAM_REDIRECT_URI",
-      "constructors": [
-        "InstagramSDK"
-      ],
+      "constructors": ["InstagramSDK"],
       "description": "The OAuth redirect URI configured for your app on the Facebook Developer platform. This URI must match the one used during the OAuth flow.",
       "required": true
     },
     {
       "key": "INSTAGRAM_ACCESS_TOKEN",
-      "constructors": [
-        "InstagramSDK"
-      ],
+      "constructors": ["InstagramSDK"],
       "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests.",
       "required": true
     },
     {
       "key": "INSTAGRAM_REFRESH_TOKEN",
-      "constructors": [
-        "InstagramSDK"
-      ],
+      "constructors": ["InstagramSDK"],
       "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires.",
       "required": true
     }

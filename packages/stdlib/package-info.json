@@ -44,6 +44,7 @@
     "zod"
   ],
   "status": "partial",
+  "authType": "none",
   "apiKeys": [],
   "extraInfo": []
 }

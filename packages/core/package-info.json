@@ -15,6 +15,7 @@
     "zod-validation-error"
   ],
   "status": "partial",
+  "authType": "none",
   "apiKeys": ["OPENAI_API_KEY"],
   "extraInfo": []
 }

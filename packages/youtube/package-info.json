@@ -5,6 +5,7 @@
   "path": "packages/youtube",
   "dependencies": ["@microfox/google", "@microfox/rest-sdk", "zod"],
   "status": "stable",
+  "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/youtube",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg",

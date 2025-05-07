@@ -2,15 +2,13 @@ import { buildPackage } from './utils/execCommands';
 import { fixPackage } from './fixPackage';
 import path from 'path';
 import fs from 'fs';
-import {
-  prCommentor,
-  updateBuildReport,
-  readUsageData,
-} from './octokit/octokit';
+import { prCommentor } from './octokit/octokit';
+import { updateBuildReport } from './octokit/commentReports';
+import { readUsageData } from './ai/usage/readUsageData';
 import { IssueDetails, PackageFoxRequest } from './process-issue';
 import { inMemoryStore } from './utils/InMemoryStore';
 
-const MAX_RETRIES = 2;
+const MAX_RETRIES = 5;
 
 export async function fixBuildIssues(packageName: string) {
   console.log(`🛠️ Starting iterative build and fix process for ${packageName}`);

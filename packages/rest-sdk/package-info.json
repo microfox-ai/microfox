@@ -5,6 +5,7 @@
   "path": "packages/rest-sdk",
   "dependencies": ["zod"],
   "status": "internal",
+  "authType": "none",
   "documentation": "https://www.npmjs.com/package/@microfox/rest-sdk",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/rest-api.svg",
   "constructors": [],

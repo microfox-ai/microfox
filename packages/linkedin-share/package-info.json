@@ -3,10 +3,9 @@
   "title": "LinkedIn Share",
   "description": "LinkedIn Share - Simple Text Post, Share an Article, Share an Image, Create a draft post. etc..",
   "path": "packages/linkedin-share",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "stable",
+  "authType": "oauth2",
   "authEndpoint": "/connect/linkedin",
   "documentation": "https://www.npmjs.com/package/@microfox/linkedin-share",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/packages/linkedin-share/icon.svg",
@@ -24,18 +23,13 @@
           "description": "The LinkedIn access token required for authentication."
         }
       ],
-      "functionalities": [
-        "post",
-        "getUserId"
-      ]
+      "functionalities": ["post", "getUserId"]
     }
   ],
   "keysInfo": [
     {
       "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": [
-        "LinkedinShareSdk"
-      ],
+      "constructors": ["LinkedinShareSdk"],
       "description": "The LinkedIn access token required for authentication.",
       "required": true
     }
@@ -47,11 +41,7 @@
     "title": "LinkedIn Share",
     "description": "The full README for the LinkedIn Share",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md",
-    "functionalities": [
-      "LinkedinShareSdk",
-      "post",
-      "getUserId"
-    ],
+    "functionalities": ["LinkedinShareSdk", "post", "getUserId"],
     "all_readmes": [
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/LinkedinShareSdk.md",

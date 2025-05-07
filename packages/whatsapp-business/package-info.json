@@ -5,6 +5,7 @@
   "path": "packages/whatsapp-business",
   "dependencies": ["@microfox/rest-sdk"],
   "status": "stable",
+  "authType": "apikey",
   "authEndpoint": "/connect/whatsapp",
   "documentation": "https://www.npmjs.com/package/@microfox/whatsapp-business",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg",

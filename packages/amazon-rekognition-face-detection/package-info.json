@@ -1,0 +1,111 @@
+{
+  "name": "@microfox/amazon-rekognition-face-detection",
+  "title": "Amazon Rekognition Face Detection SDK",
+  "description": "The Amazon Rekognition Face Detection SDK for TypeScript simplifies face detection integration into applications, providing developers with an easy-to-use interface for identifying faces in images and videos.",
+  "path": "packages/amazon-rekognition-face-detection",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/amazon-rekognition-face-detection",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/aws.svg",
+  "readme_map": {
+    "title": "Amazon Rekognition Face Detection SDK",
+    "description": "The full README for the Amazon Rekognition Face Detection SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/README.md",
+    "functionalities": [
+      "AmazonRekognitionFaceDetectionSdk",
+      "detectFaces"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/AmazonRekognitionFaceDetectionSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "AmazonRekognitionFaceDetectionSdk",
+        "description": "Initializes the Amazon Rekognition Face Detection SDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/detectFaces.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "detectFaces",
+        "description": "Detects faces in an image provided as base64 encoded bytes or an S3 object."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "AmazonRekognitionFaceDetectionSdk",
+      "description": "Create a new Amazon Rekognition Face Detection SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "AWS_ACCESS_KEY_ID",
+          "displayName": "AWS Access Key ID",
+          "description": "AWS Access Key ID",
+          "required": true
+        },
+        {
+          "key": "AWS_SECRET_ACCESS_KEY",
+          "displayName": "AWS Secret Access Key",
+          "description": "AWS Secret Access Key",
+          "required": true
+        },
+        {
+          "key": "AWS_REGION",
+          "displayName": "AWS Region",
+          "description": "AWS Region",
+          "required": false
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "detectFaces"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "AWS_ACCESS_KEY_ID",
+      "constructors": [
+        "AmazonRekognitionFaceDetectionSdk"
+      ],
+      "description": "AWS Access Key ID",
+      "required": true
+    },
+    {
+      "key": "AWS_SECRET_ACCESS_KEY",
+      "constructors": [
+        "AmazonRekognitionFaceDetectionSdk"
+      ],
+      "description": "AWS Secret Access Key",
+      "required": true
+    },
+    {
+      "key": "AWS_REGION",
+      "constructors": [
+        "AmazonRekognitionFaceDetectionSdk"
+      ],
+      "description": "AWS Region",
+      "required": false
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use this SDK, you need to set up AWS credentials:\n\n1. Create an AWS account if you don't have one.\n2. Create an IAM user with permissions to access Amazon Rekognition.\n3. Generate an access key ID and secret access key for the IAM user.\n4. Set up your credentials using one of the following methods:\n   a. Environment variables:\n      - Set AWS_ACCESS_KEY_ID to your access key ID\n      - Set AWS_SECRET_ACCESS_KEY to your secret access key\n      - Set AWS_REGION to your desired AWS region (e.g., 'us-east-1')\n   b. Shared credentials file:\n      - Create a file at ~/.aws/credentials (Linux/Mac) or C:\\Users\\USERNAME\\.aws\\credentials (Windows)\n      - Add your credentials in the following format:\n        [default]\n        aws_access_key_id = YOUR_ACCESS_KEY_ID\n        aws_secret_access_key = YOUR_SECRET_ACCESS_KEY\n      - Set the AWS_REGION environment variable or pass it to the SDK constructor\n\nMake sure to keep your credentials secure and never commit them to version control.\n\nThis SDK uses the AWS Signature Version 4 for authentication, which is handled automatically when you provide your credentials."
+  },
+  "extraInfo": [
+    "To use this SDK, you need to set up AWS credentials:\n\n1. Create an AWS account if you don't have one.\n2. Create an IAM user with permissions to access Amazon Rekognition.\n3. Generate an access key ID and secret access key for the IAM user.\n4. Set up your credentials using one of the following methods:\n   a. Environment variables:\n      - Set AWS_ACCESS_KEY_ID to your access key ID\n      - Set AWS_SECRET_ACCESS_KEY to your secret access key\n      - Set AWS_REGION to your desired AWS region (e.g., 'us-east-1')\n   b. Shared credentials file:\n      - Create a file at ~/.aws/credentials (Linux/Mac) or C:\\Users\\USERNAME\\.aws\\credentials (Windows)\n      - Add your credentials in the following format:\n        [default]\n        aws_access_key_id = YOUR_ACCESS_KEY_ID\n        aws_secret_access_key = YOUR_SECRET_ACCESS_KEY\n      - Set the AWS_REGION environment variable or pass it to the SDK constructor\n\nMake sure to keep your credentials secure and never commit them to version control.\n\nThis SDK uses the AWS Signature Version 4 for authentication, which is handled automatically when you provide your credentials."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

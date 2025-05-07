@@ -9,7 +9,7 @@
   "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/coingecko-sdk",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko-sdk.svg",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko.svg",
   "readme_map": {
     "title": "CoinGecko SDK",
     "description": "The full README for the CoinGecko SDK",

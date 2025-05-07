@@ -13,11 +13,11 @@ import {
 } from './utils/webScraper';
 import { PackageInfo } from './types';
 import { fixBuildIssues } from './fixBuildIssues';
-import { updateResearchReport } from './octokit/octokit';
-import { logUsage } from './octokit/usageLogger';
+import { updateResearchReport } from './octokit/commentReports';
+import { logUsage } from './ai/usage/usageLogger';
 import { IssueDetails, PackageFoxRequest } from './process-issue';
 import { inMemoryStore } from './utils/InMemoryStore';
-import { updateCodeGenReport } from './octokit/octokit';
+import { updateCodeGenReport } from './octokit/commentReports';
 
 // Schema for SDK generation arguments
 const GenerateSDKArgsSchema = z.object({
