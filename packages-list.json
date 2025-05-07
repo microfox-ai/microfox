@@ -4,6 +4,7 @@
     "packages/@ext_@slack#web-api"
   ],
   "stablePackages": [
+    "packages/amazon-rekognition-face-detection",
     "packages/aws-ses",
     "packages/brave",
     "packages/coingecko-sdk",
@@ -17,6 +18,7 @@
     "packages/linkedin-member-data-portability",
     "packages/linkedin-share",
     "packages/reddit",
+    "packages/riverside",
     "packages/slack-web-tiny",
     "packages/whatsapp-business",
     "packages/youtube",
@@ -40,12 +42,9 @@
     "packages/linkedin-oauth",
     "packages/reddit-oauth"
   ],
-  "unknownPackages": [
-    "packages/google-sdk"
-  ],
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 33,
-  "generatedAt": "2025-05-05T17:10:43.491Z"
+  "total": 34,
+  "generatedAt": "2025-05-07T15:52:28.945Z"
 }
