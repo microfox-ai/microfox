@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.riverside.fm/object-reference/project",
+  "content": "Riverside Business API Documentation home page\nSearch...\nNavigation\nObjects Reference\nProject Object\nObjects Reference\nProject Object\n\nA Project is a folder of related recordings and edits, meant to group the assets of a piece of content (i.e. an episode).\n\nProjects will be introduced to the Riverside dashboard interface in late summer, after advanced communication to all accounts. The release of Projects won’t affect other API endpoints.\n\nid Unique identifier for the project.\n\nname Name of the project.\n\ncreated_date Date when the project was created.\n\nnum_recordings Count of recordings associated with the project.\n\nStudio Object\nRecording Object\nx\nlinkedin\nPowered by Mintlify",
+  "updatedAt": "2025-05-05T14:17:26.344Z"
+}

@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.riverside.fm/object-reference/production",
+  "content": "Riverside Business API Documentation home page\nSearch...\nNavigation\nObjects Reference\nProduction Object\nObjects Reference\nProduction Object\n\nProductions are the top-most unit of organization in a Riverside account, containing studios. Productions often correspond to a team or initiative.\n\nid Unique identifier for the production.\n\nname Name of the production.\n\ncreated_date Date when the production was created.\n\nstudios List of studios associated with the production.\n\nnum_recordings Count of recordings associated with the production.\n\nDelete Recording\nStudio Object\nx\nlinkedin\nPowered by Mintlify",
+  "updatedAt": "2025-05-05T14:17:15.257Z"
+}
