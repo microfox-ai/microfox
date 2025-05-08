@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-05-08T13:19:17.177Z",
+    "prompt": "simple typescript code to add 2 numbers",
+    "code": "function addNumbers(a: number, b: number): number {\n  return a + b; // Return the sum of a and b\n}\n\nconst result = addNumbers(5, 3); // Example usage\nconsole.log(result); // Output the result"
+  },
+  {
+    "timestamp": "2025-05-08T13:20:06.667Z",
+    "prompt": "modify code to first take 2 random numbers and then add them",
+    "code": "function getRandomNumber(): number {\n  return Math.floor(Math.random() * 100); // Generate a random number between 0 and 99\n}\n\nfunction addNumbers(a: number, b: number): number {\n  return a + b; // Return the sum of a and b\n}\n\nconst num1 = getRandomNumber(); // First random number\nconst num2 = getRandomNumber(); // Second random number\nconst result = addNumbers(num1, num2); // Add the two random numbers\nconsole.log(`Random numbers: ${num1}, ${num2}`); // Output the random numbers\nconsole.log(`Sum: ${result}`); // Output the result"
+  }
+]
