@@ -1,0 +1,27 @@
+{
+  "name": "@microfox/stripe",
+  "title": "Stripe SDK",
+  "description": "A TypeScript SDK for interacting with the Stripe API.",
+  "path": "packages/stripe",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "stable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/stripe",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/stripe.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "description": "The full README for the Stripe SDK",
+    "functionalities": []
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Stripe SDK, you need to obtain an API key from the Stripe Dashboard:\n\n1. Sign up for a Stripe account at https://dashboard.stripe.com/register\n2. Once logged in, go to Developers > API keys in the dashboard\n3. Use the \"Secret key\" for authentication. Test mode keys start with `sk_test_`, while live mode keys start with `sk_live_`\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/stripe`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createStripeSDK } from '@microfox/stripe';\n\nconst stripe = createStripeSDK({\n  apiKey: 'your_stripe_api_key_here',\n  // Optional parameters\n  stripeAccount: 'acct_CONNECTED_ACCOUNT_ID', // For connected accounts\n  apiVersion: '2025-04-30.basil', // Specify API version\n});\n```\n\n3. Make API calls using the initialized SDK:\n\n```typescript\nconst balance = await stripe.getBalance();\nconsole.log(balance);\n```\n\nRemember to keep your API key secure and never expose it in client-side code."
+  },
+  "extraInfo": []
+}
