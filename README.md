@@ -9,7 +9,7 @@ Microfox is built on two core philosophies:
 1. **Microservices Architecture**: Breaking down complex systems into small, independent services
 2. **Deep Coding**: Creating code that writes code that writes code - enabling AI agents to build and maintain software
 
-Software should never be a MOAT, and we promise that all the SDKs here will be continously mainteained, tested & free for everyone to use.
+Software should never be a MOAT, and we promise that all the SDKs here will be continously maintained, tested & free for everyone to use.
 
 ### All our SDKs are:
 
