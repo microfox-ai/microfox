@@ -4,7 +4,7 @@
   "description": "YouTube Data v3 API SDK - Upload videos, manage playlists, add comments, search videos, list channel vidoes, get Channel details..",
   "path": "packages/youtube",
   "dependencies": ["@microfox/google", "@microfox/rest-sdk", "zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/youtube",

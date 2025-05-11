@@ -26,6 +26,12 @@ export class RedditOAuthSdk {
     this.scopes = validatedConfig.scopes;
   }
 
+  /**
+   * Generates the authorization URL for Reddit OAuth
+   * @param state Optional state parameter to maintain state across the redirect
+   * @param duration The duration of the token (temporary or permanent)
+   * @returns The complete authorization URL
+   */
   public getAuthorizationUrl(
     state: string,
     duration: 'temporary' | 'permanent' = 'permanent',
@@ -42,6 +48,22 @@ export class RedditOAuthSdk {
     return `${this.authorizationEndpoint}?${params.toString()}`;
   }
 
+  /**
+   * Generates the authorization URL for Reddit OAuth
+   * @returns The complete authorization URL
+   */
+  public getAuthUrl(): string {
+    const state = `${Math.random().toString(36).substring(2, 15)}`;
+    const duration = 'permanent';
+    return this.getAuthorizationUrl(state, duration);
+  }
+
+  /**
+   * Exchanges an authorization code for access and refresh tokens
+   * @param code The authorization code received from Reddit's OAuth callback
+   * @returns A promise that resolves to the token response containing access_token and refresh_token
+   * @throws Error if the token exchange fails
+   */
   public async getAccessToken(code: string): Promise<RedditTokenResponse> {
     const params = new URLSearchParams({
       grant_type: 'authorization_code',
@@ -66,6 +88,12 @@ export class RedditOAuthSdk {
     return redditTokenResponseSchema.parse(data);
   }
 
+  /**
+   * Refreshes an access token using a refresh token
+   * @param refreshToken The refresh token to use for token refresh
+   * @returns A promise that resolves to the refreshed token response
+   * @throws Error if the token refresh fails
+   */
   public async refreshAccessToken(
     refreshToken: string,
   ): Promise<RedditRefreshTokenResponse> {
@@ -121,6 +149,35 @@ export class RedditOAuthSdk {
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  }
+
+  /**
+   * Exchanges an authorization code for access and refresh tokens
+   * @param code The authorization code received from Reddit's OAuth callback
+   * @returns A promise that resolves to the token response containing access_token and refresh_token
+   * @throws Error if the token exchange fails
+   */
+  public async exchangeCodeForTokens(
+    code: string,
+  ): Promise<RedditTokenResponse> {
+    try {
+      const tokenResponse = await this.getAccessToken(code);
+
+      // Validate the access token to ensure its working
+      const isValid = await this.validateAccessToken(
+        tokenResponse.access_token,
+      );
+      if (!isValid) {
+        throw new Error('Received invalid access token from Reddit');
+      }
+
+      return tokenResponse;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to exchange code for tokens: ${error.message}`);
+      }
+      throw new Error('Failed to exchange code for tokens: Unknown error');
     }
   }
 }

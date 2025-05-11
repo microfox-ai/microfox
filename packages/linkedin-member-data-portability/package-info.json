@@ -5,7 +5,7 @@
   "path": "packages/linkedin-member-data-portability",
   "dependencies": ["@microfox/linkedin-oauth", "zod"],
   "authType": "oauth2",
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "/connect/linkedin-oauth",
   "oauth2Scopes": ["r_dma_portability_3rd_party"],
   "documentation": "https://www.npmjs.com/package/@microfox/linkedin-member-data-portability",

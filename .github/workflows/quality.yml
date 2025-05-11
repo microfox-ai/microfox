@@ -47,7 +47,7 @@ jobs:
           echo "Changed files: $changed_files"
 
           # Extract unique package names and build filter string
-          filters=$(echo "$changed_files" | grep -oE 'packages/([^/]+)' | sed 's|packages/|| ' | sort -u | sed 's|.*|--filter=@microfox/&|' | paste -sd ' ')
+          filters=$(echo "$changed_files" | grep -oE 'packages/([^/]+)' | sed 's|packages/|| ' | sort -u | grep -v '^@ext_' | sed 's|.*|--filter=@microfox/&|' | paste -sd ' ')
 
           echo "Generated filters: $filters"
 

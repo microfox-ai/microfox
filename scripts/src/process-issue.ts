@@ -10,9 +10,17 @@ import { logUsage } from './ai/usage/usageLogger'; // Assuming usage logging is 
 // Schema for data extracted from the issue by AI
 const IssueDetailsSchema = z.object({
   type: z
-    .enum(['pkg-create', 'pkg-build', 'bug', 'modification'])
+    .enum([
+      'pkg-create',
+      'pkg-build',
+      'bug',
+      'modification',
+      'genExt',
+      'genExtDocs',
+      'genDocs',
+    ])
     .describe(
-      'The type of request: new packages with pkg-create, test package working with okg-build, bug fix, or modification to existing functionality.',
+      'The type of request: new packages with pkg-create, test package working with pkg-build, bug fix, modification to existing functionality, generate extension, generate extension docs, or generate docs.',
     ),
   occurredAt: z
     .enum(['build', 'runtime', 'undefined'])

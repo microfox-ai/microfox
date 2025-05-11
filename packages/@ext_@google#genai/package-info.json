@@ -1,0 +1,96 @@
+{
+  "name": "@google/genai",
+  "title": "@google/genai",
+  "description": "No description available",
+  "path": "packages/@ext_@google#genai",
+  "dependencies": ["google-auth-library", "ws", "zod", "zod-to-json-schema"],
+  "status": "external",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/@google/genai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-gemini.svg",
+  "readme_map": {
+    "title": "@google/genai",
+    "description": "The full README for the @google/genai",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/README.md",
+    "functionalities": [
+      "client_GoogleGenAIOptions_html",
+      "client_GoogleGenAI_html",
+      "environment-variables",
+      "index_html",
+      "modules_html"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/docs/client_GoogleGenAIOptions_html.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "client_GoogleGenAIOptions_html",
+        "description": "The full README for the @google/genai client_GoogleGenAIOptions_html functionality"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/docs/client_GoogleGenAI_html.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "client_GoogleGenAI_html",
+        "description": "The full README for the @google/genai client_GoogleGenAI_html functionality"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/docs/environment-variables.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "environment-variables",
+        "description": "The full README for the @google/genai environment-variables functionality"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/docs/index_html.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "index_html",
+        "description": "The full README for the @google/genai index_html functionality"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@google#genai/docs/modules_html.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "modules_html",
+        "description": "The full README for the @google/genai modules_html functionality"
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "constructor",
+      "description": "Create a new @google/genai client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "GEMINI_API_KEY",
+          "displayName": "Gemini API Key",
+          "description": "The API key for the Gemini Developer API.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "client_GoogleGenAIOptions_html",
+        "client_GoogleGenAI_html",
+        "environment-variables",
+        "index_html",
+        "modules_html"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GEMINI_API_KEY",
+      "constructors": ["constructor"],
+      "description": "The API key for the Gemini Developer API.",
+      "required": true
+    }
+  ],
+  "extraInfo": [],
+  "keyInstructions": {
+    "link": "https://googleapis.github.io/js-genai/"
+  }
+}

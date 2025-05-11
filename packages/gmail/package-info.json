@@ -5,7 +5,7 @@
   "path": "packages/gmail",
   "dependencies": ["zod", "@microfox/google-oauth"],
   "authType": "oauth2",
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
     "https://www.googleapis.com/auth/gmail.readonly",

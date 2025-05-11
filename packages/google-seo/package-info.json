@@ -4,7 +4,7 @@
   "description": "A TypeScript SDK for interacting with the Google Search Console API.",
   "path": "packages/google-seo",
   "dependencies": ["@microfox/google-oauth", "zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [

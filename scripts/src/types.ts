@@ -112,7 +112,7 @@ export const Constructor = z
     name: z.string().describe('The name of the constructor'),
     description: z.string().describe('The description of the constructor'),
     auth: z
-      .enum(['oauth2', 'apikey'])
+      .enum(['oauth2', 'apikey', 'none'])
       .describe('The authentication method of the constructor'),
     authEndpoint: z
       .string()
@@ -162,14 +162,8 @@ export const PackageInfo = z
   .object({
     name: z
       .string()
-      .startsWith('@')
       .describe('The name of the package - @slack/web-api or @microfox/slack'),
-    title: z
-      .string()
-      .describe('Display name of the package')
-      .refine(value => !value.startsWith('@'), {
-        message: 'Title must not start with "@"',
-      }),
+    title: z.string().describe('Display name of the package'),
     authEndpoint: z.string().optional(),
     authType: z.enum(['oauth2', 'apikey', 'none']).optional(),
     oauth2Scopes: z.array(z.string()).optional(),

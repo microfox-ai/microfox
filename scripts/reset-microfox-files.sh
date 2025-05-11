@@ -10,6 +10,7 @@ echo '{}' > .microfox/pr-usage.json
 rm -f packages/*/research-report.md
 rm -f packages/*/build-report.md
 rm -f packages/*/doc-report.md
+rm -f packages/*/codegen-report.md
 
 echo "Successfully removed report files from packages/*/"
 echo "Successfully reset .microfox files" 

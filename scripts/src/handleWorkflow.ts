@@ -6,6 +6,23 @@ import { PackageFoxRequest } from './process-issue';
 import { fixPackage } from './fixPackage';
 import { fixBug } from './fixBug';
 import { cleanupUsage } from './ai/usage/cleanupUsage';
+import { processGitHubUrl } from './genExtPackage';
+import { generateExternalDocs } from './genExtDocs';
+import { generateDocs } from './genDocs';
+
+/**
+ * This script is used to handle the PackageFox workflow.
+ * It reads the config file, which contains the requests to be processed.
+ * It then processes each request in order.
+ *
+ * The available requests are:
+ * 1. pkg-create: Generate a new package
+ * 2. pkg-build: Build the package
+ * 3. bug: Fix a bug in the package
+ * 4. genExt: Generate an extension package
+ * 5. genExtDocs: Generate extension documentation
+ * 6. genDocs: Generate documentation
+ */
 async function handleWorkflow() {
   const configPath = path.join(
     process.cwd(),
@@ -54,12 +71,11 @@ async function handleWorkflow() {
         console.log(
           `Running genPackage with query: "${packageQuery}", url: "${baseUrl}"`,
         );
-        // Assuming genPackage takes query and url
         const result = await generateSDK({
           query: packageQuery,
           url: baseUrl,
           isBaseUrl: true,
-        }); // Adjust args as needed
+        });
         if (result) {
           console.log(`✅ SDK generation complete for ${result.packageName}`);
           console.log(`📂 Package location: ${result.packageDir}`);
@@ -76,18 +92,57 @@ async function handleWorkflow() {
           process.exit(1);
         }
         console.log(`Running fixBuildIssues for package: "${packageName}"`);
-        // Assuming fixBuildIssues takes packageName
-        await fixBuildIssues(packageName); // Adjust args as needed
+        await fixBuildIssues(packageName);
         await cleanupUsage();
         break;
-      case 'bug': // Example for future bug fixing type
+      case 'bug':
         if (!packageName) {
           console.error('Error: Missing PACKAGE_NAME for pkg-bug');
           process.exit(1);
         }
         console.log(`Running fixPackage for package: "${packageName}"`);
-        // Assuming fixPackage takes packageName
-        await fixBug(packageName, request); // Adjust args as needed
+        await fixBug(packageName, request);
+        await cleanupUsage();
+        break;
+      case 'genExt':
+        if (!baseUrl) {
+          console.error('Error: Missing BASE_URL for genExt');
+          process.exit(1);
+        }
+        console.log(`Running processGitHubUrl with url: "${baseUrl}"`);
+        await processGitHubUrl(baseUrl);
+        await cleanupUsage();
+        break;
+      case 'genExtDocs':
+        if (!packageName || !baseUrl) {
+          console.error(
+            'Error: Missing PACKAGE_NAME or BASE_URL for genExtDocs',
+          );
+          process.exit(1);
+        }
+        console.log(
+          `Running generateExternalDocs for package: "${packageName}" with url: "${baseUrl}"`,
+        );
+        const outputDir = path.join(process.cwd(), '../packages', packageName);
+        await generateExternalDocs(baseUrl, packageName, outputDir);
+        await cleanupUsage();
+        break;
+      case 'genDocs':
+        if (!packageName) {
+          console.error('Error: Missing PACKAGE_NAME for genDocs');
+          process.exit(1);
+        }
+        console.log(`Running generateDocs for package: "${packageName}"`);
+        const packageDir = path.join(process.cwd(), '../packages', packageName);
+        const packageInfoPath = path.join(packageDir, 'package-info.json');
+        const packageInfo = JSON.parse(
+          fs.readFileSync(packageInfoPath, 'utf8'),
+        );
+        const code = fs.readFileSync(
+          path.join(packageDir, 'src/index.ts'),
+          'utf8',
+        );
+        await generateDocs(code, packageInfo, packageDir);
         await cleanupUsage();
         break;
       default:

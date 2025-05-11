@@ -25,45 +25,90 @@
     "path": "/README.md",
     "title": "@slack/web-api",
     "functionalities": [],
-    "description": "The full README for the package",
-    "all_readmes": []
+    "description": "The full README for the package"
   },
   "constructors": [
     {
       "name": "WebClient",
-      "description": "Create a new Slack Web Client through which you can operate bots on Slack",
+      "description": "Create a new Microfox Slack Web Tiny client through which you can interact with the API",
       "auth": "apikey",
       "apiType": "bot_token",
       "requiredKeys": [
         {
-          "key": "SLACK_TOKEN",
-          "displayName": "Slack Token",
-          "description": "The token for the Slack Web Client"
+          "key": "SLACK_BOT_TOKEN",
+          "displayName": "Slack Bot Token",
+          "description": "The bot token for authenticating with the Slack API."
         }
       ],
       "internalKeys": [],
       "botConfig": [
         {
-          "key": "image",
-          "displayName": "Bot Send as Image",
-          "description": "The image to use for the Slack Web Client",
+          "key": "SLACK_AUTHOR_NAME",
+          "displayName": "Bot Name",
+          "description": "Name that will appear as the message sender",
+          "ui": {
+            "type": "text",
+            "label": "Bot Name",
+            "placeholder": "Enter bot name"
+          }
+        },
+        {
+          "key": "SLACK_ICON_URL",
+          "displayName": "Bot Icon",
+          "description": "Icon that will appear as the bot's avatar",
           "ui": {
             "type": "image",
-            "required": false
+            "label": "Bot Icon"
           }
         }
-      ]
+      ],
+      "functionalities": ["allFunctionalities"]
+    },
+    {
+      "name": "OAuthWebClient",
+      "description": "Create a new Microfox Slack Web Tiny client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/slack-oauth",
+      "authEndpoint": "/connect/slack-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "SLACK_ACCESS_TOKEN",
+          "displayName": "Slack Access Token",
+          "description": "The access token for authenticating with the Slack API."
+        }
+      ],
+      "botConfig": [
+        {
+          "key": "SLACK_AUTHOR_NAME",
+          "displayName": "Bot Name",
+          "description": "Name that will appear as the message sender",
+          "ui": {
+            "type": "text",
+            "label": "Bot Name",
+            "placeholder": "Enter bot name"
+          }
+        },
+        {
+          "key": "SLACK_ICON_URL",
+          "displayName": "Bot Icon",
+          "description": "Icon that will appear as the bot's avatar",
+          "ui": {
+            "type": "image",
+            "label": "Bot Icon"
+          }
+        }
+      ],
+      "functionalities": ["allFunctionalities"]
     }
   ],
   "keysInfo": [
     {
-      "key": "SLACK_TOKEN",
+      "key": "SLACK_BOT_TOKEN",
       "constructors": ["WebClient"],
-      "description": "The token for the Slack Web Client",
+      "description": "The bot token for authenticating with the Slack API.",
       "required": true
     }
   ],
-  "extraInfo": [
-    "Use the `WebClient` constructor to create a new Slack Web Client."
-  ]
+  "extraInfo": []
 }

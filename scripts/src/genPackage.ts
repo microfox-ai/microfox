@@ -219,7 +219,7 @@ function createInitialPackageInfo(
     description,
     path: `packages/${packageName.replace('@microfox/', '')}`,
     dependencies: ['zod', authSdk].filter(Boolean),
-    status: 'stable',
+    status: 'semiStable',
     authEndpoint:
       authType === 'oauth2' && authSdk
         ? `/connect/${authSdk.replace('@microfox/', '')}`

@@ -1,31 +1,35 @@
 {
   "externalPackages": [
+    "packages/@ext_@google#genai",
     "packages/@ext_@notionhq#client",
-    "packages/@ext_@slack#web-api"
+    "packages/@ext_@slack#web-api",
+    "packages/@ext_ai",
+    "packages/@ext_puppeteer"
   ],
   "semiStablePackages": [
     "packages/amazon-rekognition-face-detection",
-    "packages/drive"
+    "packages/coingecko-sdk",
+    "packages/discord",
+    "packages/drive",
+    "packages/gmail",
+    "packages/google-analytics",
+    "packages/google-seo",
+    "packages/instagram",
+    "packages/instagram-fb",
+    "packages/linkedin-member-data-portability",
+    "packages/reddit",
+    "packages/youtube",
+    "packages/youtube-analytics",
+    "packages/youtube-reporting-api"
   ],
   "stablePackages": [
     "packages/aws-ses",
     "packages/brave",
-    "packages/coingecko-sdk",
-    "packages/discord",
-    "packages/gmail",
-    "packages/google-analytics",
-    "packages/google-seo",
     "packages/google-sheets",
-    "packages/instagram",
-    "packages/instagram-fb",
-    "packages/linkedin-member-data-portability",
     "packages/linkedin-share",
-    "packages/reddit",
+    "packages/slack-oauth",
     "packages/slack-web-tiny",
-    "packages/whatsapp-business",
-    "packages/youtube",
-    "packages/youtube-analytics",
-    "packages/youtube-reporting-api"
+    "packages/whatsapp-business"
   ],
   "partialPackages": [
     "packages/core",
@@ -44,6 +48,6 @@
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 33,
-  "generatedAt": "2025-05-09T00:05:09.764Z"
+  "total": 37,
+  "generatedAt": "2025-05-10T20:41:04.520Z"
 }

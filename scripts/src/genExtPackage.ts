@@ -3,8 +3,9 @@ import path from 'path';
 import { Octokit } from 'octokit';
 import dotenv from 'dotenv';
 import { z } from 'zod';
-import { EXT_PACKAGE_URLS } from './constants';
 import { PackageInfo } from './types';
+import { generateObject } from 'ai';
+import { models } from './ai/models';
 
 // Load environment variables
 dotenv.config();
@@ -69,7 +70,31 @@ async function fetchReadme(
       throw new Error('README.md not found or is not a file');
     }
   } catch (error) {
-    console.error('Error fetching README.md:', error);
+    console.error('Error fetching path:', path);
+    // If the path contains 'package/' and the initial attempt failed, try the parent root
+    if (path && path.includes('packages/')) {
+      try {
+        const response = await octokit.request(
+          'GET /repos/{owner}/{repo}/contents/{path}',
+          {
+            owner,
+            repo,
+            path: 'README.md',
+          },
+        );
+
+        if ('content' in response.data) {
+          return Buffer.from(response.data.content, 'base64').toString('utf-8');
+        }
+      } catch (parentError) {
+        console.error(
+          'Error fetching README.md from parent root:',
+          parentError,
+        );
+      }
+    } else {
+      console.error('Error fetching README.md:', error);
+    }
     return '';
   }
 }
@@ -109,10 +134,56 @@ async function fetchPackageJson(
 }
 
 // Function to create package-info.json
-function createPackageInfo(packageJson: any, readme: string) {
+async function createPackageInfo(packageJson: any, readme: string) {
   const packageName = packageJson.name;
   const formattedPackageName = packageName.replace('/', '#');
   const directoryName = `@ext_${formattedPackageName}`;
+
+  // Search for the logo
+  const logoDir = path.join(__dirname, '../../logos');
+  let listItemsInDirectory: string[] = [];
+  if (fs.existsSync(logoDir)) {
+    listItemsInDirectory = fs.readdirSync(logoDir);
+  } else {
+    console.warn(`Logo directory not found: ${logoDir}`);
+  }
+
+  let icon = '';
+  if (listItemsInDirectory.length > 0) {
+    try {
+      const { object: logo } = await generateObject({
+        model: models.googleGeminiPro,
+        system: `You are a helpful assistant that searches the correct logo file slug (without extension) for the package based on its title and description. Pick the most relevant logo slug from the provided list. If no relevant logo is found, do not return a logo slug.`,
+        prompt: `Available logo file slugs (without extensions like .svg): ${listItemsInDirectory.map(f => f.replace('.svg', '')).join(', ')}. Pick the most appropriate logo slug for the package titled "${packageJson.name}" with description: "${packageJson.description}".`,
+        schema: z.object({
+          logo: z
+            .string()
+            .describe(
+              'Picked slug of the logo (e.g., "google-sheets", "slack")',
+            )
+            .optional(),
+        }),
+      });
+      console.log('logo picked:', logo);
+      if (logo.logo) {
+        const logoFileName = listItemsInDirectory.find(f =>
+          f.startsWith(logo.logo + '.'),
+        );
+        if (logoFileName) {
+          icon = `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${logoFileName}`;
+          console.log(`Icon set to: ${icon}`);
+        } else {
+          console.warn(
+            `Selected logo slug "${logo.logo}" does not correspond to a file in the logos directory.`,
+          );
+        }
+      }
+    } catch (logoError) {
+      console.error('Error generating logo suggestion:', logoError);
+    }
+  } else {
+    console.log('No logos found in directory to select from.');
+  }
 
   return {
     name: packageName,
@@ -125,7 +196,9 @@ function createPackageInfo(packageJson: any, readme: string) {
     status: 'external',
     authEndpoint: '',
     documentation: `https://www.npmjs.com/package/${packageName}`,
-    icon: `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.split('/')[1] || packageName}-icon.svg`,
+    icon:
+      icon ||
+      `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.split('/')[1] || packageName}-icon.svg`,
     readme_map: {
       path: '/README.md',
       title: packageJson.name || 'Unknown Package',
@@ -139,11 +212,13 @@ function createPackageInfo(packageJson: any, readme: string) {
 }
 
 // Function to process a single GitHub URL
-async function processGitHubUrl(
-  githubUrl: string,
-  octokit: Octokit,
-): Promise<void> {
+export async function processGitHubUrl(githubUrl: string): Promise<void> {
   console.log(`Processing GitHub URL: ${githubUrl}`);
+
+  // Initialize Octokit
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+  });
 
   // Validate input
   try {
@@ -166,7 +241,7 @@ async function processGitHubUrl(
   }
 
   // Create package info
-  const packageInfo = createPackageInfo(packageJson, readme);
+  const packageInfo = await createPackageInfo(packageJson, readme);
 
   // Create directory
   const formattedPackageName = packageJson.name.replace('/', '#');
@@ -195,21 +270,23 @@ async function processGitHubUrl(
 
 // Main function
 async function main() {
-  // Initialize Octokit
-  const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
-  });
+  // Get GitHub URL from command line arguments
+  const githubUrl = process.argv[2];
 
-  // Process each GitHub URL in the array
-  for (const githubUrl of EXT_PACKAGE_URLS) {
-    await processGitHubUrl(githubUrl, octokit);
+  if (!githubUrl) {
+    console.error('Please provide a GitHub URL as a command line argument');
+    process.exit(1);
   }
 
-  console.log('All packages processed successfully');
+  // Process the GitHub URL
+  await processGitHubUrl(githubUrl);
+  console.log('Package processed successfully');
 }
 
 // Run the script
-main().catch(error => {
-  console.error('Error:', error);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch(error => {
+    console.error('Error:', error);
+    process.exit(1);
+  });
+}

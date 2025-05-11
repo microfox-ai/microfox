@@ -4,7 +4,7 @@
   "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "path": "packages/reddit",
   "dependencies": ["@microfox/reddit-oauth", "zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit-oauth",
   "oauth2Scopes": [

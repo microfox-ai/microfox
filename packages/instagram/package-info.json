@@ -4,7 +4,7 @@
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
   "dependencies": ["@microfox/instagram-business-oauth", "zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "/connect/instagram-business-oauth",
   "oauth2Scopes": [
     "instagram_basic",

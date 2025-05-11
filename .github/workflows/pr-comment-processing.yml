@@ -1,0 +1,200 @@
+name: PR Comment Processing
+
+on:
+  pull_request_review:
+    types: [submitted]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  check_comment:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment'
+    outputs:
+      should_process: ${{ steps.check_comment.outputs.should_process }}
+    steps:
+      - name: Check if comment starts with packagefox
+        id: check_comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body.trim();
+            if (!comment.toLowerCase().startsWith('packagefox:')) {
+              core.setOutput('should_process', 'false');
+              return;
+            }
+
+            // Check if commenter is a maintainer
+            const { data: collaborators } = await github.rest.repos.listCollaborators({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const commenter = context.payload.comment.user.login;
+            const isMaintainer = collaborators.some(collab => 
+              collab.login === commenter && 
+              (collab.permissions.admin || collab.permissions.maintain || collab.permissions.write)
+            );
+
+            if (!isMaintainer) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: '❌ Only maintainers can process packagefox commands. Your request has been ignored.'
+              });
+              core.setOutput('should_process', 'false');
+              return;
+            }
+
+            // Add approved label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              labels: ['approved']
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: '✅ Packagefox command approved by maintainer. Processing will begin shortly.'
+            });
+
+            core.setOutput('should_process', 'true');
+
+  process_approved_comment:
+    needs: check_comment
+    if: needs.check_comment.outputs.should_process == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: Install Script Dependencies
+        run: cd scripts && npm install
+
+      - name: Run Comment Processing Script
+        id: comment_data
+        run: cd scripts && npm run process-comment
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          PR_URL: ${{ github.event.issue.html_url }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare packagefox-build.json
+        id: prepare_file
+        run: |
+          set -e
+          mkdir -p .microfox
+          EXISTING_JSON=$(cat .microfox/packagefox-build.json 2>/dev/null || echo '{"requests":[]}')
+          NEW_REQUEST_PAYLOAD='${{ steps.comment_data.outputs.json_payload }}'
+
+          if ! command -v jq &> /dev/null; then
+            echo "jq not found, installing..."
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
+          echo "Existing JSON: $EXISTING_JSON"
+          echo "New Payload: $NEW_REQUEST_PAYLOAD"
+          UPDATED_JSON=$(echo "$EXISTING_JSON" | jq --argjson payload "$NEW_REQUEST_PAYLOAD" '
+            if type == "object" and has("requests") and (.requests | type == "array") then
+              .requests += [$payload]
+            else
+              {"requests": [$payload]}
+            end
+          ' || echo "{"requests": [$NEW_REQUEST_PAYLOAD]}")
+
+          echo "Updated JSON: $UPDATED_JSON"
+          echo "$UPDATED_JSON" | jq '.' > .microfox/packagefox-build.json
+          echo "File .microfox/packagefox-build.json prepared successfully."
+        shell: bash
+
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.PACKAGEFOX_APP_ID }}
+          private_key: ${{ secrets.PACKAGEFOX_PRIVATE_KEY }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          commit-message: ${{ steps.comment_data.outputs.commit_message }}
+          branch: ${{ steps.comment_data.outputs.branch_name }}
+          delete-branch: true
+          title: ${{ steps.comment_data.outputs.pr_title }}
+          body: ${{ steps.comment_data.outputs.pr_body }}
+          add-paths: .microfox/packagefox-build.json
+          labels: |
+            automated-pr
+            from-pr-comments
+            approved
+          assignees: ${{ github.actor }}
+
+  process_approval:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_review'
+    steps:
+      - name: Check if review is approval
+        id: check_approval
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const review = context.payload.review;
+            if (review.state !== 'approved') {
+              return;
+            }
+
+            // Check if reviewer is a maintainer
+            const { data: collaborators } = await github.rest.repos.listCollaborators({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const reviewer = review.user.login;
+            const isMaintainer = collaborators.some(collab => 
+              collab.login === reviewer && 
+              (collab.permissions.admin || collab.permissions.maintain || collab.permissions.write)
+            );
+
+            if (!isMaintainer) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: '❌ Only maintainers can approve PRs. Your approval has been ignored.'
+              });
+              return;
+            }
+
+            // Add approved label
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: ['approved']
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: '✅ PR approved by maintainer. Processing will begin shortly.'
+            });

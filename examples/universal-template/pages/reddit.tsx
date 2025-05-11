@@ -218,8 +218,7 @@ export default function UniversalTemplate() {
   }, []);
 
   const handleInitiateOAuth = useCallback(() => {
-    const state = `${Math.random().toString(36).substring(2, 15)}`;
-    const authUrl = redditOAuth?.getAuthorizationUrl(state, 'permanent');
+    const authUrl = redditOAuth?.getAuthUrl();
     if (authUrl) {
       window.location.href = authUrl;
     }

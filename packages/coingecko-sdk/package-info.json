@@ -4,7 +4,7 @@
   "description": "A comprehensive TypeScript SDK providing convenient access to CoinGecko Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/coingecko-sdk",
   "dependencies": ["zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "authType": "apikey",

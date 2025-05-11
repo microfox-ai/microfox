@@ -5,7 +5,7 @@
   "path": "packages/discord",
   "dependencies": ["@microfox/rest-sdk", "zod"],
   "authType": "apikey",
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "/connect/discord",
   "documentation": "https://www.npmjs.com/package/@microfox/discord",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/discord-icon.svg",

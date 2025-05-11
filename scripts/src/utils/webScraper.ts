@@ -446,3 +446,71 @@ export async function extractContentFromUrls(
 
   return results;
 }
+
+/**
+ * Scrape content from a single URL
+ */
+export async function scrapeUrl(url: string): Promise<string> {
+  const validatedUrl = validateUrl(url);
+  console.log(`🌐 Scraping content from ${validatedUrl}...`);
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--window-size=1920x1080',
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    // Set random user agent
+    await page.setUserAgent(getRandomUserAgent());
+
+    // Set additional headers
+    await page.setExtraHTTPHeaders({
+      Accept:
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'Accept-Encoding': 'gzip, deflate, br',
+      DNT: '1',
+      Connection: 'keep-alive',
+      'Upgrade-Insecure-Requests': '1',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'none',
+      'Sec-Fetch-User': '?1',
+      'Cache-Control': 'max-age=0',
+    });
+
+    // Add random delay before navigation
+    await randomDelay();
+
+    await page.goto(validatedUrl, {
+      waitUntil: 'networkidle2',
+      timeout: 30000,
+    });
+
+    // Extract text content from the page
+    const content = await page.evaluate(() => {
+      // Remove script and style elements
+      const scripts = document.querySelectorAll('script, style');
+      scripts.forEach(script => script.remove());
+
+      // Get text content from body
+      return document.body.innerText;
+    });
+
+    console.log(
+      `✅ Extracted ${content.length} characters from ${validatedUrl}`,
+    );
+    return content;
+  } finally {
+    await browser.close();
+  }
+}

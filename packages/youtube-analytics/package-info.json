@@ -4,7 +4,7 @@
   "description": "A TypeScript SDK for interacting with the YouTube Analytics V3 API. Supports functionalities such as retrieving analyticsreports, managing groups and group items.  Provides methods for getReports, listGroups, insertGroup, updateGroup, deleteGroup, listGroupItems, insertGroupItem, deleteGroupItem, refreshAccessToken, and validateAccessToken.",
   "path": "packages/youtube-analytics",
   "dependencies": ["@microfox/google-oauth", "zod"],
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
     "https://www.googleapis.com/auth/yt-analytics.readonly",
