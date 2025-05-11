@@ -142,7 +142,7 @@ describe('REST SDK Integration Tests', () => {
     });
 
     it('should access response status', async () => {
-      const status = await jsonPlaceholder.get('/posts/1').status();
+      const status = await (await jsonPlaceholder.get('/posts/1').raw()).status;
       expect(status).toBe(200);
     });
 

@@ -7,6 +7,7 @@ const CHANNEL_ID = process.env.SLACK_CHANNEL_ID ?? '';
 const createSlackClient = (token: string) => {
   return createSlackSDK({
     botToken: token,
+    authType: 'header'
   });
 };
 

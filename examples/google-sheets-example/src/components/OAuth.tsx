@@ -25,8 +25,8 @@ const OAuth = ({ tokens, updateTokens }: OAuthProps) => {
 
   // Load client credentials from localStorage on component mount
   useEffect(() => {
-    const savedClientId = localStorage.getItem('clientId');
-    const savedClientSecret = localStorage.getItem('clientSecret');
+    const savedClientId = localStorage.getItem('clientId1');
+    const savedClientSecret = localStorage.getItem('clientSecret1');
 
     if (savedClientId) setClientId(savedClientId);
     if (savedClientSecret) setClientSecret(savedClientSecret);
@@ -56,8 +56,8 @@ const OAuth = ({ tokens, updateTokens }: OAuthProps) => {
 
       // Check if credentials are saved
       if (
-        !localStorage.getItem('clientId') ||
-        !localStorage.getItem('clientSecret')
+        !localStorage.getItem('clientId1') ||
+        !localStorage.getItem('clientSecret1')
       ) {
         setError('Please save your credentials first');
         setIsLoading(false);
