@@ -1,0 +1,21 @@
+{
+  "name": "coding-agent",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "test": "ts-node -r tsconfig-paths/register src/test-agent.ts",
+    "test:dev": "node --loader ts-node/esm src/test-agent.ts",
+    "build": "tsc",
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.1.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^4.9.5"
+  }
+}
