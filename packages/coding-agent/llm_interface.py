@@ -76,7 +76,18 @@ def get_llm_response(prompt: str) -> str:
         response = model.generate_content(full_prompt)
         llm_output = response.text
         logging.info(f"Gemini raw response: {llm_output}")
-        return llm_output
+        
+        # Clean common markdown code fences
+        cleaned_output = llm_output.strip()
+        if cleaned_output.startswith("```python"):
+            cleaned_output = cleaned_output[len("```python"):].strip()
+        elif cleaned_output.startswith("```"):
+            cleaned_output = cleaned_output[len("```"):].strip()
+        if cleaned_output.endswith("```"):
+            cleaned_output = cleaned_output[:-len("```")].strip()
+        
+        logging.info(f"Gemini cleaned response: {cleaned_output}")
+        return cleaned_output
     except Exception as e:
         logging.error(f"Error calling Gemini API: {e}", exc_info=True)
         return f"ERROR: Failed to get response from Gemini API: {e}"
