@@ -1,0 +1,1 @@
+Error generating code: Incorrect API key provided: your_api*****here. You can find your API key at https://platform.openai.com/account/api-keys.
