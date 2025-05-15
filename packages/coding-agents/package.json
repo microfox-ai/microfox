@@ -1,0 +1,13 @@
+{
+    "name": "coding-agent-js",
+    "type": "module",
+    "version": "1.0.0",
+    "main": "run_agent.js",
+    "scripts": {
+      "start": "node run_agent.js"
+    },
+    "dependencies": {
+      "dotenv": "^16.0.0",
+      "openai": "^4.0.0"
+    }
+  }
