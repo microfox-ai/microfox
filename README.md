@@ -1,104 +1,15 @@
-# Microfox
+## 🧠 AI Code Generation Agent
 
-> Code that writes code that writes code
+This agent takes a prompt (like "Build a counter app in JavaScript") and:
 
-Microfox is an ambitious open-source project that combines microservices architecture with deep coding principles. It's designed to be the foundation for the next generation of AI-powered development tools and agents.
+1. Uses OpenAI to generate the code
+2. Saves it to `generated/index.js`
+3. Automatically runs it
+4. If there's an error, it asks the LLM to fix it and retries (up to 3 times)
 
-Microfox is built on two core philosophies:
+### 🛠 How to Run
 
-1. **Microservices Architecture**: Breaking down complex systems into small, independent services
-2. **Deep Coding**: Creating code that writes code that writes code - enabling AI agents to build and maintain software
-
-Software should never be a MOAT, and we promise that all the SDKs here will be continously mainteained, tested & free for everyone to use.
-
-### All our SDKs are:
-
-- Open source and free to use
-- Published under the `@microfox` scope on npm
-- Bytesized to support serverless environments
-- Automatic version tracking and updates
-
-### SDK automation with packagefox:
-
-Our automated SDK creation system that:
-
-- Automatically generates TypeScript SDKs from API documentation
-- Supports REST, GraphQL, OAUTH2 and other API types
-- Generates comprehensive documentation and examples
-- Generates embeddings for better AI agent integration
-- Built with Zod for type safety and validation
-- Does compile testing & auto fix any issues if detected
-- Example-based documentation for improved code generation
-
-📦 Roadmap
-
-- **_Packagefox as MCP_** Imagine the ability to easily integrate any platform in your application
-- **_Testfox_** Auto create unit tests & e2e tests for all packages
-- **_VersionTracking_** Auto updates for any API migrations of existing packages
-- **_Support for Python->Typscript workflow_** a template flow inside packagefox for supportting migrations of python -> typescript packages
-
-<!-- STABLE_PACKAGES_TABLE_START -->
-### Stable Packages
-
-| Package | Links | Stats |
-| --- | --- | --- |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/aws-ses.svg" alt="Microfox AWS SES logo" width="16" height="16"> Microfox AWS SES | [![npm version](https://img.shields.io/npm/v/@microfox/aws-ses.svg)](https://www.npmjs.com/package/@microfox/aws-ses) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/README.md) | 3 envs, 3 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg" alt="Brave TypeScript SDK logo" width="16" height="16"> Brave TypeScript SDK | [![npm version](https://img.shields.io/npm/v/@microfox/brave.svg)](https://www.npmjs.com/package/@microfox/brave) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/brave/README.md) | 1 envs, 8 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-sheets-icon.svg" alt="Google Sheets SDK logo" width="16" height="16"> Google Sheets SDK | [![npm version](https://img.shields.io/npm/v/@microfox/google-sheets.svg)](https://www.npmjs.com/package/@microfox/google-sheets) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/README.md) | 4 envs, 10 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/packages/linkedin-share/icon.svg" alt="LinkedIn Share logo" width="16" height="16"> LinkedIn Share | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-share.svg)](https://www.npmjs.com/package/@microfox/linkedin-share) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md) | 1 envs, 3 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack.svg" alt="Microfox Slack OAuth logo" width="16" height="16"> Microfox Slack OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/slack-oauth.svg)](https://www.npmjs.com/package/@microfox/slack-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/README.md) | 4 envs, 5 fns  |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg" alt="Microfox Slack Web Tiny logo" width="16" height="16"> Microfox Slack Web Tiny | [![npm version](https://img.shields.io/npm/v/@microfox/slack-web-tiny.svg)](https://www.npmjs.com/package/@microfox/slack-web-tiny) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/README.md) | 1 envs, 4 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg" alt="Whatsapp Business logo" width="16" height="16"> Whatsapp Business | [![npm version](https://img.shields.io/npm/v/@microfox/whatsapp-business.svg)](https://www.npmjs.com/package/@microfox/whatsapp-business) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs, 36 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-<!-- STABLE_PACKAGES_TABLE_END -->
-
-<!-- OAUTH_CONNECTORS_TABLE_START -->
-### OAuth Connectors
-
-| Package | Links | Stats |
-| --- | --- | --- |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google.svg" alt="Microfox Google SDK logo" width="16" height="16"> Microfox Google SDK | [![npm version](https://img.shields.io/npm/v/@microfox/google.svg)](https://www.npmjs.com/package/@microfox/google) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs  |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg" alt="Microfox Google OAuth SDK logo" width="16" height="16"> Microfox Google OAuth SDK | [![npm version](https://img.shields.io/npm/v/@microfox/google-oauth.svg)](https://www.npmjs.com/package/@microfox/google-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram Business OAuth logo" width="16" height="16"> Microfox Instagram Business OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-business-oauth.svg)](https://www.npmjs.com/package/@microfox/instagram-business-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 6 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram FB Business OAuth logo" width="16" height="16"> Microfox Instagram FB Business OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-fb-business-oauth.svg)](https://www.npmjs.com/package/@microfox/instagram-fb-business-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 6 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/packages/linkedin-oauth/icon.svg" alt="LinkedIn OAuth logo" width="16" height="16"> LinkedIn OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-oauth.svg)](https://www.npmjs.com/package/@microfox/linkedin-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg" alt="Microfox Reddit OAuth logo" width="16" height="16"> Microfox Reddit OAuth | [![npm version](https://img.shields.io/npm/v/@microfox/reddit-oauth.svg)](https://www.npmjs.com/package/@microfox/reddit-oauth) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 3 envs, 6 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-<!-- OAUTH_CONNECTORS_TABLE_END -->
-
-<!-- SEMI_STABLE_PACKAGES_TABLE_START -->
-### Semi-Stable Packages
-
-| Package | Links | Stats |
-| --- | --- | --- |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/aws.svg" alt="Amazon Rekognition Face Detection SDK logo" width="16" height="16"> Amazon Rekognition Face Detection SDK | [![npm version](https://img.shields.io/npm/v/@microfox/amazon-rekognition-face-detection.svg)](https://www.npmjs.com/package/@microfox/amazon-rekognition-face-detection) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/README.md) | 3 envs, 2 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/coingecko.svg" alt="CoinGecko SDK logo" width="16" height="16"> CoinGecko SDK | [![npm version](https://img.shields.io/npm/v/@microfox/coingecko-sdk.svg)](https://www.npmjs.com/package/@microfox/coingecko-sdk) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/README.md) | 1 envs, 14 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/discord-icon.svg" alt="Microfox Discord SDK logo" width="16" height="16"> Microfox Discord SDK | [![npm version](https://img.shields.io/npm/v/@microfox/discord.svg)](https://www.npmjs.com/package/@microfox/discord) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/discord/README.md) | 1 envs, 32 fns ![API Key](https://img.shields.io/badge/auth-API%20Key-green.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg" alt="Microfox Drive SDK logo" width="16" height="16"> Microfox Drive SDK | [![npm version](https://img.shields.io/npm/v/@microfox/drive.svg)](https://www.npmjs.com/package/@microfox/drive) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 5 envs  |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-gmail.svg" alt="Gmail SDK logo" width="16" height="16"> Gmail SDK | [![npm version](https://img.shields.io/npm/v/@microfox/gmail.svg)](https://www.npmjs.com/package/@microfox/gmail) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://raw.githubusercontent.com/microfox-ai/microfox/main/README.md) | 5 envs, 11 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-analytics.svg" alt="Google Analytics SDK logo" width="16" height="16"> Google Analytics SDK | [![npm version](https://img.shields.io/npm/v/@microfox/google-analytics.svg)](https://www.npmjs.com/package/@microfox/google-analytics) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-analytics/README.md) | 4 envs, 23 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-search-console.svg" alt="Google Search Console logo" width="16" height="16"> Google Search Console | [![npm version](https://img.shields.io/npm/v/@microfox/google-seo.svg)](https://www.npmjs.com/package/@microfox/google-seo) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/README.md) | 4 envs, 13 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Microfox Instagram SDK logo" width="16" height="16"> Microfox Instagram SDK | [![npm version](https://img.shields.io/npm/v/@microfox/instagram.svg)](https://www.npmjs.com/package/@microfox/instagram) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/instagram/README.md) | 5 envs, 15 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg" alt="Instagram SDK logo" width="16" height="16"> Instagram SDK | [![npm version](https://img.shields.io/npm/v/@microfox/instagram-fb.svg)](https://www.npmjs.com/package/@microfox/instagram-fb) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/README.md) | 4 envs, 16 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/linkedin-icon.svg" alt="LinkedIn Member Data Portability SDK logo" width="16" height="16"> LinkedIn Member Data Portability SDK | [![npm version](https://img.shields.io/npm/v/@microfox/linkedin-member-data-portability.svg)](https://www.npmjs.com/package/@microfox/linkedin-member-data-portability) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/README.md) | 6 envs, 7 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg" alt="Reddit TypeScript SDK logo" width="16" height="16"> Reddit TypeScript SDK | [![npm version](https://img.shields.io/npm/v/@microfox/reddit.svg)](https://www.npmjs.com/package/@microfox/reddit) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/reddit/README.md) | 6 envs, 26 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg" alt="YouTube Data logo" width="16" height="16"> YouTube Data | [![npm version](https://img.shields.io/npm/v/@microfox/youtube.svg)](https://www.npmjs.com/package/@microfox/youtube) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](/README.md) | 4 envs ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg" alt="Youtube Analytics V3 logo" width="16" height="16"> Youtube Analytics V3 | [![npm version](https://img.shields.io/npm/v/@microfox/youtube-analytics.svg)](https://www.npmjs.com/package/@microfox/youtube-analytics) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/README.md) | 6 envs, 11 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-| <img src="https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube.svg" alt="YouTube Reporting API logo" width="16" height="16"> YouTube Reporting API | [![npm version](https://img.shields.io/npm/v/@microfox/youtube-reporting-api.svg)](https://www.npmjs.com/package/@microfox/youtube-reporting-api) [![Documentation](https://img.shields.io/badge/docs-available-green.svg)](https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/README.md) | 6 envs, 6 fns ![OAuth](https://img.shields.io/badge/auth-OAuth-blue.svg) |
-<!-- SEMI_STABLE_PACKAGES_TABLE_END -->
-
-### 🤝 Contributing
-
-Microfox represents a new paradigm in software development:
-
-Here's how you can help:
-
-1. **_Coding Agents_** Check for issues labeled with Coding Agents (Build or Fix the core generation scripts)
-2. **_SDK Design_** Good SDKs are built on top of good design standards (create a new vision for a different kind of packages)
-3. **Request New SDKs**: Create an issue with the API documentation URL (to autobuild start issue title with `packagefox: TITLE`)
-4. **Report Issues**: Help us improve by reporting bugs or suggesting improvements (to autofix the issue title with `packagefox: TITLE`)
-
-5. Fork the repository
-6. Create your feature branch (`git checkout -b dev/amazing-feature`)
-7. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-8. Open a Pull Request to staging (`git push origin staging/feature-group`)
-
-Join us in building the future of software development!
+```bash
+npm install
+OPENAI_API_KEY=your-key-here
+tsc -b && node dist/index.js
