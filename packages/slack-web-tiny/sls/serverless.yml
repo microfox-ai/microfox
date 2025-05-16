@@ -13,19 +13,18 @@ provider:
   environment: ${file(env.json)}
 
 custom:
-  allowedIp: ${env:ALLOWED_IP}
-
   serverless-whitelisting:
     stage: ${self:provider.stage}
     privateStages:
+      - dev
       - staging
       - production
     netblocks:
-      - ${self:custom.allowedIp}
+      - ${env:ALLOWED_IP}
 
   apiGatewayThrottling:
-    maxRequestsPerSecond: 50 # steady-state RPS for entire stage
-    maxConcurrentRequests: 20 # burst capacity for entire stage
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 20
 
 functions:
   unifiedHandler:
@@ -35,8 +34,6 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-          private: true
-
 resources:
   Outputs:
     ApiEndpoints:
