@@ -13,11 +13,11 @@ provider:
   environment: ${file(env.json)}
 
 custom:
-  allowedIps: ${env:ALLOWED_IPS} # comma-separated CIDRs
+  allowedIp: ${env:ALLOWED_IP}
 
   whitelist:
     sources:
-      - ${split(',', self:custom.allowedIps)} # plugin builds ResourcePolicy
+      - ${self:custom.allowedIp}
 
   apiGatewayThrottling:
     maxRequestsPerSecond: 50 # steady-state RPS for entire stage
