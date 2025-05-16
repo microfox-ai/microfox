@@ -34,6 +34,9 @@
   ],
   "author": "TheMoonDevs",
   "license": "MIT",
+  "dependencies": {
+    "@microfox/core": "*"
+  },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
