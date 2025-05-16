@@ -13,11 +13,9 @@ provider:
   environment: ${file(env.json)}
 
 custom:
-  allowedIp: ${env:ALLOWED_IP}
-
   whitelist:
     sources:
-      - ${self:custom.allowedIp}
+      - ${env:ALLOWED_IP}
 
   apiGatewayThrottling:
     maxRequestsPerSecond: 50 # steady-state RPS for entire stage
