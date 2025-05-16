@@ -1,0 +1,14 @@
+{
+  "name": "gemini-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.2.0"
+  }
+}
