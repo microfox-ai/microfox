@@ -1,5 +1,10 @@
 service: public-slack-tiny-api
 
+plugins:
+  - serverless-plugin-typescript
+  - serverless-whitelisting
+  - serverless-api-gateway-throttling
+
 provider:
   name: aws
   runtime: nodejs20.x
@@ -7,8 +12,16 @@ provider:
   stage: ${env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
 
-plugins:
-  - serverless-plugin-typescript
+custom:
+  allowedIps: ${env:ALLOWED_IPS} # comma-separated CIDRs
+
+  whitelist:
+    sources:
+      - ${split(',', self:custom.allowedIps)} # plugin builds ResourcePolicy
+
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 50 # steady-state RPS for entire stage
+    maxConcurrentRequests: 20 # burst capacity for entire stage
 
 functions:
   unifiedHandler:
@@ -18,11 +31,11 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-          
+
 resources:
   Outputs:
     ApiEndpoints:
-      Description: "API Endpoints"
+      Description: 'API Endpoints'
       Value:
         Fn::Join:
           - ""
