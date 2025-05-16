@@ -10,7 +10,7 @@ dist-ssr
 .cache
 server/dist
 public/dist
-.turbo
+# .turbo
 test-results
 
 # Microfox report files
@@ -18,3 +18,7 @@ packages/*/research-report.md
 packages/*/build-report.md
 packages/*/doc-report.md
 packages/*/codegen-report.md
+
+# My Agent Additions
+scripts/my_agent_output/
+.microfox/
