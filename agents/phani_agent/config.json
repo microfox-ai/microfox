@@ -1,0 +1,6 @@
+{
+  "name": "phani_agent",
+  "description": "A simple echo agent that repeats the input text.",
+  "entry_point": "agent.py",
+  "function": "agent"
+}
