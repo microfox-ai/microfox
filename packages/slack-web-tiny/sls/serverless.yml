@@ -9,12 +9,12 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stage: ${env:ENVIRONMENT, 'dev'}
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
 
 custom:
   serverless-whitelisting:
-    stage: ${self:provider.stage}
+    stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
     privateStages:
       - dev
       - staging
