@@ -15,8 +15,12 @@ provider:
 custom:
   allowedIp: ${env:ALLOWED_IP}
 
-  whitelist:
-    sources:
+  serverless-whitelisting:
+    stage: ${self:provider.stage}
+    privateStages:
+      - staging
+      - production
+    netblocks:
       - ${self:custom.allowedIp}
 
   apiGatewayThrottling:
@@ -31,7 +35,6 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-          private: true
 
 resources:
   Outputs:
