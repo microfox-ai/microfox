@@ -29,7 +29,6 @@
     "serverless": "^3.38.0",
     "serverless-api-gateway-throttling": "^2.0.3",
     "serverless-plugin-typescript": "^2.1.5",
-    "serverless-whitelisting": "^0.0.6",
     "typescript": "^5.3.3"
   },
   "eslintConfig": {

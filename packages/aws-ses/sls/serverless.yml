@@ -2,7 +2,6 @@ service: public-aws-ses-api
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-whitelisting
   - serverless-api-gateway-throttling
 
 provider:
@@ -13,15 +12,6 @@ provider:
   environment: ${file(env.json)}
 
 custom:
-  serverless-whitelisting:
-    stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
-    privateStages:
-      - dev
-      - staging
-      - production
-    netblocks:
-      - ${env:ALLOWED_IP}
-
   apiGatewayThrottling:
     maxRequestsPerSecond: 50
     maxConcurrentRequests: 20
