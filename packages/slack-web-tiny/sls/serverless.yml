@@ -38,9 +38,9 @@ resources:
       Description: 'API Endpoints'
       Value:
         Fn::Join:
-          - ""
-          - - "API: https://"
-            - Ref: "ApiGatewayRestApi"
-            - ".execute-api."
-            - Ref: "AWS::Region"
+          - ''
+          - - 'API: https://'
+            - Ref: 'ApiGatewayRestApi'
+            - '.execute-api.'
+            - Ref: 'AWS::Region'
             - "/${env:ENVIRONMENT, 'dev'}"

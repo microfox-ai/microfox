@@ -23,7 +23,6 @@ custom:
     maxRequestsPerSecond: 50 # steady-state RPS for entire stage
     maxConcurrentRequests: 20 # burst capacity for entire stage
 
-
 functions:
   unifiedHandler:
     handler: dist/index.handler
@@ -32,16 +31,16 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-          
+
 resources:
   Outputs:
     ApiEndpoints:
-      Description: "API Endpoints"
+      Description: 'API Endpoints'
       Value:
         Fn::Join:
-          - ""
-          - - "API: https://"
-            - Ref: "ApiGatewayRestApi"
-            - ".execute-api."
-            - Ref: "AWS::Region"
+          - ''
+          - - 'API: https://'
+            - Ref: 'ApiGatewayRestApi'
+            - '.execute-api.'
+            - Ref: 'AWS::Region'
             - "/${env:ENVIRONMENT, 'dev'}"
