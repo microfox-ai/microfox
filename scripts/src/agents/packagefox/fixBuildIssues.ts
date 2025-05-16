@@ -125,7 +125,7 @@ export async function fixBuildIssues(packageName: string) {
     });
     foxlogData.requests = newRequests;
     fs.writeFileSync(
-      path.join(process.cwd(), '.microfox/packagefox-build.json'),
+      path.join(process.cwd(), '../.microfox', 'packagefox-build.json'),
       JSON.stringify(foxlogData, null, 2),
     );
   }

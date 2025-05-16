@@ -9,6 +9,7 @@ import { cleanupUsage } from './ai/usage/cleanupUsage';
 import { processGitHubUrl } from './agents/packagefox/genExtPackage';
 import { generateExternalDocs } from './agents/docfox/genExtDocs';
 import { generateDocs } from './agents/docfox/genDocs';
+import { generateOAuthPackage } from './agents/packagefox/genOAuthPackage';
 
 /**
  * This script is used to handle the PackageFox workflow.
@@ -83,6 +84,35 @@ async function handleWorkflow() {
           await cleanupUsage();
         } else {
           console.log('⚠️ SDK generation completed with warnings or failed.');
+          process.exit(1);
+        }
+        break;
+      case 'pkg-create-oauth':
+        if (!packageQuery || !baseUrl) {
+          console.error(
+            'Error: Missing PACKAGE_QUERY or BASE_URL for pkg-create-oauth',
+          );
+          process.exit(1);
+        }
+        console.log(
+          `Running genOAuthPackage with query: "${packageQuery}", url: "${baseUrl}"`,
+        );
+        const result2 = await generateOAuthPackage({
+          query: packageQuery,
+          url: baseUrl,
+          isBaseUrl: true,
+        });
+        if (result2) {
+          console.log(
+            `✅ OAuth package generation complete for ${result2.packageName}`,
+          );
+          console.log(`📂 Package location: ${result2.packageDir}`);
+          await fixBuildIssues(result2.packageName);
+          await cleanupUsage();
+        } else {
+          console.log(
+            '⚠️ OAuth package generation completed with warnings or failed.',
+          );
           process.exit(1);
         }
         break;

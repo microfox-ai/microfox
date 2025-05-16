@@ -93,6 +93,6 @@ Here's how you can help:
 3. **Request New SDKs**: Create an issue with the API documentation URL (to autobuild start issue title with `packagefox: TITLE`)
 4. **Report Issues**: Help us improve by reporting bugs or suggesting improvements (to autofix the issue title with `packagefox: TITLE`)
 
-check the above contributing link for more specific information.
+check this [contributing link](CONTRIBUTING.md) for more specific information.
 
 Join us in building the future of software development!

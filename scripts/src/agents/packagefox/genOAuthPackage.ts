@@ -3,16 +3,16 @@ import path from 'path';
 import { z } from 'zod';
 import 'dotenv/config';
 import { generateText, generateObject, tool } from 'ai';
-import { models } from './ai/models';
+import { models } from '../../ai/models';
 import dedent from 'dedent';
-import { generateDocs } from './genDocs';
+import { generateDocs } from '../docfox/genDocs';
 import {
   extractLinks,
   analyzeLinks,
   extractContentFromUrls,
-} from './utils/webScraper';
-import { logUsage } from './ai/usage/usageLogger';
-import { PackageFoxRequest } from './process-issue';
+} from '../../utils/webScraper';
+import { logUsage } from '../../ai/usage/usageLogger';
+import { PackageFoxRequest } from '../../process-issue';
 
 // Schema for OAuth package generation arguments
 const GenerateOAuthPackageArgsSchema = z.object({
@@ -369,18 +369,46 @@ const FileContentSchema = z.object({
 });
 
 const WriteToFileSchema = z.object({
-  mainSdkFile: FileContentSchema.describe(
-    'The main SDK implementation file containing the OAuth client class with authentication flows, token management, and API integration',
-  ),
-  typesFile: FileContentSchema.describe(
-    'TypeScript type definitions file containing interfaces for configuration, tokens, responses, and other SDK-specific types',
-  ),
-  schemasFile: FileContentSchema.describe(
-    'Zod validation schemas for runtime validation of inputs, outputs, and configuration objects',
-  ),
-  exportsFile: FileContentSchema.describe(
-    'Entry point file that exports the main SDK class, types, and utilities for package consumers',
-  ),
+  mainSdkFileContent: z
+    .string()
+    .describe(
+      'The main SDK implementation file containing the OAuth client class with authentication flows, token management, and API integration - The complete source code or text content of the file, including all necessary imports, types, and implementations',
+    ),
+  mainSdkFilePath: z
+    .string()
+    .describe(
+      'The relative file path within the SDK package directory (e.g., src/index.ts, src/types/index.ts)',
+    ),
+  typesFileContent: z
+    .string()
+    .describe(
+      'TypeScript type definitions file containing interfaces for configuration, tokens, responses, and other SDK-specific types',
+    ),
+  typesFilePath: z
+    .string()
+    .describe(
+      'The relative file path within the SDK package directory (e.g., src/index.ts, src/types/index.ts)',
+    ),
+  schemasFileContent: z
+    .string()
+    .describe(
+      'Zod validation schemas for runtime validation of inputs, outputs, and configuration objects',
+    ),
+  schemasFilePath: z
+    .string()
+    .describe(
+      'The relative file path within the SDK package directory (e.g., src/index.ts, src/types/index.ts)',
+    ),
+  exportsFileContent: z
+    .string()
+    .describe(
+      'Entry point file that exports the main SDK class, types, and utilities for package consumers',
+    ),
+  exportsFilePath: z
+    .string()
+    .describe(
+      'The relative file path within the SDK package directory (e.g., src/index.ts, src/types/index.ts)',
+    ),
   extraInfo: z
     .array(z.string())
     .describe(
@@ -738,20 +766,20 @@ export async function generateOAuthPackage(
     // Write the generated files
     const files = [
       {
-        content: data.mainSdkFile.content,
-        path: path.join(packageDir, data.mainSdkFile.path),
+        content: data.mainSdkFileContent,
+        path: path.join(packageDir, data.mainSdkFilePath),
       },
       {
-        content: data.typesFile.content,
-        path: path.join(packageDir, data.typesFile.path),
+        content: data.typesFileContent,
+        path: path.join(packageDir, data.typesFilePath),
       },
       {
-        content: data.schemasFile.content,
-        path: path.join(packageDir, data.schemasFile.path),
+        content: data.schemasFileContent,
+        path: path.join(packageDir, data.schemasFilePath),
       },
       {
-        content: data.exportsFile.content,
-        path: path.join(packageDir, data.exportsFile.path),
+        content: data.exportsFileContent,
+        path: path.join(packageDir, data.exportsFilePath),
       },
     ];
 
@@ -779,10 +807,22 @@ export async function generateOAuthPackage(
       success: true,
       packageDir,
       sdkImplementation: {
-        mainSdkFile: data.mainSdkFile,
-        typesFile: data.typesFile,
-        schemasFile: data.schemasFile,
-        exportsFile: data.exportsFile,
+        mainSdkFile: {
+          content: data.mainSdkFileContent,
+          path: data.mainSdkFilePath,
+        },
+        typesFile: {
+          content: data.typesFileContent,
+          path: data.typesFilePath,
+        },
+        schemasFile: {
+          content: data.schemasFileContent,
+          path: data.schemasFilePath,
+        },
+        exportsFile: {
+          content: data.exportsFileContent,
+          path: data.exportsFilePath,
+        },
       },
       extraInfo: data.extraInfo,
     };
@@ -853,7 +893,7 @@ export async function generateOAuthPackage(
       });
       foxlogData.requests = newRequests;
       fs.writeFileSync(
-        path.join(process.cwd(), '.microfox/packagefox-build.json'),
+        path.join(process.cwd(), '../.microfox', 'packagefox-build.json'),
         JSON.stringify(foxlogData, null, 2),
       );
     }

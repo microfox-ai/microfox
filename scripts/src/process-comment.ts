@@ -12,6 +12,7 @@ const CommentDetailsSchema = z.object({
   type: z
     .enum([
       'pkg-create',
+      'pkg-create-oauth',
       'pkg-build',
       'bug',
       'modification',
