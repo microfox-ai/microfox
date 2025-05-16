@@ -7,7 +7,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-rl.question("💡 What do you want to build today?\n> ", async (task) => {
+rl.question("What do you want to build today?\n> ", async (task) => {
   let attempt = 0;
   const maxAttempts = 3;
   let originalTask = task;
