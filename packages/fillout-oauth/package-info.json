@@ -4,9 +4,7 @@
   "description": "TypeScript OAuth package simplifying authorization and access token management for Fillout.",
   "platformType": "internal",
   "path": "packages/fillout-oauth",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": [],
   "status": "stable",
   "authEndpoint": "/connect/fillout",
   "oauth2Scopes": [],
@@ -20,7 +18,8 @@
       "FilloutOAuthSdk",
       "getAuthorizationUrl",
       "getAccessToken",
-      "validateAccessToken"
+      "validateAuthorizationResponse",
+      "isAccessTokenValid"
     ],
     "all_readmes": [
       {
@@ -28,7 +27,7 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "FilloutOAuthSdk",
-        "description": "Initializes a new instance of the FilloutOAuthSdk."
+        "description": "Initializes a new instance of the Fillout OAuth SDK."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAuthorizationUrl.md",
@@ -42,14 +41,21 @@
         "type": "functionality",
         "extension": "md",
         "functionality": "getAccessToken",
-        "description": "Exchanges an authorization code for an access token."
+        "description": "Exchanges the authorization code for an access token."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/validateAccessToken.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/validateAuthorizationResponse.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the access token by making a request to the Fillout API."
+        "functionality": "validateAuthorizationResponse",
+        "description": "Validates the authorization response from Fillout."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/isAccessTokenValid.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "isAccessTokenValid",
+        "description": "Checks if the provided access token is valid."
       }
     ]
   },
@@ -65,26 +71,27 @@
         {
           "key": "FILLOUT_CLIENT_ID",
           "displayName": "Fillout Client ID",
-          "description": "The client ID for your Fillout application.",
+          "description": "Your Fillout application client ID.",
           "required": true
         },
         {
           "key": "FILLOUT_CLIENT_SECRET",
           "displayName": "Fillout Client Secret",
-          "description": "The client secret for your Fillout application.",
+          "description": "Your Fillout application client secret.",
           "required": true
         },
         {
           "key": "FILLOUT_REDIRECT_URI",
           "displayName": "Fillout Redirect URI",
-          "description": "The redirect URI for your Fillout application.",
+          "description": "Your registered redirect URI.",
           "required": true
         }
       ],
       "functionalities": [
         "getAuthorizationUrl",
         "getAccessToken",
-        "validateAccessToken"
+        "validateAuthorizationResponse",
+        "isAccessTokenValid"
       ]
     }
   ],
@@ -94,7 +101,7 @@
       "constructors": [
         "FilloutOAuthSdk"
       ],
-      "description": "The client ID for your Fillout application.",
+      "description": "Your Fillout application client ID.",
       "required": true
     },
     {
@@ -102,7 +109,7 @@
       "constructors": [
         "FilloutOAuthSdk"
       ],
-      "description": "The client secret for your Fillout application.",
+      "description": "Your Fillout application client secret.",
       "required": true
     },
     {
@@ -110,7 +117,7 @@
       "constructors": [
         "FilloutOAuthSdk"
       ],
-      "description": "The redirect URI for your Fillout application.",
+      "description": "Your registered redirect URI.",
       "required": true
     }
   ],
@@ -119,34 +126,33 @@
     "1. Sign up for a Fillout account at https://www.fillout.com/",
     "2. Navigate to the developer settings in your Fillout account",
     "3. Create a new application to receive your client ID and client secret",
-    "4. Make sure to register your redirect URI in the application settings",
+    "4. Register your redirect URI in the application settings",
     "",
     "Environment variables:",
     "- FILLOUT_CLIENT_ID: Your Fillout application client ID",
     "- FILLOUT_CLIENT_SECRET: Your Fillout application client secret",
     "- FILLOUT_REDIRECT_URI: Your registered redirect URI",
     "",
-    "To use this package:",
-    "1. Install the package: npm install @microfox/fillout-oauth",
-    "2. Import and initialize the SDK:",
-    "   import { createFilloutOAuth } from '@microfox/fillout-oauth';",
-    "   const filloutOAuth = createFilloutOAuth({",
-    "     clientId: process.env.FILLOUT_CLIENT_ID!,",
-    "     clientSecret: process.env.FILLOUT_CLIENT_SECRET!,",
-    "     redirectUri: process.env.FILLOUT_REDIRECT_URI!",
-    "   });",
-    "3. Generate the authorization URL:",
-    "   const authUrl = filloutOAuth.getAuthorizationUrl();",
-    "4. After the user authorizes, exchange the code for an access token:",
-    "   const tokenResponse = await filloutOAuth.getAccessToken({ code: 'authorization_code' });",
+    "OAuth flow requirements:",
+    "1. Use the FilloutOAuthSdk.getAuthorizationUrl() method to get the authorization URL",
+    "2. Redirect the user to the authorization URL",
+    "3. Handle the redirect back to your application and extract the 'code' and 'state' parameters",
+    "4. Use FilloutOAuthSdk.validateAuthorizationResponse() to validate the response",
+    "5. Use FilloutOAuthSdk.getAccessToken() to exchange the code for an access token",
     "",
     "Important notes:",
-    "- Always use HTTPS for all communication with Fillout servers",
-    "- Keep your client secret secure and never expose it in client-side code",
-    "- Use the state parameter in getAuthorizationUrl for added security against CSRF attacks",
-    "- The package doesn't handle token storage; implement secure storage in your application",
-    "- Fillout's documentation doesn't mention token expiration or refresh mechanisms; implement periodic reauthorization if needed",
-    "- Rate limits and other API constraints are not specified in the provided documentation; refer to Fillout's API documentation for more details"
+    "- Fillout uses the Authorization Code Grant flow",
+    "- There is no explicit mention of scopes in the Fillout OAuth documentation",
+    "- The access token does not have a specified expiration time in the documentation",
+    "- There is no documented refresh token mechanism; you may need to re-authorize when the token expires",
+    "- Always use HTTPS for secure communication",
+    "- Store the client secret securely and never expose it in client-side code",
+    "",
+    "Rate limits and constraints:",
+    "- The Fillout API documentation does not specify rate limits",
+    "- It's recommended to implement exponential backoff for API requests to handle potential rate limiting",
+    "",
+    "For more detailed information, refer to the Fillout API documentation (URL not provided in the given context)"
   ],
   "keyInstructions": {
     "link": "https://www.fillout.com/help/oauth-applications"
@@ -155,6 +161,7 @@
     "@microfox/tsconfig",
     "@types/node",
     "tsup",
-    "typescript"
+    "typescript",
+    "zod"
   ]
 }

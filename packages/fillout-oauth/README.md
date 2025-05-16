@@ -12,9 +12,9 @@ npm install @microfox/fillout-oauth @microfox/fillout-oauth
 
 To use this package, you need to set the following environment variables:
 
-- `FILLOUT_CLIENT_ID`: The client ID for your Fillout application. ** (Required)**
-- `FILLOUT_CLIENT_SECRET`: The client secret for your Fillout application. ** (Required)**
-- `FILLOUT_REDIRECT_URI`: The redirect URI for your Fillout application. ** (Required)**
+- `FILLOUT_CLIENT_ID`: Your Fillout application client ID. ** (Required)**
+- `FILLOUT_CLIENT_SECRET`: Your Fillout application client secret. ** (Required)**
+- `FILLOUT_REDIRECT_URI`: Your registered redirect URI. ** (Required)**
 
 ## API Reference
 
@@ -23,5 +23,6 @@ For detailed documentation on the constructor and all available functions, pleas
 - [**FilloutOAuthSdk** (Constructor)](./docs/FilloutOAuthSdk.md): Initializes the client.
 - [getAuthorizationUrl](./docs/getAuthorizationUrl.md)
 - [getAccessToken](./docs/getAccessToken.md)
-- [validateAccessToken](./docs/validateAccessToken.md)
+- [validateAuthorizationResponse](./docs/validateAuthorizationResponse.md)
+- [isAccessTokenValid](./docs/isAccessTokenValid.md)
 

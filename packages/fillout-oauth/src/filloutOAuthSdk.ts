@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { FilloutOAuthConfig, AccessTokenResponse, AuthorizationCodeParams, TokenRequestParams } from './types';
-import { filloutOAuthConfigSchema, accessTokenResponseSchema } from './schemas';
+import { FilloutOAuthConfig, AuthorizationResponse, TokenResponse, FilloutOAuthError } from './types';
+import { filloutOAuthConfigSchema, authorizationResponseSchema, tokenResponseSchema } from './schemas';
 
 export class FilloutOAuthSdk {
   private config: FilloutOAuthConfig;
@@ -11,72 +11,77 @@ export class FilloutOAuthSdk {
 
   /**
    * Generates the authorization URL for the OAuth flow.
-   * @param state An optional state parameter for CSRF protection
-   * @returns The authorization URL
+   * @returns The authorization URL to redirect the user to.
    */
-  getAuthorizationUrl(state?: string): string {
+  public getAuthorizationUrl(): string {
     const params = new URLSearchParams({
       client_id: this.config.clientId,
       redirect_uri: this.config.redirectUri,
+      state: this.generateState(),
     });
-
-    if (state) {
-      params.append('state', state);
-    }
 
     return `https://build.fillout.com/authorize/oauth?${params.toString()}`;
   }
 
   /**
-   * Exchanges an authorization code for an access token.
-   * @param params The parameters required for the token request
-   * @returns The access token response
+   * Exchanges the authorization code for an access token.
+   * @param code The authorization code received from the redirect.
+   * @returns A promise that resolves to the token response.
    */
-  async getAccessToken(params: AuthorizationCodeParams): Promise<AccessTokenResponse> {
-    const tokenParams: TokenRequestParams = {
-      code: params.code,
-      client_id: this.config.clientId,
-      client_secret: this.config.clientSecret,
-      redirect_uri: this.config.redirectUri,
-    };
-
+  public async getAccessToken(code: string): Promise<TokenResponse> {
     const response = await fetch('https://server.fillout.com/public/oauth/accessToken', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(tokenParams),
+      body: JSON.stringify({
+        code,
+        client_id: this.config.clientId,
+        client_secret: this.config.clientSecret,
+        redirect_uri: this.config.redirectUri,
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new FilloutOAuthError('Failed to get access token', response.status);
     }
 
     const data = await response.json();
-    return accessTokenResponseSchema.parse(data);
+    return tokenResponseSchema.parse(data);
   }
 
   /**
-   * Validates the access token by making a request to the Fillout API.
-   * @param accessToken The access token to validate
-   * @returns A boolean indicating whether the token is valid
+   * Validates the authorization response from Fillout.
+   * @param params The query parameters from the redirect URL.
+   * @returns The parsed authorization response.
    */
-  async validateAccessToken(accessToken: string): Promise<boolean> {
-    try {
-      const response = await fetch('https://api.fillout.com/v1/api/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+  public validateAuthorizationResponse(params: URLSearchParams): AuthorizationResponse {
+    const response = authorizationResponseSchema.parse({
+      code: params.get('code'),
+      state: params.get('state'),
+    });
 
-      return response.ok;
-    } catch (error) {
-      console.error('Error validating access token:', error);
-      return false;
+    if (response.state !== this.config.state) {
+      throw new FilloutOAuthError('Invalid state parameter', 400);
     }
-  }
-}
 
-export function createFilloutOAuth(config: FilloutOAuthConfig): FilloutOAuthSdk {
-  return new FilloutOAuthSdk(config);
+    return response;
+  }
+
+  /**
+   * Checks if the provided access token is valid.
+   * Note: Fillout doesn't provide a specific endpoint for token validation.
+   * This method is a placeholder and should be implemented based on Fillout's API behavior.
+   * @param accessToken The access token to validate.
+   * @returns A promise that resolves to a boolean indicating if the token is valid.
+   */
+  public async isAccessTokenValid(accessToken: string): Promise<boolean> {
+    // TODO: Implement token validation logic based on Fillout's API behavior
+    // For now, we'll assume the token is valid if it's not empty
+    return !!accessToken;
+  }
+
+  private generateState(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
 }

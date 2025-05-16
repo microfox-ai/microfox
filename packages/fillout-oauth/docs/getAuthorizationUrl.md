@@ -1,26 +1,22 @@
 ## Function: `getAuthorizationUrl`
 
-Generates the authorization URL to initiate the OAuth flow with Fillout.
+Generates the authorization URL for the OAuth flow.
 
 **Purpose:**
-This function creates the URL that redirects the user to Fillout for authorization.
+This function constructs the URL that the user needs to be redirected to in order to initiate the OAuth authorization process with Fillout.
 
 **Parameters:**
 
-- `state`: string (optional)
-  - An optional state parameter used for CSRF protection.  It is recommended to use a random, unique value.
+- None
 
 **Return Value:**
 
-- `string`
-  - The authorization URL.
+- `string`: The authorization URL.
 
 **Examples:**
 
 ```typescript
-// Example 1: Generating the authorization URL without state
-const authUrl = filloutOAuth.getAuthorizationUrl();
-
-// Example 2: Generating the authorization URL with state
-const authUrlWithState = filloutOAuth.getAuthorizationUrl("my-random-state");
+// Example usage
+const authorizationUrl = sdk.getAuthorizationUrl();
+console.log(authorizationUrl);
 ```

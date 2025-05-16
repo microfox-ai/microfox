@@ -86,8 +86,8 @@
     "documentationLinks": [
       "https://www.fillout.com/help/oauth-applications"
     ],
-    "reason": "The provided link is useful as it contains information about OAuth applications, which is crucial for authentication and authorization when creating a package for fillout-oauth. This falls under the criteria of authentication information, which is necessary for package creation.",
+    "reason": "This link provides information on OAuth applications, which is crucial for authentication and authorization when creating a package for fillout-oauth. It likely contains details on how to set up and use OAuth with the Fillout API.",
     "setupInstructionsLink": "https://www.fillout.com/help/oauth-applications"
   },
-  "linksUpdatedAt": "2025-05-16T17:58:09.689Z"
+  "linksUpdatedAt": "2025-05-16T21:22:36.880Z"
 }

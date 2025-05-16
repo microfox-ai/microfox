@@ -4,20 +4,24 @@ export interface FilloutOAuthConfig {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
+  state?: string;
 }
 
-export interface AccessTokenResponse {
+export interface AuthorizationResponse {
+  code: string;
+  state: string;
+}
+
+export interface TokenResponse {
   access_token: string;
   base_url: string;
 }
 
-export interface AuthorizationCodeParams {
-  code: string;
+export class FilloutOAuthError extends Error {
+  constructor(message: string, public statusCode: number) {
+    super(message);
+    this.name = 'FilloutOAuthError';
+  }
 }
 
-export interface TokenRequestParams {
-  code: string;
-  client_id: string;
-  client_secret: string;
-  redirect_uri: string;
-}
+export type { z };
