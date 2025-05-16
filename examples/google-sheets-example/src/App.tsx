@@ -56,8 +56,8 @@ export default function App() {
       if (code) {
         try {
           // Exchange code for tokens
-          const clientId = localStorage.getItem('clientId1');
-          const clientSecret = localStorage.getItem('clientSecret1');
+          const clientId = localStorage.getItem('clientId');
+          const clientSecret = localStorage.getItem('clientSecret');
           const redirectUri =
             window.location.origin + '/api/auth/callback/google';
           const scopes = [GoogleScope.SHEETS];

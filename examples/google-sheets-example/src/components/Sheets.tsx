@@ -31,9 +31,7 @@ export default function Sheets({ tokens }: SheetsProps) {
   const [range, setRange] = useState('A1:Z100');
   const [spreadsheetData, setSpreadsheetData] =
     useState<SpreadsheetData | null>(null);
-  const [operation, setOperation] = useState<'read' | 'update' | 'append'>(
-    'read',
-  );
+  const [operation, setOperation] = useState<'read' | 'update' | 'append' | 'delete'>('read');
   const [updateData, setUpdateData] = useState<string>('');
   const [operationResult, setOperationResult] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -138,8 +136,8 @@ export default function Sheets({ tokens }: SheetsProps) {
       setError(null);
       setOperationResult(null);
 
-      const clientId = localStorage.getItem('clientId1');
-      const clientSecret = localStorage.getItem('clientSecret1');
+      const clientId = localStorage.getItem('clientId');
+      const clientSecret = localStorage.getItem('clientSecret');
 
       // Initialize the Google Sheets SDK
       const sheetsSdk = new GoogleSheetsSdk({
@@ -208,17 +206,28 @@ export default function Sheets({ tokens }: SheetsProps) {
         // Ensure data is in 2D array format
         const twoDArrayData = convertTo2DArray(validation.data);
 
-        // Ensure UTF-8 encoding for all string values
-        const encodedData = ensureUtf8Encoding(twoDArrayData);
 
         const data = await sheetsSdk.appendValues({
           range: rangeObj,
-          values: encodedData,
+          values: twoDArrayData, // Use unencoded data
         });
 
         setOperationResult(
           `Data appended successfully. Updated ${data.updatedCells || 'unknown number of'} cells.`,
         );
+      }
+      else if (operation === 'delete') {
+        const rows = parseInt(range.match(/\d+/g)?.[1] || '10', 10) - parseInt(range.match(/\d+/g)?.[0] || '1', 10) + 1;
+        const cols = range.match(/[A-Z]+/g);
+        const colCount = cols ? (cols[1].charCodeAt(0) - cols[0].charCodeAt(0) + 1) : 2;
+        const blankRows = Array.from({ length: rows }, () => Array(colCount).fill(''));
+
+        const updateInput: UpdateValuesInput = {
+          range: rangeObj,
+          values: blankRows,
+        };
+        await sheetsSdk.updateValues(updateInput);
+        setOperationResult(`Data cleared successfully.`);
       }
     } catch (err) {
       console.error(`Error performing ${operation} operation:`, err);
@@ -226,6 +235,21 @@ export default function Sheets({ tokens }: SheetsProps) {
     } finally {
       setLoading(false);
     }
+  };
+  const downloadCSV = () => {
+    if (!spreadsheetData) return;
+
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      spreadsheetData.values.map(e => e.join(',')).join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'spreadsheet_data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -272,12 +296,13 @@ export default function Sheets({ tokens }: SheetsProps) {
             id="operation"
             value={operation}
             onChange={e =>
-              setOperation(e.target.value as 'read' | 'update' | 'append')
+              setOperation(e.target.value as 'read' | 'update' | 'append' | 'delete')
             }
           >
             <option value="read">Read</option>
             <option value="update">Update</option>
             <option value="append">Append</option>
+            <option value="delete">Delete</option>
           </select>
         </div>
 
@@ -337,6 +362,9 @@ export default function Sheets({ tokens }: SheetsProps) {
                 ))}
               </tbody>
             </table>
+            <button onClick={downloadCSV} style={{ marginTop: '1rem' }}>
+              Download CSV
+            </button>
           </div>
         </div>
       )}
