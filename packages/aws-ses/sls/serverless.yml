@@ -35,6 +35,7 @@ functions:
           path: /{functionName}
           method: any
           cors: true
+          private: true
 
 resources:
   Outputs:
