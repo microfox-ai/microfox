@@ -1,0 +1,1 @@
+Build a simple CLI calculator in Node.js that supports +, -, *, and / operations.
