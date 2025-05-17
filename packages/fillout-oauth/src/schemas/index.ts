@@ -1,23 +1,18 @@
 import { z } from 'zod';
 
-export const filloutOAuthConfigSchema = z.object({
-  clientId: z.string().describe('The client ID for your Fillout application'),
-  clientSecret: z.string().describe('The client secret for your Fillout application'),
-  redirectUri: z.string().url().describe('The redirect URI for your Fillout application'),
+export const configSchema = z.object({
+  clientId: z.string().min(1).describe('The client ID for the Fillout OAuth application'),
+  clientSecret: z.string().min(1).describe('The client secret for the Fillout OAuth application'),
+  redirectUri: z.string().url().describe('The redirect URI for the OAuth flow'),
 });
 
-export const accessTokenResponseSchema = z.object({
+export const tokenResponseSchema = z.object({
   access_token: z.string().describe('The access token for authenticating API requests'),
-  base_url: z.string().url().describe('The base URL for the Fillout API'),
+  base_url: z.string().url().describe('The base URL for making API requests'),
 });
 
-export const authorizationCodeParamsSchema = z.object({
-  code: z.string().describe('The authorization code received from the authorization endpoint'),
-});
-
-export const tokenRequestParamsSchema = z.object({
-  code: z.string().describe('The authorization code received from the authorization endpoint'),
-  client_id: z.string().describe('The client ID for your Fillout application'),
-  client_secret: z.string().describe('The client secret for your Fillout application'),
-  redirect_uri: z.string().url().describe('The redirect URI for your Fillout application'),
+export const accessTokenInfoSchema = z.object({
+  valid: z.boolean().describe('Whether the access token is valid'),
+  userId: z.string().describe('The user ID associated with the access token'),
+  organizationId: z.string().describe('The organization ID associated with the access token'),
 });

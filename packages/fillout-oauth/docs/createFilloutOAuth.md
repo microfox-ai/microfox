@@ -1,10 +1,9 @@
-## Constructor: `FilloutOAuthSdk`
+## Function: `createFilloutOAuth`
 
-Initializes a new instance of the Fillout OAuth SDK.
+Creates a new instance of the Fillout OAuth SDK.
 
 **Purpose:**
-
-This constructor sets up the SDK with the necessary configuration for interacting with the Fillout OAuth API.
+This function initializes the SDK with the provided configuration.
 
 **Parameters:**
 
@@ -28,8 +27,10 @@ This constructor sets up the SDK with the necessary configuration for interactin
 **Examples:**
 
 ```typescript
-// Example: Initializing the SDK with configuration
-const filloutOAuth = new FilloutOAuthSdk({
+// Example: Creating a new SDK instance
+import { createFilloutOAuth } from '@microfox/fillout-oauth';
+
+const filloutOAuth = createFilloutOAuth({
   clientId: process.env.FILLOUT_CLIENT_ID!,
   clientSecret: process.env.FILLOUT_CLIENT_SECRET!,
   redirectUri: process.env.FILLOUT_REDIRECT_URI!

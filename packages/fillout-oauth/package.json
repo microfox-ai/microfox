@@ -23,14 +23,12 @@
       "require": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "zod": "^3.24.2"
-  },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "zod": "3.24.4"
   },
   "publishConfig": {
     "access": "public"
