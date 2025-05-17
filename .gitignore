@@ -12,7 +12,7 @@ server/dist
 public/dist
 .turbo
 test-results
-
+.env
 # Microfox report files
 packages/*/research-report.md
 packages/*/build-report.md

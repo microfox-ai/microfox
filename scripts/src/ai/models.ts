@@ -1,32 +1,61 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createAnthropic } from '@ai-sdk/anthropic';
+import { z } from 'zod';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import 'dotenv/config';
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GEMINI_API_KEY!,
+export const ModelConfig = z.object({
+  primary: z.string(),
+  fallback: z.string()
 });
 
-const anthrophobic = createAnthropic({
-  apiKey: process.env.CLAUDE_API_KEY ?? process.env.ANTHROPIC_API_KEY ?? '',
-});
+export const modelConfigs = {
+  'gemini-pro': {
+    maxTokens: 8192,
+    temperature: 0.7
+  },
+  'gpt-4': {
+    maxTokens: 8192,
+    temperature: 0.7
+  }
+};
+
+const google = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export const models: Record<
   | 'default'
   | 'googleGeminiFlash'
-  | 'googleGeminiPro'
-  | 'claude35Sonnet'
-  | 'claudeHaiku',
+  | 'googleGeminiPro',
   {
     modelId: string;
-  } & any
+    create?: () => Promise<any>;
+    model?: string;
+    max_tokens?: number;
+  }
 > = {
-  default: anthrophobic('claude-3-haiku-20240307', {}),
-  googleGeminiFlash: google('gemini-1.5-flash', {
-    structuredOutputs: true,
-  }),
-  googleGeminiPro: google('gemini-1.5-pro', {
-    structuredOutputs: true,
-  }),
-  claude35Sonnet: anthrophobic('claude-3-5-sonnet-20240620', {}),
-  claudeHaiku: anthrophobic('claude-3-haiku-20240307', {}),
+  default: {
+    modelId: 'gemini-1.5-pro',
+    create: async () => google.getGenerativeModel({
+      model: 'gemini-1.5-pro',
+      safetySettings: []
+    }),
+    model: 'gemini-1.5-pro',
+    max_tokens: 8192
+  },
+  googleGeminiFlash: {
+    modelId: 'gemini-1.5-flash',
+    create: async () => google.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      safetySettings: []
+    }),
+    model: 'gemini-1.5-flash',
+    max_tokens: 8192
+  },
+  googleGeminiPro: {
+    modelId: 'gemini-1.5-pro',
+    create: async () => google.getGenerativeModel({
+      model: 'gemini-1.5-pro',
+      safetySettings: []
+    }),
+    model: 'gemini-1.5-pro',
+    max_tokens: 8192
+  }
 };

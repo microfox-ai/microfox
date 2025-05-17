@@ -63,8 +63,10 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
+    "@anthropic-ai/sdk": "^0.51.0",
+    "@google/generative-ai": "^0.24.1",
     "glob": "^11.0.1",
-    "zod": "^3.24.3"
+    "zod": "^3.24.4"
   },
   "type": "module"
 }
