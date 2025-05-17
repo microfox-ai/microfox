@@ -1,14 +1,20 @@
 service: public-aws-ses-api
 
+plugins:
+  - serverless-plugin-typescript
+  - serverless-api-gateway-throttling
+
 provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
-  stage: ${env:ENVIRONMENT, 'dev'}
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
 
-plugins:
-  - serverless-plugin-typescript
+custom:
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 20
 
 functions:
   unifiedHandler:
@@ -18,16 +24,15 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-          
 resources:
   Outputs:
     ApiEndpoints:
-      Description: "API Endpoints"
+      Description: 'API Endpoints'
       Value:
         Fn::Join:
-          - ""
-          - - "API: https://"
-            - Ref: "ApiGatewayRestApi"
-            - ".execute-api."
-            - Ref: "AWS::Region"
+          - ''
+          - - 'API: https://'
+            - Ref: 'ApiGatewayRestApi'
+            - '.execute-api.'
+            - Ref: 'AWS::Region'
             - "/${env:ENVIRONMENT, 'dev'}"

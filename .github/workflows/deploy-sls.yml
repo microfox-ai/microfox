@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - vwjt_ip_whitelist_may_25
 
 jobs:
   deploy:
@@ -21,6 +22,7 @@ jobs:
 
       - name: Run CI/CD deployment script
         env:
+          ALLOWED_IP: ${{ secrets.ALLOWED_IP }}
           MICROFOX_API_KEY: ${{ secrets.MICROFOX_API_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
