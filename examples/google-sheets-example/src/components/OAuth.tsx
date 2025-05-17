@@ -44,8 +44,8 @@ const OAuth = ({ tokens, updateTokens }: OAuthProps) => {
     }
 
     // Save credentials to localStorage
-    localStorage.setItem('clientId1', clientId);
-    localStorage.setItem('clientSecret1', clientSecret);
+    localStorage.setItem('clientId', clientId);
+    localStorage.setItem('clientSecret', clientSecret);
     setError(null);
   };
 

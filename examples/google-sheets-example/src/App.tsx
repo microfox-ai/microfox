@@ -56,8 +56,8 @@ export default function App() {
       if (code) {
         try {
           // Exchange code for tokens
-          const clientId = localStorage.getItem('clientId1');
-          const clientSecret = localStorage.getItem('clientSecret1');
+          const clientId = localStorage.getItem('387847109733-1272u71odjjofee4pi74v1oacgethhbh.apps.googleusercontent.com');
+          const clientSecret = localStorage.getItem('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');
           const redirectUri =
             window.location.origin + '/api/auth/callback/google';
           const scopes = [GoogleScope.SHEETS];
@@ -76,7 +76,7 @@ export default function App() {
             expiresAt: Date.now() + response.expiresIn * 1000,
             isValid: true,
           };
-
+          
           // Save tokens
           localStorage.setItem('google_tokens', JSON.stringify(newTokens));
           setTokens(newTokens);

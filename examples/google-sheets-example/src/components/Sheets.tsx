@@ -4,7 +4,7 @@ import {
   GoogleSheetsSdk,
   Range,
   UpdateValuesInput,
-  AppendValuesInput,
+  //AppendValuesInput,
 } from '@microfox/google-sheets';
 
 interface Tokens {
