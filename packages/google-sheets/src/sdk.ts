@@ -313,6 +313,42 @@ export class GoogleSheetsSdk {
     );
     return ApiResponseSchema.parse(response);
   }
+
+  /**
+ * Detects duplicate rows in a Google Sheet based on full row match.
+ * @param {Range} range - The range to check for duplicates.
+ * @returns {Promise<any[][]>} Array of duplicate rows.
+ */
+async detectDuplicateRows(range: Range): Promise<any[][]> {
+  const rows = await this.getValues(range);
+  const seen = new Set<string>();
+  const duplicates: any[][] = [];
+
+  for (const row of rows) {
+    const key = JSON.stringify(row);
+    if (seen.has(key)) {
+      duplicates.push(row);
+    } else {
+      seen.add(key);
+    }
+  }
+
+  return duplicates;
+}
+
+/**
+ * Sanitizes all values in a given range by trimming whitespace.
+ * @param {UpdateValuesInput} input - Range and values to sanitize.
+ * @returns {Promise<ApiResponse>} The API response after update.
+ */
+async sanitizeSheetData(input: UpdateValuesInput): Promise<ApiResponse> {
+  const cleanedValues = input.values.map(row =>
+    row.map(cell => (typeof cell === 'string' ? cell.trim() : cell)),
+  );
+
+  return this.updateValues({ range: input.range, values: cleanedValues });
+}
+
 }
 
 /**
