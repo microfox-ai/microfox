@@ -4,8 +4,6 @@ import { OpenAiProvider } from '../openAiProvider';
 import { createOpenAI } from '@ai-sdk/openai';
 import { LanguageModelV1Middleware } from 'ai';
 
-// THEESE ARE GENEATED USELSS DUMMY MOCK TESTS
-
 // Mock the @ai-sdk/openai module
 jest.mock('@ai-sdk/openai', () => ({
   createOpenAI: jest.fn(() => ({
@@ -20,6 +18,21 @@ jest.mock('@ai-sdk/openai', () => ({
       generate: jest.fn(),
     })),
     transcriptionModel: jest.fn(() => ({
+      generate: jest.fn(),
+    })),
+    embedding: jest.fn(() => ({
+      generate: jest.fn(),
+    })),
+    textEmbeddingModel: jest.fn(() => ({
+      generate: jest.fn(),
+    })),
+    image: jest.fn(() => ({
+      generate: jest.fn(),
+    })),
+    speech: jest.fn(() => ({
+      generate: jest.fn(),
+    })),
+    transcription: jest.fn(() => ({
       generate: jest.fn(),
     })),
   })),
@@ -80,11 +93,43 @@ describe('OpenAiProvider', () => {
     });
 
     it('should handle different model IDs', () => {
-      const models = ['gpt-4', 'gpt-3.5-turbo', 'gpt-4-turbo'] as const;
+      const models = [
+        'gpt-4',
+        'gpt-3.5-turbo',
+        'gpt-4-turbo',
+        'o1',
+        'o3-mini',
+      ] as const;
       models.forEach(modelId => {
         const model = provider.languageModel(modelId);
         expect(model).toBeDefined();
       });
+    });
+  });
+
+  describe('embedding', () => {
+    it('should return an embedding model', () => {
+      const model = provider.embedding('text-embedding-3-small');
+      expect(model).toBeDefined();
+    });
+
+    it('should handle different embedding model IDs', () => {
+      const models = [
+        'text-embedding-3-small',
+        'text-embedding-3-large',
+        'text-embedding-ada-002',
+      ] as const;
+      models.forEach(modelId => {
+        const model = provider.embedding(modelId);
+        expect(model).toBeDefined();
+      });
+    });
+  });
+
+  describe('textEmbeddingModel', () => {
+    it('should return a text embedding model', () => {
+      const model = provider.textEmbeddingModel('text-embedding-3-small');
+      expect(model).toBeDefined();
     });
   });
 
@@ -95,11 +140,18 @@ describe('OpenAiProvider', () => {
     });
 
     it('should handle different model IDs', () => {
-      const models = ['dall-e-3', 'dall-e-2'] as const;
+      const models = ['dall-e-3', 'dall-e-3-hd', 'dall-e-2'] as const;
       models.forEach(modelId => {
         const model = provider.imageModel(modelId);
         expect(model).toBeDefined();
       });
+    });
+  });
+
+  describe('image', () => {
+    it('should return an image model with settings', () => {
+      const model = provider.image('dall-e-3', { size: '1024x1024' });
+      expect(model).toBeDefined();
     });
   });
 
@@ -110,7 +162,6 @@ describe('OpenAiProvider', () => {
     });
 
     it('should throw error if speech model is not available', () => {
-      // Mock the speechModel to be undefined
       (createOpenAI as jest.Mock).mockReturnValueOnce({
         languageModel: jest.fn(),
         imageModel: jest.fn(),
@@ -125,6 +176,50 @@ describe('OpenAiProvider', () => {
     });
   });
 
+  describe('speech', () => {
+    it('should return a speech model', () => {
+      const model = provider.speech('tts-1');
+      expect(model).toBeDefined();
+    });
+
+    it('should throw error if speech is not available', () => {
+      (createOpenAI as jest.Mock).mockReturnValueOnce({
+        languageModel: jest.fn(),
+        imageModel: jest.fn(),
+        speech: undefined,
+        transcriptionModel: jest.fn(),
+      });
+
+      const providerWithoutSpeech = new OpenAiProvider({ apiKey: mockApiKey });
+      expect(() => providerWithoutSpeech.speech('tts-1')).toThrow(
+        'OpenAI provider not initialized',
+      );
+    });
+  });
+
+  describe('transcription', () => {
+    it('should return a transcription model', () => {
+      const model = provider.transcription('whisper-1');
+      expect(model).toBeDefined();
+    });
+
+    it('should throw error if transcription is not available', () => {
+      (createOpenAI as jest.Mock).mockReturnValueOnce({
+        languageModel: jest.fn(),
+        imageModel: jest.fn(),
+        speech: jest.fn(),
+        transcription: undefined,
+      });
+
+      const providerWithoutTranscription = new OpenAiProvider({
+        apiKey: mockApiKey,
+      });
+      expect(() =>
+        providerWithoutTranscription.transcription('whisper-1'),
+      ).toThrow('OpenAI provider not initialized');
+    });
+  });
+
   describe('transcriptionModel', () => {
     it('should return a transcription model', () => {
       const model = provider.transcriptionModel('whisper-1');
@@ -132,7 +227,6 @@ describe('OpenAiProvider', () => {
     });
 
     it('should throw error if transcription model is not available', () => {
-      // Mock the transcriptionModel to be undefined
       (createOpenAI as jest.Mock).mockReturnValueOnce({
         languageModel: jest.fn(),
         imageModel: jest.fn(),
