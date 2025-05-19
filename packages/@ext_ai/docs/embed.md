@@ -62,7 +62,7 @@ Creates an embedding vector representation of a given value using a specified em
 
 ```typescript
 // Example 1: Minimal usage with required arguments
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { embed } from 'ai';
 
 const openai = new OpenAiProvider({

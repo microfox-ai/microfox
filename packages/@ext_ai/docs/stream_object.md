@@ -105,7 +105,7 @@ An object containing the following:
 **Examples:**
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { streamObject } from 'ai';
 import { z } from 'zod';
 

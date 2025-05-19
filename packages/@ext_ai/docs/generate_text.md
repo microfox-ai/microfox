@@ -171,7 +171,7 @@ An object with the following properties:
 **Examples:**
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { generateText } from 'ai';
 
 const openai = new OpenAiProvider({

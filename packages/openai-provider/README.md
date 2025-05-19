@@ -5,7 +5,7 @@ This package provides a convenient wrapper for using OpenAI's various models thr
 ## Installation
 
 ```bash
-npm install @microfox/openai-provider
+npm install @microfox/ai-provider-openai
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @microfox/openai-provider
 ### Language Models
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { generateText } from 'ai';
 
 const openai = new OpenAiProvider({
@@ -31,7 +31,7 @@ console.log(response);
 ### Image Generation
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { generateImage } from 'ai';
 
 const openai = new OpenAiProvider({
@@ -52,7 +52,7 @@ console.log(image.url);
 ### Speech Generation
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { generateSpeech } from 'ai';
 
 const openai = new OpenAiProvider({
@@ -73,7 +73,7 @@ console.log(speech.audio);
 ### Audio Transcription
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { transcribeAudio } from 'ai';
 
 const openai = new OpenAiProvider({

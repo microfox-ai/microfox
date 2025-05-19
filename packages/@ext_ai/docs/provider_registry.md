@@ -31,7 +31,7 @@ A `ProviderRegistry` object with the following methods:
 ```typescript
 // Example 1: Basic usage with default separator
 import { AnthropicProvider } from '@microfox/anthropic-provider';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { createProviderRegistry } from 'ai';
 
 const openai = new OpenAiProvider({

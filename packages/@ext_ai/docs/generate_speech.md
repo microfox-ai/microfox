@@ -63,7 +63,7 @@ This function converts text into speech audio using a specified speech model.
 ```typescript
 // Example 1: Minimal usage
 import { experimental_generateSpeech as generateSpeech } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -78,7 +78,7 @@ console.log(audio);
 
 // Example 2: With optional parameters
 import { experimental_generateSpeech as generateSpeech } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -103,7 +103,7 @@ console.log(audio);
 
 // Example 3: With abort signal
 import { experimental_generateSpeech as generateSpeech } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { AbortController } from 'node:abort_controller';
 
 const openai = new OpenAiProvider({

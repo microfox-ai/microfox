@@ -32,7 +32,7 @@ This function allows developers to create a custom provider for managing languag
 
 ```typescript
 // Example 1: Custom model settings
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { customProvider } from 'ai';
 
 const openai = new OpenAiProvider({

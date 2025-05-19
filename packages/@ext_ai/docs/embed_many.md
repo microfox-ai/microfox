@@ -39,7 +39,7 @@ An object with the following properties:
 
 ```typescript
 // Example 1: Minimal usage with required arguments
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { embedMany } from 'ai';
 
 const openai = new OpenAiProvider({

@@ -81,7 +81,7 @@ An object containing the following properties:
 **Examples:**
 
 ```typescript
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { streamText } from 'ai';
 
 const openai = new OpenAiProvider({

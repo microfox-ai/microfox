@@ -38,7 +38,7 @@ Returns a `Promise` that resolves to an `MCPClient` object with the following me
 ```typescript
 // Example 1: Using stdio transport
 import { experimental_createMCPClient, generateText } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -67,7 +67,7 @@ try {
 
 // Example 2: Using SSE transport
 import { experimental_createMCPClient, generateText } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,

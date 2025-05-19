@@ -16,7 +16,7 @@ The [AI SDK Core](https://ai-sdk.dev/docs/ai-sdk-core/overview) module provides 
 
 ```ts
 import { generateText } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,

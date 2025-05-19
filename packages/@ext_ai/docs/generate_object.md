@@ -153,7 +153,7 @@ An object with the following properties:
 
 ```ts
 import { generateObject } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { z } from 'zod';
 
 // Initialize the provider

@@ -42,7 +42,7 @@ The function returns an object with the following properties:
 ```typescript
 // Example 1: Minimal usage with required arguments
 import { experimental_generateImage as generateImage } from 'ai';
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 
 const openai = new OpenAiProvider({
   apiKey: process.env.OPENAI_API_KEY!,

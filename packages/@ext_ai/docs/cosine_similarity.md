@@ -78,7 +78,7 @@ const similarity6 = cosineSimilarity(vector9, vector10); // No error thrown, but
 console.log(`cosine similarity: ${similarity6}`); // Output: NaN
 
 // Example 6: Using with embeddings (from provided example)
-import { OpenAiProvider } from '@microfox/openai-provider';
+import { OpenAiProvider } from '@microfox/ai-provider-openai';
 import { cosineSimilarity, embedMany } from 'ai';
 
 const openai = new OpenAiProvider({
