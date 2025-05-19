@@ -20,6 +20,7 @@
     "packages/instagram",
     "packages/instagram-fb",
     "packages/linkedin-member-data-portability",
+    "packages/openai-provider",
     "packages/reddit",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -51,6 +52,6 @@
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 40,
-  "generatedAt": "2025-05-17T02:12:53.865Z"
+  "total": 41,
+  "generatedAt": "2025-05-19T10:04:37.311Z"
 }
