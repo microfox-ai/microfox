@@ -8,14 +8,15 @@ Centralized management of multiple AI providers and their associated models, sim
 
 **Parameters:**
 
-- `providers`: object<string, Provider> - Required.  A record mapping provider IDs (strings) to `Provider` objects.  The provider ID should be unique within the registry.
-    - `Provider` object:
-        - `languageModel`: function<(id: string) => LanguageModel> - A function that returns a `LanguageModel` instance given its ID.
-        - `textEmbeddingModel`: function<(id: string) => EmbeddingModel<string>> - A function that returns a `TextEmbeddingModel` instance given its ID.
-        - `imageModel`: function<(id: string) => ImageModel> - A function that returns an `ImageModel` instance given its ID.
+- `providers`: object<string, Provider> - Required. A record mapping provider IDs (strings) to `Provider` objects. The provider ID should be unique within the registry.
+
+  - `Provider` object:
+    - `languageModel`: function<(id: string) => LanguageModel> - A function that returns a `LanguageModel` instance given its ID.
+    - `textEmbeddingModel`: function<(id: string) => EmbeddingModel<string>> - A function that returns a `TextEmbeddingModel` instance given its ID.
+    - `imageModel`: function<(id: string) => ImageModel> - A function that returns an `ImageModel` instance given its ID.
 
 - `options`: object - Optional. Configuration options for the registry.
-    - `separator`: string - Optional. Custom separator between provider and model IDs. Defaults to ":".
+  - `separator`: string - Optional. Custom separator between provider and model IDs. Defaults to ":".
 
 **Return Value:**
 
@@ -25,38 +26,34 @@ A `ProviderRegistry` object with the following methods:
 - `textEmbeddingModel`: function<(id: string) => EmbeddingModel<string>> - Returns a text embedding model instance based on its combined ID.
 - `imageModel`: function<(id: string) => ImageModel> - Returns an image model instance based on its combined ID.
 
-
 **Examples:**
 
 ```typescript
 // Example 1: Basic usage with default separator
-import { anthropic } from '@ai-sdk/anthropic';
-import { createOpenAI } from '@ai-sdk/openai';
+import { AnthropicProvider } from '@microfox/anthropic-provider';
+import { OpenAiProvider } from '@microfox/openai-provider';
 import { createProviderRegistry } from 'ai';
+
+const openai = new OpenAiProvider({
+  apiKey: process.env.OPENAI_API_KEY!,
+});
+
+const anthropic = new AnthropicProvider({
+  apiKey: process.env.ANTHROPIC_API_KEY!,
+});
 
 const registry = createProviderRegistry({
   anthropic,
-  openai: createOpenAI({ apiKey: process.env.OPENAI_API_KEY }),
+  openai,
 });
 
 const languageModel = registry.languageModel('openai:gpt-4-turbo');
-const embeddingModel = registry.textEmbeddingModel('openai:text-embedding-3-small');
+const embeddingModel = registry.textEmbeddingModel(
+  'openai:text-embedding-3-small',
+);
 const imageModel = registry.imageModel('anthropic:claude-2');
 
-
-// Example 2: Using a custom separator
-const customRegistry = createProviderRegistry(
-  {
-    anthropic,
-    openai: createOpenAI({ apiKey: process.env.OPENAI_API_KEY }),
-  },
-  { separator: ' > ' }
-);
-
-const customLanguageModel = customRegistry.languageModel('openai > gpt-4-turbo');
-
-
-// Example 3: Accessing models
+// Example 2: Accessing models
 import { generateText, embed, generateImage } from 'ai';
 
 async function generateContent() {
@@ -80,5 +77,4 @@ async function generateContent() {
 }
 
 generateContent();
-
 ```
