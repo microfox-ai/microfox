@@ -29,8 +29,6 @@
       "default_settings_middleware",
       "embed",
       "embed_many",
-      "environment-variables",
-      "extract_reasoning_middleware",
       "generate_id",
       "generate_image",
       "generate_object",
@@ -38,7 +36,6 @@
       "generate_text",
       "json_schema",
       "language_model_v1_middleware",
-      "mcp_stdio_transport",
       "provider_registry",
       "simulate_readable_stream",
       "simulate_streaming_middleware",
@@ -47,7 +44,6 @@
       "stream_text",
       "tool",
       "transcribe",
-      "valibot_schema",
       "wrap_language_model",
       "zod_schema"
     ],
@@ -116,20 +112,6 @@
         "description": "The full README for the ai embed_many functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/environment-variables.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "environment-variables",
-        "description": "The full README for the ai environment-variables functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/extract_reasoning_middleware.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "extract_reasoning_middleware",
-        "description": "The full README for the ai extract_reasoning_middleware functionality"
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_id.md",
         "type": "functionality",
         "extension": "md",
@@ -177,13 +159,6 @@
         "extension": "md",
         "functionality": "language_model_v1_middleware",
         "description": "The full README for the ai language_model_v1_middleware functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/mcp_stdio_transport.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "mcp_stdio_transport",
-        "description": "The full README for the ai mcp_stdio_transport functionality"
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/provider_registry.md",
@@ -242,13 +217,6 @@
         "description": "The full README for the ai transcribe functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/valibot_schema.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "valibot_schema",
-        "description": "The full README for the ai valibot_schema functionality"
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/wrap_language_model.md",
         "type": "functionality",
         "extension": "md",
@@ -266,18 +234,10 @@
   },
   "constructors": [
     {
-      "name": "generateText",
+      "name": "default",
       "description": "Create a new ai client through which you can interact with the API",
-      "auth": "apikey",
-      "apiType": "api_key",
-      "requiredKeys": [
-        {
-          "key": "OPENAI_API_KEY",
-          "displayName": "OpenAI API Key",
-          "description": "The API key for OpenAI.",
-          "required": true
-        }
-      ],
+      "auth": "none",
+      "requiredKeys": [],
       "internalKeys": [],
       "functionalities": [
         "ai_sdk_core",
@@ -313,14 +273,7 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "OPENAI_API_KEY",
-      "constructors": ["generateText"],
-      "description": "The API key for OpenAI.",
-      "required": true
-    }
-  ],
+  "keysInfo": [],
   "extraInfo": [],
   "keyInstructions": {
     "link": "https://ai-sdk.dev/docs/reference/ai-sdk-core"

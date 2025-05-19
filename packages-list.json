@@ -8,11 +8,13 @@
     "packages/@ext_puppeteer"
   ],
   "semiStablePackages": [
+    "packages/ai-provider-openai",
     "packages/amazon-rekognition-face-detection",
     "packages/brave",
     "packages/coingecko-sdk",
     "packages/discord",
     "packages/drive",
+    "packages/fillout",
     "packages/gmail",
     "packages/google-analytics",
     "packages/google-seo",
@@ -26,6 +28,7 @@
   ],
   "stablePackages": [
     "packages/aws-ses",
+    "packages/fillout-oauth",
     "packages/google-sheets",
     "packages/linkedin-share",
     "packages/slack-web-tiny",
@@ -49,6 +52,6 @@
   "internalPackages": [
     "packages/rest-sdk"
   ],
-  "total": 38,
-  "generatedAt": "2025-05-13T17:58:59.752Z"
+  "total": 41,
+  "generatedAt": "2025-05-19T13:05:13.351Z"
 }

@@ -1,10 +1,10 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { z } from 'zod';
-import { PackageInfo } from './types';
 import fs from 'fs';
 import path from 'path';
 import { glob, globSync } from 'glob';
+import { PackageInfo } from '../../types';
 
 interface ValidationError {
   file: string;
