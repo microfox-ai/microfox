@@ -8,6 +8,7 @@
     "packages/@ext_puppeteer"
   ],
   "semiStablePackages": [
+    "packages/ai-provider-openai",
     "packages/amazon-rekognition-face-detection",
     "packages/brave",
     "packages/coingecko-sdk",
@@ -20,7 +21,6 @@
     "packages/instagram",
     "packages/instagram-fb",
     "packages/linkedin-member-data-portability",
-    "packages/openai-provider",
     "packages/reddit",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -53,5 +53,5 @@
     "packages/rest-sdk"
   ],
   "total": 41,
-  "generatedAt": "2025-05-19T12:59:41.971Z"
+  "generatedAt": "2025-05-19T13:05:13.351Z"
 }
