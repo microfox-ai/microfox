@@ -96,3 +96,10 @@ Here's how you can help:
 check this [contributing link](CONTRIBUTING.md) for more specific information.
 
 Join us in building the future of software development!
+
+
+## My Contribution: Python Code Generator Agent
+
+Built this agent using Python and it accepts user prompts to build code, which is generated using OpenAi Python SDK. The code writes itself in a file, and deploys it by running the code. It also loops for iterative improvements.
+
+File path: `my_python_agent/agent.py` + generated_code.py(auto-craeted)
