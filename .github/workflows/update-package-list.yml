@@ -1,15 +1,14 @@
 name: Update Package List
 
 on:
-  pull_request:
-    paths:
-      - 'packages/**'
-      - 'scripts/src/update-package-list.ts'
-      - '.github/workflows/update-package-list.yml'
+  push:
+    branches:
+      - main
 
 jobs:
   update-package-list:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Merge pull request ') && contains(github.event.head_commit.message, '/changeset-release/')
     permissions:
       contents: write
       pull-requests: write
@@ -18,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
