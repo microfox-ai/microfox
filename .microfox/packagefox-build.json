@@ -1,1 +1,13 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "genExt",
+      "query": "Add support for external package octokit",
+      "url": "https://github.com/octokit/octokit.js",
+      "notes": "Add external package support for octokit.",
+      "issueNumber": 301,
+      "logs": "",
+      "error": ""
+    }
+  ]
+}
