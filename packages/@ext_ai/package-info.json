@@ -14,7 +14,7 @@
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/ai",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/vercel.svg",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/vercel-icon.svg",
   "readme_map": {
     "title": "ai",
     "description": "The full README for the ai",
