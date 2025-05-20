@@ -7,4 +7,5 @@ assignees: ''
 ---
 
 Package Name: [e.g. ai, octokit]
+URL: url to the documentation
 Note: add docs for webhook suport

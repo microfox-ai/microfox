@@ -15,20 +15,25 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const PACKAGES_DIR = path.resolve(process.cwd(), '..', 'packages');
 const DOCS_TABLE = 'docs_embeddings';
-const GITHUB_BASE_URL = "https://github.com/microfox-ai/microfox/blob/main/packages/";
+const GITHUB_BASE_URL =
+  'https://github.com/microfox-ai/microfox/blob/main/packages/';
 
 function getGitLastModified(fullPath: string): Date {
   try {
     const out = execSync(
       `git log -1 --format=%ct -- "${path.relative(process.cwd(), fullPath)}"`,
-      { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'] }
-    ).toString().trim();
+      { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'] },
+    )
+      .toString()
+      .trim();
     const sec = Number(out);
     if (!isNaN(sec)) {
       return new Date(sec * 1000);
     }
   } catch {
-    console.warn(`Error getting git timestamp for ${fullPath}, falling back to FS mtime`);
+    console.warn(
+      `Error getting git timestamp for ${fullPath}, falling back to FS mtime`,
+    );
   }
   return fs.statSync(fullPath).mtime;
 }
@@ -41,7 +46,13 @@ async function getExistingDocs() {
   return data as Array<{ id: string; file_path: string; updated_at: string }>;
 }
 
-interface ReadmeInfo { path: string; type: string; extension: string; functionality: string; description: string; }
+interface ReadmeInfo {
+  path: string;
+  type: string;
+  extension: string;
+  functionality: string;
+  description: string;
+}
 interface PackageInfo {
   readme_map: {
     title: string;
@@ -97,11 +108,17 @@ function walkDocs() {
 
     // package-info and sub-docs
     if (fs.existsSync(packageInfoPath)) {
-      const packageInfo: PackageInfo = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
-      const readmeMap = new Map(packageInfo?.readme_map?.all_readmes?.map(r => [r?.functionality, r]));
+      const packageInfo: PackageInfo = JSON.parse(
+        fs.readFileSync(packageInfoPath, 'utf-8'),
+      );
+      const readmeMap = new Map(
+        packageInfo?.readme_map?.all_readmes?.map(r => [r?.functionality, r]),
+      );
 
       if (fs.existsSync(docsDir) && readmeMap) {
-        for (const file of fs.readdirSync(docsDir).filter(f => f.endsWith('.md'))) {
+        for (const file of fs
+          .readdirSync(docsDir)
+          .filter(f => f.endsWith('.md') && !f.endsWith('/README.md'))) {
           const fullPath = path.join(docsDir, file);
           const functionName = file.replace(/\.md$/, '');
           const readmeInfo = readmeMap.get(functionName);
