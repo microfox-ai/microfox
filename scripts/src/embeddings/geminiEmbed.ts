@@ -22,6 +22,7 @@ function sliceTextToMaxSize(text: string): string {
 export async function embed(text: string): Promise<number[]> {
   // Slice text if it exceeds the maximum payload size
   const processedText = sliceTextToMaxSize(text);
+  console.log('processedText', processedText.length);
 
   const url = `${GEMINI_BASE_URL}/models/${EMBEDDING_MODEL}:embedContent?key=${GEMINI_API_KEY}`;
 
