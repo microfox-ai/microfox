@@ -42,7 +42,7 @@ The `Octokit` client can be used to send requests to [GitHub's REST API](https:/
 
 ```js
 // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
-const octokit = new Octokit({ auth: `personal-access-token123` });
+const octokit = new Octokit({ auth: process.env.GITHUB_PERSONAL_ACCESS_TOKEN });
 
 // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
 const {
@@ -64,9 +64,9 @@ import { createAppAuth } from '@octokit/auth-app';
 const octokit = new Octokit({
   authStrategy: createAppAuth,
   auth: {
-    appId: 1,
-    privateKey: '-----BEGIN PRIVATE KEY-----\n...',
-    installationId: 123,
+    appId: process.env.GITHUB_APP_ID,
+    privateKey: process.env.GITHUB_APP_PRIVATEKEY,
+    installationId: process.env.GITHUB_INSTALLATION_ID,
   },
 });
 
