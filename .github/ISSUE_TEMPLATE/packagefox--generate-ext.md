@@ -1,6 +1,6 @@
 ---
 name: 'packagefox: external package'
-about: Use this when you want to create external package support for an existing @microfox/** package
+about: Use this when you want to support external npm package
 title: 'packagefox: Add support for external package {package}'
 labels: 'extension'
 assignees: ''
