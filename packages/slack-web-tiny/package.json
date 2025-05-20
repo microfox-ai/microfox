@@ -1,6 +1,6 @@
 {
   "name": "@microfox/slack-web-tiny",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Slack Web Tiny SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

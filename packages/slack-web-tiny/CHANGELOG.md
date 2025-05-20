@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.2.3
+
+### Patch Changes
+
+- 20015b9: Changes from PR #248: vwjt_sls_deploy_may_25
+
 ## 1.2.2
 
 ### Patch Changes

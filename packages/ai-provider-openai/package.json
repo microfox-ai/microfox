@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-provider-openai",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Wrapped OpenAI Provider for Vercels AI SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
