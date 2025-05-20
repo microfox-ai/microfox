@@ -1,5 +1,5 @@
 ---
-name: 'packagefox: generate ext'
+name: 'packagefox: external package'
 about: Use this when you want to create external package support for an existing @microfox/** package
 title: 'packagefox: Add support for external package {package}'
 labels: 'extension'

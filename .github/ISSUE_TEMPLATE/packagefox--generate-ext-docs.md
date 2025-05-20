@@ -1,6 +1,6 @@
 ---
-name: 'packagefox: generate extension docs'
-about: Use this issue type when you need documentation for an external package (needs a package name like "ai", "octokit" etc..).
+name: 'packagefox: external documentation'
+about: Use this when you need documentation for an external package ( "ai", "octokit" etc..).
 title: 'packagefox: Generate docs for external package {package}'
 labels: 'documentation'
 assignees: ''

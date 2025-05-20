@@ -1,6 +1,6 @@
 ---
 name: 'packagefox: bug report'
-about: Use this issue type when you've found an issue in an existing package.
+about: Use this when you've found an issue in an existing package.
 title: 'packagefox: Bug in {package}'
 labels: 'bug'
 assignees: ''

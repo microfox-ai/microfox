@@ -1,6 +1,6 @@
 ---
-name: 'packagefox: build package'
-about: Use this when you want to build & fix errors (if any) of an existing package.
+name: 'packagefox: test package'
+about: Use this when you want to build & fix build errors (if any) of an existing package.
 title: 'packagefox: Build package {package}'
 labels: 'build'
 assignees: ''
