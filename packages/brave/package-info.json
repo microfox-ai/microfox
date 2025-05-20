@@ -116,7 +116,7 @@
   },
   "constructors": [
     {
-      "name": "BraveSDK",
+      "name": "createBraveSDK",
       "description": "Create a new Brave SDK client through which you can interact with the API",
       "auth": "apikey",
       "apiType": "api_key",

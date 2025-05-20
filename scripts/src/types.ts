@@ -185,6 +185,10 @@ export const PackageInfo = z
             'Path must start with either "packages/@ext_" or "packages/"',
         },
       ),
+    addedDependencies: z
+      .array(z.string())
+      .optional()
+      .describe('The added dependencies of the package'),
     dependencies: z
       .array(z.string())
       .describe('The dependencies of the package'),
