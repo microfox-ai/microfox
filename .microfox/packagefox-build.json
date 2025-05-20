@@ -1,1 +1,13 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "genExt",
+      "query": "Add support for external package @gitbook/api",
+      "url": "https://github.com/GitbookIO/integrations/tree/main/packages/api",
+      "notes": "Add external package support for @gitbook/api.",
+      "issueNumber": 299,
+      "logs": "",
+      "error": ""
+    }
+  ]
+}
