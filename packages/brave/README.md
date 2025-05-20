@@ -28,4 +28,4 @@ For detailed documentation on the constructor and all available functions, pleas
 - [newsSearch](./docs/newsSearch.md)
 - [suggestSearch](./docs/suggestSearch.md)
 - [spellcheckSearch](./docs/spellcheckSearch.md)
-- [**createBraveSDK** (Constructor)](./docs/createBraveSDK.md): Initializes the client.
+- [createBraveSDK](./docs/createBraveSDK.md): Initializes the client.
