@@ -1,1 +1,13 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Add external SDK support for Github API",
+      "url": "https://github.com/GitbookIO/integrations/tree/main/packages/api",
+      "notes": "Add support for the Github API using an external SDK.",
+      "issueNumber": 296,
+      "logs": "",
+      "error": ""
+    }
+  ]
+}
