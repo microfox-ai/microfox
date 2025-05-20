@@ -29,13 +29,6 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/BraveSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "BraveSDK",
-        "description": "Constructor for the Brave SDK. Initializes the SDK with an API key, which can be provided directly or via the BRAVE_API_KEY environment variable."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/request.md",
         "type": "functionality",
         "extension": "md",
@@ -107,7 +100,7 @@
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/createBraveSDK.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "createBraveSDK",
         "description": "Creates a new instance of the Brave SDK."
