@@ -12,13 +12,12 @@ npm install @microfox/brave
 
 To use this package, you need to set the following environment variables:
 
-- `BRAVE_API_KEY`: Your Brave Search API key.  Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/. ** (Required)**
+- `BRAVE_API_KEY`: Your Brave Search API key. Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/. ** (Required)**
 
 ## API Reference
 
 For detailed documentation on the constructor and all available functions, please refer to the following files:
 
-- [**BraveSDK** (Constructor)](./docs/BraveSDK.md): Initializes the client.
 - [request](./docs/request.md)
 - [webSearch](./docs/webSearch.md)
 - [localPoiSearch](./docs/localPoiSearch.md)
@@ -29,5 +28,4 @@ For detailed documentation on the constructor and all available functions, pleas
 - [newsSearch](./docs/newsSearch.md)
 - [suggestSearch](./docs/suggestSearch.md)
 - [spellcheckSearch](./docs/spellcheckSearch.md)
-- [createBraveSDK](./docs/createBraveSDK.md)
-
+- [**createBraveSDK** (Constructor)](./docs/createBraveSDK.md): Initializes the client.
