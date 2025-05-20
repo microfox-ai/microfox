@@ -1,0 +1,184 @@
+{
+  "name": "@microfox/github",
+  "title": "GitHub",
+  "description": "TypeScript SDK for managing GitHub authentication and repository connections.",
+  "platformType": "tool",
+  "path": "packages/github",
+  "dependencies": [
+    "zod",
+    "@microfox/fillout-oauth"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "/connect/fillout-oauth",
+  "oauth2Scopes": [
+    "repo",
+    "user"
+  ],
+  "authType": "oauth2",
+  "documentation": "https://www.npmjs.com/package/@microfox/github",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/github.svg",
+  "readme_map": {
+    "title": "GitHub",
+    "description": "The full README for the GitHub",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/README.md",
+    "functionalities": [
+      "GitHubSDK",
+      "getAuthorizationUrl",
+      "getAccessToken",
+      "validateAccessToken",
+      "connectGitHubRepository",
+      "disconnectGitHubRepository",
+      "getConnectedRepositories"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/GitHubSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "GitHubSDK",
+        "description": "Initializes a new instance of the GitHubSDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/getAuthorizationUrl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAuthorizationUrl",
+        "description": "Retrieves the authorization URL for the GitHub OAuth flow."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/getAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAccessToken",
+        "description": "Exchanges an authorization code for an access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates an access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/connectGitHubRepository.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "connectGitHubRepository",
+        "description": "Connects a GitHub repository to a GitBook space."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/disconnectGitHubRepository.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "disconnectGitHubRepository",
+        "description": "Disconnects a GitHub repository from a GitBook space."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/github/docs/getConnectedRepositories.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getConnectedRepositories",
+        "description": "Gets the connected GitHub repositories for a GitBook space."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "GitHubSDK",
+      "description": "Create a new GitHub client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/fillout-oauth",
+      "authEndpoint": "/connect/fillout-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GITHUB_CLIENT_ID",
+          "displayName": "GitHub Client ID",
+          "description": "Your GitHub OAuth app's client ID.",
+          "required": true
+        },
+        {
+          "key": "GITHUB_CLIENT_SECRET",
+          "displayName": "GitHub Client Secret",
+          "description": "Your GitHub OAuth app's client secret.",
+          "required": true
+        },
+        {
+          "key": "GITHUB_REDIRECT_URI",
+          "displayName": "GitHub Redirect URI",
+          "description": "The redirect URI you specified when creating the OAuth app.",
+          "required": true
+        },
+        {
+          "key": "SCOPES",
+          "displayName": "GitHub Scopes",
+          "description": "The scopes for the OAuth app.",
+          "required": true,
+          "defaultValue": [
+            "repo",
+            "user"
+          ]
+        }
+      ],
+      "functionalities": [
+        "getAuthorizationUrl",
+        "getAccessToken",
+        "validateAccessToken",
+        "connectGitHubRepository",
+        "disconnectGitHubRepository",
+        "getConnectedRepositories"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GITHUB_CLIENT_ID",
+      "constructors": [
+        "GitHubSDK"
+      ],
+      "description": "Your GitHub OAuth app's client ID.",
+      "required": true
+    },
+    {
+      "key": "GITHUB_CLIENT_SECRET",
+      "constructors": [
+        "GitHubSDK"
+      ],
+      "description": "Your GitHub OAuth app's client secret.",
+      "required": true
+    },
+    {
+      "key": "GITHUB_REDIRECT_URI",
+      "constructors": [
+        "GitHubSDK"
+      ],
+      "description": "The redirect URI you specified when creating the OAuth app.",
+      "required": true
+    },
+    {
+      "key": "SCOPES",
+      "constructors": [
+        "GitHubSDK"
+      ],
+      "description": "The scopes for the OAuth app.",
+      "required": true,
+      "defaultValue": [
+        "repo",
+        "user"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use this SDK, you need to set up a GitHub OAuth application and obtain the necessary credentials. Follow these steps:\n\n1. Go to your GitHub account settings.\n2. Navigate to \"Developer settings\" > \"OAuth Apps\" > \"New OAuth App\".\n3. Fill in the application details, including the redirect URI.\n4. After creating the app, you'll receive a Client ID and Client Secret.\n\nSet the following environment variables:\n- GITHUB_CLIENT_ID: Your GitHub OAuth app's client ID\n- GITHUB_CLIENT_SECRET: Your GitHub OAuth app's client secret\n- GITHUB_REDIRECT_URI: The redirect URI you specified when creating the OAuth app\n\nTo use the SDK, you'll need to implement the OAuth2 flow to obtain an access token. The SDK provides methods to help with this process.\n\nExample usage:\n```typescript\nimport { createGitHubSDK } from '@microfox/github';\n\nconst sdk = createGitHubSDK({\n  clientId: process.env.GITHUB_CLIENT_ID,\n  clientSecret: process.env.GITHUB_CLIENT_SECRET,\n  redirectUri: process.env.GITHUB_REDIRECT_URI,\n});\n\n// Use the SDK methods to interact with the GitHub API\n```\n\nMake sure to handle token refresh and validation as needed in your application."
+  },
+  "extraInfo": [
+    "To use this SDK, you need to set up a GitHub OAuth application and obtain the necessary credentials. Follow these steps:\n\n1. Go to your GitHub account settings.\n2. Navigate to \"Developer settings\" > \"OAuth Apps\" > \"New OAuth App\".\n3. Fill in the application details, including the redirect URI.\n4. After creating the app, you'll receive a Client ID and Client Secret.\n\nSet the following environment variables:\n- GITHUB_CLIENT_ID: Your GitHub OAuth app's client ID\n- GITHUB_CLIENT_SECRET: Your GitHub OAuth app's client secret\n- GITHUB_REDIRECT_URI: The redirect URI you specified when creating the OAuth app\n\nTo use the SDK, you'll need to implement the OAuth2 flow to obtain an access token. The SDK provides methods to help with this process.\n\nExample usage:\n```typescript\nimport { createGitHubSDK } from '@microfox/github';\n\nconst sdk = createGitHubSDK({\n  clientId: process.env.GITHUB_CLIENT_ID,\n  clientSecret: process.env.GITHUB_CLIENT_SECRET,\n  redirectUri: process.env.GITHUB_REDIRECT_URI,\n});\n\n// Use the SDK methods to interact with the GitHub API\n```\n\nMake sure to handle token refresh and validation as needed in your application."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
