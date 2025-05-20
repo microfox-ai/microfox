@@ -1,0 +1,32 @@
+{
+  "name": "octokit",
+  "title": "octokit",
+  "description": "The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno",
+  "platformType": "tool",
+  "path": "packages/@ext_octokit",
+  "dependencies": [
+    "@octokit/app",
+    "@octokit/core",
+    "@octokit/oauth-app",
+    "@octokit/plugin-paginate-graphql",
+    "@octokit/plugin-paginate-rest",
+    "@octokit/plugin-rest-endpoint-methods",
+    "@octokit/plugin-retry",
+    "@octokit/plugin-throttling",
+    "@octokit/request-error",
+    "@octokit/types"
+  ],
+  "status": "external",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/octokit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/octokit-icon.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "title": "octokit",
+    "functionalities": [],
+    "description": "The full README for the package"
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "extraInfo": []
+}
