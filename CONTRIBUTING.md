@@ -1,6 +1,6 @@
 # Contributing to Microfox AI 🦊
 
-First off, thank you for considering contributing to Microfox AI! We appreciate your time and effort. This guide will help you understand how you can contribute to the project.
+First off, thank you for considering contributing to Microfox AI! We appreciate your time and effort. This guide will help you understand how you can contribute efffectually to the project.
 
 ## 🏗️ Basic Repo Introduction
 
@@ -35,10 +35,9 @@ If you are new, Get started over [here](https://github.com/microfox-ai/microfox/
 
 This involves working directly within the `packages/` directory.
 
-- **Testing & Bug Fixing** 🐛:
-  - **Identify Bugs**: please [create an issue](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) detailing the problem, steps to reproduce, and expected behavior.
-  - **Fix Bugs**: If you're able to fix a bug, fork the repo, apply your fix, and submit Pull Request. Ensure your PR description is neat.
-  - **Creating (Unit Tests)** ✅: We aim for high test coverage. You can contribute by writing new `__tests__` or improving existing ones for packages.
+- **Identify Bugs**: please [create an issue](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) detailing the problem, steps to reproduce, and expected behavior.
+- **Fix Bugs**: If you're able to fix a bug, fork the repo, apply your fix, and submit Pull Request. Ensure your PR description is neat.
+- **Creating (Unit Tests)** ✅: We aim for high test coverage. You can contribute by writing new `__tests__` or improving existing ones for packages.
 
 ### 2. 🤖 Agent Level Contributions (High-Level Features & Refactors)
 
@@ -50,31 +49,21 @@ This involves significant changes to core functionalities. Agents are located in
 
 ### 3. 📚 Documentation & Team Level Contributions
 
-- **Open Source Management** 🌟:
-  - **Improving Documentation**: This `CONTRIBUTING.md` guide, the `README.md`, or inline code documentation (TSDoc/JSDoc) can always be improved.
-  - **Issue Triage**: Help us by reviewing open issues, confirming bugs, or suggesting labels.
-  - **Community Support**: Answer questions in discussions or on related forums.
-  - **Improving Workflows**: Suggest improvements to our CI/CD workflows in `.github/workflows/`.
+- **Improving Documentation**: This `CONTRIBUTING.md` guide, the `README.md`, or inline code documentation (TSDoc/JSDoc) can always be improved.
+- **Issue Triage**: Help us by reviewing open issues, confirming bugs, or suggesting labels.
+- **Community Support**: Answer questions in discussions or on related forums.
+- **Improving Workflows**: Suggest improvements to our CI/CD workflows in `.github/workflows/`.
 
 ## 🏷️ Contribute by Issue labels
 
-Understanding how issues are created and labeled can help you find areas to contribute effectively.
+Understanding how issues are created and labeled can help you find areas to contribute effectively. Contributors are welcome to [create issues](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) for bugs they find or features they'd like to propose, many core-specific issues, especially those related to the AI agents' operations, will be take priority.
 
 We use labels to categorize issues and make them easier to find and understand. Here are some common labels you might see:
-
-Contributors are welcome to [create issues](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) for bugs they find or features they'd like to propose, many core-specific issues, especially those related to the AI agents' operations, will be take priority.
 
 - **`good first issue` 🐛**: These are often good starting points for contributors - check [here](https://github.com/microfox-ai/microfox/contribute)
 - **`refactor` 🔄**: Issues with this label concern improving the existing agentic flows of the coding agents or workflows.
 - **`coding agent` 🤖**: This label is used for issues related to the AI agents.
-  - located in `scripts/src/agents/`
-  - Bugs within an agent's logic.
-  - Proposals for new agent capabilities.
-  - Improvements to the agent framework or how agents are invoked and managed.
 - **`documentation` 📚**: This label is for issues related to any form of documentation.
-  - Improving this `CONTRIBUTING.md` guide.
-  - Updating the main `README.md`.
-  - Enhancing inline code comments (TSDoc/JSDoc).
 
 ### 🍴 Fork
 
@@ -86,8 +75,9 @@ Contributors are welcome to [create issues](https://github.com/THEMOONDEVS/micro
 
 ### 💅 Code Style & Conventions
 
-- **Formatting**: We use Prettier for code formatting.
+- **Formatting**: use Prettier for code formatting.
 - **Linting**: Please run `npm run lint` to check if it follows the standards
+- **Build check**: Plese run `npm run build` to check if all things are working.
 - **Commit Messages**: Please follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). This helps us automate changelog generation and versioning.
   - Example: `feat(google-sheets): add support for batchGet an API`
   - Example: `fix(core): resolve issue with token caching`
@@ -103,7 +93,7 @@ Contributors are welcome to [create issues](https://github.com/THEMOONDEVS/micro
 4.  **Review**: Maintainers will review your PR. They may ask for changes or provide feedback.
 5.  **Merging**: Once the PR is approved and passes all checks, it will be merged.
 
-## ❓ Questions?
+## ❓ Questions
 
 If you have any questions, feel free to ask by creating an issue or joining & communicating in our [discord](https://discord.gg/HAFDjqA2Jb).
 
