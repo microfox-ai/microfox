@@ -1,5 +1,17 @@
 # @microfox/aws-ses
 
+## 1.1.4
+
+### Patch Changes
+
+- edbf6d1: Changes from PR #263: vwjt_ip_whitelist_may_25
+
+## 1.1.3
+
+### Patch Changes
+
+- 20015b9: Changes from PR #248: vwjt_sls_deploy_may_25
+
 ## 1.1.2
 
 ### Patch Changes

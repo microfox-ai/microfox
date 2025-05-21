@@ -1,0 +1,24 @@
+{
+  "name": "@gitbook/api",
+  "title": "@gitbook/api",
+  "description": "No description available",
+  "platformType": "tool",
+  "path": "packages/@ext_@gitbook#api",
+  "dependencies": [
+    "event-iterator",
+    "eventsource-parser"
+  ],
+  "status": "external",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/@gitbook/api",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/api-icon.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "title": "@gitbook/api",
+    "functionalities": [],
+    "description": "The full README for the package"
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "extraInfo": []
+}

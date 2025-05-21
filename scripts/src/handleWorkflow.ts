@@ -153,7 +153,11 @@ async function handleWorkflow() {
         console.log(
           `Running generateExternalDocs for package: "${packageName}" with url: "${baseUrl}"`,
         );
-        const outputDir = path.join(process.cwd(), '../packages', packageName);
+        const outputDir = path.join(
+          process.cwd(),
+          '../packages',
+          '@ext_' + packageName.replace(/\//g, '#'),
+        );
         await generateExternalDocs(baseUrl, packageName, outputDir);
         await cleanupUsage();
         break;

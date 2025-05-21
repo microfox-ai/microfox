@@ -1,0 +1,52 @@
+{
+  "name": "@gitbook/api",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "version": "0.115.0",
+  "sideEffects": false,
+  "files": [
+    "README.md",
+    "spec/**",
+    "dist/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GitbookIO/integrations.git",
+    "directory": "packages/api"
+  },
+  "bugs": {
+    "url": "https://github.com/GitbookIO/integrations/issues"
+  },
+  "homepage": "https://github.com/GitbookIO/integrations",
+  "dependencies": {
+    "event-iterator": "^2.0.0",
+    "eventsource-parser": "^3.0.0"
+  },
+  "devDependencies": {
+    "swagger-typescript-api": "^13.0.3",
+    "swagger-cli": "^4.0.4",
+    "esbuild": "^0.14.42",
+    "typescript": "^5.6.2",
+    "@gitbook/tsconfig": "*"
+  },
+  "overrides": {
+    "swagger-typescript-api": {
+      "typescript": "5.6.2"
+    }
+  },
+  "scripts": {
+    "build": "./build.sh",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./spec/openapi.json": "./spec/openapi.json",
+    "./spec/openapi.yaml": "./spec/openapi.yaml"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "octokit",
+  "title": "octokit",
+  "description": "The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno",
+  "platformType": "tool",
+  "path": "packages/@ext_octokit",
+  "dependencies": [
+    "@octokit/app",
+    "@octokit/core",
+    "@octokit/oauth-app",
+    "@octokit/plugin-paginate-graphql",
+    "@octokit/plugin-paginate-rest",
+    "@octokit/plugin-rest-endpoint-methods",
+    "@octokit/plugin-retry",
+    "@octokit/plugin-throttling",
+    "@octokit/request-error",
+    "@octokit/types"
+  ],
+  "status": "external",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/octokit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/github-icon.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "title": "octokit",
+    "functionalities": [],
+    "description": "The full README for the package"
+  },
+  "constructors": [
+    {
+      "name": "Octokit",
+      "description": "Create a new Octokit SDK client through which you can interact with the GitHub API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
+          "displayName": "GitHub Personal Access Token",
+          "description": "Your GitHub personal access token or OAuth access token."
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": ["rest", "request"]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "constructors": ["Octokit"],
+      "description": "Your GitHub personal access token or OAuth access token.",
+      "required": true
+    }
+  ],
+  "extraInfo": []
+}

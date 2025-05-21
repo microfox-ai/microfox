@@ -5,7 +5,7 @@ on:
     paths:
       - 'packages/**/package-info.json'
       - 'scripts/src/types.ts'
-      - 'scripts/src/validatePackageInfo.ts'
+      - 'scripts/src/agents/metafox/validatePackageInfo.ts'
 
 jobs:
   validate:
@@ -35,7 +35,7 @@ jobs:
           ls -la dist/
 
           echo "Running the validation script..."
-          node dist/validatePackageInfo.js
+          node dist/agents/metafox/validatePackageInfo.js
 
           echo "Script execution completed"
         shell: bash

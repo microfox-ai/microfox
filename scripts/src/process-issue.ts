@@ -139,6 +139,14 @@ async function processIssue() {
 
         **Analysis Guidelines:**
         - Determine the primary 'type' of the request (feature, pkg-build, bug, modification).
+          - pkg-create: Create a new @microfox/** package.
+          - pkg-create-oauth: Create a new @microfox/**-oauth package.
+          - pkg-build: Test a package's build & fix any errors.
+          - bug: Fix an issue with a package.
+          - modification: Modify an existing package.
+          - genExt: Creates external package support for an exiting package (needs a github url in issue body).
+          - genExtDocs: Generate documentation for an external package (needs a package name like "ai", "octokit" etc..).
+          - genDocs: Generate documentation for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
         - If it's a 'bug', specify if it occurred at 'build' or 'runtime'. Note 'error' details and any 'logs'.
         - Extract the core 'query' being asked.
         - Generate a concise camelCase 'title' suitable for branch names.
@@ -146,7 +154,7 @@ async function processIssue() {
         - Identify a relevant documentation 'url' if mentioned.
         - If the type is 'pkg-build' or 'bug', try to identify the target package name from the title or body.
       `,
-      temperature: 0.3, // Lower temperature for more predictable extraction
+      temperature: 0.2, // Lower temperature for more predictable extraction
     });
 
     logUsage(models.googleGeminiPro.modelId, usage); // Log usage if setup

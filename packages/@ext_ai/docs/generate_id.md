@@ -7,17 +7,15 @@ To create unique identifiers for various purposes within an application, leverag
 
 **Parameters:**
 
-* `size`: number (optional, deprecated)
-    * The length of the generated ID.
-    * Defaults to 16.
-    * This parameter is deprecated and will be removed in the next major version.  It is recommended to not use this parameter.
-
+- `size`: number (optional, deprecated)
+  - The length of the generated ID.
+  - Defaults to 16.
+  - This parameter is deprecated and will be removed in the next major version. It is recommended to not use this parameter.
 
 **Return Value:**
 
-* `string`
-    * A string representing the generated unique ID.  The ID is guaranteed to be unique within the context of the current application execution.
-
+- `string`
+  - A string representing the generated unique ID. The ID is guaranteed to be unique within the context of the current application execution.
 
 **Examples:**
 
@@ -38,20 +36,3 @@ const id3 = generateId();
 const id4 = generateId();
 console.log(id3 === id4); // Output: false (demonstrating unique ID generation)
 ```
-
-
-## Function: `createIdGenerator`
-
-This function is not provided in the input, but is referenced in the `generateId` documentation as a "See also".  Since no details are provided, only a skeletal documentation structure can be created.  Further information is needed to complete this documentation.
-
-**Purpose:**
-[Purpose of the `createIdGenerator` function is unknown.  Presumably related to ID generation.]
-
-**Parameters:**
-[Parameters of the `createIdGenerator` function are unknown.]
-
-**Return Value:**
-[Return value of the `createIdGenerator` function is unknown.]
-
-**Examples:**
-[Examples of using `createIdGenerator` cannot be provided without further information.]

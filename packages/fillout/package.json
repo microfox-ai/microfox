@@ -1,6 +1,6 @@
 {
   "name": "@microfox/fillout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript SDK for the Fillout REST API.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
