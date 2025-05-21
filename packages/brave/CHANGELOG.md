@@ -1,5 +1,12 @@
 # @microfox/brave
 
+## 1.0.3
+
+### Patch Changes
+
+- 807233f: Changes from PR #304: genext-packagefoxaddoctokitsupport-20250520
+- 0725adb: Changes from PR #295: docs
+
 ## 1.0.2
 
 ### Patch Changes
