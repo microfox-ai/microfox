@@ -1,5 +1,11 @@
 # @microfox/google-sheets
 
+## 1.1.2
+
+### Patch Changes
+
+- fd12f72: Changes from PR #288: google-sheets-utils
+
 ## 1.1.1
 
 ### Patch Changes
