@@ -44,12 +44,10 @@ The SDK provides access to the following Brave Search API endpoints:
 
 ## Rate Limits
 
-The SDK automatically handles rate limiting based on your subscription plan:
-
 - Free Plan: 1 request per second
 - Pro Plan: 20 requests per second
 
-The SDK includes built-in rate limiting protection through sequential processing. When making multiple requests, use sequential processing instead of `Promise.all` to avoid hitting rate limits:
+When making multiple requests, use sequential processing instead of `Promise.all` to avoid hitting rate limits:
 
 ```typescript
 // ❌ Don't do this
