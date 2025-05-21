@@ -50,8 +50,10 @@ class BraveSDK {
   private middleware: MiddlewareFunction[] = [];
 
   constructor(options?: BraveSDKOptions) {
-    const validatedOptions = BraveSDKOptionsSchema.parse(options);
-    this.apiKey = validatedOptions.apiKey || process.env.BRAVE_API_KEY || '';
+    const validatedOptions = options
+      ? BraveSDKOptionsSchema.parse(options)
+      : undefined;
+    this.apiKey = validatedOptions?.apiKey || process.env.BRAVE_API_KEY || '';
 
     if (!this.apiKey) {
       throw new Error(
@@ -62,11 +64,11 @@ class BraveSDK {
     // Initialize headers
     this.headers = createHeaders({
       apiKey: this.apiKey,
-      ...validatedOptions.headers,
+      ...validatedOptions?.headers,
     });
     this.localSearchHeaders = createLocalSearchHeaders({
       apiKey: this.apiKey,
-      ...validatedOptions.localSearchHeaders,
+      ...validatedOptions?.localSearchHeaders,
     });
 
     if (options?.enableRedisTracking) {
