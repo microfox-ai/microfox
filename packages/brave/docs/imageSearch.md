@@ -141,6 +141,33 @@ const processResults = async () => {
     console.error('Error performing image search:', error);
   }
 };
+
+// Batch image search example
+const batchImageSearchExample = async () => {
+  try {
+    // Define multiple image search queries
+    const searchQueries = [
+      { q: 'cats', count: 5, safesearch: 'moderate' },
+      { q: 'dogs', count: 5, safesearch: 'moderate' },
+      { q: 'birds', count: 5, safesearch: 'moderate' },
+    ];
+
+    // Process batch search with progress tracking
+    const results = await braveSDK.batchImageSearch(searchQueries);
+
+    // Process results for each query
+    results.forEach((response, index) => {
+      console.log(`\nResults for query "${searchQueries[index].q}":`);
+      const images = response.mixed.main;
+
+      images.forEach(image => {
+        console.log(`- ${image.title} (${image.source})`);
+      });
+    });
+  } catch (error) {
+    console.error('Error performing batch image search:', error);
+  }
+};
 ```
 
 ## Notes

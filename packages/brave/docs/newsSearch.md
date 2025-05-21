@@ -124,4 +124,35 @@ const articlesBySource = results.results.reduce(
   },
   {} as Record<string, typeof results.results>,
 );
+
+// Example: Batch news search
+const batchResults = await braveSDK.batchNewsSearch(
+  [
+    { q: 'technology news', freshness: 'pd' },
+    { q: 'sports news', country: 'US', count: 10 },
+    { q: 'business news', freshness: 'pw' },
+  ],
+  {
+    delay: 1000, // 1 second delay between requests
+    onProgress: (completed, total) => {
+      console.log(`Completed ${completed} of ${total} requests`);
+    },
+  },
+);
+
+// Process batch results
+batchResults.forEach((result, index) => {
+  if ('error' in result) {
+    console.error(`Error in request ${index + 1}:`, result.error);
+    return;
+  }
+
+  console.log(`\nResults for search ${index + 1}:`);
+  result.results.forEach((article, articleIndex) => {
+    console.log(`\nArticle ${articleIndex + 1}:`);
+    console.log('Title:', article.title);
+    console.log('Source:', article.meta_url?.source);
+    console.log('Age:', article.age);
+  });
+});
 ```
