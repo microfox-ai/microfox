@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.2.4
+
+### Patch Changes
+
+- edbf6d1: Changes from PR #263: vwjt_ip_whitelist_may_25
+
 ## 1.2.3
 
 ### Patch Changes
