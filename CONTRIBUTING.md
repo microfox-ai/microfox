@@ -9,12 +9,18 @@ Microfox AI is a monorepo managed with npm workspaces and Turborepo. Key directo
 - **`packages/` 📦**: Contains all the micor sdk packages. These are typically SDKs, API clients, or core functionalities.
   - Packages follow a pattern like `service-name` (e.g., `google-sheets`, `slack-web-tiny`)
   - Packages often have their own `__tests__` directory for unit tests.
-  - Package have often their own public toolcalls (aka MCPS) at `sls` directory
   - Package complete information is at `package-info.json` and is very crucial for microfox to work.
 - **`scripts/` 🔧**: Contains various ai agents, build, test, and utility scripts.
-  - **`scripts/src/agents/` 🤖**: This directory houses specialized AI agents. Each subdirectory (e.g., `metafox/`, `docfox/`, `packagefox/`, `testfox/`) corresponds to an agent with a specific focus, such as metadata management, documentation processing, package operations, or test generation.
+  - **`src/agents/` 🤖**: This directory houses specialized AI agents.
+    - `metafox` - hosts meta info generators, validators & fixers
+    - `docfox` - hosts documentation generators
+    - `packagefox` - hosts coding agents that create packages
+    - `testfox` - hosts coding agents that create tests
   - Contributions here could involve improving existing agent logic, adding new capabilities to an agent, or developing entirely new agents.
-  - **`scripts/src/embeddings/` 🔍**: This directory is responsible for generating and managing embeddings, which are crucial for semantic search and AI understanding of the codebase.
+  - **`src/ai`** : hosts ai models map & helper functions to log & track usage costs on PR.
+  - **`src/embeddings/` 🔍**: for generating and managing embeddings of docs, which are crucial for semantic search for Ai.
+  - **`src/serverless/`**: for sls deployments of remote tool calls
+  - **`src/octokit`** : Github connection & PR/Issue comments
 - **`.github/` ⚙️**: Contains GitHub automations, including workflows for CI/CD and issue/PR.
 
 Understanding this structure will help you navigate the codebase and identify where your contributions can fit.
@@ -23,31 +29,24 @@ Understanding this structure will help you navigate the codebase and identify wh
 
 We welcome contributions in various forms. Here are the primary ways you can help:
 
+If you are new, Get started over [here](https://github.com/microfox-ai/microfox/contribute)
+
 ### 1. 📦 Package Level Contributions
 
 This involves working directly within the `packages/` directory.
 
 - **Testing & Bug Fixing** 🐛:
-  - **Identify Bugs**: If you find a bug in any package, please [create an issue](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) detailing the problem, steps to reproduce, and expected behavior.
-  - **Fix Bugs**: If you're able to fix a bug, fork the repository, create a branch, apply your fix, and submit a Pull Request. Ensure your PR clearly describes the problem and the solution.
-  - **Improve Test Coverage**: We aim for high test coverage. You can contribute by writing new tests or improving existing ones for packages.
-- **Creating `__tests__` (Unit Tests)** ✅:
-  - **Location**: Unit tests for a package usually reside in a `__tests__` directory within that package (e.g., `packages/google-sheets/__tests__`).
-  - **Framework**: We primarily use Jest (or a similar JavaScript testing framework). Check existing tests for patterns and best practices.
-  - **Focus**: Unit tests should be focused, testing individual functions or modules in isolation. Mock dependencies where necessary.
+  - **Identify Bugs**: please [create an issue](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) detailing the problem, steps to reproduce, and expected behavior.
+  - **Fix Bugs**: If you're able to fix a bug, fork the repo, apply your fix, and submit Pull Request. Ensure your PR description is neat.
+  - **Creating (Unit Tests)** ✅: We aim for high test coverage. You can contribute by writing new `__tests__` or improving existing ones for packages.
 
 ### 2. 🤖 Agent Level Contributions (High-Level Features & Refactors)
 
-This involves more significant changes, introducing new core functionalities. All agents are in thhe scripts/agents and follow the pattern of multiple generators, helpers, toolcalls for a single agent. all agents are designed to primarily communicate via PR/Issue comments.
+This involves significant changes to core functionalities. Agents are located in `scripts/agents` and follow a pattern of generators, helpers, and toolcalls. They primarily communicate through PR/Issue comments.
 
-- **High-Level Refactors** 🔄:
-  - If you see opportunities to improve code structure, performance, or maintainability at a broader level, especially within the agent framework or shared utilities, please discuss your ideas by creating an issue first. This allows for community feedback before significant effort is invested.
-- **Adding New Generative Functionalities** ✨:
-  - This could involve creating new core utilities that agents can leverage, enhancing existing agent capabilities (e.g., making `docfox` understand new documentation patterns, or `testfox` generate tests for new scenarios), or adding features that benefit multiple agents.
-  - **Proposal**: For substantial new features, please create a detailed proposal as an issue. Outline the problem, your proposed solution, and potential impact.
-- **Developing New Specialized Agents** 🚀:
-  - If you identify a new area that could benefit from AI-driven automation (e.g., a `securityfox` for vulnerability checks, an `i18nfox` for internationalization tasks, or a `uifox` for UI component generation/testing), proposing and developing a new agent is a valuable contribution.
-  - Start by creating an issue to discuss the scope and feasibility of the new agent.
+- **High-Level Refactors** 🔄: Create an issue first to discuss improvements to code structure, performance, or maintainability.
+- **New Generative Features** ✨: Add new utilities or enhance existing agent capabilities (e.g., `docfox` for docs, `testfox` for tests). Create a detailed proposal for substantial features.
+- **New Specialized Agents** 🚀: Propose new agents for specific tasks (e.g., `securityfox` for security, `i18nfox` for translations). Start with an issue to discuss scope and feasibility.
 
 ### 3. 📚 Documentation & Team Level Contributions
 
@@ -65,14 +64,14 @@ We use labels to categorize issues and make them easier to find and understand. 
 
 Contributors are welcome to [create issues](https://github.com/THEMOONDEVS/microfox-ai/issues/new/choose) for bugs they find or features they'd like to propose, many core-specific issues, especially those related to the AI agents' operations, will be take priority.
 
-- **`bug` 🐛**: These are often good starting points for contributors looking to make impactful fixes.
+- **`good first issue` 🐛**: These are often good starting points for contributors - check [here](https://github.com/microfox-ai/microfox/contribute)
 - **`refactor` 🔄**: Issues with this label concern improving the existing agentic flows of the coding agents or workflows.
-- **`coding agent` 🤖**: This label is used for issues related to the AI agents themselves (e.g., `metafox`, `docfox`, `packagefox`, `testfox` located in `scripts/src/agents/`). This could involve:
+- **`coding agent` 🤖**: This label is used for issues related to the AI agents.
+  - located in `scripts/src/agents/`
   - Bugs within an agent's logic.
   - Proposals for new agent capabilities.
-  - Tasks for an agent to perform (e.g., an issue created by `testfox` to add specific unit tests).
   - Improvements to the agent framework or how agents are invoked and managed.
-- **`documentation` 📚**: This label is for issues related to any form of documentation. This includes:
+- **`documentation` 📚**: This label is for issues related to any form of documentation.
   - Improving this `CONTRIBUTING.md` guide.
   - Updating the main `README.md`.
   - Enhancing inline code comments (TSDoc/JSDoc).
