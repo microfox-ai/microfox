@@ -28,26 +28,12 @@ const braveSDK = createBraveSDK({
 const braveSDK = createBraveSDK(); // Uses BRAVE_API_KEY from environment
 ```
 
-## Available Features
-
-The SDK provides access to the following Brave Search API endpoints:
-
-- Web Search
-- Local POI Search (Pro plan required)
-- Local Descriptions Search (Pro plan required)
-- Summarizer Search (Pro AI plan required)
-- Image Search
-- Video Search
-- News Search
-- Suggest Search
-- Spellcheck Search
-
-## Rate Limits
+## Rate Limits ( DO NOT USE PROMISE.A;l )
 
 - Free Plan: 1 request per second
 - Pro Plan: 20 requests per second
 
-When making multiple requests, use sequential processing instead of `Promise.all` to avoid hitting rate limits:
+When making multiple requests, use sequential processing instead to avoid hitting rate limits:
 
 ```typescript
 // ❌ Don't do this
