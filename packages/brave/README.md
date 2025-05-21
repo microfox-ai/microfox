@@ -28,7 +28,7 @@ const braveSDK = createBraveSDK({
 const braveSDK = createBraveSDK(); // Uses BRAVE_API_KEY from environment
 ```
 
-## Rate Limits ( DO NOT USE PROMISE.A;l )
+## Rate Limits ( DO NOT USE PROMISE.All )
 
 - Free Plan: 1 request per second
 - Pro Plan: 20 requests per second
@@ -43,11 +43,10 @@ const results = await Promise.all([
 ]);
 
 // ✅ Do this instead
-const results = [];
-for (const query of ['query1', 'query2']) {
-  results.push(await braveSDK.webSearch({ q: query }));
-  await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
-}
+const results = await braveSdk.batchWebSearch([
+  { q: 'query1' },
+  { q: 'query2' },
+]);
 ```
 
 ## API Reference

@@ -143,4 +143,38 @@ const videosByCreator = results.results.reduce(
   },
   {} as Record<string, typeof results.results>,
 );
+
+// Example: Batch video search
+const batchResults = await braveSDK.batchVideoSearch(
+  [
+    { q: 'cute puppies', count: 5 },
+    { q: 'funny cats', count: 5 },
+    { q: 'baby animals', count: 5 },
+  ],
+  {
+    delay: 1000, // 1 second delay between requests
+    onProgress: (completed, total) => {
+      console.log(`Completed ${completed} of ${total} searches`);
+    },
+  },
+);
+
+// Process batch results
+batchResults.forEach((result, index) => {
+  if ('error' in result) {
+    console.error(`Search ${index + 1} failed:`, result.error);
+    return;
+  }
+
+  console.log(`\nResults for search ${index + 1}:`);
+  result.results.forEach((video, videoIndex) => {
+    console.log(`\nVideo ${videoIndex + 1}:`);
+    console.log('Title:', video.title);
+    console.log('URL:', video.url);
+    if (video.video) {
+      console.log('Duration:', video.video.duration);
+      console.log('Views:', video.video.views);
+    }
+  });
+});
 ```

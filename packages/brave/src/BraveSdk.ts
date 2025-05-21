@@ -42,6 +42,33 @@ export type MiddlewareFunction = (request: {
   useLocalSearchHeaders: boolean;
 }>;
 
+export interface BatchRequestOptions {
+  delay?: number; // Delay between requests in milliseconds
+  onProgress?: (completed: number, total: number) => void; // Progress callback
+}
+
+export type BatchRequest = {
+  type:
+    | 'web'
+    | 'image'
+    | 'video'
+    | 'news'
+    | 'suggest'
+    | 'spellcheck'
+    | 'summarizer'
+    | 'localPoi'
+    | 'localDescriptions';
+  params:
+    | WebSearchParams
+    | ImageSearchParams
+    | VideoSearchParams
+    | NewsSearchParams
+    | SuggestSearchParams
+    | SpellcheckSearchParams
+    | SummarizerSearchParams
+    | LocalSearchParams;
+};
+
 class BraveSDK {
   private apiKey: string;
   private baseUrl = 'https://api.search.brave.com/res/v1';
@@ -137,6 +164,12 @@ class BraveSDK {
     return this.request<WebSearchApiResponse>('/web/search', params);
   }
 
+  async batchWebSearch(
+    params: WebSearchParams[],
+  ): Promise<WebSearchApiResponse[]> {
+    return this.batchProcess(params.map(p => ({ type: 'web', params: p })));
+  }
+
   async localPoiSearch(
     params: LocalSearchParams,
   ): Promise<LocalPoiSearchApiResponse> {
@@ -168,14 +201,32 @@ class BraveSDK {
     return this.request<ImageSearchApiResponse>('/images/search', params);
   }
 
+  async batchImageSearch(
+    params: ImageSearchParams[],
+  ): Promise<ImageSearchApiResponse[]> {
+    return this.batchProcess(params.map(p => ({ type: 'image', params: p })));
+  }
+
   async videoSearch(
     params: VideoSearchParams,
   ): Promise<VideoSearchApiResponse> {
     return this.request<VideoSearchApiResponse>('/videos/search', params);
   }
 
+  async batchVideoSearch(
+    params: VideoSearchParams[],
+  ): Promise<VideoSearchApiResponse[]> {
+    return this.batchProcess(params.map(p => ({ type: 'video', params: p })));
+  }
+
   async newsSearch(params: NewsSearchParams): Promise<NewsSearchApiResponse> {
     return this.request<NewsSearchApiResponse>('/news/search', params);
+  }
+
+  async batchNewsSearch(
+    params: NewsSearchParams[],
+  ): Promise<NewsSearchApiResponse[]> {
+    return this.batchProcess(params.map(p => ({ type: 'news', params: p })));
   }
 
   async suggestSearch(
@@ -191,6 +242,93 @@ class BraveSDK {
       '/spellcheck/search',
       params,
     );
+  }
+
+  /**
+   * Process multiple requests sequentially with a configurable delay
+   * @param requests Array of requests to process
+   * @param options Configuration options for batch processing
+   * @returns Array of responses in the same order as requests
+   */
+  async batchProcess<T extends any[]>(
+    requests: BatchRequest[],
+    options: BatchRequestOptions = {},
+  ): Promise<T> {
+    const { delay = 1000, onProgress } = options;
+    const results: any[] = [];
+    const total = requests.length;
+
+    for (let i = 0; i < total; i++) {
+      const request = requests[i];
+      let response: any;
+
+      try {
+        switch (request.type) {
+          case 'web':
+            response = await this.webSearch(request.params as WebSearchParams);
+            break;
+          case 'image':
+            response = await this.imageSearch(
+              request.params as ImageSearchParams,
+            );
+            break;
+          case 'video':
+            response = await this.videoSearch(
+              request.params as VideoSearchParams,
+            );
+            break;
+          case 'news':
+            response = await this.newsSearch(
+              request.params as NewsSearchParams,
+            );
+            break;
+          case 'suggest':
+            response = await this.suggestSearch(
+              request.params as SuggestSearchParams,
+            );
+            break;
+          case 'spellcheck':
+            response = await this.spellcheckSearch(
+              request.params as SpellcheckSearchParams,
+            );
+            break;
+          case 'summarizer':
+            response = await this.summarizerSearch(
+              request.params as SummarizerSearchParams,
+            );
+            break;
+          case 'localPoi':
+            response = await this.localPoiSearch(
+              request.params as LocalSearchParams,
+            );
+            break;
+          case 'localDescriptions':
+            response = await this.localDescriptionsSearch(
+              request.params as LocalSearchParams,
+            );
+            break;
+          default:
+            throw new Error(`Unknown request type: ${request.type}`);
+        }
+
+        results.push(response);
+      } catch (error) {
+        results.push({
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+
+      if (onProgress) {
+        onProgress(i + 1, total);
+      }
+
+      // Add delay between requests, except for the last one
+      if (i < total - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+
+    return results as T;
   }
 }
 

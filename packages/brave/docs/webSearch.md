@@ -92,4 +92,33 @@ if (results.type === 'web') {
     console.log('FAQ Results:', results.faq.results);
   }
 }
+
+// Batch web search example
+const batchResults = await braveSDK.batchWebSearch([
+  { q: 'TypeScript' },
+  { q: 'JavaScript', count: 10 },
+  { q: 'Python', freshness: 'pw' },
+]);
+
+// Process batch results
+batchResults.forEach((result, index) => {
+  if (result.type === 'web' && result.search) {
+    console.log(`Batch ${index + 1} Results:`);
+    result.search.results.forEach((searchResult, resultIndex) => {
+      console.log(`  Result ${resultIndex + 1}:`, searchResult.title);
+      console.log('  URL:', searchResult.url);
+    });
+  }
+});
+
+// Batch search with progress tracking
+const batchResultsWithProgress = await braveSDK.batchWebSearch(
+  [{ q: 'React' }, { q: 'Vue' }, { q: 'Angular' }],
+  {
+    delay: 2000, // 2 second delay between requests
+    onProgress: (completed, total) => {
+      console.log(`Completed ${completed} of ${total} searches`);
+    },
+  },
+);
 ```
