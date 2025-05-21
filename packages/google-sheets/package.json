@@ -29,7 +29,10 @@
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
+    "@types/jest": "^29.5.14",
     "@types/node": "^18",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
     "tsup": "^8",
     "typescript": "5.6.3"
   },
