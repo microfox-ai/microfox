@@ -1,5 +1,11 @@
 # @microfox/brave
 
+## 1.0.4
+
+### Patch Changes
+
+- 5e5598c: Changes from PR #309: docs
+
 ## 1.0.3
 
 ### Patch Changes
