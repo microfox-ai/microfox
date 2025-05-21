@@ -1,25 +1,110 @@
-## Function: `localDescriptionsSearch`
+# Brave Search API: Local Descriptions Search
 
-Performs a local descriptions search using the Brave Search API.
+The `localDescriptionsSearch` function enables searching for local descriptions using the Brave Search API, allowing you to retrieve detailed information about specific locations based on their IDs.
 
-**Purpose:**
-This function allows you to search for local descriptions based on location IDs.
-
-**Parameters:**
-
-* `params` (LocalSearchParams, required): An object containing the search parameters.
-    * `ids` (array<string>, required): List of location IDs (max 20).
-    * `search_lang` (string, optional): Search language.
-    * `ui_lang` (string, optional): UI language.
-    * `units` (enum, optional): Units for measurements ('metric', 'imperial').
-
-**Return Value:**
-
-* `Promise<LocalDescriptionsSearchApiResponse>`: A promise that resolves to the local descriptions search response.
-
-**Examples:**
+## Function Signature
 
 ```typescript
-// Example: Performing a local descriptions search
-const results = await braveSDK.localDescriptionsSearch({ ids: ['id1', 'id2'] });
+localDescriptionsSearch(params: LocalSearchParams): Promise<LocalDescriptionsSearchApiResponse>
 ```
+
+## Parameters
+
+The function accepts a single parameter object with the following properties:
+
+### Required Parameters
+
+- `ids` (array<string>): List of location IDs to search for
+  - Maximum number of IDs: 20
+
+### Optional Parameters
+
+- `search_lang` (string): Language for search results
+- `ui_lang` (string): Language for user interface elements
+- `units` (enum): Units for measurements
+  - Values: 'metric' | 'imperial'
+
+## Return Value
+
+Returns a Promise that resolves to a `LocalDescriptionsSearchApiResponse` object containing the local descriptions search results.
+
+### Response Type Structure
+
+```typescript
+interface LocalDescriptionsSearchApiResponse {
+  type: 'local_descriptions';
+  results?: Array<{
+    type: 'local_description';
+    id: string;
+    description?: string;
+  }>;
+}
+```
+
+## Example Usage
+
+```typescript
+// Basic local descriptions search
+const results = await braveSDK.localDescriptionsSearch({
+  ids: ['location1', 'location2'],
+});
+
+// Advanced search with multiple parameters
+const results = await braveSDK.localDescriptionsSearch({
+  ids: ['location1', 'location2', 'location3'],
+  search_lang: 'en',
+  ui_lang: 'en',
+  units: 'metric',
+});
+
+// Processing the results
+const processResults = async () => {
+  try {
+    const response = await braveSDK.localDescriptionsSearch({
+      ids: ['location1', 'location2'],
+    });
+
+    // Access the location descriptions
+    const descriptions = response.results || [];
+
+    // Process each description
+    descriptions.forEach(desc => {
+      console.log(`Location ID: ${desc.id}`);
+      console.log(
+        `Description: ${desc.description || 'No description available'}`,
+      );
+    });
+  } catch (error) {
+    console.error('Error performing local descriptions search:', error);
+  }
+};
+```
+
+## Notes
+
+- The function is specifically designed for retrieving detailed information about locations
+- Maximum of 20 location IDs can be searched in a single request
+- All parameters except `ids` are optional
+
+## Best Practices
+
+1. **Error Handling**
+
+   - Always wrap API calls in try-catch blocks
+   - Handle rate limiting and network errors appropriately
+
+2. **Result Processing**
+
+   - Validate the response data before processing
+   - Handle cases where some location IDs might not return results
+   - Check for optional description field before using it
+
+3. **Performance**
+
+   - Batch location IDs when possible to minimize API calls
+   - Cache results when appropriate for frequently accessed locations
+
+4. **Language and Units**
+   - Set appropriate language parameters based on your user base
+   - Use consistent units throughout your application
+   - Consider user preferences when setting the units parameter
