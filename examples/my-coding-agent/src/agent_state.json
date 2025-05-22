@@ -1,0 +1,42 @@
+{
+  "tasks": [
+    {
+      "id": "da06ffd1-8640-4153-b4b2-a179fbaf9a1d",
+      "input": "write a code for binary search in c++",
+      "createdAt": "2025-05-21T10:21:39.450Z"
+    },
+    {
+      "id": "0a1aadb1-ce9a-4b24-9c4a-d845002bce0a",
+      "input": "write bubble sort code in c++",
+      "createdAt": "2025-05-21T10:34:01.895Z"
+    },
+    {
+      "id": "87c9aa42-9054-42e7-b649-01cd267c2a78",
+      "input": "write bubble sort code in cpp",
+      "createdAt": "2025-05-21T11:17:20.751Z"
+    },
+    {
+      "id": "546719ec-c354-4abe-bed0-a18110f8245d",
+      "input": "write merge sort code",
+      "createdAt": "2025-05-21T17:23:46.993Z"
+    },
+    {
+      "id": "86255cb3-7509-4c56-abf8-b3e68a62f2ec",
+      "input": "write merge sort code in cpp",
+      "language": "python",
+      "createdAt": "2025-05-21T18:36:31.462Z"
+    },
+    {
+      "id": "f3b62d58-d889-4f71-949e-68a379eac397",
+      "input": "write binary serch code in c++",
+      "language": "c++",
+      "createdAt": "2025-05-21T18:38:11.428Z"
+    },
+    {
+      "id": "4fa0ce97-3b3f-458e-873b-5e46fab623f8",
+      "input": "writ merge sort in c++",
+      "language": "c++",
+      "createdAt": "2025-05-22T05:57:36.885Z"
+    }
+  ]
+}

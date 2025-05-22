@@ -1,3 +1,5 @@
+//microfox/examples/rest-sdk-example/tsconfig.json
+
 {
   "compilerOptions": {
     "target": "ES2020",

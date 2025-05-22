@@ -1,3 +1,5 @@
+// microfox/examples/rest-sdk-example/src/index.ts
+
 import { z } from 'zod';
 import {
   APICallError,
@@ -31,6 +33,9 @@ const github = createRestSDK({
     Accept: 'application/vnd.github.v3+json',
   },
 });
+
+
+console.log("example started");
 
 // Example usage with different content types and response formats
 async function restSDKExamples() {
@@ -186,6 +191,11 @@ const clientWithTimeout = createRestSDK({
   baseUrl: 'https://api.example.com',
   timeout: 5000,
 });
+
+//added line
+restSDKExamples();
+
+
 
 export {
   restSDKExamples,

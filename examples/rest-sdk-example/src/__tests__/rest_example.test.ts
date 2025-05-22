@@ -1,3 +1,5 @@
+//microfox/examples/rest-sdk-example/src/__tests__/rest_example.test.ts
+
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
 import {
   createRestSDK,
