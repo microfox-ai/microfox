@@ -28,7 +28,7 @@ const braveSDK = createBraveSDK({
 const braveSDK = createBraveSDK(); // Uses BRAVE_API_KEY from environment
 ```
 
-## Rate Limits ( DO NOT USE PROMISE.All )
+## Batch Requests ( DO NOT USE PROMISE.All )
 
 - Free Plan: 1 request per second
 - Pro Plan: 20 requests per second
@@ -37,6 +37,7 @@ When making multiple requests, use sequential processing instead to avoid hittin
 
 ```typescript
 const queries = ['search query 1', 'search query 2'];
+
 // ❌ Don't do this
 const searches = queries.map((query: string) =>
   braveSDK.webSearch({ q: query }),
