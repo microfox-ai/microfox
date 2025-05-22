@@ -36,17 +36,25 @@ const braveSDK = createBraveSDK(); // Uses BRAVE_API_KEY from environment
 When making multiple requests, use sequential processing instead to avoid hitting rate limits:
 
 ```typescript
+const queries = ['search query 1', 'search query 2'];
 // ❌ Don't do this
-const results = await Promise.all([
-  braveSDK.webSearch({ q: 'query1' }),
-  braveSDK.webSearch({ q: 'query2' }),
-]);
+const searches = queries.map((query: string) =>
+  braveSDK.webSearch({ q: query }),
+);
+const results = await Promise.all(searches);
 
 // ✅ Do this instead
-const results = await braveSdk.batchWebSearch([
-  { q: 'query1' },
-  { q: 'query2' },
-]);
+const results = await braveSdk.batchWebSearch(
+  queries.map(query => ({
+    q: query,
+  })),
+); // deafault delay of 1 second
+
+// ✅ Do this instead
+for (const query of queries) {
+  await braveSDK.webSearch({ q: query });
+  await new Promise(resolve => setTimeout(resolve, 1000)); // delay by 1 seconds
+}
 ```
 
 ## API Reference
@@ -68,8 +76,6 @@ For detailed documentation on all available functions and their parameters, plea
 ## Best Practices
 
 1. Always use sequential processing for multiple requests to respect rate limits
-2. Configure appropriate headers for your use case
-3. Handle API errors appropriately
-4. Use the appropriate subscription plan for your needs
-5. Consider caching responses when appropriate
-6. Monitor rate limit headers in responses for quota management
+2. Handle API errors appropriately
+3. Consider caching responses when appropriate
+4. Monitor rate limit headers in responses for quota management
