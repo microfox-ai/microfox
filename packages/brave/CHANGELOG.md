@@ -1,5 +1,11 @@
 # @microfox/brave
 
+## 1.0.5
+
+### Patch Changes
+
+- ee65847: Changes from PR #314: batch-process
+
 ## 1.0.4
 
 ### Patch Changes
