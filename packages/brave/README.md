@@ -38,23 +38,27 @@ When making multiple requests, use sequential processing instead to avoid hittin
 ```typescript
 const queries = ['search query 1', 'search query 2'];
 
-// ❌ Don't do this
-const searches = queries.map((query: string) =>
-  braveSDK.webSearch({ q: query }),
-);
-const results = await Promise.all(searches);
+// ❌ Don't do this ( Promise.all will hit 429 due to rate limiting. )
+const contentPromises = userTopics.topics.map(async topic => {
+  const results = await braveSDK.webSearch({ q: topic, count: 5 });
+  return results.search?.results || [];
+});
+const contentResults = await Promise.all(contentPromises);
 
-// ✅ Do this instead
-const results = await braveSdk.batchWebSearch(
-  queries.map(query => ({
-    q: query,
+// ✅ Do this instead ( use batchWebSearch )
+const contentResults = await braveSdk.batchWebSearch(
+  userTopics.topics.map(topic => ({
+    q: topic,
+    count: 5,
   })),
 ); // deafault delay of 1 second
 
-// ✅ Do this instead
+// ✅ or Do this instead
+const contentResults = [];
 for (const query of queries) {
-  await braveSDK.webSearch({ q: query });
+  const results = await braveSDK.webSearch({ q: topic, count: 5 });
   await new Promise(resolve => setTimeout(resolve, 1000)); // delay by 1 seconds
+  contentResults.push({ query: topic, results: results.search?.results });
 }
 ```
 
