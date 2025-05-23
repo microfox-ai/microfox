@@ -30,8 +30,8 @@ const braveSDK = createBraveSDK(); // Uses BRAVE_API_KEY from environment
 
 ## Batch Requests ( DO NOT USE PROMISE.All )
 
-- Free Plan: 1 request per second
-- Pro Plan: 20 requests per second
+- Free Plan Ratelimit: 1 request per second
+- Pro Plan Ratelimit: 20 requests per second
 
 When making multiple requests, use sequential processing instead to avoid hitting rate limits:
 
