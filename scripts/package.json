@@ -26,6 +26,7 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.10",
     "@ai-sdk/google": "^1.2.12",
+    "@google/generative-ai": "^0.24.1",
     "@microfox/serpapi": "1.0.2",
     "@microfox/tavily": "1.0.2",
     "@octokit/rest": "^21.1.1",

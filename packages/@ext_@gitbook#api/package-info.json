@@ -1,7 +1,7 @@
 {
   "name": "@gitbook/api",
   "title": "@gitbook/api",
-  "description": "No description available",
+  "description": "TypeScript SDK providing GitBook API access for content management and publishing.",
   "platformType": "tool",
   "path": "packages/@ext_@gitbook#api",
   "dependencies": [
