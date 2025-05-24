@@ -1,5 +1,11 @@
 # @microfox/brave
 
+## 1.0.7
+
+### Patch Changes
+
+- 33ac5d1: Changes from PR #325: tracking
+
 ## 1.0.6
 
 ### Patch Changes
