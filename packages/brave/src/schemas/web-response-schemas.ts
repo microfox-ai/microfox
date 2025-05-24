@@ -100,7 +100,7 @@ export const SearchSchema = z.object({
 
 // Web Search API Response Schema
 export const WebSearchApiResponseSchema = z.object({
-  type: z.literal('web'),
+  type: z.literal('search'),
   discussions: DiscussionsSchema.optional(),
   faq: FAQSchema.optional(),
   infobox: GraphInfoboxSchema.optional(),
@@ -109,7 +109,7 @@ export const WebSearchApiResponseSchema = z.object({
   news: NewsSchema.optional(),
   query: QuerySchema.optional(),
   rich_data: z.any().optional(), // RichDataSchema
-  search: SearchSchema.optional(),
+  web: SearchSchema.optional(),
   videos: VideosSchema.optional(),
 });
 

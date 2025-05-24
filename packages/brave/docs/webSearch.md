@@ -67,10 +67,10 @@ const results = await braveSDK.webSearch({
 });
 
 // Processing the results
-if (results.type === 'web') {
+if (results.type === 'search') {
   // Access search results
-  if (results.search) {
-    results.search.results.forEach((result, index) => {
+  if (results.web) {
+    results.web.results.forEach((result, index) => {
       console.log(`Result ${index + 1}:`, result.title);
       console.log('URL:', result.url);
       console.log('Description:', result.description);
@@ -102,9 +102,9 @@ const batchResults = await braveSDK.batchWebSearch([
 
 // Process batch results
 batchResults.forEach((result, index) => {
-  if (result.type === 'web' && result.search) {
+  if (result.type === 'web' && result.web) {
     console.log(`Batch ${index + 1} Results:`);
-    result.search.results.forEach((searchResult, resultIndex) => {
+    result.web.results.forEach((searchResult, resultIndex) => {
       console.log(`  Result ${resultIndex + 1}:`, searchResult.title);
       console.log('  URL:', searchResult.url);
     });

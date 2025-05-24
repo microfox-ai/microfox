@@ -59,7 +59,7 @@ const contentResults = [];
 for (const topic of topics) {
   const results = await braveSDK.webSearch({ q: topic, count: 5 });
   await new Promise(resolve => setTimeout(resolve, 1000)); // delay by 1 seconds
-  contentResults.push({ query: topic, results: results.search?.results });
+  contentResults.push({ query: topic, results: results.web?.results });
 }
 ```
 
