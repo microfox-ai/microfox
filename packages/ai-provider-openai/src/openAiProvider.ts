@@ -4,6 +4,7 @@ import {
   LanguageModelV1Middleware,
   wrapLanguageModel,
 } from 'ai';
+import { updateUsage } from './redisTracker';
 
 export type OpenAIImageModelId =
   | 'dall-e-3'
@@ -82,7 +83,11 @@ export class OpenAiProvider {
       },
       async wrapGenerate({ doGenerate, params }) {
         const result = await doGenerate();
-        console.log(result.usage);
+        if (result.response?.modelId) {
+          updateUsage(result.response?.modelId, result.usage);
+        } else {
+          console.warn('No model ID found in the result');
+        }
         return result;
       },
       async wrapStream({ doStream, params }) {
