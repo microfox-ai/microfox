@@ -4,6 +4,7 @@ import {
   LocalSearchHeaders,
   RequestHeaders,
 } from './lib/headers';
+import { updateUsage } from './redisTracker';
 import {
   BraveSDKOptions,
   BraveSDKOptionsSchema,
@@ -156,6 +157,8 @@ class BraveSDK {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    await updateUsage('brave', 1);
 
     return response.json() as Promise<T>;
   }
