@@ -36,17 +36,29 @@ This function sends a single email to a specified recipient using the AWS SES se
 ```typescript
 // Example 1: Sending a plain text email
 await ses.sendEmail({
-  sender: 'sender@example.com',
-  recipient: 'recipient@example.com',
-  subject: 'Hello from SES!',
+  sender:
+    process.env.AWS_SES_SENDER_EMAIL ??
+    req.params.senderEmail ??
+    'sender@example.com',
+  recipient:
+    process.env.AWS_SES_RECEPIENT_EMAIL ??
+    req.params.recepientMail ??
+    'recipient@example.com',
+  subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
 
 // Example 2: Sending an HTML email
 await ses.sendEmail({
-  sender: 'sender@example.com',
-  recipient: 'recipient@example.com',
-  subject: 'Hello from SES!',
+  sender:
+    process.env.AWS_SES_SENDER_EMAIL ??
+    req.params.senderEmail ??
+    'sender@example.com',
+  recipient:
+    process.env.AWS_SES_RECEPIENT_EMAIL ??
+    req.params.recepientMail ??
+    'recipient@example.com',
+  subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyHtml: '<p>This is an HTML email body.</p>',
 });
 ```
