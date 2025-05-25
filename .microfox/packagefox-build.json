@@ -1,1 +1,13 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Google Calendar API",
+      "url": "https://developers.google.com/workspace/calendar/api/guides/overview",
+      "notes": "Create a new package for Google Calendar API.",
+      "issueNumber": 328,
+      "logs": "",
+      "error": ""
+    }
+  ]
+}
