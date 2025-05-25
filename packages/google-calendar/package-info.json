@@ -1,0 +1,32 @@
+{
+  "name": "@microfox/google-calendar",
+  "title": "Google Calendar",
+  "description": "A TypeScript SDK for interacting with the Google Calendar API.",
+  "platformType": "tool",
+  "path": "packages/google-calendar",
+  "dependencies": [
+    "zod",
+    "@microfox/google-oauth"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "/connect/google-oauth",
+  "oauth2Scopes": [
+    "https://www.googleapis.com/auth/calendar",
+    "https://www.googleapis.com/auth/calendar.events"
+  ],
+  "authType": "oauth2",
+  "documentation": "https://www.npmjs.com/package/@microfox/google-calendar",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-calendar.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "description": "The full README for the Google Calendar",
+    "functionalities": []
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use this SDK, you need to set up a Google Cloud project and obtain OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Calendar API for your project.\n4. Create OAuth 2.0 credentials (client ID and client secret) for a Web application.\n5. Set up the OAuth consent screen and add the necessary scopes.\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: The redirect URI for your application\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token (optional, can be provided in the SDK constructor)\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token (optional, can be provided in the SDK constructor)\n\nMake sure to keep your credentials and tokens secure and never expose them in client-side code."
+  },
+  "extraInfo": []
+}
