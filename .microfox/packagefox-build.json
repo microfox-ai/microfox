@@ -1,22 +1,6 @@
 {
   "requests": [
     {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
       "type": "pkg-create",
       "query": "Google Calendar API",
       "url": "https://developers.google.com/workspace/calendar/api/v3/reference",
