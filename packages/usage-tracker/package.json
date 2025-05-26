@@ -1,6 +1,6 @@
 {
   "name": "@microfox/usage-tracker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Microfox AI usage tracker which tracks usage of any LLM and TypeScript AI SDK internally.",
   "license": "MIT",
   "repository": {
