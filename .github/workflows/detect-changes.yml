@@ -194,6 +194,11 @@ jobs:
           chmod +x scripts/reset-microfox-files.sh
           ./scripts/reset-microfox-files.sh
 
+      - name: Clean up  & reset .microfox files
+        run: |
+          echo "{ requests: [] }" > .microfox/packagefox-build.json
+          echo "{}" > .microfox/pr-usage.json
+
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
