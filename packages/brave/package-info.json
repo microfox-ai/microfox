@@ -4,7 +4,7 @@
   "description": "The Brave SDK for TypeScript provides convenient access to various Brave APIs, including web, image, video, news, and local search functionalities, as well as summarization, spell check, and suggestions.",
   "path": "packages/brave",
   "dependencies": [],
-  "status": "semiStable",
+  "status": "stable",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/brave",
