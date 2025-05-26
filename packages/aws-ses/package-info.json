@@ -62,6 +62,18 @@
           "required": false
         }
       ],
+      "botConfig": [
+        {
+          "key": "AWS_SES_SENDER_MAIL_DOMAIN",
+          "displayName": "Sender Mail Domain Name",
+          "description": "The domain name that will appear as the suffix of the sender email address.",
+          "ui": {
+            "type": "text",
+            "label": "Sender Mail Domain Name",
+            "placeholder": "reply-bots.com"
+          }
+        }
+      ],
       "internalKeys": [],
       "functionalities": ["sendEmail", "sendBulkEmails"]
     }

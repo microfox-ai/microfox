@@ -1,0 +1,50 @@
+{
+  "name": "@microfox/usage-tracker",
+  "version": "1.0.1",
+  "description": "Microfox AI usage tracker which tracks usage of any LLM and TypeScript AI SDK internally.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "type": "module",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "dependencies": {
+    "@upstash/redis": "*"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "keywords": [
+    "microfox",
+    "ai",
+    "sdk",
+    "usage",
+    "tracker"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

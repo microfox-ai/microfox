@@ -9,10 +9,12 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  check-and-release:
-    name: Check for changesets and release
+  check:
+    name: Check for changesets
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
+    outputs:
+      has_changesets: ${{ steps.check-changesets.outputs.has_changesets }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -28,19 +30,29 @@ jobs:
           echo "Found $changeset_count changeset files"
           echo "has_changesets=$([[ $changeset_count -gt 0 ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
 
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: check
+    if: needs.check.outputs.has_changesets == 'true'
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+
       - name: Setup Node.js 20.x
-        if: steps.check-changesets.outputs.has_changesets == 'true'
         uses: actions/setup-node@v2
         with:
           node-version: 20
 
       - name: Install Dependencies
-        if: steps.check-changesets.outputs.has_changesets == 'true'
         run: |
           npm i
 
       - name: Create Release Pull Request or Publish to npm
-        if: steps.check-changesets.outputs.has_changesets == 'true'
         id: changesets
         uses: changesets/action@v1
         with:

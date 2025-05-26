@@ -1,0 +1,21 @@
+{
+  "name": "@microfox/usage-pricing",
+  "title": "Microfox Usage Pricing",
+  "description": "Microfox AI usage pricing which tracks usage of any LLM and TypeScript AI SDK internally.",
+  "path": "packages/usage-pricing",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "authType": "none",
+  "documentation": "https://www.npmjs.com/package/@microfox/usage-tracker",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/upstash-icon.svg",
+  "constructors": [],
+  "keysInfo": [],
+  "extraInfo": [],
+  "readme_map": {
+    "path": "/README.md",
+    "functionalities": [],
+    "description": "No description provided",
+    "all_readmes": []
+  },
+  "platformType": "internal"
+}
