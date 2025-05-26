@@ -1,3 +1,2 @@
-export { createGoogleCalendarSDK, GoogleCalendarSDK } from './GoogleCalendarSdk';
+export { createGoogleCalendarSDK, GoogleCalendarSdk } from './GoogleCalendarSdk';
 export * from './types';
-export * from './schemas';

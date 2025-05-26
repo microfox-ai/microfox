@@ -10,6 +10,7 @@ import { processGitHubUrl } from './agents/packagefox/genExtPackage';
 import { generateExternalDocs } from './agents/docfox/genExtDocs';
 import { generateDocs } from './agents/docfox/genDocs';
 import { generateOAuthPackage } from './agents/packagefox/genOAuthPackage';
+import { regenPackage } from './agents/packagefox/regenPackage';
 
 /**
  * This script is used to handle the PackageFox workflow.
@@ -81,6 +82,25 @@ async function handleWorkflow() {
           console.log(`✅ SDK generation complete for ${result.packageName}`);
           console.log(`📂 Package location: ${result.packageDir}`);
           await fixBuildIssues(result.packageName);
+          await cleanupUsage();
+        } else {
+          console.log('⚠️ SDK generation completed with warnings or failed.');
+          process.exit(1);
+        }
+        break;
+      case 'pkg-recreate':
+        if (!packageName) {
+          console.error('Error: Missing PACKAGE_NAME for pkg-recreate');
+          process.exit(1);
+        }
+        console.log(`Running regenPackage for package: "${packageName}"`);
+        const recreateResult = await regenPackage(packageName, true);
+        if (recreateResult) {
+          console.log(
+            `✅ SDK generation complete for ${recreateResult.packageName}`,
+          );
+          console.log(`📂 Package location: ${recreateResult.packageDir}`);
+          await fixBuildIssues(recreateResult.packageName);
           await cleanupUsage();
         } else {
           console.log('⚠️ SDK generation completed with warnings or failed.');

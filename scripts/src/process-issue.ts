@@ -12,6 +12,7 @@ const IssueDetailsSchema = z.object({
   type: z
     .enum([
       'pkg-create',
+      'pkg-recreate',
       'pkg-create-oauth',
       'pkg-create-webhook',
       'pkg-build',

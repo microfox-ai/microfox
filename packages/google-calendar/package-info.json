@@ -1,34 +1,158 @@
 {
   "name": "@microfox/google-calendar",
   "title": "Google Calendar",
-  "description": "A TypeScript SDK for interacting with the Google Calendar API.",
+  "description": "A TypeScript SDK providing convenient access to the Google Calendar API for creating, reading, updating, and deleting events.",
   "platformType": "tool",
   "path": "packages/google-calendar",
-  "dependencies": [
-    "zod",
-    "@microfox/google-oauth"
-  ],
+  "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
-    "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/calendar.readonly",
+    "https://www.googleapis.com/auth/calendar.acls.readonly",
     "https://www.googleapis.com/auth/calendar.events",
-    "https://www.googleapis.com/auth/calendar.events.readonly"
+    "https://www.googleapis.com/auth/calendar.events.readonly",
+    "https://www.googleapis.com/auth/calendar.events.owned",
+    "https://www.googleapis.com/auth/calendar.events.public.readonly",
+    "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+    "https://www.googleapis.com/auth/calendar.freebusy",
+    "https://www.googleapis.com/auth/calendar.events.freebusy",
+    "https://www.googleapis.com/auth/calendar.settings.readonly",
+    "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
   ],
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/google-calendar",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-calendar.svg",
   "readme_map": {
-    "path": "/README.md",
+    "title": "Google Calendar",
     "description": "The full README for the Google Calendar",
-    "functionalities": []
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/README.md",
+    "functionalities": ["GoogleCalendarSdk"],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/GoogleCalendarSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "GoogleCalendarSdk",
+        "description": "Initializes a new instance of the GoogleCalendarSdk. This SDK provides methods to interact with the Google Calendar API, allowing for management of calendars, events, access control lists (ACLs), and settings. It handles OAuth 2.0 authentication internally using the provided credentials and tokens."
+      }
+    ]
   },
-  "constructors": [],
-  "keysInfo": [],
+  "constructors": [
+    {
+      "name": "GoogleCalendarSdk",
+      "description": "Create a new Google Calendar client through which you can interact with the API",
+      "auth": "none",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GOOGLE_CLIENT_ID",
+          "displayName": "Google Client ID",
+          "description": "Your Google Cloud project's OAuth 2.0 Client ID. This is used to identify your application to Google's authentication servers.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_CLIENT_SECRET",
+          "displayName": "Google Client Secret",
+          "description": "Your Google Cloud project's OAuth 2.0 Client Secret. This is used to authenticate your application to Google's authentication servers.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_REDIRECT_URI",
+          "displayName": "Google Redirect URI",
+          "description": "The URI to which Google will redirect the user after they have authorized your application. This must match one of the authorized redirect URIs configured in your Google Cloud project.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_ACCESS_TOKEN",
+          "displayName": "Google Access Token",
+          "description": "An existing Google OAuth 2.0 Access Token for API authentication. The SDK will use this token and attempt to refresh it if a refresh token is also provided.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_REFRESH_TOKEN",
+          "displayName": "Google Refresh Token",
+          "description": "An existing Google OAuth 2.0 Refresh Token. Used to obtain a new access token when the current one expires.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_SCOPES",
+          "displayName": "Google API Scopes",
+          "description": "A comma-separated or space-separated list of Google API scopes that your application requires. If not provided, the SDK defaults to a comprehensive set of Google Calendar scopes (e.g., 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'). The application should parse this string into an array of strings before passing it to the SDK constructor.",
+          "required": false,
+          "defaultValue": [
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/calendar.acls.readonly",
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+            "https://www.googleapis.com/auth/calendar.events.owned",
+            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+            "https://www.googleapis.com/auth/calendar.events.public.readonly",
+            "https://www.googleapis.com/auth/calendar.freebusy",
+            "https://www.googleapis.com/auth/calendar.events.freebusy",
+            "https://www.googleapis.com/auth/calendar.settings.readonly",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+          ]
+        }
+      ],
+      "functionalities": []
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GOOGLE_CLIENT_ID",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "Your Google Cloud project's OAuth 2.0 Client ID. This is used to identify your application to Google's authentication servers.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_CLIENT_SECRET",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "Your Google Cloud project's OAuth 2.0 Client Secret. This is used to authenticate your application to Google's authentication servers.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_REDIRECT_URI",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "The URI to which Google will redirect the user after they have authorized your application. This must match one of the authorized redirect URIs configured in your Google Cloud project.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_ACCESS_TOKEN",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "An existing Google OAuth 2.0 Access Token for API authentication. The SDK will use this token and attempt to refresh it if a refresh token is also provided.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_REFRESH_TOKEN",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "An existing Google OAuth 2.0 Refresh Token. Used to obtain a new access token when the current one expires.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_SCOPES",
+      "constructors": ["GoogleCalendarSdk"],
+      "description": "A comma-separated or space-separated list of Google API scopes that your application requires. If not provided, the SDK defaults to a comprehensive set of Google Calendar scopes (e.g., 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'). The application should parse this string into an array of strings before passing it to the SDK constructor.",
+      "required": false,
+      "defaultValue": [
+        "https://www.googleapis.com/auth/calendar.readonly",
+        "https://www.googleapis.com/auth/calendar.acls.readonly",
+        "https://www.googleapis.com/auth/calendar.events",
+        "https://www.googleapis.com/auth/calendar.events.readonly",
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
+        "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.freebusy",
+        "https://www.googleapis.com/auth/calendar.settings.readonly",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+      ]
+    }
+  ],
   "keyInstructions": {
     "link": "",
-    "setupInfo": "To use the Google Calendar SDK, you need to set up OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Calendar API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleCalendarSDK } from '@microfox/google-calendar';\n\nconst sdk = createGoogleCalendarSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n```\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token (if available)\n\nMake sure to keep your credentials and tokens secure and never expose them in client-side code."
+    "setupInfo": "To use this SDK, you need to set up OAuth 2.0 credentials for the Google Calendar API:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Calendar API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleCalendarSDK } from '@microfox/google-calendar';\n\nconst sdk = createGoogleCalendarSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN', // Optional, if you already have a valid access token\n  refreshToken: 'YOUR_REFRESH_TOKEN', // Optional, for refreshing the access token\n});\n```\n\nYou can also use environment variables to configure the SDK:\n\n- GOOGLE_CLIENT_ID: Your OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: A valid access token (optional)\n- GOOGLE_REFRESH_TOKEN: A refresh token for obtaining new access tokens (optional)\n\nMake sure to keep your credentials and tokens secure and never expose them in client-side code."
   },
-  "extraInfo": []
+  "extraInfo": [],
+  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
 }

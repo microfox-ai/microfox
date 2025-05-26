@@ -120,6 +120,510 @@ interface SDKMetadata {
 // Helper type for storing function docs
 type StoredFunctionDocs = { [functionName: string]: FunctionDocsData };
 
+// Helper type for environment keys
+type EnvKeyType = {
+  key: string;
+  displayName: string;
+  description: string;
+  required: boolean;
+};
+
+/**
+ * Phase 1: Generate environment keys and dependencies only
+ */
+async function generatePhase1(
+  code: string,
+  metadata: SDKMetadata,
+  extraInfo: string[],
+  envKeysStoreKey: string,
+  dependenciesStoreKey: string,
+): Promise<boolean> {
+  const phase1SystemPrompt = dedent`
+    You are a professional documentation generator for TypeScript SDKs. Your task is to analyze the provided SDK code and generate ONLY environment keys and dependencies by calling the available tools.
+
+    ## IMPORTANT: You MUST call exactly 3 tools in this order:
+    1. Call \`saveEnvKeys\` tool with environment variables (or empty array if none needed)
+    2. Call \`saveDependencies\` tool with dependencies (or empty arrays if none needed)  
+    3. Call \`finalizeDocs\` tool to complete Phase 1
+
+    ## Process
+    1. Carefully analyze the SDK code, schemas, types, and extra information provided in the user prompt.
+    2. Identify any necessary environment variables based on the code and auth type. Call the \`saveEnvKeys\` tool. If none, call it with an empty array.
+    3. Identify any necessary external dependencies or devDependencies needed beyond standard Node/TS. Call the \`saveDependencies\` tool. If none, call it with empty arrays.
+    4. DO NOT generate constructor or function documentation in this phase.
+    5. ALWAYS call the \`finalizeDocs\` tool to signal completion of this phase - this is REQUIRED.
+
+    ## Environment Variables Requirements
+    - All required API keys and tokens
+    - For OAuth2 authentication:
+      * Include the constructor configs like accessToken, refreshToken, clientId, clientSecret, etc. in the environment variables
+      * If the constructor config includes scopes, ALWAYS include a SCOPES environment variable
+      * The name of the environment variable should be based on the oauth provider name not the package name. For example, for google-oauth, the environment variable should be GOOGLE_ACCESS_TOKEN, GOOGLE_REFRESH_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SCOPES etc. not GOOGLE_SHEETS_ACCESS_TOKEN, GOOGLE_SHEETS_REFRESH_TOKEN, GOOGLE_SHEETS_CLIENT_ID, GOOGLE_SHEETS_CLIENT_SECRET, GOOGLE_SHEETS_SCOPES etc.
+    - For each environment variable:
+      * Clear display name
+      * Detailed description
+      * Required/optional status
+      * Format and validation requirements
+  `;
+
+  const phase1Prompt = dedent`
+    Analyze the TypeScript SDK below and generate ONLY environment keys and dependencies by calling the provided tools (\`saveEnvKeys\`, \`saveDependencies\`, \`finalizeDocs\`).
+
+    IMPORTANT: You must call all 3 tools:
+    1. saveEnvKeys (with environment variables or empty array)
+    2. saveDependencies (with dependencies or empty arrays)
+    3. finalizeDocs (to complete this phase)
+
+    ## Package Name
+    ${metadata.packageName}
+
+    ## Package Code
+    \`\`\`typescript
+    ${code}
+    \`\`\`
+
+    ## Extra Information
+    ${extraInfo.join('\n\n')}
+
+    ## SDK Information
+    - Title: ${metadata.title}
+    - Description: ${metadata.description}
+    - Auth Type: ${metadata.authType}
+    ${metadata.authSdk ? `- Auth SDK: ${metadata.authSdk}` : ''}
+
+    Generate ONLY environment keys and dependencies. Do NOT generate constructor or function documentation.
+    Remember to call finalizeDocs at the end to complete Phase 1.
+  `;
+
+  let phase1Complete = false;
+
+  const phase1Tools: Record<string, CoreTool<any, any>> = {
+    saveEnvKeys: tool({
+      description:
+        'STEP 1: Saves the list of environment variables required by the SDK. Call this first with environment variables or empty array if none needed.',
+      parameters: SaveEnvKeysSchema,
+      execute: async (data: EnvKeysData) => {
+        console.log(
+          `💾 Phase 1 Step 1: Saving env keys: ${data.envKeys?.length || 0} keys`,
+        );
+        const keysToSave = data.envKeys ?? [];
+        inMemoryStore.setItem(envKeysStoreKey, keysToSave);
+        return `Environment keys saved (${keysToSave.length} keys). Now call saveDependencies.`;
+      },
+    }),
+    saveDependencies: tool({
+      description:
+        'STEP 2: Saves the list of external dependencies and devDependencies required by the SDK. Call this second with dependencies or empty arrays if none needed.',
+      parameters: SaveDependenciesSchema,
+      execute: async (data: DependenciesData) => {
+        console.log(
+          `💾 Phase 1 Step 2: Saving dependencies: ${data.dependencies?.length || 0} deps, ${data.devDependencies?.length || 0} devDeps`,
+        );
+        const depsToSave = {
+          dependencies: data.dependencies ?? [],
+          devDependencies: data.devDependencies ?? [],
+        };
+        inMemoryStore.setItem(dependenciesStoreKey, depsToSave);
+        return `Dependencies saved (${depsToSave.dependencies.length} deps, ${depsToSave.devDependencies.length} devDeps). Now call finalizeDocs to complete Phase 1.`;
+      },
+    }),
+    finalizeDocs: tool({
+      description:
+        'STEP 3: REQUIRED - Signals that environment keys and dependencies have been generated and saved. Call this last to complete Phase 1.',
+      parameters: z.object({}),
+      execute: async () => {
+        console.log(
+          '🏁 Phase 1 Step 3: Complete - Environment keys and dependencies saved.',
+        );
+        phase1Complete = true;
+        return 'Phase 1 documentation generation process finalized successfully.';
+      },
+    }),
+  };
+
+  try {
+    console.log(
+      '🔑 Starting Phase 1: Environment keys and dependencies generation...',
+    );
+
+    const result = await generateText({
+      model: models.googleGemini25Pro,
+      system: phase1SystemPrompt,
+      prompt: phase1Prompt,
+      tools: phase1Tools,
+      toolChoice: 'required',
+      maxRetries: 3,
+      maxSteps: 3, // Only need 3 steps: saveEnvKeys, saveDependencies, finalizeDocs
+    });
+
+    if (result.usage) {
+      logUsage(models.googleGemini25Pro.modelId, result.usage);
+      console.log('Phase 1 Usage:', result.usage);
+    }
+
+    console.log(
+      `🔍 Phase 1 completed with ${result.toolCalls?.length || 0} tool calls`,
+    );
+    console.log(`🔍 Phase 1 finalizeDocs called: ${phase1Complete}`);
+
+    if (!phase1Complete) {
+      console.warn(
+        '⚠️ Phase 1 did not call finalizeDocs tool. This may indicate an issue.',
+      );
+      // Check if we at least got the required data
+      const envKeysData = inMemoryStore.getItem(envKeysStoreKey);
+      const dependenciesData = inMemoryStore.getItem(dependenciesStoreKey);
+
+      if (envKeysData !== null && dependenciesData !== null) {
+        console.log(
+          '✅ Phase 1 data was saved despite finalizeDocs not being called. Proceeding...',
+        );
+        return true; // Allow proceeding if data was saved
+      }
+    }
+
+    return phase1Complete;
+  } catch (error) {
+    console.error('Error during Phase 1 generation:', error);
+    return false;
+  }
+}
+
+/**
+ * Phase 2: Generate constructor and function documentation recursively
+ */
+async function generatePhase2Recursive(
+  code: string,
+  metadata: SDKMetadata,
+  extraInfo: string[],
+  constructorStoreKey: string,
+  functionsStoreKey: string,
+  packageDir: string,
+  attempt: number = 1,
+  maxAttempts: number = 3,
+): Promise<boolean> {
+  console.log(`📚 Phase 2 attempt ${attempt}/${maxAttempts}`);
+
+  // Check what's already been generated
+  const existingConstructor =
+    inMemoryStore.getItem<ConstructorDocsData>(constructorStoreKey);
+  const existingFunctions =
+    inMemoryStore.getItem<StoredFunctionDocs>(functionsStoreKey) || {};
+  const existingFunctionNames = Object.keys(existingFunctions);
+
+  // Ensure docs directory exists
+  const docsDir = path.join(packageDir, 'docs');
+  if (!fs.existsSync(docsDir)) {
+    console.log(`📁 Creating docs directory: ${docsDir}`);
+    fs.mkdirSync(docsDir, { recursive: true });
+  } else {
+    console.log(`📁 Docs directory already exists: ${docsDir}`);
+  }
+
+  // On first attempt, populate existing functions from filesystem since inMemoryStore was cleaned
+  let existingFunctionNamesFromFs: string[] = [];
+  let existingConstructorFromFs: string | null = null;
+
+  if (attempt === 1 && fs.existsSync(docsDir)) {
+    const existingDocFiles = fs
+      .readdirSync(docsDir)
+      .filter(file => file.endsWith('.md'));
+    console.log(
+      `📄 Found ${existingDocFiles.length} existing documentation files in docs directory`,
+    );
+
+    for (const file of existingDocFiles) {
+      const fileName = file.replace('.md', '');
+      const filePath = path.join(docsDir, file);
+
+      try {
+        const content = fs.readFileSync(filePath, 'utf8');
+
+        // Check if this is a constructor doc (look for constructor-specific patterns)
+        if (
+          content.includes('## Constructor:') ||
+          content.includes('Create a new') ||
+          content.includes('Initializes')
+        ) {
+          existingConstructorFromFs = fileName;
+          console.log(
+            `📋 Found existing constructor documentation: ${fileName}`,
+          );
+        } else {
+          // Assume it's a function doc
+          existingFunctionNamesFromFs.push(fileName);
+          console.log(`🔧 Found existing function documentation: ${fileName}`);
+        }
+      } catch (error) {
+        console.warn(`⚠️ Could not read existing doc file ${file}:`, error);
+      }
+    }
+  }
+
+  let contextInfo = '';
+
+  // Combine existing documentation from both in-memory store and filesystem
+  const hasExistingConstructor =
+    existingConstructor || existingConstructorFromFs;
+  const allExistingFunctionNames = [
+    ...existingFunctionNames,
+    ...existingFunctionNamesFromFs,
+  ];
+  const uniqueExistingFunctionNames = [...new Set(allExistingFunctionNames)];
+
+  if (hasExistingConstructor || uniqueExistingFunctionNames.length > 0) {
+    contextInfo = '\n## Already Generated Documentation\n';
+
+    if (hasExistingConstructor) {
+      const constructorName =
+        existingConstructor?.name || existingConstructorFromFs;
+      contextInfo += `- Constructor "${constructorName}" has already been documented. DO NOT regenerate it.\n`;
+    }
+
+    if (uniqueExistingFunctionNames.length > 0) {
+      contextInfo += `- Functions already documented: ${uniqueExistingFunctionNames.join(', ')}. DO NOT regenerate these functions.\n`;
+    }
+
+    contextInfo +=
+      'Focus ONLY on generating documentation for components that have NOT been documented yet.\n';
+  }
+
+  const phase2SystemPrompt = dedent`
+    You are a professional documentation generator for TypeScript SDKs. Your task is to analyze the provided SDK code and generate comprehensive documentation for the constructor and functions by calling the available tools.
+
+    ## Process
+    1. Carefully analyze the SDK code, schemas, types, and extra information provided in the user prompt.
+    2. Check the context information to see what has already been documented.
+    3. If the constructor has NOT been documented yet, identify the main constructor/class and call the \`saveConstructorDocs\` tool.
+    4. Identify ALL functions available in the SDK (exported or methods on the main class).
+    5. For EACH function that has NOT been documented yet, call the \`saveFunctionDocs\` tool with its detailed documentation.
+    6. DO NOT regenerate documentation for components that have already been documented.
+    7. Once ALL remaining documentation components have been saved using the tools, call the \`finalizeDocs\` tool to signal completion.
+
+    ## Documentation Format
+    Each function documentation should follow this structure:
+
+    \`\`\`markdown
+    ## Function: \`functionName\`
+
+    [Clear, detailed description of what the function does and its purpose]
+
+    **Purpose:**
+    [Explain the main purpose and use cases of the function]
+
+    **Parameters:**
+    [Describe each parameter in detail, including:
+    - Parameter name and type (for arrays, specify element type like array<string>, array<number>, array<object>, etc.)
+    - Whether it's required or optional
+    - Detailed description of what the parameter represents
+    - Any constraints or valid values
+    - Default values if applicable
+    - For each parameter type that is an object, array, or named type, provide a detailed description of its structure and purpose]
+
+    **Return Value:**
+    [Describe what the function returns, including:
+    - Return type (for arrays, specify element type like array<string>, array<number>, array<object>, etc.)
+    - Description of the returned value
+    - Any special cases or conditions
+    - Error cases if applicable
+    - For return types that are objects, arrays, or named types, provide a detailed description of their structure]
+
+    **Examples:**
+    [Provide examples that demonstrate all possible functionality of the function. Include examples for:
+    - Minimal usage with only required arguments
+    - Full usage with all optional arguments
+    - Different input types and formats
+    - Edge cases and special conditions
+    - Error handling scenarios
+    - Return value variations]
+
+    \`\`\`typescript
+    // Example 1: Minimal usage with only required arguments
+    const result1 = functionName({
+      // Required string parameter - should be a valid identifier
+      param1: '<identifier>',
+      // Required array<string> parameter - list of valid identifiers
+      param2: ['<identifier1>', '<identifier2>']
+    });
+
+    // Example 2: Full usage with all optional arguments
+    const result2 = functionName({
+      // Required string parameter - should be a valid identifier
+      param1: '<identifier>',
+      // Required array<string> parameter - list of valid identifiers
+      param2: ['<identifier1>', '<identifier2>'],
+      // Optional number parameter - controls behavior (default: 0)
+      optionalParam1: 42,
+      // Optional array<object> parameter - additional configuration
+      optionalParam2: [
+        { id: '<id1>', value: 1 },
+        { id: '<id2>', value: 2 }
+      ],
+      // Optional boolean parameter - enables feature (default: false)
+      optionalParam3: true
+    });
+    \`\`\`
+    \`\`\`
+
+    Generate documentation that is comprehensive, detailed, well-structured, technically accurate, and follows TypeScript best practices.
+  `;
+
+  const phase2Prompt = dedent`
+    Generate comprehensive documentation for the TypeScript SDK below by calling the provided tools (\`saveConstructorDocs\`, \`saveFunctionDocs\`, \`finalizeDocs\`). Call the appropriate save tool for any undocumented constructor and functions, then call finalize.
+
+    ## Package Name
+    ${metadata.packageName}
+
+    ## Package Code
+    \`\`\`typescript
+    ${code}
+    \`\`\`
+
+    ## Extra Information
+    ${extraInfo.join('\n\n')}
+
+    ## SDK Information
+    - Title: ${metadata.title}
+    - Description: ${metadata.description}
+    - Auth Type: ${metadata.authType}
+    ${metadata.authSdk ? `- Auth SDK: ${metadata.authSdk}` : ''}
+    ${contextInfo}
+
+    Generate documentation for constructor and functions that have NOT been documented yet.
+  `;
+
+  let phase2Complete = false;
+
+  const phase2Tools: Record<string, CoreTool<any, any>> = {
+    saveConstructorDocs: tool({
+      description:
+        'Saves the generated documentation for the SDK constructor or main class.',
+      parameters: SaveConstructorDocsSchema,
+      execute: async (data: ConstructorDocsData) => {
+        console.log(`💾 Saving constructor docs: ${data.name}`);
+        inMemoryStore.setItem(constructorStoreKey, data);
+        // Get package directory
+        const docsDir = path.join(packageDir, 'docs');
+        // Create docs directory if it doesn't exist
+        if (!fs.existsSync(docsDir)) {
+          fs.mkdirSync(docsDir, { recursive: true });
+        }
+        const safeFuncName = data.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+        if (safeFuncName !== data.name) {
+          console.warn(
+            `⚠️ Sanitized function name "${data.name}" to "${safeFuncName}" for filename.`,
+          );
+        }
+        if (!safeFuncName) {
+          console.error(
+            `❌ Invalid function name found: "${data.name}". Skipping file write.`,
+          );
+        }
+        fs.writeFileSync(path.join(docsDir, `${safeFuncName}.md`), data.docs);
+        return `Constructor documentation for ${data.name} saved.`;
+      },
+    }),
+    saveFunctionDocs: tool({
+      description:
+        'Saves the generated documentation for a single SDK function.',
+      parameters: SaveFunctionDocsSchema,
+      execute: async (data: FunctionDocsData) => {
+        console.log(`💾 Saving function docs: ${data.name}`);
+        const existingFunctions =
+          inMemoryStore.getItem<StoredFunctionDocs>(functionsStoreKey) || {};
+        existingFunctions[data.name] = data;
+        inMemoryStore.setItem(functionsStoreKey, existingFunctions);
+        // Get package directory
+        const docsDir = path.join(packageDir, 'docs');
+
+        // Create docs directory if it doesn't exist
+        if (!fs.existsSync(docsDir)) {
+          fs.mkdirSync(docsDir, { recursive: true });
+        }
+        const safeFuncName = data.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+        if (safeFuncName !== data.name) {
+          console.warn(
+            `⚠️ Sanitized function name "${data.name}" to "${safeFuncName}" for filename.`,
+          );
+        }
+        if (!safeFuncName) {
+          console.error(
+            `❌ Invalid function name found: "${data.name}". Skipping file write.`,
+          );
+        }
+        fs.writeFileSync(path.join(docsDir, `${safeFuncName}.md`), data.docs);
+        return `Function documentation for ${data.name} saved.`;
+      },
+    }),
+    finalizeDocs: tool({
+      description:
+        'Signals that all remaining documentation components have been generated and saved.',
+      parameters: z.object({}),
+      execute: async () => {
+        console.log(
+          '🏁 Phase 2 complete: Constructor and function documentation saved.',
+        );
+        phase2Complete = true;
+        return 'Phase 2 documentation generation process finalized.';
+      },
+    }),
+  };
+
+  try {
+    const result = await generateText({
+      model: models.googleGemini25Pro,
+      system: phase2SystemPrompt,
+      prompt: phase2Prompt,
+      tools: phase2Tools,
+      toolChoice: 'auto',
+      maxRetries: 5,
+      maxSteps: 10,
+    });
+
+    if (result.usage) {
+      logUsage(models.googleGemini25Pro.modelId, result.usage);
+      console.log(`Phase 2 Attempt ${attempt} Usage:`, result.usage);
+    }
+
+    console.log(`🔍 Phase 2 result: ${result}`);
+    // If finalizeDocs wasn't called and we haven't reached max attempts, try again
+    if (!phase2Complete && attempt < maxAttempts) {
+      console.log(`⚠️ Phase 2 attempt ${attempt} incomplete, retrying...`);
+      return generatePhase2Recursive(
+        code,
+        metadata,
+        extraInfo,
+        constructorStoreKey,
+        functionsStoreKey,
+        packageDir,
+        attempt + 1,
+        maxAttempts,
+      );
+    }
+
+    return phase2Complete;
+  } catch (error) {
+    console.error(`Error during Phase 2 attempt ${attempt}:`, error);
+
+    // If we haven't reached max attempts, try again
+    if (attempt < maxAttempts) {
+      console.log(`⚠️ Phase 2 attempt ${attempt} failed, retrying...`);
+      return generatePhase2Recursive(
+        code,
+        metadata,
+        extraInfo,
+        constructorStoreKey,
+        functionsStoreKey,
+        packageDir,
+        attempt + 1,
+        maxAttempts,
+      );
+    }
+
+    return false;
+  }
+}
+
 /**
  * Generate detailed documentation for an SDK using tool calls
  */
@@ -158,512 +662,55 @@ export async function generateDocs(
       packageDir,
     );
 
-    // Update the system prompt to instruct tool usage
-    const docsSystemPrompt = dedent`
-      You are a professional documentation generator for TypeScript SDKs. Your task is to analyze the provided SDK code and generate comprehensive documentation by calling the available tools.
+    // Phase 1: Generate environment keys and dependencies
+    console.log(
+      '\n🔑 Phase 1: Generating environment keys and dependencies...',
+    );
+    const phase1Success = await generatePhase1(
+      code,
+      metadata,
+      extraInfo,
+      envKeysStoreKey,
+      dependenciesStoreKey,
+    );
 
-      ## Process
-      1. Carefully analyze the SDK code, schemas, types, and extra information provided in the user prompt.
-      2. Identify the main constructor/class.
-      3. Call the \`saveConstructorDocs\` tool with the documentation for the constructor.
-      4. Identify ALL functions available in the SDK (exported or methods on the main class).
-      5. For EACH function, call the \`saveFunctionDocs\` tool with its detailed documentation.
-      6. Identify any necessary environment variables based on the code and auth type. Call the \`saveEnvKeys\` tool. If none, call it with an empty array.
-      7. Identify any necessary external dependencies or devDependencies needed beyond standard Node/TS. Call the \`saveDependencies\` tool. If none, call it with empty arrays.
-      8. Ensure you have called the appropriate tool for the constructor and EVERY function.
-      9. Once ALL documentation components (constructor, ALL functions, env keys, dependencies) have been saved using the tools, call the \`finalizeDocs\` tool to signal completion. DO NOT call \`finalizeDocs\` before saving documentation for every component.
-
-      
-## Documentation Format
-Each function documentation should follow this structure:
-
-\`\`\`markdown
-## Function: \`functionName\`
-
-[Clear, detailed description of what the function does and its purpose]
-
-**Purpose:**
-[Explain the main purpose and use cases of the function]
-
-**Parameters:**
-[Describe each parameter in detail, including:
-- Parameter name and type (for arrays, specify element type like array<string>, array<number>, array<object>, etc.)
-- Whether it's required or optional
-- Detailed description of what the parameter represents
-- Any constraints or valid values
-- Default values if applicable
-- For each parameter type that is an object, array, or named type, provide a detailed description of its structure and purpose]
-
-**Return Value:**
-[Describe what the function returns, including:
-- Return type (for arrays, specify element type like array<string>, array<number>, array<object>, etc.)
-- Description of the returned value
-- Any special cases or conditions
-- Error cases if applicable
-- For return types that are objects, arrays, or named types, provide a detailed description of their structure]
-
-**Examples:**
-[Provide examples that demonstrate all possible functionality of the function. Include examples for:
-- Minimal usage with only required arguments
-- Full usage with all optional arguments
-- Different input types and formats
-- Edge cases and special conditions
-- Error handling scenarios
-- Return value variations]
-
-\`\`\`typescript
-// Example 1: Minimal usage with only required arguments
-const result1 = functionName({
-  // Required string parameter - should be a valid identifier
-  param1: '<identifier>',
-  // Required array<string> parameter - list of valid identifiers
-  param2: ['<identifier1>', '<identifier2>']
-});
-
-// Example 2: Full usage with all optional arguments
-const result2 = functionName({
-  // Required string parameter - should be a valid identifier
-  param1: '<identifier>',
-  // Required array<string> parameter - list of valid identifiers
-  param2: ['<identifier1>', '<identifier2>'],
-  // Optional number parameter - controls behavior (default: 0)
-  optionalParam1: 42,
-  // Optional array<object> parameter - additional configuration
-  optionalParam2: [
-    { id: '<id1>', value: 1 },
-    { id: '<id2>', value: 2 }
-  ],
-  // Optional boolean parameter - enables feature (default: false)
-  optionalParam3: true
-});
-
-// Example 3: Different input types with optional arguments
-const result3 = functionName({
-  // Required string parameter - should be a valid identifier
-  param1: '<identifier>',
-  // Required array<string> parameter - list of valid identifiers
-  param2: ['<identifier1>', '<identifier2>'],
-  // Optional array<number> parameter - list of quantities
-  optionalParam1: [42, 100],
-  // Optional array<boolean> parameter - list of feature flags
-  optionalParam2: [true, false, true]
-});
-
-// Example 4: Error handling with optional arguments
-try {
-  const result4 = functionName({
-    // Required string parameter - should be a valid identifier
-    param1: '<identifier>',
-    // Required array<string> parameter - list of valid identifiers
-    param2: ['<identifier1>', '<identifier2>'],
-    // Invalid optional number parameter - will trigger validation error
-    optionalParam1: -1
-  });
-} catch (error) {
-  // Handle validation error
-  console.error('Invalid optional parameter:', error.message);
-}
-
-// Example 5: Using different combinations of optional arguments
-const result5 = functionName({
-  // Required string parameter - should be a valid identifier
-  param1: '<identifier>',
-  // Required array<string> parameter - list of valid identifiers
-  param2: ['<identifier1>', '<identifier2>'],
-  // Using only some optional parameters
-  optionalParam1: 42,
-  optionalParam3: true
-});
-\`\`\`
-\`\`\`
-
-## Type Documentation Standards
-1. Type Expansion Rules:
-   - For each parameter and return type that is an object, array, or named type:
-     * Document all fields with their types
-     * For nested objects, create a new section
-     * Continue expanding until reaching primitive types
-     * Include field descriptions and constraints
-     * Document required vs optional fields
-     * Show default values if any
-     * Document ALL possible values for each field
-     * Include validation rules
-     * NEVER refer to external type documentation
-     * ALWAYS expand all types inline
-
-2. Object Type Documentation:
-   - Create a section for each object type
-   - Document all fields with their types
-   - For nested objects, create a new section
-   - Continue expanding until reaching primitive types
-   - Include field descriptions and constraints
-   - Document required vs optional fields
-   - Show default values if any
-   - Document ALL possible values for each field
-   - Include validation rules
-   - NEVER refer to external type documentation
-   - ALWAYS expand all types inline
-
-3. Array Type Documentation:
-   - Document the element type (e.g., array<string>, array<number>, array<object>)
-   - For object arrays, create a section for the element type
-   - Document array constraints (min/max length)
-   - For nested arrays, document the structure (e.g., array<array<string>>)
-   - Include validation rules for array contents
-   - ALWAYS expand the element type if it's an object or named type
-   - Document ALL possible values for array elements
-   - NEVER refer to external type documentation
-   - ALWAYS expand all types inline
-
-4. Recursive Type Expansion:
-   - For each object field that is an object:
-     * Create a new section for the nested object
-     * Document all fields of the nested object
-     * Continue expanding nested objects
-     * Stop at primitive types
-     * Document ALL possible values for each field
-     * NEVER refer to external type documentation
-   - For each array field that contains objects:
-     * Create a section for the element type (e.g., array<object>)
-     * Document all fields of the element type
-     * Expand nested objects in elements
-     * Stop at primitive types
-     * Document ALL possible values for array elements
-     * NEVER refer to external type documentation
-   - For union types:
-     * Document all possible types
-     * For each object type in the union, create sections
-     * Expand nested objects in each type
-     * Document type guards if any
-     * List ALL possible values for each type in the union
-     * NEVER refer to external type documentation
-   - For named types:
-     * ALWAYS expand to their base types
-     * Create sections for object types
-     * Document all fields
-     * Continue expanding until primitive types
-     * Document ALL possible values for each field
-     * NEVER refer to external type documentation
-
-5. Primitive Type Documentation:
-   - For string types:
-     * Document all possible string values
-     * Include format requirements
-     * Show validation patterns
-     * List any enum values
-   - For number types:
-     * Document valid ranges
-     * List any enum values
-     * Show precision requirements
-   - For boolean types:
-     * Document when to use true/false
-     * Explain the meaning of each value
-   - For enum types:
-     * List all possible enum values
-     * Explain the meaning of each value
-     * Show when to use each value
-
-## Function Documentation Standards
-1. Function Overview:
-   - Clear description of what the function does
-   - Purpose and use cases
-   - Any side effects or state changes
-   - Error handling and edge cases
-   - Performance considerations
-
-2. Parameter Documentation:
-   - Document all parameters with types
-   - Include required vs optional status
-   - Document default values
-   - Document possible values for enums
-   - Expand object parameters to their base types
-   - Document all nested object fields
-   - Continue expanding until reaching primitive types
-   - For array parameters, expand element types
-
-3. Return Value Documentation:
-   - Describe what the function returns
-   - Document the structure of returned data
-   - Expand object return types to their base types
-   - Document all nested object fields
-   - Continue expanding until reaching primitive types
-   - For array return types, expand element types
-
-4. Examples:
-   - Provide minimal example with only required arguments
-   - Provide full example with all optional arguments
-   - Show different combinations of optional arguments
-   - Include examples for all parameter combinations
-   - Show different input types and formats
-   - Demonstrate edge cases and special conditions
-   - Include error handling scenarios
-   - Show variations in return values
-   - Use clear and descriptive comments
-   - Use descriptive placeholder values that explain the expected format/type
-   - Focus on demonstrating functionality rather than real-world use cases
-
-5. Constructor Documentation:
-   - Show how to construct the SDK using configuration objects (use environment variables if suitable instead of mock data)
-   - Document all available configuration options
-   - Include examples of different configuration combinations
-   - Explain how to handle authentication
-   - Show how to set up error handling
-
-## Documentation Requirements
-
-1. Type Documentation:
-   For each type used in the SDK, generate comprehensive documentation that includes:
-   - Complete type expansion until primitive types
-   - ALL possible values for each field
-   - Detailed descriptions and constraints
-   - Validation rules and requirements
-   - Examples showing valid values (if helpful)
-   - For primitive types:
-     * All possible string values
-     * Valid number ranges
-     * Boolean usage cases
-     * All enum values
-   - For object types:
-     * All fields and their types
-     * All possible values for each field
-     * Nested object expansion
-   - For array types:
-     * Element type documentation
-     * All possible element values
-     * Array constraints
-   - For union types:
-     * All possible types
-     * All possible values for each type
-     * Type guards and validation
-   - IMPORTANT: NEVER refer to external type documentation. ALWAYS expand all types inline.
-
-2. Function Documentation:
-   For each function, generate documentation that includes:
-   - Clear description of purpose and functionality
-   - Detailed parameter documentation
-   - Return value documentation
-   - Practical examples WITHOUT constructor code
-   - Error handling and edge cases
-   - Expanded type documentation for all parameters and return values:
-     * Create sections for all object types
-     * Expand all nested objects and arrays
-     * Document all fields and their types
-     * Continue expanding until reaching primitive types
-   - Examples based on need:
-     * Provide examples only when they add value
-     * Show different parameter combinations if helpful
-     * Demonstrate different use cases
-     * Include error handling if relevant
-     * Use mock data in examples
-   - IMPORTANT:
-     * NEVER leave placeholders like [Implementation Details], [Parameter Details], etc.
-     * NEVER cross-reference other documentation files
-     * Each function's documentation must be complete and self-contained
-     * If the function is not documented, it should be removed from the package
-
-3. Constructor Documentation:
-   Generate documentation that includes:
-   - Clear description of purpose and functionality
-   - Detailed parameter documentation
-   - Expanded type documentation
-   - Usage examples showing:
-     * How to construct using configuration objects (use environment variables if suitable instead of mock data)
-     * Different configuration combinations
-     * Authentication setup
-     * Error handling setup
-   - IMPORTANT:
-     * NEVER leave placeholders like [Implementation Details], [Parameter Details], etc.
-     * NEVER cross-reference other documentation files
-     * Constructor documentation must be complete and self-contained
-
-4. Environment Variables:
-   Generate environment variables documentation that includes:
-   - All required API keys and tokens
-   - For OAuth2 authentication:
-     * Include the constructor configs like accessToken, refreshToken, clientId, clientSecret, etc. in the environment variables
-     * If the constructor config includes scopes, ALWAYS include a SCOPES environment variable
-     * The name of the environment variable should be based on the oauth provider name not the package name. For example, for google-oauth, the environment variable should be GOOGLE_ACCESS_TOKEN, GOOGLE_REFRESH_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SCOPES etc. not GOOGLE_SHEETS_ACCESS_TOKEN, GOOGLE_SHEETS_REFRESH_TOKEN, GOOGLE_SHEETS_CLIENT_ID, GOOGLE_SHEETS_CLIENT_SECRET, GOOGLE_SHEETS_SCOPES etc.
-   - For each environment variable:
-     * Clear display name
-     * Detailed description
-     * Required/optional status
-     * Format and validation requirements
-
-5. Formatting Requirements:
-   - Include code blocks for examples
-   - Maintain consistent style
-   - Use clear section headers
-   - Include proper spacing
-   - NEVER include constructor or SDK initialization code in function examples
-   - Use mock data in examples
-   - Follow the exact documentation format provided
-
-Generate documentation that is:
-- Comprehensive and detailed
-- Well-structured and easy to navigate
-- Practical with real-world examples
-- Technically accurate
-- Consistent in style and formatting
-- Follows TypeScript best practices
-- COMPLETE with no placeholders or cross-references
-- DO not use tabular format for the documentation.
-
-## Tool use
-      - Call the tools sequentially as you generate each piece of documentation.
-      - You MUST call \`saveFunctionDocs\` for EVERY function found in the SDK code.
-      - You MUST call \`saveConstructorDocs\` for the main constructor/class.
-      - You MUST call \`saveEnvKeys\` and \`saveDependencies\` (even if empty).
-      - You MUST call \`finalizeDocs\` ONLY after all other tool calls are complete.
-      - finalizeDocs is important and MUST be called.
-    `;
-
-    // Generation prompt remains largely the same, focusing on the source material
-    const docsGenerationPrompt = dedent`
-      Generate comprehensive documentation for the TypeScript SDK below by calling the provided tools (\`saveConstructorDocs\`, \`saveFunctionDocs\`, \`saveEnvKeys\`, \`saveDependencies\`, \`finalizeDocs\`). Call the appropriate save tool for the constructor and EACH function, then call finalize. Adhere strictly to the documentation standards outlined in the system prompt.
-
-      ## Package Name
-      ${metadata.packageName}
-
-      ## Package Code
-      \`\`\`typescript
-      ${code}
-      \`\`\`
-
-      ## Extra Information
-      ${extraInfo.join('\n\n')}
-
-      ## SDK Information
-      - Title: ${metadata.title}
-      - Description: ${metadata.description}
-      - Auth Type: ${metadata.authType}
-      ${metadata.authSdk ? `- Auth SDK: ${metadata.authSdk}` : ''}
-
-      ## Documentation Standards Reminder (Summarized from System Prompt)
-      - **Constructor/Function Docs**: Use the detailed markdown format. Include Purpose, Parameters, Return Value, Examples.
-      - **Type Expansion**: Expand ALL types inline down to primitives. Document ALL possible values. NO external references.
-      - **Env Keys**: Provide key, displayName, description, required status. Use generic names for OAuth2 (e.g., GOOGLE_ACCESS_TOKEN).
-      - **Dependencies**: List only extra needed dependencies.
-      - **Tool Order**: Call save tools for constructor, ALL functions, env keys, dependencies. Then call \`finalizeDocs\` at the end.
-    `;
-
-    let allToolsCalled = false;
-    let usage = { promptTokens: 0, completionTokens: 0, totalTokens: 0 };
-
-    // Define the tools for the AI
-    const tools: Record<string, CoreTool<any, any>> = {
-      saveConstructorDocs: tool({
-        description:
-          'Saves the generated documentation for the SDK constructor or main class.',
-        parameters: SaveConstructorDocsSchema,
-        execute: async (data: ConstructorDocsData) => {
-          console.log(`💾 Saving constructor docs: ${data.name}`);
-          inMemoryStore.setItem(constructorStoreKey, data);
-          return `Constructor documentation for ${data.name} saved.`;
-        },
-      }),
-      saveFunctionDocs: tool({
-        description:
-          'Saves the generated documentation for a single SDK function.',
-        parameters: SaveFunctionDocsSchema,
-        execute: async (data: FunctionDocsData) => {
-          console.log(`💾 Saving function docs: ${data.name}`);
-          const existingFunctions =
-            inMemoryStore.getItem<StoredFunctionDocs>(functionsStoreKey) || {};
-          existingFunctions[data.name] = data;
-          inMemoryStore.setItem(functionsStoreKey, existingFunctions);
-          return `Function documentation for ${data.name} saved.`;
-        },
-      }),
-      saveEnvKeys: tool({
-        description:
-          'Saves the list of environment variables required by the SDK.',
-        parameters: SaveEnvKeysSchema,
-        execute: async (data: EnvKeysData) => {
-          console.log(`💾 Saving env keys: ${data.envKeys?.length || 0} keys`);
-          const keysToSave = data.envKeys ?? [];
-          inMemoryStore.setItem(envKeysStoreKey, keysToSave);
-          return `Environment keys saved (${keysToSave.length} keys).`;
-        },
-      }),
-      saveDependencies: tool({
-        description:
-          'Saves the list of external dependencies and devDependencies required by the SDK.',
-        parameters: SaveDependenciesSchema,
-        execute: async (data: DependenciesData) => {
-          console.log(
-            `💾 Saving dependencies: ${data.dependencies?.length || 0} deps, ${data.devDependencies?.length || 0} devDeps`,
-          );
-          const depsToSave = {
-            dependencies: data.dependencies ?? [],
-            devDependencies: data.devDependencies ?? [],
-          };
-          inMemoryStore.setItem(dependenciesStoreKey, depsToSave);
-          return `Dependencies saved (${depsToSave.dependencies.length} deps, ${depsToSave.devDependencies.length} devDeps).`;
-        },
-      }),
-      finalizeDocs: tool({
-        description:
-          'Signals that all documentation components (constructor, all functions, env keys, dependencies) have been generated and saved using the other tools.',
-        parameters: z.object({}),
-        execute: async () => {
-          console.log(
-            '🏁 FinalizeDocs tool called. Documentation generation complete.',
-          );
-          allToolsCalled = true;
-          return 'Documentation generation process finalized.';
-        },
-      }),
-    };
-
-    // Generate documentation using tool calls
-    console.log('\n🧠 Generating detailed documentation via tool calls...');
-    try {
-      const result = await generateText({
-        model: models.googleGemini25Pro,
-        system: docsSystemPrompt,
-        prompt: docsGenerationPrompt,
-        tools: tools,
-        toolChoice: 'required',
-        maxRetries: 5,
-      });
-
-      if (result.usage) {
-        usage = result.usage;
-        logUsage(models.googleGemini25Pro.modelId, usage);
-        console.log('Usage:', usage);
-      } else {
-        console.warn('Usage information not available from the stream result.');
-      }
-
-      if (!allToolsCalled) {
-        throw new Error(
-          'AI did not call the finalizeDocs tool. Documentation may be incomplete.',
-        );
-      }
-      await updateDocReport(
-        'generate',
-        {
-          status: 'success',
-          details: {
-            'Generated Docs': result.toolCalls.length,
-          },
-        },
-        packageDir,
-      );
-    } catch (e) {
-      console.error('Error during AI documentation generation:', e);
-      await updateDocReport(
-        'generate',
-        {
-          status: 'failure',
-          error: e instanceof Error ? e.message : String(e),
-        },
-        packageDir,
-      );
-      throw e;
+    if (!phase1Success) {
+      throw new Error('Phase 1 (env keys & dependencies) generation failed');
     }
 
-    // --- Retrieve and Assemble Data from Store ---
+    // Phase 2: Generate constructor and function documentation recursively
+    console.log(
+      '\n📚 Phase 2: Generating constructor and function documentation...',
+    );
+    const phase2Success = await generatePhase2Recursive(
+      code,
+      metadata,
+      extraInfo,
+      constructorStoreKey,
+      functionsStoreKey,
+      packageDir,
+    );
+
+    console.log(`🔍 Phase 2 completed, phase2Success: ${phase2Success}`);
+
+    if (!phase2Success) {
+      throw new Error('Phase 2 (constructor & functions) generation failed');
+    }
+
+    // Update documentation report - generation complete
+    await updateDocReport(
+      'generate',
+      {
+        status: 'success',
+        details: {
+          'Phase 1': 'Environment keys and dependencies generated',
+          'Phase 2': 'Constructor and function documentation generated',
+        },
+      },
+      packageDir,
+    );
+
+    // Continue with existing assembly logic...
     console.log('🧩 Assembling documentation from storage...');
     const constructorData =
       inMemoryStore.getItem<ConstructorDocsData>(constructorStoreKey);
@@ -704,7 +751,6 @@ Generate documentation that is:
         {
           status: 'success',
           details: {
-            'Total Tokens': usage.totalTokens,
             'Constructor Docs': assembledData.constructorDocs.docs.length,
             'Functions Docs': assembledData.functionsDocs.length,
             'Env Keys': assembledData.envKeys?.length || 0,
@@ -722,37 +768,6 @@ Generate documentation that is:
       console.log(`- Constructor: ${constructorName}`);
       console.log(`- Functions: ${validatedData.functionsDocs.length}`);
       console.log(`- Environment Keys: ${validatedData.envKeys?.length || 0}`);
-
-      // Get package directory
-      const docsDir = path.join(packageDir, 'docs');
-
-      // Create docs directory if it doesn't exist
-      if (!fs.existsSync(docsDir)) {
-        fs.mkdirSync(docsDir, { recursive: true });
-      }
-
-      // Save constructor documentation file
-      fs.writeFileSync(
-        path.join(docsDir, `${constructorName}.md`),
-        `${validatedData.constructorDocs.docs}`,
-      );
-
-      // Save function documentation files
-      for (const func of validatedData.functionsDocs) {
-        const safeFuncName = func.name.replace(/[^a-zA-Z0-9_-]/g, '_');
-        if (safeFuncName !== func.name) {
-          console.warn(
-            `⚠️ Sanitized function name "${func.name}" to "${safeFuncName}" for filename.`,
-          );
-        }
-        if (!safeFuncName) {
-          console.error(
-            `❌ Invalid function name found: "${func.name}". Skipping file write.`,
-          );
-          continue;
-        }
-        fs.writeFileSync(path.join(docsDir, `${safeFuncName}.md`), func.docs);
-      }
 
       // Update documentation report - save step
       await updateDocReport(
@@ -997,7 +1012,7 @@ Generate documentation that is:
         metadata,
         validatedData.constructorDocs,
         validatedData.functionsDocs,
-        validatedData.envKeys || [],
+        (validatedData.envKeys || []) as Array<EnvKeyType>,
         extraInfo,
       );
       fs.writeFileSync(path.join(packageDir, 'README.md'), readmeContent);
@@ -1069,14 +1084,9 @@ Generate documentation that is:
  */
 function generateMainReadme(
   metadata: SDKMetadata,
-  constructorDocs: { name: string; docs: string },
-  functionsDocs: Array<{ name: string; docs: string }>,
-  envKeys: Array<{
-    key: string;
-    displayName: string;
-    description: string;
-    required: boolean;
-  }>,
+  constructorDocs: ConstructorDocsData,
+  functionsDocs: Array<FunctionDocsData>,
+  envKeys: Array<EnvKeyType>,
   extraInfo: string[],
 ): string {
   const { title, description, packageName } = metadata;
