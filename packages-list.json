@@ -8,10 +8,17 @@
     "packages/@ext_octokit",
     "packages/@ext_puppeteer"
   ],
-  "semiStablePackages": [
+  "stablePackages": [
     "packages/ai-provider-openai",
-    "packages/amazon-rekognition-face-detection",
+    "packages/aws-ses",
     "packages/brave",
+    "packages/google-sheets",
+    "packages/linkedin-share",
+    "packages/slack-web-tiny",
+    "packages/whatsapp-business"
+  ],
+  "semiStablePackages": [
+    "packages/amazon-rekognition-face-detection",
     "packages/coingecko-sdk",
     "packages/discord",
     "packages/drive",
@@ -27,13 +34,6 @@
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
-  ],
-  "stablePackages": [
-    "packages/aws-ses",
-    "packages/google-sheets",
-    "packages/linkedin-share",
-    "packages/slack-web-tiny",
-    "packages/whatsapp-business"
   ],
   "partialPackages": [
     "packages/core",
@@ -60,5 +60,5 @@
     "packages/webhook-slack"
   ],
   "total": 46,
-  "generatedAt": "2025-05-26T09:50:39.433Z"
+  "generatedAt": "2025-05-26T14:41:59.767Z"
 }
