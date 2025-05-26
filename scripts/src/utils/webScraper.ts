@@ -344,15 +344,66 @@ export async function extractContentFromUrls(
   let results: { url: string; content: string }[] = [];
   let totalContentLength = 0;
   let failedUrls: string[] = [];
+  let skippedUrls: string[] = [];
 
-  fs.mkdirSync(path.join(options.packageDir, './scrapedDocs'), {
+  const scrapedDocsDir = path.join(options.packageDir, './scrapedDocs');
+  fs.mkdirSync(scrapedDocsDir, {
     recursive: true,
   });
+
+  // Helper function to check if file needs to be scraped
+  const needsScraping = (filePath: string): boolean => {
+    if (!fs.existsSync(filePath)) {
+      return true; // File doesn't exist, needs scraping
+    }
+
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const fileData = JSON.parse(fileContent);
+
+      if (!fileData.updatedAt) {
+        return true; // No timestamp, needs scraping
+      }
+
+      const updatedAt = new Date(fileData.updatedAt);
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+      return updatedAt < oneDayAgo; // Needs scraping if older than a day
+    } catch (error) {
+      console.warn(
+        `Error reading existing file ${filePath}, will re-scrape:`,
+        error,
+      );
+      return true; // Error reading file, needs scraping
+    }
+  };
 
   try {
     for (const url of urls) {
       try {
         const validatedUrl = validateUrl(url);
+
+        let cleanURLwithoutSlashes = validatedUrl
+          ?.replace(options.baseUrl, '')
+          .replace(/\//g, '-');
+        cleanURLwithoutSlashes = 'base-' + cleanURLwithoutSlashes;
+
+        const filePath = path.join(
+          scrapedDocsDir,
+          `${cleanURLwithoutSlashes}.json`,
+        );
+
+        // Check if we need to scrape this URL
+        if (!needsScraping(filePath)) {
+          console.log(`⏭️  Skipping ${validatedUrl} - file is up to date`);
+
+          // Load existing content
+          const existingContent = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          results.push({ url: validatedUrl, content: existingContent.content });
+          totalContentLength += existingContent.content.length;
+          skippedUrls.push(validatedUrl);
+          continue;
+        }
 
         console.log(`📄 Extracting content from ${validatedUrl}...`);
         const page = await browser.newPage();
@@ -394,16 +445,8 @@ export async function extractContentFromUrls(
           return document.body.innerText;
         });
 
-        let cleanURLwithoutSlashes = validatedUrl
-          ?.replace(options.baseUrl, '')
-          .replace(/\//g, '-');
-        cleanURLwithoutSlashes = 'base-' + cleanURLwithoutSlashes;
-
         fs.writeFileSync(
-          path.join(
-            options.packageDir,
-            `./scrapedDocs/${cleanURLwithoutSlashes}.json`,
-          ),
+          filePath,
           JSON.stringify(
             { url: validatedUrl, content, updatedAt: new Date().toISOString() },
             null,
@@ -416,6 +459,8 @@ export async function extractContentFromUrls(
         console.log(
           `✅ Extracted ${content.length} characters from ${validatedUrl}`,
         );
+
+        await page.close();
       } catch (error) {
         console.error(`❌ Error extracting content from ${url}:`, error);
         failedUrls.push(url);
@@ -428,6 +473,7 @@ export async function extractContentFromUrls(
   }
 
   console.log(`✅ Extracted content from ${results.length} URLs`);
+  console.log(`⏭️  Skipped ${skippedUrls.length} URLs (up to date)`);
 
   // Update research report
   await updateResearchReport(
@@ -436,6 +482,7 @@ export async function extractContentFromUrls(
       status: 'success',
       details: {
         'Successfully Extracted': results.length,
+        'Skipped URLs (up to date)': skippedUrls.length,
         'Failed URLs': failedUrls.length,
         'Total Content Length': `${(totalContentLength / 1024).toFixed(2)} KB`,
         'Average Content Length': `${(totalContentLength / results.length / 1024).toFixed(2)} KB`,

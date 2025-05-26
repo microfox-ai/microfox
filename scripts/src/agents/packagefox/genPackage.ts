@@ -21,6 +21,7 @@ import {
   extractLinks,
 } from '../../utils/webScraper';
 import { getProjectRoot } from '../../utils/getProjectRoot';
+import { cleanupFoxRequests } from '../metafox/cleanupFoxRequests';
 
 // Schema for SDK generation arguments
 const GenerateSDKArgsSchema = z.object({
@@ -300,7 +301,7 @@ export default defineConfig([
 /**
  * Summarize content using Gemini to extract API information
  */
-async function summarizeContent(
+export async function summarizeGenPackageContent(
   content: string,
   query: string,
   options: { packageDir: string },
@@ -592,6 +593,376 @@ interface SDKResult {
 }
 
 /**
+ * Generate SDK code files using AI with tools
+ */
+export async function generateCodeFiles(
+  metadata: SDKMetadata,
+  docsSummary: string,
+  packageDir: string,
+): Promise<{
+  finalSetupInfo: SetupInfoData;
+  generatedFileContentsMap: Record<string, string>;
+  usage: any;
+  requiredFiles: string[];
+  combinedCode: string;
+}> {
+  // Get OAuth package README if authType is oauth2
+  let oauthPackageReadme = '';
+  if (metadata.authType === 'oauth2' && metadata.authSdk) {
+    const oauthPackageName = metadata.authSdk.replace('@microfox/', '');
+    const oauthReadmePath = path.join(
+      getProjectRoot(),
+      'packages',
+      oauthPackageName,
+      'README.md',
+    );
+
+    if (fs.existsSync(oauthReadmePath)) {
+      oauthPackageReadme = fs.readFileSync(oauthReadmePath, 'utf8');
+      console.log(`✅ Found OAuth package README for ${metadata.authSdk}`);
+    } else {
+      console.warn(`⚠️ OAuth package README not found for ${metadata.authSdk}`);
+    }
+  }
+
+  let oauthPackages = fs
+    .readdirSync(path.join(getProjectRoot(), 'packages'))
+    .filter(dir => dir.includes('-oauth'));
+  console.log(`✅ Found ${oauthPackages.length} OAuth packages`);
+  oauthPackages = oauthPackages.map(pkg => `@microfox/${pkg}`);
+
+  // Clear in-memory store for this generation
+  inMemoryStore.clear();
+
+  // --- Tool Definitions ---
+  const requiredFiles = [
+    `src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts`,
+    `src/types/index.ts`,
+    `src/schemas/index.ts`,
+    `src/index.ts`,
+  ];
+
+  // Tool for setting up SDK info and updating package-info.json
+  const setupTool = tool({
+    description:
+      'Provide SDK setup information like auth type, scopes, and documentation details.',
+    parameters: SetupInfoSchema,
+    execute: async (data: SetupInfoData) => {
+      console.log('🛠️ Received setup information:');
+      console.log(`- Auth Type: ${data.authType}`);
+      if (data.authSdk) {
+        console.log(`- Auth SDK: ${data.authSdk}`);
+      }
+      if (data.oauth2Scopes && data.oauth2Scopes.length > 0) {
+        console.log(`- OAuth2 Scopes: ${data.oauth2Scopes.join(', ')}`);
+      }
+      inMemoryStore.setItem('finalSetupInfo', data);
+
+      const packageInfoPath = path.join(packageDir, 'package-info.json');
+      try {
+        const packageInfo: PackageInfo = JSON.parse(
+          fs.readFileSync(packageInfoPath, 'utf8'),
+        );
+
+        packageInfo.authEndpoint =
+          data.authType === 'oauth2' && data?.authSdk
+            ? `/connect/${data?.authSdk.replace('@microfox/', '')}`
+            : '';
+        packageInfo.authType = data.authType;
+        packageInfo.oauth2Scopes = data.oauth2Scopes || [];
+
+        packageInfo.keyInstructions = {
+          link: '',
+          setupInfo: data.setupInfo,
+        };
+
+        fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2));
+        console.log(`✅ Updated package-info.json with setup details.`);
+
+        return {
+          success: true,
+          message: 'Setup info processed and package-info.json updated.',
+        };
+      } catch (error) {
+        console.error(`❌ Error updating package-info.json:`, error);
+        return {
+          success: false,
+          message: 'Failed to update package-info.json.',
+        };
+      }
+    },
+  });
+
+  // Tool for writing a single file
+  const writeFileTool = tool({
+    description: 'Write content to a specific file within the SDK package.',
+    parameters: WriteSingleFileSchema,
+    execute: async (data: WriteSingleFileData) => {
+      const fullPath = path.join(packageDir, data.path);
+      try {
+        const dir = path.dirname(fullPath);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+
+        await fs.promises.writeFile(fullPath, data.content + '\n');
+        let contents =
+          inMemoryStore.getItem<Record<string, string>>(
+            'generatedFileContents',
+          ) || {};
+        contents[data.path] = data.content;
+        inMemoryStore.setItem('generatedFileContents', contents);
+
+        console.log(`✅ Written file: ${data.path}`);
+        return { success: true, path: data.path };
+      } catch (error) {
+        console.error(`❌ Error writing file ${data.path}:`, error);
+        return {
+          success: false,
+          path: data.path,
+          error: (error as Error).message,
+        };
+      }
+    },
+  });
+  // --- End Tool Definitions ---
+
+  // Create system prompt and generation prompt
+  const systemPrompt = dedent`
+    You are a TypeScript SDK generator. Your task is to create a TypeScript SDK for an API based on documentation.
+
+
+    ## Principles
+    1. First carefully analyze the requirements and API documentation
+    2. Plan what needs to be done, including:
+        - Determining the authentication method
+        - Identifying ALL API endpoints and their parameters
+        - Planning the SDK structure and methods covering all endpoints
+     3. Criticize your plan and refine it to be specific to this task
+     4. Write complete, production-ready code with no TODOs or placeholders
+     5. Recheck your code for any linting or TypeScript errors
+     6. Make sure the SDK is easy to use and follows best practices
+
+    ## Process
+    1. First call the \`setupTool\` to provide the final determined authentication type ('apikey', 'oauth2', 'none'), the specific OAuth SDK if applicable ('@microfox/...-oauth'), required OAuth scopes, and detailed \`setupInfo\` (how to get keys, env vars, etc.).
+    2. Then, generate the content for the main SDK file (\`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`) and call the \`writeFileTool\` with the path and content.
+    3. Next, generate the content for the types file (\`src/types/index.ts\`) and call the \`writeFileTool\` with the path and content.
+    4. Next, generate the content for the schemas file (\`src/schemas/index.ts\`) and call the \`writeFileTool\` with the path and content.
+    5. Finally, generate the content for the exports file (\`src/index.ts\`) and call the \`writeFileTool\` with the path and content.
+
+    ## Core Requirements for the SDK Code Generation
+    1. Use Zod for defining types with descriptive comments using .describe()
+    2. DO NOT use Zod for validation or parsing of API and function responses
+    3. The SDK should expose a constructor function or Class named "create${metadata.apiName.replace(/\s+/g, '')}SDK"
+    4. The SDK MUST have functions for ALL endpoints mentioned in the documentation
+    5. The Functions MUST cover all endpoints and their parameters
+    6. A Single Function can be used to call multiple similar endpoints by combining the parameters of the endpoints like how @octokit/rest does it.
+    7. The SDK should abstract as much as possible of the API's complexity, so that the API can be easily used by any developer.
+    8. The parameters of constructor and functions should be as much abstracted as possible, so that the developer can pass in the parameters in the way that is most convenient for them.
+    9. The SDK should be as clean, customizable and reusable as possible
+    10. Export all necessary types from \`src/types/index.ts\`
+    11. Handle error cases properly so that the developer can easily understand what went wrong
+    12. Do not use axios or node-fetch dependencies, use nodejs20 default fetch instead
+    13. Provide comprehensive setupInfo via the \`setupTool\` for documentation generation
+
+    ## Project Structure & File Paths
+    1. Main SDK: \`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`
+       - Must include all API methods and authentication handling
+       - Complete implementation with proper error handling
+       - Follow TypeScript best practices
+
+    2. Type Definitions: \`src/types/index.ts\`
+       - All necessary interfaces and types
+       - Proper JSDoc documentation
+       - Export everything needed by the SDK
+
+    3. Validation Schemas: \`src/schemas/index.ts\`
+       - Zod schemas matching type definitions
+       - Comprehensive validation rules
+       - Clear error messages
+
+    4. Package Exports: \`src/index.ts\`
+       - Export main SDK class/constructor
+       - Re-export types (must be: export * from './types')
+       - Do not re-export schemas
+
+    Each component must be properly typed, documented, and follow best practices for security and error handling.
+
+    ## Authentication Implementation
+    ${
+      metadata.authType === 'auto'
+        ? `You must analyze the API documentation to determine the appropriate final auth type for the \`setupTool\` call:
+    - Use "oauth2" if the API uses OAuth 2.0 flows (client IDs, authorization codes, redirect URIs)
+    - Use "apikey" if the API uses API keys, tokens, or headers for auth
+    - Use "none" if no auth is required
+
+    You must explicitly decide which auth type to implement based on the documentation and provide it via the \`setupTool\`.`
+        : `The authentication type is initially set to "${metadata.authType}". Confirm or update this type in the \`setupTool\` call.`
+    }
+
+    ${
+      metadata.authType === 'oauth2' || metadata.authType === 'auto'
+        ? `
+    ## OAuth 2.0 Implementation Guidelines
+    - If you determine the authType is "oauth2", you MUST provide the correct \`authSdk\` name (e.g., "@microfox/google-oauth") and the required \`oauth2Scopes\` array via the \`setupTool\`. Available OAuth packages: ${oauthPackages.join(', ')}
+    - The main SDK (\`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`) should accept all the parameters required by the OAuth package and the SDK itself in the constructor including accessToken, refreshToken(if supported by the provider), clientId, clientSecret, redirectUri, and scopes.
+    - The SDK should export functions to validate and refresh the access token which uses the functions from the OAuth package constructor.
+    - The SDK should check if the provided access token is valid and if not, throw an error.
+    - The environment variable names should be related to the provider, not the package (e.g., "GOOGLE_ACCESS_TOKEN" not "GOOGLE_SHEETS_ACCESS_TOKEN"). These details should be part of the \`setupInfo\` provided to the \`setupTool\`.
+    `
+        : ''
+    }
+
+    ## Tool Call Sequence
+    1. Call \`setupTool\` ONCE with \`authType\`, \`authSdk\` (if authType='oauth2'), \`oauth2Scopes\` (if authType='oauth2'), and detailed \`setupInfo\`.
+    2. Generate content for \`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\` and call \`writeFileTool\`.
+    3. Generate content for \`src/types/index.ts\` and call \`writeFileTool\`.
+    4. Generate content for \`src/schemas/index.ts\` and call \`writeFileTool\`.
+    5. Generate content for \`src/index.ts\` and call \`writeFileTool\`.
+
+    Ensure complete, production-ready code with no TODOs. Follow all requirements from the system prompt.
+  `;
+
+  const generationPrompt = dedent`
+    You are requested to generate a TypeScript SDK for ${metadata.apiName} based on the following documentation summary.
+
+    ## User's query (VERY IMPORTANT)
+    ${metadata.inputArgs.query}
+
+    ## SDK Information
+    - Title: ${metadata.title}
+    - Description: ${metadata.description}
+    - Package Name: ${metadata.packageName}
+    ${
+      metadata.authType !== 'auto'
+        ? `- Initial Auth Type: ${metadata.authType}`
+        : `- Initial Auth Type: auto - Please determine the final auth type ('apikey', 'oauth2', 'none') based on the documentation and provide it via the \`setupTool\`.`
+    }
+    ${metadata.authSdk ? `- Initial Auth SDK: ${metadata.authSdk}` : ''}
+
+    ## API Documentation Summary
+    ${docsSummary}
+
+    ${
+      oauthPackageReadme
+        ? `
+    ## OAuth Package Documentation (${metadata.authSdk})
+    ${oauthPackageReadme}
+
+    Use direct string literals for the \`oauth2Scopes\` array passed to the \`setupTool\`, do not use enums if possible.
+    `
+        : ''
+    }
+
+    ## Available Dependencies
+    The following packages are already installed in the project:
+    - Dev dependencies: @microfox/tsconfig, @types/node, tsup, typescript
+    - Dependencies: zod ${metadata?.authSdk ? `, ${metadata?.authSdk}` : ''}
+
+     ## SDK Requirements
+     - Create a complete, production-ready SDK with no TODOs or placeholders
+     - Ensure all types are properly defined with Zod
+     - Include comprehensive error handling
+     - Make sure the SDK is easy to use and follows best practices
+     - Create a function for EVERY endpoint mentioned in the documentation
+     - Provide comprehensive extraInfo for documentation generation
+     - Make sure all the types are followed correctly in the code, and not mismatched
+     
+     ${
+       metadata.authType === 'oauth2' || metadata.authType === 'auto'
+         ? `
+     ## OAuth Implementation Requirements
+     - The SDK should accept parameters like accessToken, refreshToken, clientId, clientSecret, redirectUri, and scopes based on the OAuth package documentation
+     - The SDK should export functions to validate and refresh the access token which uses the functions exported from the OAuth package
+     - The SDK should check if the provided access token is valid and if not, throw an error
+     - The environment variable names should be related to the provider, not the package (e.g., "GOOGLE_ACCESS_TOKEN" not "GOOGLE_SHEETS_ACCESS_TOKEN")
+     `
+         : ''
+     }
+
+    
+    Ensure complete, production-ready code with no TODOs. Follow all requirements from the system prompt.
+  `;
+
+  // Log prompts
+  console.log('\n📋 System Prompt Length:', systemPrompt.length);
+  console.log('\n📋 Generation Prompt Length:', generationPrompt.length);
+
+  // Generate SDK code with Claude 3.5 Sonnet and execute tools
+  console.log('\n🧠 Generating SDK code and executing tools...');
+  const { usage, toolResults } = await generateText({
+    model: models.claude35Sonnet,
+    system: systemPrompt,
+    prompt: generationPrompt,
+    tools: { setupTool, writeFileTool },
+    toolChoice: 'auto',
+    maxSteps: 5,
+    maxRetries: 3,
+  });
+
+  logUsage(models.claude35Sonnet.modelId, usage);
+  console.log('Usage:', usage);
+
+  // --- Process Tool Results ---
+  console.log('🛠️ Processing tool results...');
+
+  const finalSetupInfo = inMemoryStore.getItem<SetupInfoData>('finalSetupInfo');
+  const generatedFileContentsMap =
+    inMemoryStore.getItem<Record<string, string>>('generatedFileContents') ||
+    {};
+
+  if (!finalSetupInfo) {
+    console.error('❌ Error: Setup information was not generated by the AI.');
+    throw new Error('Setup information missing.');
+  }
+
+  const missingFiles = requiredFiles.filter(
+    file => !generatedFileContentsMap[file],
+  );
+  if (missingFiles.length > 0) {
+    console.error(
+      `❌ Error: The AI did not generate all required files. Missing: ${missingFiles.join(
+        ', ',
+      )}`,
+    );
+    console.log('Generated files:', Object.keys(generatedFileContentsMap));
+    throw new Error(`Missing required files: ${missingFiles.join(', ')}`);
+  }
+  console.log(`✅ All required files generated and written.`);
+
+  // Calculate total bytes of generated files
+  const totalBytes = Object.entries(generatedFileContentsMap).reduce(
+    (total, [_, content]) => total + Buffer.byteLength(content, 'utf8'),
+    0,
+  );
+
+  // Update code generation report
+  await updateCodeGenReport(
+    {
+      files: generatedFileContentsMap,
+      setupInfo: finalSetupInfo,
+      totalBytes,
+    },
+    packageDir,
+  );
+
+  const combinedCode = requiredFiles
+    .map(filePath => {
+      const content = generatedFileContentsMap[filePath] || '';
+      return `\n// --- File: ${filePath} ---\n${content}`;
+    })
+    .join('\n\n');
+
+  return {
+    finalSetupInfo,
+    generatedFileContentsMap,
+    usage,
+    requiredFiles,
+    combinedCode,
+  };
+}
+
+/**
  * Generate SDK based on arguments
  */
 export async function generateSDK(
@@ -644,369 +1015,23 @@ export async function generateSDK(
       .join('\n\n---\n\n');
 
     // Generate a single summary from all the combined content
-    const docsSummary = await summarizeContent(
+    const docsSummary = await summarizeGenPackageContent(
       combinedContent,
       validatedArgs.query,
       {
         packageDir,
       },
     );
+    // Generate code files using AI
+    const {
+      finalSetupInfo,
+      generatedFileContentsMap,
+      usage,
+      requiredFiles,
+      combinedCode,
+    } = await generateCodeFiles(metadata, docsSummary, packageDir);
 
-    let oauthPackages = fs
-      .readdirSync(path.join(getProjectRoot(), 'packages'))
-      .filter(dir => dir.includes('-oauth'));
-    console.log(`✅ Found ${oauthPackages.length} OAuth packages`);
-    oauthPackages = oauthPackages.map(pkg => `@microfox/${pkg}`);
-
-    // Get OAuth package README if authType is oauth2
-    let oauthPackageReadme = '';
-    inMemoryStore.clear();
-
-    if (metadata.authType === 'oauth2' && metadata.authSdk) {
-      const oauthPackageName = metadata.authSdk.replace('@microfox/', '');
-      const oauthReadmePath = path.join(
-        getProjectRoot(),
-        'packages',
-        oauthPackageName,
-        'README.md',
-      );
-
-      if (fs.existsSync(oauthReadmePath)) {
-        oauthPackageReadme = fs.readFileSync(oauthReadmePath, 'utf8');
-        console.log(`✅ Found OAuth package README for ${metadata.authSdk}`);
-      } else {
-        console.warn(
-          `⚠️ OAuth package README not found for ${metadata.authSdk}`,
-        );
-      }
-    }
-
-    // --- Tool Definitions ---
-    const requiredFiles = [
-      `src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts`,
-      `src/types/index.ts`,
-      `src/schemas/index.ts`,
-      `src/index.ts`,
-    ];
-
-    // Tool for setting up SDK info and updating package-info.json
-    const setupTool = tool({
-      description:
-        'Provide SDK setup information like auth type, scopes, and documentation details.',
-      parameters: SetupInfoSchema,
-      execute: async (data: SetupInfoData) => {
-        console.log('🛠️ Received setup information:');
-        console.log(`- Auth Type: ${data.authType}`);
-        if (data.authSdk) {
-          console.log(`- Auth SDK: ${data.authSdk}`);
-        }
-        if (data.oauth2Scopes && data.oauth2Scopes.length > 0) {
-          console.log(`- OAuth2 Scopes: ${data.oauth2Scopes.join(', ')}`);
-        }
-        inMemoryStore.setItem('finalSetupInfo', data);
-
-        const packageInfoPath = path.join(packageDir, 'package-info.json');
-        try {
-          const packageInfo: PackageInfo = JSON.parse(
-            fs.readFileSync(packageInfoPath, 'utf8'),
-          );
-
-          packageInfo.authEndpoint =
-            data.authType === 'oauth2' && data?.authSdk
-              ? `/connect/${data?.authSdk.replace('@microfox/', '')}`
-              : '';
-          packageInfo.authType = data.authType;
-          packageInfo.oauth2Scopes = data.oauth2Scopes || [];
-
-          packageInfo.keyInstructions = {
-            link: '',
-            setupInfo: data.setupInfo,
-          };
-
-          fs.writeFileSync(
-            packageInfoPath,
-            JSON.stringify(packageInfo, null, 2),
-          );
-          console.log(`✅ Updated package-info.json with setup details.`);
-
-          return {
-            success: true,
-            message: 'Setup info processed and package-info.json updated.',
-          };
-        } catch (error) {
-          console.error(`❌ Error updating package-info.json:`, error);
-          return {
-            success: false,
-            message: 'Failed to update package-info.json.',
-          };
-        }
-      },
-    });
-
-    // Tool for writing a single file
-    const writeFileTool = tool({
-      description: 'Write content to a specific file within the SDK package.',
-      parameters: WriteSingleFileSchema,
-      execute: async (data: WriteSingleFileData) => {
-        const fullPath = path.join(packageDir, data.path);
-        try {
-          const dir = path.dirname(fullPath);
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-          }
-
-          await fs.promises.writeFile(fullPath, data.content + '\n');
-          let contents =
-            inMemoryStore.getItem<Record<string, string>>(
-              'generatedFileContents',
-            ) || {};
-          contents[data.path] = data.content;
-          inMemoryStore.setItem('generatedFileContents', contents);
-
-          console.log(`✅ Written file: ${data.path}`);
-          return { success: true, path: data.path };
-        } catch (error) {
-          console.error(`❌ Error writing file ${data.path}:`, error);
-          return {
-            success: false,
-            path: data.path,
-            error: (error as Error).message,
-          };
-        }
-      },
-    });
-    // --- End Tool Definitions ---
-
-    // Create system prompt and generation prompt
-    const systemPrompt = dedent`
-      You are a TypeScript SDK generator. Your task is to create a TypeScript SDK for an API based on documentation.
-
-
-      ## Principles
-      1. First carefully analyze the requirements and API documentation
-      2. Plan what needs to be done, including:
-          - Determining the authentication method
-          - Identifying ALL API endpoints and their parameters
-          - Planning the SDK structure and methods covering all endpoints
-       3. Criticize your plan and refine it to be specific to this task
-       4. Write complete, production-ready code with no TODOs or placeholders
-       5. Recheck your code for any linting or TypeScript errors
-       6. Make sure the SDK is easy to use and follows best practices
-
-      ## Process
-      1. First call the \`setupTool\` to provide the final determined authentication type ('apikey', 'oauth2', 'none'), the specific OAuth SDK if applicable ('@microfox/...-oauth'), required OAuth scopes, and detailed \`setupInfo\` (how to get keys, env vars, etc.).
-      2. Then, generate the content for the main SDK file (\`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`) and call the \`writeFileTool\` with the path and content.
-      3. Next, generate the content for the types file (\`src/types/index.ts\`) and call the \`writeFileTool\` with the path and content.
-      4. Next, generate the content for the schemas file (\`src/schemas/index.ts\`) and call the \`writeFileTool\` with the path and content.
-      5. Finally, generate the content for the exports file (\`src/index.ts\`) and call the \`writeFileTool\` with the path and content.
-
-      ## Core Requirements for the SDK Code Generation
-      1. Use Zod for defining types with descriptive comments using .describe()
-      2. DO NOT use Zod for validation or parsing of API and function responses
-      3. The SDK should expose a constructor function or Class named "create${metadata.apiName.replace(/\s+/g, '')}SDK"
-      4. The SDK MUST have functions for ALL endpoints mentioned in the documentation
-      5. The Functions MUST cover all endpoints and their parameters
-      6. A Single Function can be used to call multiple similar endpoints by combining the parameters of the endpoints like how @octokit/rest does it.
-      7. The SDK should abstract as much as possible of the API's complexity, so that the API can be easily used by any developer.
-      8. The parameters of constructor and functions should be as much abstracted as possible, so that the developer can pass in the parameters in the way that is most convenient for them.
-      9. The SDK should be as clean, customizable and reusable as possible
-      10. Export all necessary types from \`src/types/index.ts\`
-      11. Handle error cases properly so that the developer can easily understand what went wrong
-      12. Do not use axios or node-fetch dependencies, use nodejs20 default fetch instead
-      13. Provide comprehensive setupInfo via the \`setupTool\` for documentation generation
-
-      ## Project Structure & File Paths
-      1. Main SDK: \`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`
-         - Must include all API methods and authentication handling
-         - Complete implementation with proper error handling
-         - Follow TypeScript best practices
-
-      2. Type Definitions: \`src/types/index.ts\`
-         - All necessary interfaces and types
-         - Proper JSDoc documentation
-         - Export everything needed by the SDK
-
-      3. Validation Schemas: \`src/schemas/index.ts\`
-         - Zod schemas matching type definitions
-         - Comprehensive validation rules
-         - Clear error messages
-
-      4. Package Exports: \`src/index.ts\`
-         - Export main SDK class/constructor
-         - Re-export types (must be: export * from './types')
-         - Do not re-export schemas
-
-      Each component must be properly typed, documented, and follow best practices for security and error handling.
-
-      ## Authentication Implementation
-      ${
-        metadata.authType === 'auto'
-          ? `You must analyze the API documentation to determine the appropriate final auth type for the \`setupTool\` call:
-      - Use "oauth2" if the API uses OAuth 2.0 flows (client IDs, authorization codes, redirect URIs)
-      - Use "apikey" if the API uses API keys, tokens, or headers for auth
-      - Use "none" if no auth is required
-
-      You must explicitly decide which auth type to implement based on the documentation and provide it via the \`setupTool\`.`
-          : `The authentication type is initially set to "${metadata.authType}". Confirm or update this type in the \`setupTool\` call.`
-      }
-
-      ${
-        metadata.authType === 'oauth2' || metadata.authType === 'auto'
-          ? `
-      ## OAuth 2.0 Implementation Guidelines
-      - If you determine the authType is "oauth2", you MUST provide the correct \`authSdk\` name (e.g., "@microfox/google-oauth") and the required \`oauth2Scopes\` array via the \`setupTool\`. Available OAuth packages: ${oauthPackages.join(', ')}
-      - The main SDK (\`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\`) should accept all the parameters required by the OAuth package and the SDK itself in the constructor including accessToken, refreshToken(if supported by the provider), clientId, clientSecret, redirectUri, and scopes.
-      - The SDK should export functions to validate and refresh the access token which uses the functions from the OAuth package constructor.
-      - The SDK should check if the provided access token is valid and if not, throw an error.
-      - The environment variable names should be related to the provider, not the package (e.g., "GOOGLE_ACCESS_TOKEN" not "GOOGLE_SHEETS_ACCESS_TOKEN"). These details should be part of the \`setupInfo\` provided to the \`setupTool\`.
-      `
-          : ''
-      }
-
-      ## Tool Call Sequence
-      1. Call \`setupTool\` ONCE with \`authType\`, \`authSdk\` (if authType='oauth2'), \`oauth2Scopes\` (if authType='oauth2'), and detailed \`setupInfo\`.
-      2. Generate content for \`src/${metadata.apiName.replace(/\s+/g, '')}Sdk.ts\` and call \`writeFileTool\`.
-      3. Generate content for \`src/types/index.ts\` and call \`writeFileTool\`.
-      4. Generate content for \`src/schemas/index.ts\` and call \`writeFileTool\`.
-      5. Generate content for \`src/index.ts\` and call \`writeFileTool\`.
-
-      Ensure complete, production-ready code with no TODOs. Follow all requirements from the system prompt.
-    `;
-
-    const generationPrompt = dedent`
-      You are requested to generate a TypeScript SDK for ${metadata.apiName} based on the following documentation summary.
-
-      ## User's query (VERY IMPORTANT)
-      ${validatedArgs.query}
-
-      ## SDK Information
-      - Title: ${metadata.title}
-      - Description: ${metadata.description}
-      - Package Name: ${metadata.packageName}
-      ${
-        metadata.authType !== 'auto'
-          ? `- Initial Auth Type: ${metadata.authType}`
-          : `- Initial Auth Type: auto - Please determine the final auth type ('apikey', 'oauth2', 'none') based on the documentation and provide it via the \`setupTool\`.`
-      }
-      ${metadata.authSdk ? `- Initial Auth SDK: ${metadata.authSdk}` : ''}
-
-      ## API Documentation Summary
-      ${docsSummary}
-
-      ${
-        oauthPackageReadme
-          ? `
-      ## OAuth Package Documentation (${metadata.authSdk})
-      ${oauthPackageReadme}
-
-      Use direct string literals for the \`oauth2Scopes\` array passed to the \`setupTool\`, do not use enums if possible.
-      `
-          : ''
-      }
-
-      ## Available Dependencies
-      The following packages are already installed in the project:
-      - Dev dependencies: @microfox/tsconfig, @types/node, tsup, typescript
-      - Dependencies: zod ${metadata?.authSdk ? `, ${metadata?.authSdk}` : ''}
-
-       ## SDK Requirements
-       - Create a complete, production-ready SDK with no TODOs or placeholders
-       - Ensure all types are properly defined with Zod
-       - Include comprehensive error handling
-       - Make sure the SDK is easy to use and follows best practices
-       - Create a function for EVERY endpoint mentioned in the documentation
-       - Provide comprehensive extraInfo for documentation generation
-       - Make sure all the types are followed correctly in the code, and not mismatched
-       
-       ${
-         metadata.authType === 'oauth2' || metadata.authType === 'auto'
-           ? `
-       ## OAuth Implementation Requirements
-       - The SDK should accept parameters like accessToken, refreshToken, clientId, clientSecret, redirectUri, and scopes based on the OAuth package documentation
-       - The SDK should export functions to validate and refresh the access token which uses the functions exported from the OAuth package
-       - The SDK should check if the provided access token is valid and if not, throw an error
-       - The environment variable names should be related to the provider, not the package (e.g., "GOOGLE_ACCESS_TOKEN" not "GOOGLE_SHEETS_ACCESS_TOKEN")
-       `
-           : ''
-       }
-
-      
-      Ensure complete, production-ready code with no TODOs. Follow all requirements from the system prompt.
-    `;
-
-    // Log prompts
-    console.log('\n📋 System Prompt Length:', systemPrompt.length);
-    console.log('\n📋 Generation Prompt Length:', generationPrompt.length);
-
-    // Generate SDK code with Claude 3.5 Sonnet and execute tools
-    console.log('\n🧠 Generating SDK code and executing tools...');
-    const { usage, toolResults } = await generateText({
-      model: models.claude35Sonnet,
-      system: systemPrompt,
-      prompt: generationPrompt,
-      tools: { setupTool, writeFileTool },
-      toolChoice: 'auto',
-      maxSteps: 5,
-      maxRetries: 3,
-    });
-
-    logUsage(models.claude35Sonnet.modelId, usage);
-    console.log('Usage:', usage);
-
-    // --- Process Tool Results ---
-    console.log('🛠️ Processing tool results...');
-
-    const finalSetupInfo =
-      inMemoryStore.getItem<SetupInfoData>('finalSetupInfo');
-    const generatedFileContentsMap =
-      inMemoryStore.getItem<Record<string, string>>('generatedFileContents') ||
-      {};
-
-    if (!finalSetupInfo) {
-      console.error('❌ Error: Setup information was not generated by the AI.');
-      throw new Error('Setup information missing.');
-    }
-
-    //console.log('Final setup info:', finalSetupInfo);
-    //console.log('Generated file contents:', generatedFileContentsMap);
-    const missingFiles = requiredFiles.filter(
-      file => !generatedFileContentsMap[file],
-    );
-    if (missingFiles.length > 0) {
-      console.error(
-        `❌ Error: The AI did not generate all required files. Missing: ${missingFiles.join(
-          ', ',
-        )}`,
-      );
-      console.log('Generated files:', Object.keys(generatedFileContentsMap));
-      throw new Error(`Missing required files: ${missingFiles.join(', ')}`);
-    }
-    console.log(`✅ All required files generated and written.`);
     // --- End Process Tool Results ---
-
-    // Calculate total bytes of generated files
-    const totalBytes = Object.entries(generatedFileContentsMap).reduce(
-      (total, [_, content]) => total + Buffer.byteLength(content, 'utf8'),
-      0,
-    );
-
-    // Update code generation report
-    await updateCodeGenReport(
-      {
-        files: generatedFileContentsMap,
-        setupInfo: finalSetupInfo,
-        totalBytes,
-      },
-      packageDir,
-    );
-
-    // Combine generated file contents for documentation
-    const combinedCode = requiredFiles
-      .map(filePath => {
-        const content = generatedFileContentsMap[filePath] || '';
-        return `\n// --- File: ${filePath} ---\n${content}`;
-      })
-      .join('\n\n');
 
     // Generate documentation using the combined code and setup info
     await generateDocs(
@@ -1024,27 +1049,9 @@ export async function generateSDK(
     );
 
     // Clean up build request log
-    const foxLogPath = path.join(
-      getProjectRoot(),
-      '.microfox/packagefox-build.json',
-    );
-    try {
-      if (fs.existsSync(foxLogPath)) {
-        const foxlog = fs.readFileSync(foxLogPath, 'utf8');
-        const foxlogData = JSON.parse(foxlog);
-        const newRequests: PackageFoxRequest[] = foxlogData.requests.filter(
-          (request: PackageFoxRequest) =>
-            !(
-              request.url === validatedArgs.url && request.type === 'pkg-create'
-            ),
-        );
-        foxlogData.requests = newRequests;
-        fs.writeFileSync(foxLogPath, JSON.stringify(foxlogData, null, 2));
-        console.log('✅ Cleaned up packagefox-build.json log.');
-      }
-    } catch (logError) {
-      console.warn('⚠️ Could not clean up packagefox-build.json:', logError);
-    }
+    await cleanupFoxRequests('pkg-create', {
+      url: validatedArgs.url,
+    });
 
     return {
       name: metadata.apiName,
