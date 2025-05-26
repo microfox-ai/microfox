@@ -1,77 +1,47 @@
 ## Function: `getAccessProposal`
 
-Retrieves a specific access proposal for a file by its ID. Access proposals are requests made by users to gain access to a file they currently cannot view or edit.
+Retrieves a specific access proposal for a file by its ID. Access proposals are requests for access to a file, typically generated when a user tries to access a file they don't have permission for.
 
 **Purpose:**
-To fetch the details of a single access proposal, allowing the application to understand the request, who made it, and what level of access is being requested.
+To fetch the details of a single access proposal, allowing an application to understand the context of an access request (e.g., who requested access, their proposed role, and any comments).
 
 **Parameters:**
-
--   `fileId` (string): Required. The ID of the file for which the access proposal was made.
--   `proposalId` (string): Required. The ID of the access proposal to retrieve.
+- `fileId`: `string` (required) - The ID of the file for which the access proposal was made.
+- `proposalId`: `string` (required) - The ID of the access proposal to retrieve.
 
 **Return Value:**
-
--   Type: `Promise<AccessProposalResponse>`
--   Description: A promise that resolves to an `AccessProposalResponse` object containing the details of the specified access proposal.
--   Error cases: Throws an error if the API request fails (e.g., file not found, proposal not found, authentication issues, or insufficient permissions).
-
-**Type Definitions:**
-
-*   `AccessProposalResponse`:
-    ```typescript
-    type AccessProposalResponse = {
-      fileId: string; // The ID of the file this proposal pertains to.
-      proposalId: string; // The ID of this access proposal.
-      requesterEmailAddress: string; // The email address of the user who made the access request.
-      recipientEmailAddress: string; // The email address of the user to whom the access request was sent (usually the file owner or someone with sharing permissions).
-      rolesAndViews: Array<RoleAndView>; // The roles and/or views requested in the proposal.
-      requestMessage: string; // The message included by the requester with their proposal.
-      createTime: string; // The time this access proposal was created, in RFC 3339 date-time format.
-    };
-    ```
-
-*   `RoleAndView`:
-    ```typescript
-    type RoleAndView = {
-      role: 'writer' | 'commenter' | 'reader'; // The role being requested (e.g., writer, commenter, reader).
-      view?: string; // An optional specific view being requested (e.g., a specific named view in a Google Sheet). The exact meaning can depend on the application that created the file.
-    };
-    ```
+- Type: `Promise<AccessProposalResponse>` (object)
+- Description: A promise that resolves to an `AccessProposalResponse` object containing the details of the access proposal.
+  - `AccessProposalResponse`: An object representing the access proposal, which may include:
+    - `kind`: `string` - Identifies the resource type, `drive#accessProposal`.
+    - `id`: `string` - The ID of the access proposal.
+    - `accessLevel`: `string` - The access level requested (e.g., `'commenter'`, `'reader'`, `'writer'`).
+    - `creationTime`: `string` (date-time) - The time the access proposal was created.
+    - `comment`: `string` (optional) - The comment provided by the user when creating the proposal.
+    - `proposedBy`: `object` - Information about the user who made the proposal.
+      - `displayName`: `string` - The display name of the user.
+      - `emailAddress`: `string` - The email address of the user.
+      - `photoLink`: `string` - A link to the user's profile photo.
+    - `file`: `object` - Information about the file for which access is proposed.
+      - `id`: `string` - The ID of the file.
+      - `name`: `string` - The name of the file.
+      - `mimeType`: `string` - The MIME type of the file.
+    - `status`: `string` - The current status of the proposal (e.g., `'pending'`, `'approved'`, `'rejected'`).
 
 **Examples:**
-
 ```typescript
-// Assuming 'sdk' is an initialized instance of GoogleDriveSdk
-
-// Example 1: Get an access proposal with valid fileId and proposalId
-async function getSpecificAccessProposal() {
-  const fileId = 'TARGET_FILE_ID';         // Replace with an actual file ID
-  const proposalId = 'TARGET_PROPOSAL_ID'; // Replace with an actual proposal ID
+// Example 1: Get an access proposal
+async function exampleGetAccessProposal() {
+  const fileId = 'your-file-id'; // Replace with an actual file ID
+  const proposalId = 'your-proposal-id'; // Replace with an actual proposal ID
   try {
     const proposal = await sdk.getAccessProposal(fileId, proposalId);
-    console.log('Access Proposal Details:', proposal);
-    console.log(`Requester: ${proposal.requesterEmailAddress}`);
-    console.log(`Requested Roles/Views: ${JSON.stringify(proposal.rolesAndViews)}`);
+    console.log('Access Proposal:', proposal);
+    if (proposal.status === 'pending') {
+      console.log(`Proposal from ${proposal.proposedBy.emailAddress} for ${proposal.accessLevel} access.`);
+    }
   } catch (error) {
-    console.error(`Error fetching access proposal ${proposalId} for file ${fileId}:`, error);
-  }
-}
-
-// Example 2: Handle cases where the file or proposal does not exist
-async function getNonExistentAccessProposal() {
-  const fileId = 'NON_EXISTENT_FILE_ID';
-  const proposalId = 'NON_EXISTENT_PROPOSAL_ID';
-  try {
-    const proposal = await sdk.getAccessProposal(fileId, proposalId);
-    console.log('Access Proposal Details:', proposal); // This line is not expected to be reached
-  } catch (error) {
-    // Error handling for 404 Not Found or other API errors
-    console.error(`Failed to fetch access proposal: ${error.message}`);
-    // Example: Check for a specific status code if the error object includes it
-    // if (error.status === 404) {
-    //   console.log('File or proposal not found.');
-    // }
+    console.error('Error getting access proposal:', error);
   }
 }
 ```

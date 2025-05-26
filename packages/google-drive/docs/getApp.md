@@ -1,83 +1,50 @@
 ## Function: `getApp`
 
-Retrieves information about a specific application installed or available in Google Drive, identified by its application ID. This can include details like the app's name, supported MIME types, and icons.
+Retrieves information about a specific application installed by the user or available in the Google Workspace Marketplace that integrates with Google Drive.
 
 **Purpose:**
-To fetch detailed information about a particular Google Drive application. This can be useful for understanding an app's capabilities, how it integrates with Drive, or for displaying app information within a user interface.
+To fetch details about a particular Drive-connected application, such as its name, ID, supported MIME types, and icons.
 
 **Parameters:**
-
--   `appId` (string): Required. The ID of the application to retrieve. This is typically a numeric string (e.g., "123456789012").
+- `appId`: `string` (required) - The ID of the application to retrieve. This is the unique identifier for the app.
 
 **Return Value:**
-
--   Type: `Promise<AppResponse>`
--   Description: A promise that resolves to an `AppResponse` object containing the details of the specified application.
--   Error cases: Throws an error if the API request fails (e.g., app not found, authentication issues, or invalid `appId`).
-
-**Type Definitions:**
-
-*   `AppResponse`:
-    ```typescript
-    type AppResponse = {
-      id: string; // The ID of the app.
-      name: string; // The name of the app.
-      objectType: string; // The object type. Value: "drive#app".
-      openUrlTemplate?: string; // A template URL for opening files with this app. Contains {ids} and/or {exportIds} placeholders.
-      primaryMimeTypes?: string[]; // The primary MIME types supported by this app.
-      secondaryMimeTypes?: string[]; // The secondary MIME types supported by this app.
-      primaryFileExtensions?: string[]; // The primary file extensions supported by this app.
-      secondaryFileExtensions?: string[]; // The secondary file extensions supported by this app.
-      icons?: Array<{
-        category: string; // Category of the icon. e.g. "application", "document".
-        iconUrl: string; // URL for the icon.
-        size: number; // Size of the icon in pixels.
-      }>; // A list of icons for the app.
-      shortDescription?: string; // A short description of the app.
-      longDescription?: string; // A long description of the app.
-      createInFolderTemplate?: string; // URL template for creating a new file with this app in a specific folder. Contains {folderId} placeholder.
-      createUrl?: string; // URL for creating a new file with this app.
-      useByDefault?: boolean; // Whether this app is the default app for the supported primary MIME types.
-      installed: boolean; // Whether this app is installed for the user.
-      authorized: boolean; // Whether this app is authorized to access data on behalf of the user.
-      hasDriveWideScope: boolean; // Whether the app has fulfilled the requirements to participate in the "Open with" dialog with scope "drive.file".
-      productId?: string; // The G Suite Marketplace product ID of this app.
-    };
-    ```
+- Type: `Promise<AppResponse>` (object)
+- Description: A promise that resolves to an `AppResponse` object containing the details of the application.
+  - `AppResponse`: An object representing the application, which may include:
+    - `kind`: `string` - Identifies the resource type, `drive#app`.
+    - `id`: `string` - The ID of the app.
+    - `name`: `string` - The name of the app.
+    - `objectType`: `string` (optional) - The type of object this app creates (e.g., `'document'`).
+    - `supportsCreate`: `boolean` (optional) - Whether the app supports creating new files.
+    - `supportsImport`: `boolean` (optional) - Whether the app supports importing Google Docs.
+    - `installed`: `boolean` (optional) - Whether the app is installed.
+    - `authorized`: `boolean` (optional) - Whether the app is authorized to access data on the user's Drive.
+    - `useByDefault`: `boolean` (optional) - Whether this app is the default handler for open queries.
+    - `productUrl`: `string` (optional) - A link to the product page for this app.
+    - `primaryMimeTypes`: `array<string>` (optional) - The primary MIME types supported by this app.
+    - `secondaryMimeTypes`: `array<string>` (optional) - The secondary MIME types supported by this app.
+    - `primaryFileExtensions`: `array<string>` (optional) - The primary file extensions supported by this app.
+    - `secondaryFileExtensions`: `array<string>` (optional) - The secondary file extensions supported by this app.
+    - `icons`: `array<object>` (optional) - A list of icons for the app.
+      - `category`: `string` - The category of the icon (e.g., `'document'`, `'application'`).
+      - `size`: `number` - The size of the icon in pixels.
+      - `iconUrl`: `string` - The URL for the icon.
 
 **Examples:**
-
 ```typescript
-// Assuming 'sdk' is an initialized instance of GoogleDriveSdk
-
-// Example 1: Get information for a known application ID
-async function getSpecificAppInfo() {
-  const appId = 'SPECIFIC_APP_ID'; // Replace with an actual application ID, e.g., a Google Workspace app ID
+// Example 1: Get information about a specific app
+async function exampleGetApp() {
+  const appId = 'your-app-id'; // Replace with an actual app ID (e.g., from listApps)
   try {
     const appInfo = await sdk.getApp(appId);
-    console.log('Application Information:', appInfo);
+    console.log('App Information:', appInfo);
     console.log(`App Name: ${appInfo.name}`);
-    console.log(`Installed: ${appInfo.installed}`);
-    if (appInfo.primaryMimeTypes && appInfo.primaryMimeTypes.length > 0) {
-      console.log('Primary MIME types:', appInfo.primaryMimeTypes.join(', '));
+    if (appInfo.productUrl) {
+      console.log(`Product URL: ${appInfo.productUrl}`);
     }
   } catch (error) {
-    console.error(`Error fetching app info for ID ${appId}:`, error);
-  }
-}
-
-// Example 2: Handle case where the application ID does not exist or is invalid
-async function getNonExistentAppInfo() {
-  const invalidAppId = 'INVALID_OR_NON_EXISTENT_APP_ID';
-  try {
-    const appInfo = await sdk.getApp(invalidAppId);
-    console.log('Application Information:', appInfo); // This line is not expected to be reached
-  } catch (error) {
-    console.error(`Failed to fetch app info for ID ${invalidAppId}: ${error.message}`);
-    // Example: Check for a specific status code if the error object includes it
-    // if (error.status === 404) {
-    //   console.log('Application not found.');
-    // }
+    console.error('Error getting app information:', error);
   }
 }
 ```

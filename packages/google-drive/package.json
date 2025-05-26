@@ -24,8 +24,8 @@
     }
   },
   "dependencies": {
-    "zod": "^3.24.2",
-    "@microfox/google-oauth": "*"
+    "@microfox/google-oauth": "1.0.5",
+    "zod": "3.24.4"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

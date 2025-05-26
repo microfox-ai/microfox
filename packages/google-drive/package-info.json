@@ -1,12 +1,12 @@
 {
   "name": "@microfox/google-drive",
   "title": "Google Drive SDK",
-  "description": "A TypeScript SDK for interacting with the Google Drive API.",
+  "description": "Manage Google Drive resources (drives, files, and access proposals) using the Google Drive API.",
   "platformType": "tool",
   "path": "packages/google-drive",
   "dependencies": [
-    "zod",
-    "@microfox/google-oauth"
+    "@microfox/google-oauth",
+    "zod"
   ],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
@@ -27,15 +27,301 @@
   "documentation": "https://www.npmjs.com/package/@microfox/google-drive",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg",
   "readme_map": {
-    "path": "/README.md",
+    "title": "Google Drive SDK",
     "description": "The full README for the Google Drive SDK",
-    "functionalities": []
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/README.md",
+    "functionalities": [
+      "GoogleDriveSdk",
+      "createGoogleDriveSDK",
+      "deleteDrive",
+      "getAbout",
+      "getAccessProposal",
+      "getApp",
+      "getDrive",
+      "getStartPageToken",
+      "hideDrive",
+      "listAccessProposals",
+      "listApps",
+      "listChanges",
+      "listDrives",
+      "resolveAccessProposal",
+      "unhideDrive",
+      "updateDrive",
+      "watchChanges"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/GoogleDriveSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "GoogleDriveSdk",
+        "description": "The `GoogleDriveSdk` constructor initializes a new instance of the SDK, enabling interaction with the Google Drive API. It configures the OAuth 2.0 authentication mechanism required for all API requests. The constructor accepts client credentials and, optionally, pre-existing access and refresh tokens."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/createGoogleDriveSDK.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createGoogleDriveSDK",
+        "description": "A factory function that creates and initializes an instance of the `GoogleDriveSdk`. This function simplifies the setup process by encapsulating the instantiation of the SDK client."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/deleteDrive.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteDrive",
+        "description": "Permanently deletes a shared drive. The calling user must be an organizer of the shared drive. The shared drive must be empty before it can be deleted."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/getAbout.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAbout",
+        "description": "Retrieves information about the user, their Drive, and system capabilities. This can include details like the user's display name, email address, storage quota, and supported features."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/getAccessProposal.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAccessProposal",
+        "description": "Retrieves a specific access proposal for a file by its ID. Access proposals are requests for access to a file, typically generated when a user tries to access a file they don't have permission for."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/getApp.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getApp",
+        "description": "Retrieves information about a specific application installed by the user or available in the Google Workspace Marketplace that integrates with Google Drive."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/getDrive.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getDrive",
+        "description": "Retrieves the metadata for a specific shared drive by its ID. This includes information like the drive's name, theme, capabilities, and restrictions."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/getStartPageToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getStartPageToken",
+        "description": "Retrieves the starting page token for listing changes to files and shared drives. This token represents a point in time from which changes can be tracked. It is essential for initiating the change tracking process with the `listChanges` function."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/hideDrive.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hideDrive",
+        "description": "Hides a shared drive from the user's view. This operation does not delete the drive or alter its permissions; it merely removes the drive from the default list of drives displayed to the user. This can be useful for users to declutter their list of shared drives by hiding those they do not access frequently."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/listAccessProposals.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listAccessProposals",
+        "description": "Lists all pending access proposals for a specific file. This allows applications to retrieve multiple access requests that are awaiting review."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/listApps.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listApps",
+        "description": "Lists the applications installed by the user or available in the Google Workspace Marketplace that integrate with Google Drive. This can include apps that can open or create files in Drive."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/listChanges.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listChanges",
+        "description": "Lists changes to files and shared drives for a user. Changes include creations, deletions, metadata modifications, and permission updates. This function requires a `pageToken` obtained from `getStartPageToken` or a previous `listChanges` call to track changes incrementally."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/listDrives.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listDrives",
+        "description": "Lists the user's shared drives. This function can retrieve a paginated list of shared drives that the authenticated user has access to. It supports filtering and pagination to manage large sets of drives."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/resolveAccessProposal.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "resolveAccessProposal",
+        "description": "Resolves an access proposal for a file by either approving or rejecting the requested access. This action typically grants or denies the user the specified level of access to the file."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/unhideDrive.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unhideDrive",
+        "description": "Makes a previously hidden shared drive visible to the user again. This operation reverses the effect of `hideDrive`. If the drive was not hidden, this operation has no effect."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/updateDrive.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateDrive",
+        "description": "Updates the metadata of an existing shared drive. This can include changing its name, theme, or other modifiable properties. Only the fields provided in the `updates` object will be modified."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/watchChanges.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "watchChanges",
+        "description": "Subscribes to push notifications for changes to files and shared drives. Instead of repeatedly polling the `listChanges` endpoint, your application can register a webhook URL to receive notifications whenever a change occurs. This is a more efficient way to monitor changes."
+      }
+    ]
   },
-  "constructors": [],
-  "keysInfo": [],
+  "constructors": [
+    {
+      "name": "GoogleDriveSdk",
+      "description": "Create a new Google Drive SDK client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/google-oauth",
+      "authEndpoint": "/connect/google-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GOOGLE_DRIVE_CLIENT_ID",
+          "displayName": "Google Drive Client ID",
+          "description": "Client ID for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_CLIENT_SECRET",
+          "displayName": "Google Drive Client Secret",
+          "description": "Client Secret for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_REDIRECT_URI",
+          "displayName": "Google Drive Redirect URI",
+          "description": "The redirect URI registered in your Google Cloud project for the OAuth 2.0 client. This URI is where Google will redirect the user after they authorize the application.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_SCOPES",
+          "displayName": "Google Drive Scopes",
+          "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
+          "required": true,
+          "defaultValue": [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive.metadata",
+            "https://www.googleapis.com/auth/drive.metadata.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly",
+            "https://www.googleapis.com/auth/drive.readonly",
+            "https://www.googleapis.com/auth/docs",
+            "https://www.googleapis.com/auth/drive.apps.readonly",
+            "https://www.googleapis.com/auth/drive.apps",
+            "https://www.googleapis.com/auth/drive.meet.readonly"
+          ]
+        },
+        {
+          "key": "GOOGLE_DRIVE_ACCESS_TOKEN",
+          "displayName": "Google Drive Access Token",
+          "description": "Optional. An OAuth 2.0 access token for Google Drive API. If not provided, the SDK may attempt to use a refresh token or require an OAuth flow.",
+          "required": false
+        },
+        {
+          "key": "GOOGLE_DRIVE_REFRESH_TOKEN",
+          "displayName": "Google Drive Refresh Token",
+          "description": "Optional. An OAuth 2.0 refresh token for Google Drive API. Used to obtain new access tokens without requiring user re-authentication.",
+          "required": false
+        }
+      ],
+      "functionalities": [
+        "createGoogleDriveSDK",
+        "deleteDrive",
+        "getAbout",
+        "getAccessProposal",
+        "getApp",
+        "getDrive",
+        "getStartPageToken",
+        "hideDrive",
+        "listAccessProposals",
+        "listApps",
+        "listChanges",
+        "listDrives",
+        "resolveAccessProposal",
+        "unhideDrive",
+        "updateDrive",
+        "watchChanges"
+      ]
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "GOOGLE_DRIVE_CLIENT_ID",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "Client ID for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_DRIVE_CLIENT_SECRET",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "Client Secret for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_DRIVE_REDIRECT_URI",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "The redirect URI registered in your Google Cloud project for the OAuth 2.0 client. This URI is where Google will redirect the user after they authorize the application.",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_DRIVE_SCOPES",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
+      "required": true,
+      "defaultValue": [
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.appdata",
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/drive.metadata",
+        "https://www.googleapis.com/auth/drive.metadata.readonly",
+        "https://www.googleapis.com/auth/drive.photos.readonly",
+        "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/docs",
+        "https://www.googleapis.com/auth/drive.apps.readonly",
+        "https://www.googleapis.com/auth/drive.apps",
+        "https://www.googleapis.com/auth/drive.meet.readonly"
+      ]
+    },
+    {
+      "key": "GOOGLE_DRIVE_ACCESS_TOKEN",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "Optional. An OAuth 2.0 access token for Google Drive API. If not provided, the SDK may attempt to use a refresh token or require an OAuth flow.",
+      "required": false
+    },
+    {
+      "key": "GOOGLE_DRIVE_REFRESH_TOKEN",
+      "constructors": [
+        "GoogleDriveSdk"
+      ],
+      "description": "Optional. An OAuth 2.0 refresh token for Google Drive API. Used to obtain new access tokens without requiring user re-authentication.",
+      "required": false
+    }
+  ],
   "keyInstructions": {
     "link": "",
     "setupInfo": "To use the Google Drive SDK, you need to set up OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Drive API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleDriveSDK } from '@microfox/google-drive';\n\nconst sdk = createGoogleDriveSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n```\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token\n\nMake sure to keep your client secret and tokens secure and never expose them in client-side code."
   },
-  "extraInfo": []
+  "extraInfo": [],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }
