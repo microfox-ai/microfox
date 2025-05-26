@@ -1,5 +1,11 @@
 # @microfox/brave
 
+## 1.0.9
+
+### Patch Changes
+
+- 5128fc7: Changes from PR #336: updates
+
 ## 1.0.8
 
 ### Patch Changes
