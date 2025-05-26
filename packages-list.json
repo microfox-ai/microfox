@@ -18,6 +18,7 @@
     "packages/fillout",
     "packages/gmail",
     "packages/google-analytics",
+    "packages/google-calendar",
     "packages/google-seo",
     "packages/instagram",
     "packages/instagram-fb",
@@ -51,8 +52,13 @@
     "packages/slack-oauth"
   ],
   "internalPackages": [
-    "packages/rest-sdk"
+    "packages/rest-sdk",
+    "packages/usage-pricing",
+    "packages/usage-tracker"
   ],
-  "total": 42,
-  "generatedAt": "2025-05-21T04:16:46.055Z"
+  "webhookConnectorPackages": [
+    "packages/webhook-slack"
+  ],
+  "total": 46,
+  "generatedAt": "2025-05-26T09:50:39.433Z"
 }
