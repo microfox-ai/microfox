@@ -129,6 +129,137 @@ type EnvKeyType = {
 };
 
 /**
+ * Helper function to read function documentation from filesystem
+ */
+function readFunctionDocsFromFilesystem(
+  packageDir: string,
+): StoredFunctionDocs {
+  const docsDir = path.join(packageDir, 'docs');
+  const functionsMap: StoredFunctionDocs = {};
+
+  if (!fs.existsSync(docsDir)) {
+    console.log(`📁 Docs directory does not exist: ${docsDir}`);
+    return functionsMap;
+  }
+
+  const existingDocFiles = fs
+    .readdirSync(docsDir)
+    .filter(file => file.endsWith('.md'));
+
+  console.log(
+    `📄 Reading ${existingDocFiles.length} existing documentation files from filesystem`,
+  );
+
+  for (const file of existingDocFiles) {
+    const fileName = file.replace('.md', '');
+    const filePath = path.join(docsDir, file);
+
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Skip constructor docs (look for constructor-specific patterns)
+      if (
+        content.includes('## Constructor:') ||
+        content.includes('Create a new') ||
+        content.includes('Initializes')
+      ) {
+        console.log(`📋 Skipping constructor documentation: ${fileName}`);
+        continue;
+      }
+
+      // Extract function name and description from the markdown content
+      const functionNameMatch = content.match(/## Function: `([^`]+)`/);
+      const functionName = functionNameMatch ? functionNameMatch[1] : fileName;
+
+      // Extract description (first paragraph after the function header)
+      const descriptionMatch = content.match(
+        /## Function: `[^`]+`\s*\n\n([^\n]+)/,
+      );
+      const description = descriptionMatch
+        ? descriptionMatch[1]
+        : `Documentation for ${functionName}`;
+
+      functionsMap[functionName] = {
+        name: functionName,
+        description: description,
+        docs: content,
+      };
+
+      console.log(
+        `🔧 Read function documentation from filesystem: ${functionName}`,
+      );
+    } catch (error) {
+      console.warn(`⚠️ Could not read existing doc file ${file}:`, error);
+    }
+  }
+
+  return functionsMap;
+}
+
+/**
+ * Helper function to read constructor documentation from filesystem
+ */
+function readConstructorDocsFromFilesystem(
+  packageDir: string,
+): ConstructorDocsData | null {
+  const docsDir = path.join(packageDir, 'docs');
+
+  if (!fs.existsSync(docsDir)) {
+    console.log(`📁 Docs directory does not exist: ${docsDir}`);
+    return null;
+  }
+
+  const existingDocFiles = fs
+    .readdirSync(docsDir)
+    .filter(file => file.endsWith('.md'));
+
+  console.log(
+    `📄 Looking for constructor documentation in ${existingDocFiles.length} files`,
+  );
+
+  for (const file of existingDocFiles) {
+    const fileName = file.replace('.md', '');
+    const filePath = path.join(docsDir, file);
+
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+
+      // Check if this is a constructor doc (look for constructor-specific patterns)
+      if (content.includes('## Constructor:')) {
+        console.log(`📋 Found constructor documentation: ${fileName}`);
+
+        // Extract constructor name and description from the markdown content
+        const constructorNameMatch =
+          content.match(/## Constructor: `([^`]+)`/) ||
+          content.match(/# ([^\n]+)/);
+        const constructorName = constructorNameMatch
+          ? constructorNameMatch[1]
+          : fileName;
+
+        // Extract description (first paragraph after the constructor header)
+        const descriptionMatch =
+          content.match(/## Constructor: `[^`]+`\s*\n\n([^\n]+)/) ||
+          content.match(/# [^\n]+\s*\n\n([^\n]+)/);
+        const description = descriptionMatch
+          ? descriptionMatch[1]
+          : `Constructor for ${constructorName}`;
+
+        return {
+          name: constructorName,
+          description: description,
+          docs: content,
+        };
+      }
+    } catch (error) {
+      console.warn(`⚠️ Could not read existing doc file ${file}:`, error);
+    }
+  }
+
+  console.log(`📋 No constructor documentation found in filesystem`);
+  return null;
+}
+
+/**
  * Phase 1: Generate environment keys and dependencies only
  */
 async function generatePhase1(
@@ -158,7 +289,15 @@ async function generatePhase1(
     - For OAuth2 authentication:
       * Include the constructor configs like accessToken, refreshToken, clientId, clientSecret, etc. in the environment variables
       * If the constructor config includes scopes, ALWAYS include a SCOPES environment variable
-      * The name of the environment variable should be based on the oauth provider name not the package name. For example, for google-oauth, the environment variable should be GOOGLE_ACCESS_TOKEN, GOOGLE_REFRESH_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SCOPES etc. not GOOGLE_SHEETS_ACCESS_TOKEN, GOOGLE_SHEETS_REFRESH_TOKEN, GOOGLE_SHEETS_CLIENT_ID, GOOGLE_SHEETS_CLIENT_SECRET, GOOGLE_SHEETS_SCOPES etc.
+      * The name of the environment variable should be based on the oauth provider name not the package name.
+      * package name should only be used for scoped tokens likes access token, refresh token, scopes, etc..
+      * for constructors, use provider names as prefix like for clientId, clientSecret, etc.
+      *  For example, for google-oauth, the environment variable should be 
+      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_ACCESS_TOKEN, 
+      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_REFRESH_TOKEN, 
+      *   GOOGLE_CLIENT_ID, 
+      *   GOOGLE_CLIENT_SECRET, 
+      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_SCOPES etc.
     - For each environment variable:
       * Clear display name
       * Detailed description
@@ -632,6 +771,7 @@ export async function generateDocs(
   metadata: SDKMetadata,
   packageDir: string,
   extraInfo: string[] = [],
+  skipPhase2: boolean = false,
 ): Promise<boolean> {
   const storeKeyBase = `docs:${metadata.packageName}`;
   const constructorStoreKey = `${storeKeyBase}:constructor`;
@@ -643,6 +783,11 @@ export async function generateDocs(
   console.log(
     `🧹 Clearing previous documentation data for ${metadata.packageName}...`,
   );
+  if (skipPhase2) {
+    console.log(
+      `⏭️ skipPhase2 enabled - will use existing documentation from filesystem`,
+    );
+  }
   inMemoryStore.removeItem(constructorStoreKey);
   inMemoryStore.removeItem(functionsStoreKey);
   inMemoryStore.removeItem(envKeysStoreKey);
@@ -679,22 +824,32 @@ export async function generateDocs(
     }
 
     // Phase 2: Generate constructor and function documentation recursively
-    console.log(
-      '\n📚 Phase 2: Generating constructor and function documentation...',
-    );
-    const phase2Success = await generatePhase2Recursive(
-      code,
-      metadata,
-      extraInfo,
-      constructorStoreKey,
-      functionsStoreKey,
-      packageDir,
-    );
+    let phase2Success = true;
+    if (skipPhase2) {
+      console.log(
+        '\n⏭️ Phase 2: Skipping constructor and function documentation generation (skipPhase2=true)...',
+      );
+      console.log(
+        '📄 Will use existing documentation from filesystem if available',
+      );
+    } else {
+      console.log(
+        '\n📚 Phase 2: Generating constructor and function documentation...',
+      );
+      phase2Success = await generatePhase2Recursive(
+        code,
+        metadata,
+        extraInfo,
+        constructorStoreKey,
+        functionsStoreKey,
+        packageDir,
+      );
 
-    console.log(`🔍 Phase 2 completed, phase2Success: ${phase2Success}`);
+      console.log(`🔍 Phase 2 completed, phase2Success: ${phase2Success}`);
 
-    if (!phase2Success) {
-      throw new Error('Phase 2 (constructor & functions) generation failed');
+      if (!phase2Success) {
+        throw new Error('Phase 2 (constructor & functions) generation failed');
+      }
     }
 
     // Update documentation report - generation complete
@@ -704,7 +859,9 @@ export async function generateDocs(
         status: 'success',
         details: {
           'Phase 1': 'Environment keys and dependencies generated',
-          'Phase 2': 'Constructor and function documentation generated',
+          'Phase 2': skipPhase2
+            ? 'Skipped (using existing docs)'
+            : 'Constructor and function documentation generated',
         },
       },
       packageDir,
@@ -712,10 +869,48 @@ export async function generateDocs(
 
     // Continue with existing assembly logic...
     console.log('🧩 Assembling documentation from storage...');
-    const constructorData =
+    const constructorDataFromMemory =
       inMemoryStore.getItem<ConstructorDocsData>(constructorStoreKey);
-    const functionsMap =
+
+    // Read constructor documentation from filesystem if not in memory
+    const constructorDataFromFs =
+      skipPhase2 || !constructorDataFromMemory
+        ? readConstructorDocsFromFilesystem(packageDir)
+        : null;
+
+    // Use constructor data from memory first, then filesystem
+    const constructorData = constructorDataFromMemory || constructorDataFromFs;
+
+    const functionsMapFromMemory =
       inMemoryStore.getItem<StoredFunctionDocs>(functionsStoreKey) || {};
+
+    // Read function documentation from filesystem as well
+    const functionsMapFromFs = readFunctionDocsFromFilesystem(packageDir);
+
+    // Combine function docs from both sources, prioritizing in-memory store
+    const functionsMap: StoredFunctionDocs = {
+      ...functionsMapFromFs,
+      ...functionsMapFromMemory,
+    };
+
+    console.log(`📊 Documentation assembly summary:`);
+    console.log(
+      `  - Constructor from memory: ${constructorDataFromMemory ? 'Yes' : 'No'}`,
+    );
+    console.log(
+      `  - Constructor from filesystem: ${constructorDataFromFs ? 'Yes' : 'No'}`,
+    );
+    console.log(`  - Constructor available: ${constructorData ? 'Yes' : 'No'}`);
+    console.log(
+      `  - Functions from memory: ${Object.keys(functionsMapFromMemory).length} functions`,
+    );
+    console.log(
+      `  - Functions from filesystem: ${Object.keys(functionsMapFromFs).length} functions`,
+    );
+    console.log(
+      `  - Total combined functions: ${Object.keys(functionsMap).length} functions`,
+    );
+
     const envKeysData =
       inMemoryStore.getItem<EnvKeysData['envKeys']>(envKeysStoreKey) || [];
     const dependenciesData = inMemoryStore.getItem<DependenciesData>(
@@ -724,13 +919,16 @@ export async function generateDocs(
 
     // --- Basic Validation ---
     if (!constructorData) {
-      throw new Error(
-        'Failed to retrieve constructor documentation from store.',
-      );
+      const errorMsg = skipPhase2
+        ? 'No constructor documentation found in filesystem. When skipPhase2=true, constructor docs must exist in the docs directory.'
+        : 'Failed to retrieve constructor documentation from store.';
+      throw new Error(errorMsg);
     }
     if (Object.keys(functionsMap).length === 0) {
       console.warn(
-        '⚠️ No function documentation was saved. This might be expected if the SDK has no functions, or it might indicate an issue.',
+        skipPhase2
+          ? '⚠️ No function documentation found in memory or filesystem. This might be expected if the SDK has no functions, or you may need to generate docs first without skipPhase2.'
+          : '⚠️ No function documentation was saved. This might be expected if the SDK has no functions, or it might indicate an issue.',
       );
     }
 
@@ -1136,6 +1334,7 @@ function generateMainReadme(
 if (require.main === module) {
   (async () => {
     const packageName = process.argv[2];
+    const skipPhase2 = process.argv[3] === 'skip';
     if (!packageName) {
       console.error('Please provide a package name as an argument');
       process.exit(1);
@@ -1211,6 +1410,7 @@ if (require.main === module) {
         metadata,
         packageDir,
         extraInfo,
+        skipPhase2,
       );
       if (success) {
         console.log(

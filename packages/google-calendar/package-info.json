@@ -1,7 +1,7 @@
 {
   "name": "@microfox/google-calendar",
   "title": "Google Calendar",
-  "description": "A TypeScript SDK providing convenient access to the Google Calendar API for creating, reading, updating, and deleting events.",
+  "description": "A TypeScript SDK for interacting with Google Calendar, enabling management of events, calendars, settings, and access control.",
   "platformType": "tool",
   "path": "packages/google-calendar",
   "dependencies": ["@microfox/google-oauth", "zod"],
@@ -27,58 +27,310 @@
     "title": "Google Calendar",
     "description": "The full README for the Google Calendar",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/README.md",
-    "functionalities": ["GoogleCalendarSdk"],
+    "functionalities": [
+      "createGoogleCalendarSDK",
+      "clearCalendar",
+      "deleteAclRule",
+      "deleteCalendar",
+      "deleteCalendarFromList",
+      "deleteEvent",
+      "getAclRule",
+      "getCalendar",
+      "getCalendarFromList",
+      "getColors",
+      "getEvent",
+      "getSetting",
+      "importEvent",
+      "insertAclRule",
+      "insertCalendarToList",
+      "insertEvent",
+      "listAclRules",
+      "listCalendarList",
+      "listEventInstances",
+      "listEvents",
+      "listSettings",
+      "moveEvent",
+      "queryFreebusy",
+      "quickAddEvent",
+      "stopChannel",
+      "updateAclRule",
+      "updateCalendar",
+      "updateCalendarInList",
+      "updateEvent",
+      "watchAcl",
+      "watchCalendarList",
+      "watchEvents",
+      "watchSettings"
+    ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/GoogleCalendarSdk.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md",
         "type": "constructor",
         "extension": "md",
-        "functionality": "GoogleCalendarSdk",
-        "description": "Initializes a new instance of the GoogleCalendarSdk. This SDK provides methods to interact with the Google Calendar API, allowing for management of calendars, events, access control lists (ACLs), and settings. It handles OAuth 2.0 authentication internally using the provided credentials and tokens."
+        "functionality": "createGoogleCalendarSDK",
+        "description": "Factory function to create an instance of the `GoogleCalendarSdk`. This function simplifies the instantiation of the SDK by accepting a configuration object."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/clearCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "clearCalendar",
+        "description": "Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account. It cannot be used on secondary calendars."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteAclRule.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteAclRule",
+        "description": "Deletes an access control list (ACL) rule from a calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteCalendar",
+        "description": "Deletes a secondary calendar. This operation cannot be used to delete the primary calendar of an account; for that, use the `clearCalendar` method which removes all events from the primary calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteCalendarFromList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteCalendarFromList",
+        "description": "Removes a calendar from the authenticated user's calendar list. This does not delete the calendar itself, but rather unsubscribes the user from it, so it no longer appears in their list of calendars."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteEvent",
+        "description": "Deletes an event from the specified calendar. If the event is recurring, this operation deletes the single instance or the entire series, depending on the API's default behavior for such events unless specified otherwise (though this SDK method doesn't directly expose instance deletion vs. series deletion for recurring events via a specific parameter beyond `eventId`)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getAclRule.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAclRule",
+        "description": "Retrieves a specific access control list (ACL) rule from a calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCalendar",
+        "description": "Retrieves metadata for a specific calendar, such as its title, description, and time zone."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getCalendarFromList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCalendarFromList",
+        "description": "Retrieves a specific calendar entry from the authenticated user's calendar list. This provides details about a calendar that the user is subscribed to or has added to their list."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getColors.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getColors",
+        "description": "Retrieves the list of colors that can be used for calendars and events in Google Calendar. This includes both predefined event colors and calendar colors."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getEvent",
+        "description": "Retrieves detailed information about a specific event from the specified calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/getSetting.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSetting",
+        "description": "Fetches the details of a specific user setting from Google Calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/importEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "importEvent",
+        "description": "Imports an event into the specified calendar. This method allows for greater control over event creation, including setting properties like the event's original iCalendar UID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertAclRule.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "insertAclRule",
+        "description": "Inserts an access control list (ACL) rule into a calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertCalendarToList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "insertCalendarToList",
+        "description": "Adds an existing calendar to the authenticated user's calendar list. This makes the calendar visible and accessible to the user through their Google Calendar interface."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "insertEvent",
+        "description": "Creates and inserts a new event into the specified calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/listAclRules.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listAclRules",
+        "description": "Retrieves a list of access control list (ACL) rules for a specified calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/listCalendarList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listCalendarList",
+        "description": "Retrieves the authenticated user's calendar list. This includes all calendars that the user has added to their list, such as their primary calendar, calendars they own, and calendars they are subscribed to."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/listEventInstances.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listEventInstances",
+        "description": "Retrieves a list of instances for a given recurring event. This is useful for finding all occurrences of a repeating event within a specific date range."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/listEvents.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listEvents",
+        "description": "Retrieves a list of events from the specified calendar. This function supports numerous query parameters for filtering, sorting, and paginating the results."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/listSettings.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listSettings",
+        "description": "Retrieves a list of all available user settings for Google Calendar, along with their current values."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/moveEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "moveEvent",
+        "description": "Moves an existing event from a specified source calendar to a destination calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/queryFreebusy.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryFreebusy",
+        "description": "Retrieves the free/busy information for a set of calendars within a given time range. This allows checking for available time slots without accessing the full details of the events."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/quickAddEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "quickAddEvent",
+        "description": "Creates an event on the specified calendar based on a single text string. Google Calendar's natural language processing attempts to parse the details (like title, date, time, and location) from this text."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/stopChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "stopChannel",
+        "description": "Stops a previously established notification channel, ceasing the delivery of notifications for the watched resource."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/updateAclRule.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateAclRule",
+        "description": "Updates an existing Access Control List (ACL) rule for a specified calendar. This operation modifies the access permissions of an existing rule, for example, changing the role of a user or group."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/updateCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCalendar",
+        "description": "Updates metadata for an existing calendar, such as its summary (title), description, or time zone. This method supports patch semantics, meaning only the fields provided in the `calendar` object will be updated; other fields will remain unchanged."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/updateCalendarInList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCalendarInList",
+        "description": "Updates an existing calendar on the user's calendar list. This method allows modifying properties of a calendar that the user has already added to their list."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/updateEvent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateEvent",
+        "description": "Modifies an existing event in the specified calendar. Only the fields provided in the `event` object will be updated; other fields will remain unchanged (unless they are dependent on changed fields, e.g., `updated` timestamp)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/watchAcl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "watchAcl",
+        "description": "Establishes a watch on the Access Control List (ACL) of a specified calendar. This allows your application to receive notifications whenever there are changes to the calendar's ACL rules."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/watchCalendarList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "watchCalendarList",
+        "description": "Establishes a notification channel to watch for changes to the user's calendar list. When changes occur (e.g., a calendar is added, removed, or updated), a notification will be sent to the specified address."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/watchEvents.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "watchEvents",
+        "description": "Establishes a notification channel to monitor changes to events on a given calendar. When changes occur (e.g., event creation, update, deletion), Google's servers will send a notification to a webhook URL you provide in the `channel` object."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/watchSettings.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "watchSettings",
+        "description": "Establishes a notification channel to monitor changes to the user's Google Calendar settings. When settings are modified, Google's servers will send a notification to a webhook URL you provide in the `channel` object."
       }
     ]
   },
   "constructors": [
     {
-      "name": "GoogleCalendarSdk",
+      "name": "createGoogleCalendarSDK",
       "description": "Create a new Google Calendar client through which you can interact with the API",
-      "auth": "none",
+      "auth": "oauth2",
       "requiredKeys": [],
       "internalKeys": [
         {
           "key": "GOOGLE_CLIENT_ID",
           "displayName": "Google Client ID",
-          "description": "Your Google Cloud project's OAuth 2.0 Client ID. This is used to identify your application to Google's authentication servers.",
+          "description": "The client ID obtained from the Google API Console for your OAuth2 application.",
           "required": true
         },
         {
           "key": "GOOGLE_CLIENT_SECRET",
           "displayName": "Google Client Secret",
-          "description": "Your Google Cloud project's OAuth 2.0 Client Secret. This is used to authenticate your application to Google's authentication servers.",
+          "description": "The client secret obtained from the Google API Console for your OAuth2 application.",
           "required": true
         },
         {
-          "key": "GOOGLE_REDIRECT_URI",
-          "displayName": "Google Redirect URI",
-          "description": "The URI to which Google will redirect the user after they have authorized your application. This must match one of the authorized redirect URIs configured in your Google Cloud project.",
+          "key": "GOOGLE_CALENDAR_ACCESS_TOKEN",
+          "displayName": "Google Calendar Access Token",
+          "description": "The access token for Google Calendar API. This token grants access to the user's Google Calendar data.",
           "required": true
         },
         {
-          "key": "GOOGLE_ACCESS_TOKEN",
-          "displayName": "Google Access Token",
-          "description": "An existing Google OAuth 2.0 Access Token for API authentication. The SDK will use this token and attempt to refresh it if a refresh token is also provided.",
+          "key": "GOOGLE_CALENDAR_REFRESH_TOKEN",
+          "displayName": "Google Calendar Refresh Token",
+          "description": "The refresh token for Google Calendar API. This token is used to obtain a new access token when the current one expires.",
           "required": true
         },
         {
-          "key": "GOOGLE_REFRESH_TOKEN",
-          "displayName": "Google Refresh Token",
-          "description": "An existing Google OAuth 2.0 Refresh Token. Used to obtain a new access token when the current one expires.",
-          "required": true
-        },
-        {
-          "key": "GOOGLE_SCOPES",
-          "displayName": "Google API Scopes",
-          "description": "A comma-separated or space-separated list of Google API scopes that your application requires. If not provided, the SDK defaults to a comprehensive set of Google Calendar scopes (e.g., 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'). The application should parse this string into an array of strings before passing it to the SDK constructor.",
+          "key": "GOOGLE_CALENDAR_SCOPES",
+          "displayName": "Google Calendar Scopes",
+          "description": "A space-separated list of scopes required for Google Calendar API access. Defaults to a predefined set of calendar scopes if not provided. Example: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events'",
           "required": false,
           "defaultValue": [
             "https://www.googleapis.com/auth/calendar.readonly",
@@ -86,8 +338,8 @@
             "https://www.googleapis.com/auth/calendar.events",
             "https://www.googleapis.com/auth/calendar.events.readonly",
             "https://www.googleapis.com/auth/calendar.events.owned",
-            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
             "https://www.googleapis.com/auth/calendar.events.public.readonly",
+            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
             "https://www.googleapis.com/auth/calendar.freebusy",
             "https://www.googleapis.com/auth/calendar.events.freebusy",
             "https://www.googleapis.com/auth/calendar.settings.readonly",
@@ -95,44 +347,71 @@
           ]
         }
       ],
-      "functionalities": []
+      "functionalities": [
+        "clearCalendar",
+        "deleteAclRule",
+        "deleteCalendar",
+        "deleteCalendarFromList",
+        "deleteEvent",
+        "getAclRule",
+        "getCalendar",
+        "getCalendarFromList",
+        "getColors",
+        "getEvent",
+        "getSetting",
+        "importEvent",
+        "insertAclRule",
+        "insertCalendarToList",
+        "insertEvent",
+        "listAclRules",
+        "listCalendarList",
+        "listEventInstances",
+        "listEvents",
+        "listSettings",
+        "moveEvent",
+        "queryFreebusy",
+        "quickAddEvent",
+        "stopChannel",
+        "updateAclRule",
+        "updateCalendar",
+        "updateCalendarInList",
+        "updateEvent",
+        "watchAcl",
+        "watchCalendarList",
+        "watchEvents",
+        "watchSettings"
+      ]
     }
   ],
   "keysInfo": [
     {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "Your Google Cloud project's OAuth 2.0 Client ID. This is used to identify your application to Google's authentication servers.",
+      "constructors": ["createGoogleCalendarSDK"],
+      "description": "The client ID obtained from the Google API Console for your OAuth2 application.",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "Your Google Cloud project's OAuth 2.0 Client Secret. This is used to authenticate your application to Google's authentication servers.",
+      "constructors": ["createGoogleCalendarSDK"],
+      "description": "The client secret obtained from the Google API Console for your OAuth2 application.",
       "required": true
     },
     {
-      "key": "GOOGLE_REDIRECT_URI",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "The URI to which Google will redirect the user after they have authorized your application. This must match one of the authorized redirect URIs configured in your Google Cloud project.",
+      "key": "GOOGLE_CALENDAR_ACCESS_TOKEN",
+      "constructors": ["createGoogleCalendarSDK"],
+      "description": "The access token for Google Calendar API. This token grants access to the user's Google Calendar data.",
       "required": true
     },
     {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "An existing Google OAuth 2.0 Access Token for API authentication. The SDK will use this token and attempt to refresh it if a refresh token is also provided.",
+      "key": "GOOGLE_CALENDAR_REFRESH_TOKEN",
+      "constructors": ["createGoogleCalendarSDK"],
+      "description": "The refresh token for Google Calendar API. This token is used to obtain a new access token when the current one expires.",
       "required": true
     },
     {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "An existing Google OAuth 2.0 Refresh Token. Used to obtain a new access token when the current one expires.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_SCOPES",
-      "constructors": ["GoogleCalendarSdk"],
-      "description": "A comma-separated or space-separated list of Google API scopes that your application requires. If not provided, the SDK defaults to a comprehensive set of Google Calendar scopes (e.g., 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events'). The application should parse this string into an array of strings before passing it to the SDK constructor.",
+      "key": "GOOGLE_CALENDAR_SCOPES",
+      "constructors": ["createGoogleCalendarSDK"],
+      "description": "A space-separated list of scopes required for Google Calendar API access. Defaults to a predefined set of calendar scopes if not provided. Example: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events'",
       "required": false,
       "defaultValue": [
         "https://www.googleapis.com/auth/calendar.readonly",
@@ -140,8 +419,8 @@
         "https://www.googleapis.com/auth/calendar.events",
         "https://www.googleapis.com/auth/calendar.events.readonly",
         "https://www.googleapis.com/auth/calendar.events.owned",
-        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
         "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
         "https://www.googleapis.com/auth/calendar.freebusy",
         "https://www.googleapis.com/auth/calendar.events.freebusy",
         "https://www.googleapis.com/auth/calendar.settings.readonly",

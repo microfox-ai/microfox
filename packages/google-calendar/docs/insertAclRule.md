@@ -1,91 +1,62 @@
 ## Function: `insertAclRule`
 
-Inserts a new Access Control List (ACL) rule into a specified calendar. This operation grants a user, group, or domain specific access permissions to the calendar.
+Inserts an access control list (ACL) rule into a calendar.
 
 **Purpose:**
-To grant access permissions to a calendar for a specific entity by adding a new ACL rule.
+To grant a specific permission or access level to a user or group for a calendar.
 
 **Parameters:**
-- `calendarId`: string (required) - The identifier of the calendar to which the ACL rule will be added. This is typically the email address of the calendar or the calendar's unique ID.
-- `rule`: `AclRule` (required) - An `AclRule` object defining the rule to be inserted. The `AclRule` object should specify the `scope` (who the rule applies to) and the `role` (the level of access).
-  The `AclRule` object structure:
-  ```typescript
-  interface AclRule {
-    // kind: "calendar#aclRule"; // Not required for insertion, will be set by API
-    // etag: string; // Not required for insertion
-    // id: string; // Not required for insertion, will be set by API
-    scope: {
-      type: string; // Required. The type of the scope. Possible values are: "user", "group", "domain", "default".
-      value?: string; // Required if type is "user", "group", or "domain". The email address or domain name.
-    };
-    role: string; // Required. The role assigned to the scope. Possible values are: "none", "freeBusyReader", "reader", "writer", "owner".
-  }
-  ```
-- `sendNotifications`: string (optional) - Whether to send notifications about the calendar sharing change. 
-  Possible values are:
-  - `"all"`: Send notifications to all users.
-  - `"externalOnly"`: Send notifications only to users outside the calendar's domain.
-  - `"none"`: Do not send notifications.
-  Default behavior if omitted is typically to send notifications.
+- `calendarId`: string (required) - The identifier of the calendar where the ACL rule will be inserted. Use 'primary' to refer to the primary calendar of the authenticated user.
+- `rule`: `AclRule` (required) - The ACL rule object to insert. The `AclRule` object has the following structure:
+  - `kind`: string (optional) - Identifies this as an ACL rule. Value: "calendar#aclRule".
+  - `etag`: string (optional) - ETag of the resource.
+  - `id`: string (optional) - Identifier of the ACL rule.
+  - `scope`: object (required) - The scope of the rule.
+    - `type`: string (required) - The type of the scope. Possible values are:
+      - "default" - The public scope. This is the default value.
+      - "user" - Limits the scope to a single user.
+      - "group" - Limits the scope to a group.
+      - "domain" - Limits the scope to a domain.
+    - `value`: string (optional) - The email address of a user or group, or the name of a domain, depending on the scope type. Omitted for type "default". Required for other scope types.
+  - `role`: string (required) - The role assigned to the scope. Possible values are:
+    - "none" - Provides no access.
+    - "freeBusyReader" - Provides read access to free/busy information.
+    - "reader" - Provides read access to the calendar. Private events will appear to users with reader access, but event details will be hidden.
+    - "writer" - Provides read and write access to the calendar. Private events will appear to users with writer access, and event details will be visible.
+    - "owner" - Provides ownership of the calendar. This role has all of the permissions of the writer role and is required to grant access to the calendar via ACLs.
+- `sendNotifications`: string (optional) - Whether to send notifications about the new rule to the recipient. Acceptable values are:
+    - "all" - Send notifications.
+    - "none" - Do not send notifications.
+    - Default: "all"
 
 **Return Value:**
-`Promise<AclRule>` - A promise that resolves to an `AclRule` object representing the newly created ACL rule, including its server-assigned ID and ETag. An error is thrown if the operation fails, for example, due to invalid input, insufficient permissions, or if the rule already exists.
+- `Promise<AclRule>`: A promise that resolves with the created `AclRule` object, including any server-generated fields like `id` and `etag`.
 
 **Examples:**
 ```typescript
-// Example 1: Insert an ACL rule to grant reader access to a user
-async function grantUserReaderAccess() {
-  const newRule: AclRule = {
-    scope: {
-      type: 'user',
-      value: 'new.user@example.com',
-    },
-    role: 'reader',
-  };
-  try {
-    const createdRule = await calendarSdk.insertAclRule('primary', newRule);
-    console.log('ACL rule created successfully:', createdRule);
-  } catch (error) {
-    console.error('Failed to insert ACL rule:', error);
-  }
-}
+// Example 1: Insert an ACL rule for a user with reader role on the primary calendar
+const newRule1: AclRule = {
+  scope: {
+    type: 'user',
+    value: 'user@example.com'
+  },
+  role: 'reader'
+};
+const createdRule1 = await sdk.insertAclRule('primary', newRule1);
+console.log(createdRule1);
 
-// Example 2: Insert an ACL rule for a group with notifications disabled
-async function grantGroupWriterAccessNoNotifications() {
-  const calendarId = 'my.custom.calendar@group.calendar.google.com';
-  const groupRule: AclRule = {
-    scope: {
-      type: 'group',
-      value: 'project-team@example.com',
-    },
-    role: 'writer',
-  };
-  try {
-    const createdRule = await calendarSdk.insertAclRule(
-      calendarId,
-      groupRule,
-      'none'
-    );
-    console.log('Group ACL rule created:', createdRule);
-  } catch (error) {
-    console.error('Failed to insert group ACL rule:', error);
-  }
-}
-
-// Example 3: Insert an ACL rule for a domain
-async function grantDomainFreeBusyAccess() {
-  const domainRule: AclRule = {
-    scope: {
-      type: 'domain',
-      value: 'example.com',
-    },
-    role: 'freeBusyReader',
-  };
-  try {
-    const createdRule = await calendarSdk.insertAclRule('primary', domainRule, 'all');
-    console.log('Domain ACL rule created:', createdRule);
-  } catch (error) {
-    console.error('Failed to insert domain ACL rule:', error);
-  }
-}
+// Example 2: Insert an ACL rule for a group with writer role on a specific calendar, without sending notifications
+const newRule2: AclRule = {
+  scope: {
+    type: 'group',
+    value: 'group@example.com'
+  },
+  role: 'writer'
+};
+const createdRule2 = await sdk.insertAclRule(
+  'calendarId@group.calendar.google.com',
+  newRule2,
+  'none'
+);
+console.log(createdRule2);
 ```

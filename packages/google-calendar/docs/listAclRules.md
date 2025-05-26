@@ -1,104 +1,55 @@
 ## Function: `listAclRules`
 
-Retrieves a list of Access Control List (ACL) rules for a specified calendar. These rules define who has what type of access to the calendar.
+Retrieves a list of access control list (ACL) rules for a specified calendar.
 
 **Purpose:**
-To fetch all ACL rules associated with a calendar, allowing inspection of current access permissions.
+To get all the permissions and access levels defined for a calendar.
 
 **Parameters:**
-- `calendarId`: string (required) - The identifier of the calendar for which to list ACL rules. This is typically the email address of the calendar or the calendar's unique ID.
-- `params`: object (optional) - An object containing optional query parameters to filter or paginate the results.
+- `calendarId`: string (required) - The identifier of the calendar for which to list ACL rules. Use 'primary' to refer to the primary calendar of the authenticated user.
+- `params`: object (optional) - An object containing query parameters to filter and paginate the results.
   - `maxResults`: string (optional) - Maximum number of entries returned on one result page. By default the value is 100 entries. The page size can never be larger than 250 entries. Optional.
   - `pageToken`: string (optional) - Token specifying which result page to return. Optional.
-  - `showDeleted`: string (optional) - Whether to include deleted ACL rules in the result. Deleted ACL rules are represented by rules with the role equal to `"none"`. Deleted rules are only listed if `showDeleted` is set to true. Optional. The default is False.
-  - `syncToken`: string (optional) - Token obtained from the `nextSyncToken` field returned on the last page of a previous `list` request. It makes the result of this `list` request contain only entries that have changed since then. All entries deleted since the previous `list` request will always be in the result set and it is not allowed to set `showDeleted` to False. If the `syncToken` expires, the server will respond with a 410 GONE response code and the client should clear its storage and perform a full synchronization without the `syncToken`. Learn more about incremental synchronization. Optional. The default is to synchronize all entries.
+  - `showDeleted`: string (optional) - Whether to include deleted ACL rules in the result. Deleted ACL rules are represented by rules with the role equal to "none". Deleted rules are only guaranteed to be present in the list for up to 30 days after deletion. Optional. The default is False.
+  - `syncToken`: string (optional) - Token obtained from the nextSyncToken field returned on the last page of a previous list request. It makes the result of this list request contain only entries that have changed since then. An error is returned if the syncToken is invalidated by the server, in which case another full list request should be performed.
+    Optional. The default is to synchronize everything.
 
 **Return Value:**
-`Promise<Acl>` - A promise that resolves to an `Acl` object. This object contains a list of `AclRule` items and potentially a `nextPageToken` or `nextSyncToken` for pagination or synchronization.
-
-  The `Acl` object has the following structure:
-  ```typescript
-  interface Acl {
-    kind: "calendar#acl"; // Type of the collection ("calendar#acl").
-    etag: string; // ETag of the collection.
-    items: AclRule[]; // List of ACL rules.
-    nextPageToken?: string; // Token used to access the next page of this result. Omitted if no further results are available.
-    nextSyncToken?: string; // Token used at a later point in time to retrieve only the entries that have changed since this result was returned. Omitted if further results are available, in which case nextPageToken is provided.
-  }
-
-  interface AclRule {
-    kind: "calendar#aclRule";
-    etag: string;
-    id: string;
-    scope: {
-      type: string;
-      value?: string;
-    };
-    role: string;
-  }
-  ```
-  An error is thrown if the operation fails, for example, if the calendar does not exist or the authenticated user lacks permission.
+- `Promise<Acl>`: A promise that resolves with an `Acl` object. The `Acl` object has the following structure:
+  - `kind`: string (optional) - Identifies this as a list of ACL rules. Value: "calendar#acl".
+  - `etag`: string (optional) - ETag of the collection.
+  - `items`: array<`AclRule`> (optional) - List of ACL rules.
+    - Each `AclRule` object has the following structure:
+      - `kind`: string (optional) - Identifies this as an ACL rule. Value: "calendar#aclRule".
+      - `etag`: string (optional) - ETag of the resource.
+      - `id`: string (optional) - Identifier of the ACL rule.
+      - `scope`: object (optional) - The scope of the rule.
+        - `type`: string (required) - The type of the scope. (e.g., "user", "group", "domain", "default")
+        - `value`: string (optional) - The email address or domain name associated with the scope.
+      - `role`: string (optional) - The role assigned to the scope. (e.g., "reader", "writer", "owner")
+  - `nextPageToken`: string (optional) - Token used to access the next page of this result. Omitted if no further results are available, in which case nextSyncToken is provided.
+  - `nextSyncToken`: string (optional) - Token used at a later point in time to retrieve only the entries that have changed since this result was returned. Omitted if further results are available, in which case nextPageToken is provided.
 
 **Examples:**
 ```typescript
 // Example 1: List all ACL rules for the primary calendar
-async function listPrimaryCalendarAcls() {
-  try {
-    const aclList = await calendarSdk.listAclRules("primary");
-    console.log("ACL Rules for primary calendar:", aclList.items);
-    if (aclList.nextPageToken) {
-      console.log("More ACL rules available. Next page token:", aclList.nextPageToken);
-    }
-  } catch (error) {
-    console.error("Failed to list ACL rules:", error);
+const aclList1 = await sdk.listAclRules('primary');
+console.log(aclList1.items);
+
+// Example 2: List ACL rules for a specific calendar with pagination and showing deleted rules
+const aclList2 = await sdk.listAclRules(
+  'calendarId@group.calendar.google.com',
+  {
+    maxResults: '50',
+    showDeleted: 'true'
   }
+);
+console.log(aclList2.items);
+if (aclList2.nextPageToken) {
+  console.log("Next page token:", aclList2.nextPageToken);
 }
 
-// Example 2: List ACL rules with pagination and include deleted rules
-async function listCalendarAclsWithDetails() {
-  const calendarId = "my.custom.calendar@group.calendar.google.com";
-  try {
-    const aclList = await calendarSdk.listAclRules(calendarId, {
-      maxResults: "10",
-      showDeleted: "true",
-    });
-    console.log(`ACL Rules for ${calendarId} (max 10, showing deleted):`, aclList.items);
-
-    // Example of fetching the next page if available
-    if (aclList.nextPageToken) {
-      const nextPageAclList = await calendarSdk.listAclRules(calendarId, {
-        maxResults: "10",
-        showDeleted: "true",
-        pageToken: aclList.nextPageToken,
-      });
-      console.log("Next page of ACL rules:", nextPageAclList.items);
-    }
-  } catch (error) {
-    console.error("Failed to list ACL rules with details:", error);
-  }
-}
-
-// Example 3: Using syncToken for incremental synchronization (conceptual)
-async function syncAclRules(calendarId: string, knownSyncToken?: string) {
-  try {
-    const params: { syncToken?: string } = {};
-    if (knownSyncToken) {
-      params.syncToken = knownSyncToken;
-    }
-    const aclList = await calendarSdk.listAclRules(calendarId, params);
-    console.log("Synced ACL rules:", aclList.items);
-    // Store aclList.nextSyncToken for the next sync
-    const nextSyncToken = aclList.nextSyncToken;
-    console.log("Next sync token:", nextSyncToken);
-    // Process updated/deleted rules
-  } catch (error: any) {
-    if (error.message && error.message.includes("410 GONE")) {
-      console.warn("Sync token expired. Performing full sync.");
-      // Perform a full sync without syncToken
-      await syncAclRules(calendarId); 
-    } else {
-      console.error("Failed to sync ACL rules:", error);
-    }
-  }
-}
+// Example 3: List ACL rules using a sync token
+const aclList3 = await sdk.listAclRules('primary', { syncToken: 'SYNC_TOKEN_FROM_PREVIOUS_CALL' });
+console.log(aclList3.items);
 ```

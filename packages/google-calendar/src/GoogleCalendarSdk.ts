@@ -25,7 +25,6 @@ export class GoogleCalendarSdk {
     private config: {
       clientId: string;
       clientSecret: string;
-      redirectUri: string;
       accessToken: string;
       refreshToken: string;
       scopes?: string[];
@@ -34,7 +33,7 @@ export class GoogleCalendarSdk {
     this.oauthSdk = new GoogleOAuthSdk({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
-      redirectUri: config.redirectUri,
+      redirectUri: 'urn:ietf:wg:oauth:2.0:oob', // Default redirect URI for installed applications
       scopes: config.scopes ?? [
         'https://www.googleapis.com/auth/calendar.readonly',
         'https://www.googleapis.com/auth/calendar.acls.readonly',
@@ -470,7 +469,6 @@ export class GoogleCalendarSdk {
 export function createGoogleCalendarSDK(config: {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
   accessToken: string;
   refreshToken: string;
   scopes?: string[];

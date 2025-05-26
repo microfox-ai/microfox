@@ -1,45 +1,43 @@
 ## Function: `getAclRule`
 
-Retrieves a specific Access Control List (ACL) rule for a given calendar and rule ID.
+Retrieves a specific access control list (ACL) rule from a calendar.
 
 **Purpose:**
-To fetch the details of a single ACL rule, such as the scope (user, group, domain) and the role (e.g., reader, writer, owner) granted.
+To get the details of a specific permission or access level for a user or group on a calendar.
 
 **Parameters:**
-- `calendarId`: string (required) - The identifier of the calendar from which to retrieve the ACL rule. This can be the calendar's email address or its unique ID.
-- `ruleId`: string (required) - The identifier of the ACL rule to retrieve. This ID is unique for each ACL rule.
+- `calendarId`: string (required) - The identifier of the calendar from which to retrieve the ACL rule. Use 'primary' to refer to the primary calendar of the authenticated user.
+- `ruleId`: string (required) - The identifier of the ACL rule to retrieve.
 
 **Return Value:**
-- `Promise<AclRule>` - A promise that resolves to an `AclRule` object containing the details of the requested ACL rule. The `AclRule` object structure is defined by the Google Calendar API and typically includes fields like `id`, `kind`, `etag`, `scope`, and `role`.
-  - `AclRule`: object - Represents an ACL rule.
-    - `id`: string - The identifier of the ACL rule.
-    - `kind`: string - The type of the resource. For an ACL rule, this is `calendar#aclRule`.
-    - `etag`: string - The ETag of the resource.
-    - `scope`: object - The scope of the rule.
-      - `type`: string - The type of the scope. Possible values are: `default`, `user`, `group`, `domain`.
-      - `value`: string (optional) - The email address or domain name for the scope. Required for `user`, `group`, and `domain` scope types.
-    - `role`: string - The role assigned to the scope. Possible values are: `none`, `freeBusyReader`, `reader`, `writer`, `owner`.
+- `Promise<AclRule>`: A promise that resolves with the `AclRule` object. The `AclRule` object has the following structure:
+  - `kind`: string (optional) - Identifies this as an ACL rule. Value: "calendar#aclRule".
+  - `etag`: string (optional) - ETag of the resource.
+  - `id`: string (optional) - Identifier of the ACL rule.
+  - `scope`: object (optional) - The scope of the rule.
+    - `type`: string (required) - The type of the scope. Possible values are:
+      - "default" - The public scope. This is the default value.
+      - "user" - Limits the scope to a single user.
+      - "group" - Limits the scope to a group.
+      - "domain" - Limits the scope to a domain.
+    - `value`: string (optional) - The email address of a user or group, or the name of a domain, depending on the scope type. Omitted for type "default".
+  - `role`: string (optional) - The role assigned to the scope. Possible values are:
+    - "none" - Provides no access.
+    - "freeBusyReader" - Provides read access to free/busy information.
+    - "reader" - Provides read access to the calendar. Private events will appear to users with reader access, but event details will be hidden.
+    - "writer" - Provides read and write access to the calendar. Private events will appear to users with writer access, and event details will be visible.
+    - "owner" - Provides ownership of the calendar. This role has all of the permissions of the writer role and is required to grant access to the calendar via ACLs.
 
 **Examples:**
 ```typescript
-// Example 1: Get a specific ACL rule
-async function fetchAclRuleDetails() {
-  const calendarId = "primary"; // or "user@example.com"
-  const ruleIdToFetch = "user:specificuser@example.com";
+// Example 1: Get an ACL rule from the primary calendar
+const aclRule1 = await sdk.getAclRule('primary', 'ruleId123');
+console.log(aclRule1);
 
-  try {
-    const aclRule = await calendarSdk.getAclRule(calendarId, ruleIdToFetch);
-    console.log("Fetched ACL Rule:", aclRule);
-    console.log(`Rule ID: ${aclRule.id}`);
-    console.log(`Scope Type: ${aclRule.scope.type}`);
-    if (aclRule.scope.value) {
-      console.log(`Scope Value: ${aclRule.scope.value}`);
-    }
-    console.log(`Role: ${aclRule.role}`);
-  } catch (error) {
-    console.error(`Failed to get ACL rule: ${error.message}`);
-  }
-}
-
-fetchAclRuleDetails();
+// Example 2: Get an ACL rule from a specific calendar
+const aclRule2 = await sdk.getAclRule(
+  'calendarId@group.calendar.google.com',
+  'user:test@example.com'
+);
+console.log(aclRule2);
 ```

@@ -17,10 +17,10 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "usage": {
-      "promptTokens": 388484,
-      "completionTokens": 34821,
+      "promptTokens": 457613,
+      "completionTokens": 36931,
       "totalTokens": 0
     },
-    "cost": 1.493525
+    "cost": 1.6979975
   }
 }
