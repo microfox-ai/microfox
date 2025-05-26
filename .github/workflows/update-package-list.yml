@@ -35,6 +35,7 @@ jobs:
         id: git-check
         run: |
           git add packages-list.json
+          git add README.md
           git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changed
