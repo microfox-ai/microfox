@@ -1,20 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    },
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/webhook-slack"
-    }
-  ]
+  "requests": []
 }
