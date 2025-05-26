@@ -13,6 +13,7 @@ const IssueDetailsSchema = z.object({
     .enum([
       'pkg-create',
       'pkg-create-oauth',
+      'pkg-create-webhook',
       'pkg-build',
       'bug',
       'modification',
@@ -141,6 +142,7 @@ async function processIssue() {
         - Determine the primary 'type' of the request (feature, pkg-build, bug, modification).
           - pkg-create: Create a new @microfox/** package.
           - pkg-create-oauth: Create a new @microfox/**-oauth package.
+          - pkg-create-webhook: Create a new @microfox/**-webhook package.
           - pkg-build: Test a package's build & fix any errors.
           - bug: Fix an issue with a package.
           - modification: Modify an existing package.
