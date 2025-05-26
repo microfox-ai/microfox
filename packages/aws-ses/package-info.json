@@ -72,6 +72,17 @@
             "label": "Sender Mail Domain Name",
             "placeholder": "reply-bots.com"
           }
+        },
+        {
+          "key": "AWS_SES_SECRET_TEMPLATE_TYPE",
+          "displayName": "Template Type",
+          "description": "The type of template to use for the email.",
+          "required": false,
+          "ui": {
+            "type": "text",
+            "label": "Template Type",
+            "placeholder": "markup"
+          }
         }
       ],
       "internalKeys": [],

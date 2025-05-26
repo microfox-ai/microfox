@@ -394,10 +394,12 @@ export const createSESSdk = (config: SESConfig): SESSDK => {
         })
         .json();
 
-      const tracker = createDefaultMicrofoxUsageTracker();
-      tracker?.trackApi1Usage('aws-ses', 'outboundEmail', {
-        requestCount: 1,
-      });
+      if (process.env.AWS_SES_SECRET_TEMPLATE_TYPE === 'markup') {
+        const tracker = createDefaultMicrofoxUsageTracker();
+        tracker?.trackApi1Usage('aws-ses', 'outboundEmail', {
+          requestCount: 1,
+        });
+      }
 
       return SendEmailResponseSchema.parse(response);
     } catch (error) {
