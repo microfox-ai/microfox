@@ -1,6 +1,6 @@
 {
   "name": "@microfox/webhook-slack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TypeScript package for sending webhooks to Slack.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
