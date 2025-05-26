@@ -17,6 +17,27 @@ jobs:
           # Fetch entire history to ensure correct diff calculation
           fetch-depth: 0
 
+      - name: Check if packagefox-build is empty
+        id: check-packagefox
+        run: |
+          PACKAGEFOX_FILE=".microfox/packagefox-build.json"
+
+          if [ -f "$PACKAGEFOX_FILE" ]; then
+            # Check if the requests array is empty
+            if jq -e '.requests | length == 0' "$PACKAGEFOX_FILE" > /dev/null; then
+              echo "packagefox_empty=true" >> $GITHUB_OUTPUT
+              echo "PackageFox build file is empty (no requests). Continuing with quality checks."
+            else
+              echo "packagefox_empty=false" >> $GITHUB_OUTPUT
+              echo "❌ ERROR: PackageFox build file is not empty - contains pending requests!"
+              echo "Quality checks cannot proceed with pending packagefox requests."
+              exit 1
+            fi
+          else
+            echo "packagefox_empty=false" >> $GITHUB_OUTPUT
+            echo "PackageFox build file not found. Continuing with quality checks."
+          fi
+
       - name: Get relevant changed files
         id: changed-files
         uses: tj-actions/changed-files@v46.0.1
