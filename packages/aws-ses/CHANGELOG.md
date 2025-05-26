@@ -1,5 +1,11 @@
 # @microfox/aws-ses
 
+## 1.1.6
+
+### Patch Changes
+
+- 5128fc7: Changes from PR #336: updates
+
 ## 1.1.5
 
 ### Patch Changes

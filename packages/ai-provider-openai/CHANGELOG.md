@@ -1,5 +1,11 @@
 # @microfox/ai-provider-openai
 
+## 1.0.7
+
+### Patch Changes
+
+- 5128fc7: Changes from PR #336: updates
+
 ## 1.0.6
 
 ### Patch Changes
