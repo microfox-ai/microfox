@@ -2,8 +2,8 @@
 
 | Step | Status | Details | Error |
 |------|--------|---------|-------|
-| 🔍 analyze | ⏳ | currentFile: packages/google-calendar/.foxes/packagefox-bug-build-1748231715078.json |  |
-| ✏️ apply | ⏳ | filesToFix: 1 |  |
+| 🔍 analyze | ⏳ | currentFile: packages/google-drive/.foxes/packagefox-bug-build-1748257240127.json |  |
+| ✏️ apply | ✅ | filesFixed: 1 |  |
 
 ---
-**Total Usage:** Tokens: 189557 | Cost: $0.7362
+**Total Usage:** Tokens: 800142 | Cost: $2.9246

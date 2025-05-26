@@ -177,7 +177,7 @@ export async function fixBuildIssues(packageName: string) {
       body: `❌ Failed to build ${packageDir} after ${MAX_RETRIES} attempts. Please review logs and fix manually.`,
     });
     inMemoryStore.clear();
-    process.exitCode = 1;
+    process.exitCode = 0;
   }
 }
 

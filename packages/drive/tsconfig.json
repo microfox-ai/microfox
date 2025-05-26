@@ -1,4 +1,0 @@
-{
-  "extends": "@microfox/tsconfig/base.json",
-  "include": ["**/*.ts"]
-} 
