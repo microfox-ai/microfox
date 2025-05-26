@@ -25,6 +25,8 @@ import {
   AwsResponse,
 } from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
 import { AllMessageEvents, SlackEvent } from './types';
+import NextJsReceiver from './NextJsReceiver';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 /**
  * Custom error class for webhook verification failures
@@ -60,13 +62,18 @@ export class SlackWebhookSdk {
   private secret?: string;
   private botToken?: string;
   private app: App;
-  private awsLambdaReceiver: AwsLambdaReceiver;
+  private awsLambdaReceiver?: AwsLambdaReceiver;
+  private nextJsReceiver?: NextJsReceiver;
 
   /**
    * Creates an instance of SlackWebhookSdk.
    * @param {string} secret - The secret used for verifying webhook signatures
    */
-  constructor(secret?: string, botToken?: string) {
+  constructor(
+    secret?: string,
+    botToken?: string,
+    type: 'aws' | 'nextjs' = 'nextjs',
+  ) {
     this.secret = secret ?? process.env.SLACK_SIGNING_SECRET;
     this.botToken = botToken ?? process.env.SLACK_BOT_TOKEN;
     if (!this.secret) {
@@ -75,9 +82,15 @@ export class SlackWebhookSdk {
     if (!this.botToken) {
       throw new Error('Bot token is required');
     }
-    this.awsLambdaReceiver = new AwsLambdaReceiver({
-      signingSecret: this.secret,
-    });
+    if (type === 'aws') {
+      this.awsLambdaReceiver = new AwsLambdaReceiver({
+        signingSecret: this.secret,
+      });
+    } else {
+      this.nextJsReceiver = new NextJsReceiver({
+        signingSecret: this.secret,
+      });
+    }
     this.app = new App({
       token: botToken,
       receiver: this.awsLambdaReceiver,
@@ -244,7 +257,19 @@ export class SlackWebhookSdk {
    * @param callback - The callback function from the AWS Lambda function
    * @returns The response from the AWS Lambda function
    */
-  async handleEvent(
+  async handleNextJs(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    // Verify the signature
+    await this.nextJsReceiver?.handleRequest(req, res);
+  }
+
+  /**
+   * Handles incoming webhooks from Slack
+   * @param event - The event object from the AWS Lambda function
+   * @param context - The context object from the AWS Lambda function
+   * @param callback - The callback function from the AWS Lambda function
+   * @returns The response from the AWS Lambda function
+   */
+  async handleAwsEvent(
     event: AwsEvent,
     context: any,
     callback: AwsCallback,
@@ -274,7 +299,10 @@ export class SlackWebhookSdk {
     // }
 
     // Parse the event
-    const handler = await this.awsLambdaReceiver.start();
+    const handler = await this.awsLambdaReceiver?.start();
+    if (!handler) {
+      throw new Error('Failed to start AWS Lambda receiver');
+    }
     return handler(event, context, callback);
   }
 }
