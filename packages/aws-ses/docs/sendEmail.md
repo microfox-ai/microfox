@@ -40,10 +40,7 @@ await ses.sendEmail({
   sender:
     req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN ??
     'sender@example.com',
-  recipient:
-    process.env.AWS_SES_RECEPIENT_EMAIL ??
-    req.params.recepientMail ??
-    'recipient@example.com',
+  recipient: req.params.recepientMail ?? 'recipient@example.com',
   subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
@@ -54,10 +51,7 @@ await ses.sendEmail({
   sender:
     req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN ??
     'sender@example.com',
-  recipient:
-    process.env.AWS_SES_RECEPIENT_EMAIL ??
-    req.params.recepientMail ??
-    'recipient@example.com',
+  recipient: req.params.recepientMail ?? 'recipient@example.com',
   subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyHtml: '<p>This is an HTML email body.</p>',
 });
