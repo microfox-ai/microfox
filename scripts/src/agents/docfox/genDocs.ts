@@ -514,7 +514,7 @@ Generate documentation that is:
       - You MUST call \`saveConstructorDocs\` for the main constructor/class.
       - You MUST call \`saveEnvKeys\` and \`saveDependencies\` (even if empty).
       - You MUST call \`finalizeDocs\` ONLY after all other tool calls are complete.
-      - You 
+      - finalizeDocs is important and MUST be called.
     `;
 
     // Generation prompt remains largely the same, focusing on the source material
@@ -619,17 +619,17 @@ Generate documentation that is:
     console.log('\n🧠 Generating detailed documentation via tool calls...');
     try {
       const result = await generateText({
-        model: models.googleGeminiPro,
+        model: models.googleGemini25Pro,
         system: docsSystemPrompt,
         prompt: docsGenerationPrompt,
         tools: tools,
         toolChoice: 'required',
-        maxRetries: 3,
+        maxRetries: 5,
       });
 
       if (result.usage) {
         usage = result.usage;
-        logUsage(models.googleGeminiPro.modelId, usage);
+        logUsage(models.googleGemini25Pro.modelId, usage);
         console.log('Usage:', usage);
       } else {
         console.warn('Usage information not available from the stream result.');

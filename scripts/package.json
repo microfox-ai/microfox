@@ -10,6 +10,7 @@
     "gen:pkg-fix": "ts-node src/agents/packagefox/fixPackage.ts",
     "gen:pkg": "ts-node src/agents/packagefox/genPackage.ts",
     "gen:pkg-oauth": "ts-node src/agents/packagefox/genOAuthPackage.ts",
+    "gen:pkg-webhook": "ts-node src/agents/packagefox/genWebhookPackage.ts",
     "gen:ext-pkgs": "ts-node src/agents/packagefox/genExtPackage.ts",
     "update:readme": "ts-node src/agents/docfox/updateReadme.ts",
     "gen:docs": "ts-node src/agents/docfox/genDocs.ts",

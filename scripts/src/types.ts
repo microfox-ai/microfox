@@ -117,7 +117,11 @@ export const Constructor = z
     authEndpoint: z
       .string()
       .optional()
-      .describe('The endpoint of the constructor'),
+      .describe('The endpoint to authenticate the user with our app'),
+    webhookEndpoint: z
+      .string()
+      .optional()
+      .describe('The webhook endpoint to receive events from the platform'),
     requiredKeys: z
       .array(KeyInfo)
       .describe('The required keys of the constructor'),
@@ -169,6 +173,7 @@ export const PackageInfo = z
       .default('communication')
       .describe('The platform type of the package'),
     authEndpoint: z.string().optional(),
+    webhookEndpoint: z.string().optional(),
     authType: z.enum(['oauth2', 'apikey', 'none']).optional(),
     oauth2Scopes: z.array(z.string()).optional(),
     description: z.string().describe('One line Description of the package'),
@@ -199,6 +204,7 @@ export const PackageInfo = z
         'semiStable',
         'unstable',
         'oauthConnector',
+        'webhookConnector',
         'internal',
       ])
       .describe('The status of the package'),
