@@ -429,7 +429,7 @@
     }
   ],
   "keyInstructions": {
-    "link": "",
+    "link": "https://developers.google.com/workspace/calendar/api/v3/reference",
     "setupInfo": "To use this SDK, you need to set up OAuth 2.0 credentials for the Google Calendar API:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Calendar API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleCalendarSDK } from '@microfox/google-calendar';\n\nconst sdk = createGoogleCalendarSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN', // Optional, if you already have a valid access token\n  refreshToken: 'YOUR_REFRESH_TOKEN', // Optional, for refreshing the access token\n});\n```\n\nYou can also use environment variables to configure the SDK:\n\n- GOOGLE_CLIENT_ID: Your OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: A valid access token (optional)\n- GOOGLE_REFRESH_TOKEN: A refresh token for obtaining new access tokens (optional)\n\nMake sure to keep your credentials and tokens secure and never expose them in client-side code."
   },
   "extraInfo": [],
