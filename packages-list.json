@@ -52,11 +52,13 @@
     "packages/slack-oauth"
   ],
   "internalPackages": [
-    "packages/rest-sdk"
+    "packages/rest-sdk",
+    "packages/usage-pricing",
+    "packages/usage-tracker"
   ],
   "webhookConnectorPackages": [
     "packages/webhook-slack"
   ],
-  "total": 44,
-  "generatedAt": "2025-05-26T06:44:23.415Z"
+  "total": 46,
+  "generatedAt": "2025-05-26T09:50:39.433Z"
 }
