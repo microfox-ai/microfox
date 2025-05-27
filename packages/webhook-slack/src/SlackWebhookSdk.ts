@@ -17,13 +17,13 @@ import {
   type SlashCommand,
   type StringIndexed,
 } from '@slack/bolt';
-import App from '@slack/bolt/dist/App';
-import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+import App from '@slack/bolt/dist/App.js';
+import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
 import {
   type AwsCallback,
   type AwsEvent,
   type AwsResponse,
-} from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+} from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
 import { type AllMessageEvents } from './types';
 import NextJsReceiver from './NextJsReceiver';
 import type { NextApiRequest, NextApiResponse } from 'next/types';
