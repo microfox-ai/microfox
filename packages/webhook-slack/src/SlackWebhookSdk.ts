@@ -1,7 +1,5 @@
 import {
   type AckFn,
-  App,
-  AwsLambdaReceiver,
   type BlockElementAction,
   type Context,
   type DialogSubmitAction,
@@ -19,6 +17,8 @@ import {
   type SlashCommand,
   type StringIndexed,
 } from '@slack/bolt';
+import App from '@slack/bolt/dist/App';
+import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
 import {
   type AwsCallback,
   type AwsEvent,

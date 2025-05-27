@@ -1,27 +1,24 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import crypto from 'node:crypto';
-import querystring from 'node:querystring';
 import {
-  type App,
-  type BufferedIncomingMessage,
-  type CodedError,
-  HTTPResponseAck,
   type InstallProviderOptions,
   type InstallURLOptions,
   type Receiver,
   type ReceiverEvent,
-  ReceiverInconsistentStateError,
   ReceiverMultipleAckError,
   type ReceiverProcessEventErrorHandlerArgs,
   type ReceiverUnhandledRequestHandlerArgs,
   HTTPModuleFunctions as httpFunc,
 } from '@slack/bolt';
+import App from '@slack/bolt/dist/App';
+import { HTTPResponseAck } from '@slack/bolt/dist/receivers/HTTPResponseAck';
 import { ConsoleLogger, type LogLevel, type Logger } from '@slack/logger';
 import {
   type CallbackOptions,
   type InstallPathOptions,
   InstallProvider,
 } from '@slack/oauth';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'node:crypto';
+import querystring from 'node:querystring';
 
 type CustomPropertiesExtractor = (
   request: NextApiRequest,
