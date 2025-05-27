@@ -24,6 +24,7 @@ functions:
           path: /{functionName}
           method: any
           cors: true
+
 resources:
   Outputs:
     ApiEndpoints:
