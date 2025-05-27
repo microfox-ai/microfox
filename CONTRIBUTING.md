@@ -16,6 +16,7 @@ Microfox AI is a monorepo managed with npm workspaces and Turborepo. Key directo
     - `docfox` - hosts documentation generators
     - `packagefox` - hosts coding agents that create packages
     - `testfox` - hosts coding agents that create tests
+    - `slsfox` - hosts public remote tool calls genrators
   - Contributions here could involve improving existing agent logic, adding new capabilities to an agent, or developing entirely new agents.
   - **`src/ai`** : hosts ai models map & helper functions to log & track usage costs on PR.
   - **`src/embeddings/`**: for generating and managing embeddings of docs, which are crucial for semantic search for Ai.

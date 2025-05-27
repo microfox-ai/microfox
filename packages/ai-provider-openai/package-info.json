@@ -4,7 +4,7 @@
   "description": "A comprehensive TypeScript SDK providing convenient access to OpenAI Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/ai-provider-openai",
   "dependencies": ["zod"],
-  "status": "semiStable",
+  "status": "stable",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "authType": "apikey",
@@ -33,6 +33,19 @@
         }
       ],
       "internalKeys": [],
+      "botConfig": [
+        {
+          "key": "OPENAI_SECRET_TEMPLATE_TYPE",
+          "displayName": "Template Type",
+          "description": "The type of template to use for the email.",
+          "required": false,
+          "ui": {
+            "type": "text",
+            "label": "Template Type",
+            "placeholder": "markup"
+          }
+        }
+      ],
       "functionalities": []
     }
   ],

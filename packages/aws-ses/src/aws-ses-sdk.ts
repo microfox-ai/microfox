@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createRestSDK } from '@microfox/rest-sdk';
 import crypto from 'crypto';
+import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
 
 // AWS SES API response schemas
 const SendEmailResultSchema = z
@@ -392,6 +393,13 @@ export const createSESSdk = (config: SESConfig): SESSDK => {
           contentType: 'application/x-www-form-urlencoded',
         })
         .json();
+
+      if (process.env.AWS_SES_SECRET_TEMPLATE_TYPE === 'markup') {
+        const tracker = createDefaultMicrofoxUsageTracker();
+        tracker?.trackApi1Usage('aws-ses', 'outboundEmail', {
+          requestCount: 1,
+        });
+      }
 
       return SendEmailResponseSchema.parse(response);
     } catch (error) {

@@ -4,7 +4,7 @@ import {
   LanguageModelV1Middleware,
   wrapLanguageModel,
 } from 'ai';
-import { updateUsage } from './redisTracker';
+import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
 
 export type OpenAIImageModelId =
   | 'dall-e-3'
@@ -83,8 +83,19 @@ export class OpenAiProvider {
       },
       async wrapGenerate({ doGenerate, params }) {
         const result = await doGenerate();
-        if (result.response?.modelId) {
-          updateUsage(result.response?.modelId, result.usage);
+        if (
+          result.response?.modelId &&
+          process.env.OPENAI_SECRET_TEMPLATE_TYPE === 'markup'
+        ) {
+          const tracker = createDefaultMicrofoxUsageTracker();
+          tracker?.trackLLMUsage(
+            'ai-provider-openai',
+            result.response.modelId,
+            {
+              promptTokens: result.usage.promptTokens,
+              completionTokens: result.usage.completionTokens,
+            },
+          );
         } else {
           console.warn('No model ID found in the result');
         }

@@ -31,10 +31,18 @@ jobs:
       - name: Run update package list script
         run: cd scripts && npm run update:package-list
 
+      - name: Clean up  & reset .microfox files
+        run: |
+          echo "{ requests: [] }" > .microfox/packagefox-build.json
+          echo "{}" > .microfox/pr-usage.json
+
       - name: Check for changes
         id: git-check
         run: |
           git add packages-list.json
+          git add README.md
+          git add .microfox/packagefox-build.json
+          git add .microfox/pr-usage.json
           git diff --staged --quiet || echo "changes=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changed

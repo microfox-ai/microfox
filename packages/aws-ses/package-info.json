@@ -62,6 +62,29 @@
           "required": false
         }
       ],
+      "botConfig": [
+        {
+          "key": "AWS_SES_SENDER_MAIL_DOMAIN",
+          "displayName": "Sender Mail Domain Name",
+          "description": "The domain name that will appear as the suffix of the sender email address.",
+          "ui": {
+            "type": "text",
+            "label": "Sender Mail Domain Name",
+            "placeholder": "reply-bots.com"
+          }
+        },
+        {
+          "key": "AWS_SES_SECRET_TEMPLATE_TYPE",
+          "displayName": "Template Type",
+          "description": "The type of template to use for the email.",
+          "required": false,
+          "ui": {
+            "type": "text",
+            "label": "Template Type",
+            "placeholder": "markup"
+          }
+        }
+      ],
       "internalKeys": [],
       "functionalities": ["sendEmail", "sendBulkEmails"]
     }

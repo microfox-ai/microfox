@@ -1,0 +1,22 @@
+{
+  "name": "@microfox/agent-connector",
+  "title": "Microfox Agent Connector",
+  "description": "Interconnecting agents with multiple platforms for communication and data exchange.",
+  "platformType": "internal",
+  "path": "packages/webhook-slack",
+  "dependencies": ["zod"],
+  "status": "webhookConnector",
+  "webhookEndpoint": "/webhook/webhook-slack",
+  "documentation": "https://www.npmjs.com/package/@microfox/webhook-slack",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/webhook-slack.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "description": "The full README for the Microfox Slack Webhook"
+  },
+  "constructors": [],
+  "keysInfo": [],
+  "extraInfo": [],
+  "keyInstructions": {
+    "link": "https://api.slack.com/events-api"
+  }
+}
