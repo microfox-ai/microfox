@@ -1,45 +1,21 @@
 import {
-  type InstallProviderOptions,
-  type InstallURLOptions,
   type Receiver,
   type ReceiverEvent,
   ReceiverMultipleAckError,
   type ReceiverProcessEventErrorHandlerArgs,
   type ReceiverUnhandledRequestHandlerArgs,
   HTTPModuleFunctions as httpFunc,
+  isValidSlackRequest,
 } from '@slack/bolt';
 import App from '@slack/bolt/dist/App.js';
 import { HTTPResponseAck } from '@slack/bolt/dist/receivers/HTTPResponseAck.js';
 import { ConsoleLogger, type LogLevel, type Logger } from '@slack/logger';
-import {
-  type CallbackOptions,
-  type InstallPathOptions,
-  InstallProvider,
-} from '@slack/oauth';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import crypto from 'node:crypto';
-import querystring from 'node:querystring';
 
 type CustomPropertiesExtractor = (
   request: NextApiRequest,
   // biome-ignore lint/suspicious/noExplicitAny: custom properties can be anything
 ) => Record<string, any>;
-
-export interface InstallerOptions {
-  stateStore?: InstallProviderOptions['stateStore']; // default ClearStateStore
-  stateVerification?: InstallProviderOptions['stateVerification']; // defaults true
-  authVersion?: InstallProviderOptions['authVersion']; // default 'v2'
-  metadata?: InstallURLOptions['metadata'];
-  installPath?: string;
-  directInstall?: boolean; // see https://api.slack.com/start/distributing/directory#direct_install
-  renderHtmlForInstallPath?: (url: string) => string;
-  redirectUriPath?: string;
-  installPathOptions?: InstallPathOptions;
-  callbackOptions?: CallbackOptions;
-  userScopes?: InstallURLOptions['userScopes'];
-  clientOptions?: InstallProviderOptions['clientOptions'];
-  authorizationUrl?: InstallProviderOptions['authorizationUrl'];
-}
 
 export interface NextJsReceiverOptions {
   signingSecret: string | (() => PromiseLike<string>);
@@ -48,13 +24,6 @@ export interface NextJsReceiverOptions {
   path?: string;
   signatureVerification?: boolean;
   processBeforeResponse?: boolean;
-  clientId?: string;
-  clientSecret?: string;
-  stateSecret?: InstallProviderOptions['stateSecret']; // required when using default stateStore
-  redirectUri?: string;
-  installationStore?: InstallProviderOptions['installationStore']; // default MemoryInstallationStore
-  scopes?: InstallURLOptions['scopes'];
-  installerOptions?: InstallerOptions;
   customPropertiesExtractor?: CustomPropertiesExtractor;
   processEventErrorHandler?: (
     args: ReceiverProcessEventErrorHandlerArgs,
@@ -85,8 +54,6 @@ export default class NextJsReceiver implements Receiver {
   private unhandledRequestHandler: (
     args: ReceiverUnhandledRequestHandlerArgs,
   ) => void;
-  private installer: InstallProvider | undefined;
-  private installerOptions: InstallerOptions | undefined;
   private invalidRequestSignatureHandler: (args: {
     rawBody: string;
     signature: string;
@@ -125,37 +92,6 @@ export default class NextJsReceiver implements Receiver {
     this.invalidRequestSignatureHandler =
       options.invalidRequestSignatureHandler ??
       this.defaultInvalidRequestSignatureHandler;
-
-    this.installerOptions = options.installerOptions;
-    if (
-      this.installerOptions &&
-      this.installerOptions.installPath === undefined
-    ) {
-      this.installerOptions.installPath = '/slack/install';
-    }
-    if (
-      this.installerOptions &&
-      this.installerOptions.redirectUriPath === undefined
-    ) {
-      this.installerOptions.redirectUriPath = '/slack/oauth_redirect';
-    }
-    if (options.clientId && options.clientSecret) {
-      this.installer = new InstallProvider({
-        ...this.installerOptions,
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-        stateSecret: options.stateSecret,
-        installationStore: options.installationStore,
-        logger: options.logger,
-        logLevel: options.logLevel,
-        installUrlOptions: {
-          scopes: options.scopes ?? [],
-          userScopes: this.installerOptions?.userScopes,
-          metadata: this.installerOptions?.metadata,
-          redirectUri: options.redirectUri,
-        },
-      });
-    }
   }
 
   private _signingSecret: string | undefined;
@@ -300,13 +236,6 @@ export default class NextJsReceiver implements Receiver {
       ? contentType[0]
       : contentType;
 
-    if (contentTypeStr === 'application/x-www-form-urlencoded') {
-      const parsedBody = querystring.parse(stringBody);
-      if (typeof parsedBody.payload === 'string') {
-        return JSON.parse(parsedBody.payload);
-      }
-      return parsedBody;
-    }
     if (contentTypeStr === 'application/json') {
       return JSON.parse(stringBody);
     }
@@ -339,20 +268,14 @@ export default class NextJsReceiver implements Receiver {
       return false;
     }
 
-    const hmac = crypto.createHmac('sha256', signingSecret);
-    const [version, hash] = signature.split('=');
-    hmac.update(`${version}:${requestTimestamp}:${body}`);
-    const computedHash = hmac.digest('hex');
-
-    // Timing-safe string comparison
-    if (hash.length !== computedHash.length) {
-      return false;
-    }
-    let result = 0;
-    for (let i = 0; i < hash.length; i++) {
-      result |= hash.charCodeAt(i) ^ computedHash.charCodeAt(i);
-    }
-    return result === 0;
+    return isValidSlackRequest({
+      signingSecret,
+      body,
+      headers: {
+        'x-slack-signature': signature,
+        'x-slack-request-timestamp': requestTimestamp,
+      },
+    });
   }
 
   private defaultInvalidRequestSignatureHandler(args: {
@@ -365,36 +288,6 @@ export default class NextJsReceiver implements Receiver {
     const { signature, ts } = args;
     this.logger.info(
       `Invalid request signature detected (X-Slack-Signature: ${signature}, X-Slack-Request-Timestamp: ${ts})`,
-    );
-  }
-
-  public async handleInstall(
-    req: NextApiRequest,
-    res: NextApiResponse,
-  ): Promise<void> {
-    if (!this.installer || !this.installerOptions?.installPath) {
-      res.status(404).end();
-      return;
-    }
-    await this.installer.handleInstallPath(
-      req,
-      res,
-      this.installerOptions.installPathOptions,
-    );
-  }
-
-  public async handleCallback(
-    req: NextApiRequest,
-    res: NextApiResponse,
-  ): Promise<void> {
-    if (!this.installer || !this.installerOptions?.redirectUriPath) {
-      res.status(404).end();
-      return;
-    }
-    await this.installer.handleCallback(
-      req,
-      res,
-      this.installerOptions.callbackOptions,
     );
   }
 
