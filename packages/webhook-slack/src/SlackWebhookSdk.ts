@@ -1,4 +1,5 @@
 import {
+  isValidSlackRequest,
   type AckFn,
   type BlockElementAction,
   type Context,
@@ -6,7 +7,6 @@ import {
   type DialogValidation,
   type EnvelopedEvent,
   type InteractiveAction,
-  isValidSlackRequest,
   type KnownEventFromType,
   type RespondArguments,
   type RespondFn,
@@ -17,16 +17,8 @@ import {
   type SlashCommand,
   type StringIndexed,
 } from '@slack/bolt';
-import App from '@slack/bolt/dist/App.js';
-import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
-import {
-  type AwsCallback,
-  type AwsEvent,
-  type AwsResponse,
-} from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { type AllMessageEvents } from './types';
-import NextJsReceiver from './NextJsReceiver';
-import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 /**
  * Custom error class for webhook verification failures
@@ -48,25 +40,26 @@ export class WebhookParseError extends Error {
   }
 }
 
+interface MessageCallbackArgs {
+  message: AllMessageEvents;
+  context: Context & StringIndexed;
+  say: SayFn;
+  body: EnvelopedEvent<AllMessageEvents>;
+}
+
 /**
  * SlackWebhookSdk - A class for handling Slack webhooks
  */
 export class SlackWebhookSdk {
   private secret?: string;
   private botToken?: string;
-  private app: App<StringIndexed>;
-  private awsLambdaReceiver?: AwsLambdaReceiver;
-  private nextJsReceiver?: NextJsReceiver;
+  private callbacks: Record<string, ((args: any) => Promise<void>)[]> = {};
 
   /**
    * Creates an instance of SlackWebhookSdk.
    * @param {string} secret - The secret used for verifying webhook signatures
    */
-  constructor(
-    secret?: string,
-    botToken?: string,
-    type: 'aws' | 'nextjs' = 'nextjs',
-  ) {
+  constructor(secret?: string, botToken?: string) {
     this.secret = secret ?? process.env.SLACK_SIGNING_SECRET;
     this.botToken = botToken ?? process.env.SLACK_BOT_TOKEN;
     if (!this.secret) {
@@ -75,32 +68,14 @@ export class SlackWebhookSdk {
     if (!this.botToken) {
       throw new Error('Bot token is required');
     }
-    if (type === 'aws') {
-      this.awsLambdaReceiver = new AwsLambdaReceiver({
-        signingSecret: this.secret,
-      });
-    } else {
-      this.nextJsReceiver = new NextJsReceiver({
-        signingSecret: this.secret,
-      });
-    }
-    this.app = new App({
-      token: botToken,
-      receiver: this.awsLambdaReceiver,
-    });
   }
 
-  onMessage(
-    calbback: (args: {
-      message: AllMessageEvents;
-      context: Context & StringIndexed;
-      say: SayFn;
-      body: EnvelopedEvent<AllMessageEvents>;
-    }) => Promise<void>,
-  ) {
-    this.app.message(async ({ message, say, client, context, body }) => {
-      calbback({ body, message, context, say });
-    });
+  onMessage(calbback: (args: MessageCallbackArgs) => Promise<void>) {
+    if (this.callbacks.message) {
+      this.callbacks.message.push(calbback);
+    } else {
+      this.callbacks.message = [calbback];
+    }
   }
 
   onPatternedMessage(
@@ -112,12 +87,11 @@ export class SlackWebhookSdk {
       body: EnvelopedEvent<AllMessageEvents>;
     }) => Promise<void>,
   ) {
-    this.app.message(
-      pattern,
-      async ({ message, say, client, context, body }) => {
-        calbback({ body, message, context, say });
-      },
-    );
+    if (this.callbacks.message) {
+      this.callbacks.message.push(calbback);
+    } else {
+      this.callbacks.message = [calbback];
+    }
   }
 
   onCommand(
@@ -131,12 +105,11 @@ export class SlackWebhookSdk {
       respond: RespondFn;
     }) => Promise<void>,
   ) {
-    this.app.command(
-      command,
-      async ({ command, say, ack, respond, client, context, body }) => {
-        await calbback({ body, command, context, say, ack, respond });
-      },
-    );
+    if (this.callbacks.command) {
+      this.callbacks.command.push(calbback);
+    } else {
+      this.callbacks.command = [calbback];
+    }
   }
 
   onAction(
@@ -149,18 +122,11 @@ export class SlackWebhookSdk {
       respond: RespondFn;
     }) => Promise<void>,
   ) {
-    this.app.action(
-      actionId,
-      async ({ action, ack, respond, client, context, body }) => {
-        await calbback({
-          body,
-          action: action as BlockElementAction | InteractiveAction,
-          context,
-          ack: ack as AckFn<string | SayArguments> | AckFn<void>,
-          respond,
-        });
-      },
-    );
+    if (this.callbacks.action) {
+      this.callbacks.action.push(calbback);
+    } else {
+      this.callbacks.action = [calbback];
+    }
   }
 
   onDialogSubmission(
@@ -173,20 +139,11 @@ export class SlackWebhookSdk {
       respond: RespondFn;
     }) => Promise<void>,
   ) {
-    this.app.action(
-      {
-        callback_id: dialogCallbackId,
-      },
-      async ({ action, ack, respond, client, context, body }) => {
-        await calbback({
-          body,
-          dialog: action as DialogSubmitAction,
-          context,
-          ack,
-          respond,
-        });
-      },
-    );
+    if (this.callbacks.dialog) {
+      this.callbacks.dialog.push(calbback);
+    } else {
+      this.callbacks.dialog = [calbback];
+    }
   }
 
   onShortcut(
@@ -199,12 +156,11 @@ export class SlackWebhookSdk {
       respond: RespondFn;
     }) => Promise<void>,
   ) {
-    this.app.shortcut(
-      shortcutId,
-      async ({ shortcut, ack, respond, context, body }) => {
-        await calbback({ body, shortcut, context, ack, respond });
-      },
-    );
+    if (this.callbacks.shortcut) {
+      this.callbacks.shortcut.push(calbback);
+    } else {
+      this.callbacks.shortcut = [calbback];
+    }
   }
 
   onEvent(
@@ -215,9 +171,11 @@ export class SlackWebhookSdk {
       body: EnvelopedEvent<KnownEventFromType<string>>;
     }) => Promise<void>,
   ) {
-    this.app.event(eventType, async ({ event, context, body }) => {
-      await calbback({ body, event, context });
-    });
+    if (this.callbacks.event) {
+      this.callbacks.event.push(calbback);
+    } else {
+      this.callbacks.event = [calbback];
+    }
   }
 
   /**
@@ -226,7 +184,7 @@ export class SlackWebhookSdk {
    * @param {string} headers - The headers from the webhook request
    * @returns {boolean} - True if the signature is valid, false otherwise
    */
-  private verifySignature(
+  verifySignature(
     payload: string,
     headers: {
       'x-slack-signature': string;
@@ -234,7 +192,7 @@ export class SlackWebhookSdk {
     },
   ): boolean {
     if (!this.secret) {
-      throw new Error('Secret is required');
+      throw new WebhookParseError('Secret is required');
     }
     return isValidSlackRequest({
       signingSecret: this.secret,
@@ -244,58 +202,76 @@ export class SlackWebhookSdk {
   }
 
   /**
-   * Handles incoming webhooks from Slack
-   * @param event - The event object from the AWS Lambda function
-   * @param context - The context object from the AWS Lambda function
-   * @param callback - The callback function from the AWS Lambda function
-   * @returns The response from the AWS Lambda function
+   * Verifies the signature of the incoming webhook and parses the request body
+   * @param rawBody - The raw body of the request
+   * @param headers - The headers of the request
+   * @returns The response and payload of the request
    */
-  async handleNextJs(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    // Verify the signature
-    await this.nextJsReceiver?.handleRequest(req, res);
-  }
-
-  /**
-   * Handles incoming webhooks from Slack
-   * @param event - The event object from the AWS Lambda function
-   * @param context - The context object from the AWS Lambda function
-   * @param callback - The callback function from the AWS Lambda function
-   * @returns The response from the AWS Lambda function
-   */
-  async handleAwsEvent(
-    event: AwsEvent,
-    context: any,
-    callback: AwsCallback,
-  ): Promise<AwsResponse> {
-    // Verify the signature
-    const rawBody = JSON.stringify(event.body);
+  async verifyAndParseRequest(
+    rawBody: string,
+    headers: Record<string, string | undefined>,
+  ): Promise<{
+    response: APIGatewayProxyResult;
+    payload: EnvelopedEvent;
+  }> {
     if (
       !this.verifySignature(rawBody, {
-        'x-slack-signature': event.headers['x-slack-signature'] ?? '',
+        'x-slack-signature': headers['x-slack-signature'] ?? '',
         'x-slack-request-timestamp':
-          Number(event.headers['x-slack-request-timestamp']) ?? 0,
+          Number(headers['x-slack-request-timestamp']) ?? 0,
       })
     ) {
       throw new WebhookVerificationError('Invalid webhook signature');
     }
-    // Handle URL verification challenge
-    // if (requestBody.type === 'url_verification') {
-    //   // Cast to our specific type for URL verification
-    //   const verificationRequestBody = requestBody as UrlVerificationRequestBody;
-    //   // Validate that challenge is a string before returning
-    //   if (typeof verificationRequestBody.challenge === 'string') {
-    //     return { challenge: verificationRequestBody.challenge };
-    //   }
-    //   throw new WebhookParseError(
-    //     'Failed to parse URL verification challenge: challenge property is not a string or is missing',
-    //   );
-    // }
+    const body = JSON.parse(rawBody);
 
-    // Parse the event
-    const handler = await this.awsLambdaReceiver?.start();
-    if (!handler) {
-      throw new Error('Failed to start AWS Lambda receiver');
+    if (body?.ssl_check) {
+      return {
+        response: {
+          statusCode: 200,
+          body: JSON.stringify({ ok: true }),
+        },
+        payload: body,
+      };
     }
-    return handler(event, context, callback);
+
+    // Handle URL verification challenge
+    if (body?.type === 'url_verification') {
+      // Cast to our specific type for URL verification
+      const verificationRequestBody = body as {
+        challenge: string;
+      };
+      // Validate that challenge is a string before returning
+      if (typeof verificationRequestBody.challenge === 'string') {
+        return {
+          response: {
+            statusCode: 200,
+            body: JSON.stringify({
+              challenge: verificationRequestBody.challenge,
+            }),
+          },
+          payload: body,
+        };
+      }
+      throw new WebhookParseError(
+        'Failed to parse URL verification challenge: challenge property is not a string or is missing',
+      );
+    }
+
+    const slackEnvelope = body as EnvelopedEvent;
+
+    if (slackEnvelope.type != 'event_callback') {
+      throw new WebhookParseError(
+        'Invalid webhook type: expected event_callback',
+      );
+    }
+
+    return {
+      response: {
+        statusCode: 200,
+        body: JSON.stringify({ ok: true }),
+      },
+      payload: slackEnvelope,
+    };
   }
 }
