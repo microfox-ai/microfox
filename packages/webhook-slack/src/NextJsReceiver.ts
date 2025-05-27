@@ -8,8 +8,8 @@ import {
   type ReceiverUnhandledRequestHandlerArgs,
   HTTPModuleFunctions as httpFunc,
 } from '@slack/bolt';
-import App from '@slack/bolt/dist/App';
-import { HTTPResponseAck } from '@slack/bolt/dist/receivers/HTTPResponseAck';
+import App from '@slack/bolt/dist/App.js';
+import { HTTPResponseAck } from '@slack/bolt/dist/receivers/HTTPResponseAck.js';
 import { ConsoleLogger, type LogLevel, type Logger } from '@slack/logger';
 import {
   type CallbackOptions,
