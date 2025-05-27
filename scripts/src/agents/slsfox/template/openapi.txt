@@ -1,0 +1,158 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Microfox SDK Unified API",
+    "version": "1.0.0",
+    "description": "Single entry-point API for all Microfox SDK functions via a wrapper Lambda",
+    "contact": {
+      "name": "Microfox Dev Support",
+      "email": "support@microfox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.microfox.com/c/slack-web-tiny",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "paths": {
+    "/functionName": {
+      "post": {
+        "operationId": "functionName",
+        "summary": "Function summary",
+        "description": "Function description",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the message sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Arguments for the function",
+                        "properties": {
+                          "arg1": {
+                            "type": "string",
+                            "description": "Argument 1"
+                          },
+                          "arg2": {
+                            "type": "string",
+                            "description": "Argument 2"
+                          }
+                        },
+                        "required": ["arg1"]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": ["apikey", "oauth2"]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string",
+                                  "description": "Environment variable name"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "Package name"
+                      }
+                    },
+                    "required": ["arguments"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Function executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "result": { "type": "object" },
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing or invalid parameters" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/functionName2": {
+      "post": {
+        "operationId": "functionName2",
+        "summary": "Function summary",
+        "description": "Function description",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "arg1": {
+                    "type": "string",
+                    "description": "Argument 1"
+                  },
+                  "arg2": {
+                    "type": "string",
+                    "description": "Argument 2"
+                  }
+                },
+                "required": ["arg1", "arg2"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Function executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "result": {
+                      "type": "object",
+                      "properties": { "id": { "type": "string" } }
+                    },
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing or invalid parameters" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    }
+  }
+}
