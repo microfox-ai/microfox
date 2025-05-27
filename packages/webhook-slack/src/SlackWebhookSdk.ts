@@ -17,13 +17,13 @@ import {
   type SlashCommand,
   type StringIndexed,
 } from '@slack/bolt';
-import App from '@slack/bolt/dist/App';
-import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+import App from '@slack/bolt/dist/App.js';
+import AwsLambdaReceiver from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
 import {
   type AwsCallback,
   type AwsEvent,
   type AwsResponse,
-} from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+} from '@slack/bolt/dist/receivers/AwsLambdaReceiver.js';
 import { type AllMessageEvents } from './types';
 import NextJsReceiver from './NextJsReceiver';
 import type { NextApiRequest, NextApiResponse } from 'next/types';
@@ -47,13 +47,6 @@ export class WebhookParseError extends Error {
     this.name = 'WebhookParseError';
   }
 }
-
-/**
- * Type for the response to a URL verification challenge
- */
-export type ChallengeResponse = {
-  challenge: string;
-};
 
 /**
  * SlackWebhookSdk - A class for handling Slack webhooks
