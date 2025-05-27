@@ -5,10 +5,6 @@ on:
     branches: [main]
     paths:
       - 'packages/*/docs/*.md'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'packages/*/docs/*.md'
 
 jobs:
   detect-and-update:
@@ -34,13 +30,8 @@ jobs:
     - name: Detect changed documentation files
       id: detect-changes
       run: |
-        # Get the base commit for comparison
-        if [ "${{ github.event_name }}" = "pull_request" ]; then
-          BASE_SHA="${{ github.event.pull_request.base.sha }}"
-        else
-          # For push events, compare with previous commit
-          BASE_SHA="${{ github.event.before }}"
-        fi
+        # For push events, compare with previous commit
+        BASE_SHA="${{ github.event.before }}"
         
         echo "Comparing against base: $BASE_SHA"
         
@@ -150,35 +141,15 @@ jobs:
         fi
 
     - name: Commit and push SLS changes
-      if: steps.check-sls-changes.outputs.has_sls_changes == 'true' && github.event_name == 'push'
+      if: steps.check-sls-changes.outputs.has_sls_changes == 'true'
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
         git add .
-        git commit -m "🤖 Auto-update SLS files for documentation changes
-        
-        Updated SLS configurations for:
-        ${{ steps.detect-changes.outputs.update_commands }}
-        
-        [skip ci]"
+        git commit -m "🤖 Auto-update SLS files for documentation changes"
         
         git push
-
-    - name: Create commit for PR
-      if: steps.check-sls-changes.outputs.has_sls_changes == 'true' && github.event_name == 'pull_request'
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        
-        git add .
-        git commit -m "🤖 Auto-update SLS files for documentation changes
-        
-        Updated SLS configurations for:
-        ${{ steps.detect-changes.outputs.update_commands }}"
-        
-        # Push to the PR branch
-        git push origin HEAD:${{ github.head_ref }}
 
     - name: Summary
       if: steps.detect-changes.outputs.has_changes == 'true'
