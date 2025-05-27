@@ -52,7 +52,7 @@ jobs:
         echo "Documentation changes detected:"
         echo "$DOC_CHANGES"
         
-        # Group changes by package
+        # Group changes by package, but only for packages with existing sls directory
         declare -A PACKAGE_FUNCTIONS
         
         while IFS= read -r file; do
@@ -60,13 +60,27 @@ jobs:
             PACKAGE_NAME="${BASH_REMATCH[1]}"
             FUNCTION_NAME="${BASH_REMATCH[2]}"
             
-            if [[ -n "${PACKAGE_FUNCTIONS[$PACKAGE_NAME]}" ]]; then
-              PACKAGE_FUNCTIONS[$PACKAGE_NAME]="${PACKAGE_FUNCTIONS[$PACKAGE_NAME]},$FUNCTION_NAME"
+            # Check if package has sls directory
+            if [ -d "packages/$PACKAGE_NAME/sls" ]; then
+              echo "✅ Package $PACKAGE_NAME has sls directory, including function: $FUNCTION_NAME"
+              
+              if [[ -n "${PACKAGE_FUNCTIONS[$PACKAGE_NAME]}" ]]; then
+                PACKAGE_FUNCTIONS[$PACKAGE_NAME]="${PACKAGE_FUNCTIONS[$PACKAGE_NAME]},$FUNCTION_NAME"
+              else
+                PACKAGE_FUNCTIONS[$PACKAGE_NAME]="$FUNCTION_NAME"
+              fi
             else
-              PACKAGE_FUNCTIONS[$PACKAGE_NAME]="$FUNCTION_NAME"
+              echo "⏭️ Package $PACKAGE_NAME has no sls directory, skipping function: $FUNCTION_NAME"
             fi
           fi
         done <<< "$DOC_CHANGES"
+        
+        # Check if we have any packages to process
+        if [ ${#PACKAGE_FUNCTIONS[@]} -eq 0 ]; then
+          echo "No packages with sls directory found in changes"
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
         
         # Create update commands
         UPDATE_COMMANDS=""
