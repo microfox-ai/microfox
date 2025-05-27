@@ -45,6 +45,12 @@
     "packages/stdlib",
     "packages/twitter"
   ],
+  "internalPackages": [
+    "packages/crypto-sdk",
+    "packages/rest-sdk",
+    "packages/usage-pricing",
+    "packages/usage-tracker"
+  ],
   "oauthConnectorPackages": [
     "packages/fillout-oauth",
     "packages/google",
@@ -55,11 +61,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "internalPackages": [
-    "packages/rest-sdk",
-    "packages/usage-pricing",
-    "packages/usage-tracker"
-  ],
-  "total": 47,
-  "generatedAt": "2025-05-27T15:12:18.088Z"
+  "total": 48,
+  "generatedAt": "2025-05-27T21:12:27.616Z"
 }
