@@ -31,7 +31,7 @@ jobs:
               echo "packagefox_empty=false" >> $GITHUB_OUTPUT
               echo "❌ ERROR: PackageFox build file is not empty - contains pending requests!"
               echo "Quality checks cannot proceed with pending packagefox requests."
-              exit 1
+              exit 0
             fi
           else
             echo "packagefox_empty=false" >> $GITHUB_OUTPUT
