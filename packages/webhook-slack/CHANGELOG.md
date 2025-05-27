@@ -1,5 +1,11 @@
 # @microfox/webhook-slack
 
+## 1.0.4
+
+### Patch Changes
+
+- 5ce5ff2: Changes from PR #346: updates
+
 ## 1.0.3
 
 ### Patch Changes
