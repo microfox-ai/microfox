@@ -49,13 +49,6 @@ export class WebhookParseError extends Error {
 }
 
 /**
- * Type for the response to a URL verification challenge
- */
-export type ChallengeResponse = {
-  challenge: string;
-};
-
-/**
  * SlackWebhookSdk - A class for handling Slack webhooks
  */
 export class SlackWebhookSdk {
