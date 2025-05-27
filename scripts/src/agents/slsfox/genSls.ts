@@ -634,11 +634,23 @@ async function updateFunctionsInOpenAPI(
         // Read existing OpenAPI JSON
         const openapi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
 
+        // Get constructor name for validation
+        const constructor = packageInfo.constructors[0];
+        const constructorName = constructor?.name;
+
         let successCount = 0;
         let failureCount = 0;
+        let skippedCount = 0;
 
         // Update each specified function
         for (const functionName of functionNames) {
+            // Skip constructor functions
+            if (constructorName && functionName === constructorName) {
+                console.log(`⏭️ Skipping constructor function: ${functionName} (constructors don't need OpenAPI endpoints)`);
+                skippedCount++;
+                continue;
+            }
+
             const docPath = path.join(docsDir, `${functionName}.md`);
             if (!fs.existsSync(docPath)) {
                 console.error(`❌ Documentation not found for function: ${functionName}`);
@@ -663,7 +675,7 @@ async function updateFunctionsInOpenAPI(
 
         // Write updated OpenAPI JSON
         fs.writeFileSync(openApiPath, JSON.stringify(openapi, null, 2));
-        console.log(`✅ Updated OpenAPI for ${successCount} functions (${failureCount} failed)`);
+        console.log(`✅ Updated OpenAPI for ${successCount} functions (${failureCount} failed, ${skippedCount} skipped)`);
 
         return failureCount === 0;
     } catch (error) {
@@ -719,6 +731,25 @@ export async function generateSLSStructure(packageName: string, specificFunction
 
         // If specific functions are requested, validate they exist
         if (specificFunctions && specificFunctions.length > 0) {
+            // Filter out constructor functions from specific functions
+            const constructorName = constructor.name;
+            const filteredFunctions = specificFunctions.filter(func => {
+                if (func === constructorName) {
+                    console.log(`⏭️ Skipping constructor function: ${func} (constructors don't need OpenAPI endpoints)`);
+                    return false;
+                }
+                return true;
+            });
+
+            // Update specificFunctions to the filtered list
+            specificFunctions = filteredFunctions;
+
+            // If all functions were constructors, exit early
+            if (specificFunctions.length === 0) {
+                console.log(`ℹ️ All specified functions were constructors. No OpenAPI updates needed.`);
+                return true;
+            }
+
             const invalidFunctions = specificFunctions.filter(func => !functionalities.includes(func));
             if (invalidFunctions.length > 0) {
                 console.error(`❌ Functions not found in package functionalities: ${invalidFunctions.join(', ')}`);
@@ -791,6 +822,12 @@ export async function generateSLSStructure(packageName: string, specificFunction
         const functionsToProcess = specificFunctions && specificFunctions.length > 0 ? specificFunctions : functionalities;
 
         for (const funcName of functionsToProcess) {
+            // Skip constructor functions (double-check for full generation)
+            if (funcName === constructor.name) {
+                console.log(`⏭️ Skipping constructor function: ${funcName} (constructors don't need OpenAPI endpoints)`);
+                continue;
+            }
+
             const docPath = path.join(docsDir, `${funcName}.md`);
             if (fs.existsSync(docPath)) {
                 const docContent = fs.readFileSync(docPath, 'utf8');
