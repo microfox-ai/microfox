@@ -1,30 +1,30 @@
 import {
-  AckFn,
+  type AckFn,
   App,
   AwsLambdaReceiver,
-  BlockElementAction,
-  Context,
-  DialogSubmitAction,
-  DialogValidation,
-  EnvelopedEvent,
-  InteractiveAction,
+  type BlockElementAction,
+  type Context,
+  type DialogSubmitAction,
+  type DialogValidation,
+  type EnvelopedEvent,
+  type InteractiveAction,
   isValidSlackRequest,
-  KnownEventFromType,
-  RespondArguments,
-  RespondFn,
-  SayArguments,
-  SayFn,
-  SlackAction,
-  SlackShortcut,
-  SlashCommand,
-  StringIndexed,
+  type KnownEventFromType,
+  type RespondArguments,
+  type RespondFn,
+  type SayArguments,
+  type SayFn,
+  type SlackAction,
+  type SlackShortcut,
+  type SlashCommand,
+  type StringIndexed,
 } from '@slack/bolt';
 import {
-  AwsCallback,
-  AwsEvent,
-  AwsResponse,
+  type AwsCallback,
+  type AwsEvent,
+  type AwsResponse,
 } from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
-import { AllMessageEvents, SlackEvent } from './types';
+import { type AllMessageEvents } from './types';
 import NextJsReceiver from './NextJsReceiver';
 import type { NextApiRequest, NextApiResponse } from 'next/types';
 
@@ -61,7 +61,7 @@ export type ChallengeResponse = {
 export class SlackWebhookSdk {
   private secret?: string;
   private botToken?: string;
-  private app: App;
+  private app: App<StringIndexed>;
   private awsLambdaReceiver?: AwsLambdaReceiver;
   private nextJsReceiver?: NextJsReceiver;
 
