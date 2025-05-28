@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Microfox AWS SES SDK API",
+    "title": "Microfox AWS SES API",
     "version": "1.0.0",
-    "description": "AWS Simple Email Service (SES) SDK API for sending emails",
+    "description": "Single entry-point API for all Microfox AWS SES functions via a wrapper Lambda",
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
@@ -19,8 +19,8 @@
     "/sendEmail": {
       "post": {
         "operationId": "sendEmail",
-        "summary": "Send a single email",
-        "description": "Sends a single email to a specified recipient using the AWS SES service.",
+        "summary": "Sends a single email using AWS SES service with specified parameters.",
+        "description": "This function sends an email to a specified recipient using AWS SES (Simple Email Service). It allows for customization of sender, recipient, subject, and body content in both plain text and HTML formats. The function returns a promise that resolves to a SendEmailResponse object containing the message ID and request metadata.",
         "requestBody": {
           "required": true,
           "content": {
@@ -28,32 +28,120 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "sender": {
-                    "type": "string",
-                    "description": "Email address of the sender (must be verified in AWS SES)"
-                  },
-                  "recipient": {
-                    "type": "string",
-                    "description": "Email address of the recipient"
-                  },
-                  "displayName": {
-                    "type": "string",
-                    "description": "Display name for the sender (e.g., \"John Doe\" <john@example.com>)"
-                  },
-                  "subject": {
-                    "type": "string",
-                    "description": "Subject line of the email"
-                  },
-                  "bodyText": {
-                    "type": "string",
-                    "description": "Plain text version of the email body"
-                  },
-                  "bodyHtml": {
-                    "type": "string",
-                    "description": "HTML version of the email body"
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the sendEmail sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "EmailParams object containing all email sending parameters",
+                            "properties": {
+                              "sender": {
+                                "type": "string",
+                                "description": "Email address of the sender (must be verified in AWS SES)",
+                                "format": "email"
+                              },
+                              "recipient": {
+                                "type": "string",
+                                "description": "Email address of the recipient",
+                                "format": "email"
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "Optional display name for the sender"
+                              },
+                              "subject": {
+                                "type": "string",
+                                "description": "Subject line of the email"
+                              },
+                              "bodyText": {
+                                "type": "string",
+                                "description": "Optional plain text version of the email body"
+                              },
+                              "bodyHtml": {
+                                "type": "string",
+                                "description": "Optional HTML version of the email body"
+                              }
+                            },
+                            "required": [
+                              "sender",
+                              "recipient",
+                              "subject"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_ACCESS_KEY_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_ACCESS_KEY_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_SECRET_ACCESS_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_SECRET_ACCESS_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_REGION"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_REGION"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/aws-ses"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
                   }
-                },
-                "required": ["sender", "recipient", "subject"]
+                }
               }
             }
           }
@@ -89,16 +177,46 @@
               }
             }
           },
-          "400": { "description": "Missing or invalid parameters" },
-          "500": { "description": "Internal server error" }
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error - failed to send email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server-side issue"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
     "/sendBulkEmails": {
       "post": {
         "operationId": "sendBulkEmails",
-        "summary": "Send multiple emails in parallel",
-        "description": "Sends multiple emails to a list of recipients using the AWS SES service. Emails are sent in parallel for improved performance.",
+        "summary": "Sends multiple emails in parallel using AWS SES service.",
+        "description": "This function sends multiple emails to a list of recipients using the AWS SES service. It takes a single configuration object containing sender details, recipients, subject, and optional body content. Emails are sent in parallel for improved performance.",
         "requestBody": {
           "required": true,
           "content": {
@@ -106,42 +224,130 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "sender": {
-                    "type": "string",
-                    "description": "Email address of the sender (must be verified in AWS SES)"
-                  },
-                  "recipients": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the sendBulkEmails sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "Parameters for sending bulk emails",
+                            "properties": {
+                              "sender": {
+                                "type": "string",
+                                "description": "Email address of the sender (must be verified in AWS SES)",
+                                "format": "email"
+                              },
+                              "recipients": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "format": "email"
+                                },
+                                "description": "List of recipient email addresses"
+                              },
+                              "displayName": {
+                                "type": "string",
+                                "description": "Display name for the sender (e.g., \"John Doe\" <john@example.com>)"
+                              },
+                              "subject": {
+                                "type": "string",
+                                "description": "Subject line of the email"
+                              },
+                              "bodyText": {
+                                "type": "string",
+                                "description": "Plain text version of the email body"
+                              },
+                              "bodyHtml": {
+                                "type": "string",
+                                "description": "HTML version of the email body"
+                              }
+                            },
+                            "required": [
+                              "sender",
+                              "recipients",
+                              "subject"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_ACCESS_KEY_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_ACCESS_KEY_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_SECRET_ACCESS_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_SECRET_ACCESS_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "AWS_SES_REGION"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of AWS_SES_REGION"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/aws-ses"
+                      }
                     },
-                    "description": "List of recipient email addresses"
-                  },
-                  "displayName": {
-                    "type": "string",
-                    "description": "Display name for the sender (e.g., \"John Doe\" <john@example.com>)"
-                  },
-                  "subject": {
-                    "type": "string",
-                    "description": "Subject line of the email"
-                  },
-                  "bodyText": {
-                    "type": "string",
-                    "description": "Plain text version of the email body"
-                  },
-                  "bodyHtml": {
-                    "type": "string",
-                    "description": "HTML version of the email body"
+                    "required": [
+                      "arguments"
+                    ]
                   }
-                },
-                "required": ["sender", "recipients", "subject"]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Emails sent successfully",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -173,8 +379,38 @@
               }
             }
           },
-          "400": { "description": "Missing or invalid parameters" },
-          "500": { "description": "Internal server error" }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

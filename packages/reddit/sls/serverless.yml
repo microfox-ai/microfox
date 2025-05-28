@@ -1,4 +1,4 @@
-service: public-aws-ses-api
+service: public-reddit-api
 
 plugins:
   - serverless-plugin-typescript

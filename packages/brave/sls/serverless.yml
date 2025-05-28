@@ -1,4 +1,4 @@
-service: public-aws-ses-api
+service: public-brave-api
 
 plugins:
   - serverless-plugin-typescript

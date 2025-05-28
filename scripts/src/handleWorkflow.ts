@@ -11,6 +11,7 @@ import { generateExternalDocs } from './agents/docfox/genExtDocs';
 import { generateDocs } from './agents/docfox/genDocs';
 import { generateOAuthPackage } from './agents/packagefox/genOAuthPackage';
 import { regenPackage } from './agents/packagefox/regenPackage';
+import { generateSLSStructure } from './agents/slsfox/genSls';
 
 /**
  * This script is used to handle the PackageFox workflow.
@@ -24,6 +25,7 @@ import { regenPackage } from './agents/packagefox/regenPackage';
  * 4. genExt: Generate an extension package
  * 5. genExtDocs: Generate extension documentation
  * 6. genDocs: Generate documentation
+ * 7. genSls: Generate SLS files for a package
  */
 async function handleWorkflow() {
   const configPath = path.join(
@@ -197,6 +199,15 @@ async function handleWorkflow() {
           'utf8',
         );
         await generateDocs(code, packageInfo, packageDir);
+        await cleanupUsage();
+        break;
+      case 'genSls':
+        if (!packageName) {
+          console.error('Error: Missing PACKAGE_NAME for genSls');
+          process.exit(1);
+        }
+        console.log(`Running genSls for package: "${packageName}"`);
+        await generateSLSStructure(packageName);
         await cleanupUsage();
         break;
       default:

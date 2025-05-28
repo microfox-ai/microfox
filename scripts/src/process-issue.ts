@@ -21,6 +21,7 @@ const IssueDetailsSchema = z.object({
       'genExt',
       'genExtDocs',
       'genDocs',
+      'genSls',
     ])
     .describe(
       'The type of request: new packages with pkg-create, test package working with pkg-build, bug fix, modification to existing functionality, generate extension, generate extension docs, or generate docs.',

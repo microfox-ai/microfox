@@ -1,7 +1,7 @@
 {
-  "name": "public-aws-ses-api",
+  "name": "public-reddit-api",
   "version": "1.0.0",
-  "description": "A lightweight, type-safe SDK for interacting with AWS Simple Email Service (SES)",
+  "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -18,7 +18,7 @@
   "dependencies": {
     "@microfox/crypto-sdk": "1.0.1",
     "dotenv": "^16.4.5",
-    "@microfox/aws-ses": "^1.1.4"
+    "@microfox/reddit": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
