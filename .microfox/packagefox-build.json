@@ -1,3 +1,14 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "gen-pkg-sls",
+      "query": "Generate sls for @microfox/twitter",
+      "url": "",
+      "notes": "Generate serverless function for the @microfox/twitter package.",
+      "issueNumber": 384,
+      "logs": "",
+      "error": "",
+      "packageName": "@microfox/twitter"
+    }
+  ]
 }
