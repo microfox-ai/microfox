@@ -2,7 +2,7 @@ name: Auto SLS Update
 
 on:
   push:
-    branches: [main]
+    branches: [main, vwjt_slsfox_may_2025]
     paths:
       - 'packages/*/docs/*.md'
 
