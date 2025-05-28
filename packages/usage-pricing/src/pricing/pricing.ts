@@ -51,7 +51,8 @@ export const attachPricingApi1 = (
   }
   return {
     ...usage,
-    priceUSD: usagePriceUSD,
+    priceUSD: usagePriceUSD * (1 - (usage.markup ?? 0) / 100),
+    originalPriceUSD: usagePriceUSD,
   } as UsageWithPricing;
 };
 
@@ -79,7 +80,8 @@ export const attachPricingLLM = (usage: UsageWithPricing): UsageWithPricing => {
     (usage.completionTokens / modelPricingConfig.completionToken.per);
   return {
     ...usage,
-    priceUSD: usagePriceUSD,
+    priceUSD: usagePriceUSD * (1 - (usage.markup ?? 0) / 100),
+    originalPriceUSD: usagePriceUSD,
   };
 };
 
