@@ -83,10 +83,7 @@ export class OpenAiProvider {
       },
       async wrapGenerate({ doGenerate, params }) {
         const result = await doGenerate();
-        if (
-          result.response?.modelId &&
-          process.env.OPENAI_SECRET_TEMPLATE_TYPE === 'markup'
-        ) {
+        if (result.response?.modelId) {
           const tracker = createDefaultMicrofoxUsageTracker();
           tracker?.trackLLMUsage(
             'ai-provider-openai',
