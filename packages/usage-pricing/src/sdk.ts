@@ -53,7 +53,7 @@ export class MicrofoxUsagePricing {
     return Object.values(usage)
       .map(entry => {
         try {
-          let json = JSON.parse(entry as string);
+          let json = typeof entry === 'string' ? JSON.parse(entry) : entry;
           if ('model' in json) {
             json.type = 'llm';
           }
@@ -62,6 +62,7 @@ export class MicrofoxUsagePricing {
           }
           return json;
         } catch {
+          console.error('Failed to parse usage entry', entry);
           return null;
         }
       })
