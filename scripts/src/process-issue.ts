@@ -151,6 +151,7 @@ async function processIssue() {
           - genExt: Creates external package support for an exiting package (needs a github url in issue body).
           - genExtDocs: Generate documentation for an external package (needs a package name like "ai", "octokit" etc..).
           - genDocs: Generate documentation for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
+          - genSls: Generate sls for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
         - If it's a 'bug', specify if it occurred at 'build' or 'runtime'. Note 'error' details and any 'logs'.
         - Extract the core 'query' being asked.
         - Generate a concise camelCase 'title' suitable for branch names.
