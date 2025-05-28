@@ -12,7 +12,10 @@ export const PricingConfig = {
 export const attachPricingApi1 = (usage: Usage) => {
   const pricingConfig = (PricingConfig as any)[usage.package];
   if (!pricingConfig) {
-    return 0;
+    return {
+      ...usage,
+      priceUSD: 0,
+    } as Usage;
   }
   let usagePriceUSD = 0;
   if (
@@ -36,13 +39,16 @@ export const attachPricingApi1 = (usage: Usage) => {
   return {
     ...usage,
     priceUSD: usagePriceUSD,
-  };
+  } as Usage;
 };
 
 export const attachPricingLLM = (usage: Usage) => {
   const pricingConfig = (PricingConfig as any)[usage.package];
   if (!pricingConfig) {
-    return 0;
+    return {
+      ...usage,
+      priceUSD: 0,
+    } as Usage;
   }
   let usagePriceUSD = 0;
   if (usage.type != 'llm' || !usage.model) {
@@ -61,7 +67,7 @@ export const attachPricingLLM = (usage: Usage) => {
   return {
     ...usage,
     priceUSD: usagePriceUSD,
-  };
+  } as Usage;
 };
 
 export const attachPricing = (usage: Usage) => {
