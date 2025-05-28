@@ -1,10 +1,7 @@
 {
-  "name": "@microfox/usage-tracker",
-  "version": "0.0.2",
-  "description": "A TypeScript SDK for Tracking Usage of any LLM and TypeScript AI SDK internally.",
+  "name": "@microfox/crypto-sdk",
+  "version": "1.0.1",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist/**/*",
     "CHANGELOG.md"
@@ -23,22 +20,17 @@
       "require": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "zod": "^3.24.2",
-    "@upstash/redis": "*"
-  },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
-    "typescript": "5.6.3",
-    "eslint": "^8.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
+    "typescript": "5.6.3"
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "homepage": "https://github.com/microfox-ai/microfox",
   "repository": {
@@ -49,12 +41,6 @@
     "url": "https://github.com/microfox-ai/microfox/issues"
   },
   "keywords": [
-    "usage",
-    "tracker",
-    "llm",
-    "ai",
-    "sdk",
-    "microfox",
-    "sdk"
+    "microfox"
   ]
 }
