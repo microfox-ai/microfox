@@ -397,8 +397,8 @@
     "/uploadFile": {
       "post": {
         "operationId": "uploadFile",
-        "summary": "Uploads a file to Slack and shares it in a channel or conversation.",
-        "description": "The uploadFile function allows users to share a file in a Slack channel or conversation. It accepts a single FileUpload object containing various optional parameters such as channels, content, filename, and title. The function returns a promise that resolves to a FileUploadResponse, providing details about the uploaded file or any potential errors.",
+        "summary": "Uploads a file to Slack channels or conversations.",
+        "description": "The uploadFile function allows users to share a file in Slack channels or conversations. It accepts a single FileUpload object containing various optional parameters such as channels, content, filename, and more. The function returns a promise that resolves to a FileUploadResponse object.",
         "requestBody": {
           "required": true,
           "content": {
