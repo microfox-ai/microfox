@@ -1,5 +1,13 @@
 # @microfox/ai-provider-openai
 
+## 1.0.8
+
+### Patch Changes
+
+- 82d5fb7: Changes from PR #370: updates
+- Updated dependencies [82d5fb7]
+  - @microfox/usage-tracker@0.0.3
+
 ## 1.0.7
 
 ### Patch Changes
