@@ -14,6 +14,7 @@ Creates an instance of the AWS SES SDK. This function configures and returns an 
 
 - `SESSDK` - An object containing the `sendEmail` and `sendBulkEmails` functions.
 
+
 **Examples:**
 
 ```typescript
