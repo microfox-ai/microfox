@@ -15,6 +15,7 @@ Assigns a specific role to a user in a guild.
 **Return Value:**
 A `Promise` that resolves when the role is added.
 
+
 **Examples:**
 
 ```typescript
