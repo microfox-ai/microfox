@@ -124,7 +124,7 @@ jobs:
             
             # Run the SLS generation script with ts-node
             cd scripts
-            npx ts-node src/agents/slsFox/genSls.ts "$PACKAGE_NAME" "$FUNCTIONS"
+            npx ts-node src/agents/slsfox/genSls.ts "$PACKAGE_NAME" "$FUNCTIONS"
             
             if [ $? -eq 0 ]; then
               echo "✅ Successfully updated SLS for $PACKAGE_NAME"
