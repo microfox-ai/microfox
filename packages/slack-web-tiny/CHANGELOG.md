@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.2.5
+
+### Patch Changes
+
+- ea63671: Changes from PR #377: vwjt_slsfox_may_2025
+
 ## 1.2.4
 
 ### Patch Changes
