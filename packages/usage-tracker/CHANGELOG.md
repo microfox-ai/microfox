@@ -1,5 +1,11 @@
 # @microfox/usage-tracker
 
+## 0.0.3
+
+### Patch Changes
+
+- 82d5fb7: Changes from PR #370: updates
+
 ## 0.0.2
 
 ### Patch Changes
