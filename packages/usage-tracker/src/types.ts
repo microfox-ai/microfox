@@ -34,6 +34,7 @@ const API1UsageSchema = z.object({
 const BaseUsageSchema = z.object({
   package: z.string(),
   priceUSD: z.number().optional(),
+  markup: z.number().optional(),
 });
 
 export const UsageSchema = BaseUsageSchema.and(
