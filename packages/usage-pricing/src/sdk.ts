@@ -1,6 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { UsageTrackerConstructorOptions, Usage } from '@microfox/usage-tracker';
 import { attachPricing } from './pricing/pricing';
+import { UsageWithPricing } from './types';
 
 // return YYYY-MM-DD
 const getDateKey = () => {
@@ -49,27 +50,30 @@ export class MicrofoxUsagePricing {
   private processUsageEntries(
     usage: Record<string, unknown>,
     packageName?: string,
-  ): Usage[] {
-    return Object.values(usage)
-      .map(entry => {
+  ): UsageWithPricing[] {
+    return Object.entries(usage)
+      .map(([key, value]) => {
         try {
-          let json = typeof entry === 'string' ? JSON.parse(entry) : entry;
+          let json = typeof value === 'string' ? JSON.parse(value) : value;
           if ('model' in json) {
             json.type = 'llm';
           }
           if ('requestKey' in json) {
             json.type = 'api_1';
           }
-          return json;
+          return {
+            ...json,
+            timestamp: key,
+          };
         } catch {
-          console.error('Failed to parse usage entry', entry);
+          console.error('Failed to parse usage entry', value);
           return null;
         }
       })
-      .filter(entry => entry != null)
+      .filter(entry => entry != null && entry !== undefined)
       .filter(entry =>
         packageName ? entry.package === cleanPackageName(packageName) : true,
-      ) as Usage[];
+      ) as UsageWithPricing[];
   }
 
   async getUsage(
@@ -100,7 +104,7 @@ export class MicrofoxUsagePricing {
 
     const pageKeys = keys.slice(offset, offset + limit);
 
-    const usages: Usage[] = (
+    const usages: UsageWithPricing[] = (
       await Promise.all(
         pageKeys.map(async usageKey => {
           const usage = await this.redis.hgetall(usageKey);
@@ -144,7 +148,7 @@ export class MicrofoxUsagePricing {
     const usageKey = `${this.prefix}:${prefixDateKey ?? '*'}`;
     const keys = await this.redis.keys(usageKey);
 
-    const usages: Usage[] = (
+    const usages: UsageWithPricing[] = (
       await Promise.all(
         keys.map(async usageKey => {
           const usage = await this.redis.hgetall(usageKey);

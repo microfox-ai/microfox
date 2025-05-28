@@ -146,6 +146,16 @@ export const OpenAIPricingConfig = {
         ...commonPricingCompletion,
       },
     },
+    ['gpt-4-0613']: {
+      promptToken: {
+        basePriceUSD: 0.15,
+        ...commonPricingPrompt,
+      },
+      completionToken: {
+        basePriceUSD: 0.6,
+        ...commonPricingCompletion,
+      },
+    },
     ['gpt-4o-mini-2024-07-18']: {
       promptToken: {
         basePriceUSD: 0.15,
