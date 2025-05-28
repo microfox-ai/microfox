@@ -16,12 +16,12 @@ const IssueDetailsSchema = z.object({
       'pkg-create-oauth',
       'pkg-create-webhook',
       'pkg-build',
+      'gen-pkg-sls',
       'bug',
       'modification',
       'genExt',
       'genExtDocs',
       'genDocs',
-      'genSls',
     ])
     .describe(
       'The type of request: new packages with pkg-create, test package working with pkg-build, bug fix, modification to existing functionality, generate extension, generate extension docs, or generate docs.',
@@ -61,6 +61,12 @@ const IssueDetailsSchema = z.object({
     .describe(
       'A relevant documentation or reference URL if provided or inferable.',
     ),
+  packageName: z
+    .string()
+    .optional()
+    .describe(
+      'Optional: Target package name if type is pkg-build, gen-pkg-sls, or bug. Prefix with @microfox/ if not already present.',
+    ),
 });
 
 export type IssueDetails = z.infer<typeof IssueDetailsSchema>;
@@ -74,10 +80,7 @@ const PackageFoxRequestSchema = z.object({
   logs: IssueDetailsSchema.shape.logs.optional(),
   error: IssueDetailsSchema.shape.error.optional(),
   // Add other fields if needed based on type, e.g., error details for 'bug'
-  packageName: z
-    .string()
-    .optional()
-    .describe('Optional: Target package name if type is pkg-build or bug'),
+  packageName: IssueDetailsSchema.shape.packageName.optional(),
   issueNumber: z.number().optional().describe('The originating issue number'),
 });
 
@@ -151,13 +154,13 @@ async function processIssue() {
           - genExt: Creates external package support for an exiting package (needs a github url in issue body).
           - genExtDocs: Generate documentation for an external package (needs a package name like "ai", "octokit" etc..).
           - genDocs: Generate documentation for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
-          - genSls: Generate sls for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
+          - gen-pkg-sls: Generate sls/serverless and openapi files for an existing package (needs a package name like "@microfox/slack-web-tiny", "@microfox/youtube-analytics" etc..).
         - If it's a 'bug', specify if it occurred at 'build' or 'runtime'. Note 'error' details and any 'logs'.
         - Extract the core 'query' being asked.
         - Generate a concise camelCase 'title' suitable for branch names.
         - Capture any essential 'notes'.
         - Identify a relevant documentation 'url' if mentioned.
-        - If the type is 'pkg-build' or 'bug', try to identify the target package name from the title or body.
+        - If the type is 'pkg-build' 'gen-pkg-sls' or 'bug', try to identify the target package name from the title or body.
       `,
       temperature: 0.2, // Lower temperature for more predictable extraction
     });
@@ -187,9 +190,14 @@ async function processIssue() {
       error: details.error,
     };
     // Add packageName if relevant and found (implement logic if needed)
-    // if ((details.type === 'pkg-build' || details.type === 'bug') && details.packageName) {
-    //    jsonPayload.packageName = details.packageName;
-    // }
+    if (
+      (details.type === 'pkg-build' ||
+        details.type === 'bug' ||
+        details.type === 'gen-pkg-sls') &&
+      details.packageName
+    ) {
+      jsonPayload.packageName = details.packageName;
+    }
     const jsonPayloadString = JSON.stringify(jsonPayload);
     console.log(`📦 JSON Payload: ${jsonPayloadString}`);
 
