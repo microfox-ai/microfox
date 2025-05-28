@@ -36,11 +36,27 @@ This function sends multiple emails to a list of recipients using the AWS SES se
 ```typescript
 // Example: Sending bulk emails
 const responses = await ses.sendBulkEmails({
-  sender: 'sender@example.com',
-  recipients: ['recipient1@example.com', 'recipient2@example.com'],
+  sender:
+    process.env.AWS_SES_SENDER_EMAIL ??
+    req.queryStringParams.senderName +
+      '@' +
+      process.env.AWS_SES_SENDER_MAIL_DOMAIN ??
+    'sender@example.com',
+  recipient: process.env.AWS_SES_RECEPIENT_EMAILS?.split(',') ??
+    req.paramsreq.queryStringParams.recepientMail?.split(',') ?? [
+      'recipient1@example.com',
+      'recipient2@example.com',
+    ],
   subject: 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
 
 console.log(responses);
 ```
+
+## Priorities for sender
+
+1. if `AWS_SES_SENDER_MAIL_DOMAIN` exists, use this - req.params.senderName + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN
+2. if the above does not exist, and `AWS_SES_SENDER_EMAIL` exists, use that env directly,
+3. if bothe of the above does not exists, try to create your own env variable or collect sender email from request body.
+4. as a last option, hard code it.

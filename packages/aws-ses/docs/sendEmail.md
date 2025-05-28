@@ -36,29 +36,30 @@ This function sends a single email to a specified recipient using the AWS SES se
 ```typescript
 // Example 1: Sending a plain text email
 await ses.sendEmail({
+  // sender will be like service@reply-bots.com
   sender:
-    process.env.AWS_SES_SENDER_EMAIL ??
-    req.params.senderEmail ??
+    req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN ??
     'sender@example.com',
-  recipient:
-    process.env.AWS_SES_RECEPIENT_EMAIL ??
-    req.params.recepientMail ??
-    'recipient@example.com',
+  recipient: req.params.recepientMail ?? 'recipient@example.com',
   subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
 
 // Example 2: Sending an HTML email
 await ses.sendEmail({
+  // sender will be like service@reply-bots.com
   sender:
-    process.env.AWS_SES_SENDER_EMAIL ??
-    req.params.senderEmail ??
+    req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN ??
     'sender@example.com',
-  recipient:
-    process.env.AWS_SES_RECEPIENT_EMAIL ??
-    req.params.recepientMail ??
-    'recipient@example.com',
+  recipient: req.params.recepientMail ?? 'recipient@example.com',
   subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
   bodyHtml: '<p>This is an HTML email body.</p>',
 });
 ```
+
+## Priorities for sender
+
+1. if `AWS_SES_SENDER_MAIL_DOMAIN` exists, use this - req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN
+2. if the above does not exist, and `AWS_SES_SENDER_EMAIL` exists, use that env directly,
+3. if bothe of the above does not exists, try to create your own env variable or collect sender email from request body.
+4. as a last option, hard code it.

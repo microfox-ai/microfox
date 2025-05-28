@@ -1,0 +1,116 @@
+import { Redis } from '@upstash/redis';
+import { UsageTrackerConstructorOptions, Usage } from '@microfox/usage-tracker';
+import { attachPricing } from './pricing/pricing';
+
+// return YYYY-MM-DD
+const getDateKey = () => {
+  return new Date().toISOString().split('T')[0];
+};
+
+// return YYYY-MM
+const getDateKeyUntilMonth = () => {
+  const date = new Date();
+  return date.toISOString().split('T')[0].split('-').slice(0, 2).join('-');
+};
+
+// return YYYY
+const getDateKeyUntilYear = () => {
+  const date = new Date();
+  return date.toISOString().split('T')[0].split('-')[0];
+};
+
+const getTimestampKey = () => {
+  return new Date().toISOString();
+};
+
+const cleanPackageName = (packageName: string) => {
+  return packageName
+    .replace('@microfox/', '')
+    .replace('#', '/')
+    .replace('@ext_', '');
+};
+
+export class MicrofoxUsagePricing {
+  private readonly redis: Redis;
+  private readonly prefix?: string;
+
+  constructor(config: UsageTrackerConstructorOptions) {
+    this.redis = new Redis({
+      url: config.redisOptions?.url ?? process.env.MICROFOX_REDIS_URL_TRACKER,
+      token:
+        config.redisOptions?.token ?? process.env.MICROFOX_REDIS_TOKEN_TRACKER,
+    });
+    this.prefix =
+      config.prefix ??
+      process.env.MICROFOX_CLIENT_REQUEST_ID ??
+      process.env.MICROFOX_BOT_PROJECT_ID;
+  }
+
+  async getUsage(prefixDateKey: string, packageName?: string) {
+    const usageKey = `${this.prefix}:${prefixDateKey}`;
+    const dayUsageKeys = await this.redis.keys(usageKey);
+    const usages: Usage[] = (
+      await Promise.all(
+        dayUsageKeys.map(async usageKey => {
+          const usage = await this.redis.hgetall(usageKey);
+          if (!usage) return [];
+
+          const filteredEntries = Object.values(usage)
+            .map(entry => {
+              try {
+                let json = JSON.parse(entry as string);
+                if ('model' in json) {
+                  json.type = 'llm';
+                }
+                if ('requestKey' in json) {
+                  json.type = 'api_1';
+                }
+                return json;
+              } catch {
+                return null;
+              }
+            })
+            .filter(entry => entry != null)
+            .filter(entry =>
+              packageName
+                ? entry.package === cleanPackageName(packageName)
+                : true,
+            );
+          return filteredEntries as Usage[];
+        }),
+      )
+    ).flat();
+    return usages.map(attachPricing);
+  }
+
+  async getDailyUsage(packageName?: string) {
+    return this.getUsage(`${getDateKey()}:*`, packageName);
+  }
+
+  async getMonthlyUsage(packageName?: string) {
+    return this.getUsage(`${getDateKeyUntilMonth()}*`, packageName);
+  }
+
+  async getYearlyUsage(packageName?: string) {
+    return this.getUsage(`${getDateKeyUntilYear()}*`, packageName);
+  }
+}
+
+export const createMicrofoxUsagePricing = (
+  config: UsageTrackerConstructorOptions,
+) => {
+  return new MicrofoxUsagePricing(config);
+};
+
+export const createDefaultMicrofoxUsagePricing = () => {
+  if (
+    !process.env.MICROFOX_REDIS_URL_TRACKER ||
+    !process.env.MICROFOX_REDIS_TOKEN_TRACKER
+  ) {
+    return;
+  }
+  if (!process.env.MICROFOX_CLIENT_REQUEST_ID) {
+    return;
+  }
+  return new MicrofoxUsagePricing({});
+};

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/aws-ses",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "description": "AWS SES SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -27,7 +27,8 @@
     }
   },
   "dependencies": {
-    "@microfox/rest-sdk": "^1.0.5",
+    "@microfox/usage-tracker": "*",
+    "@microfox/rest-sdk": "*",
     "zod": "^3.24.3"
   },
   "devDependencies": {

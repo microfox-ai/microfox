@@ -38,6 +38,15 @@ jest.mock('@ai-sdk/openai', () => ({
   })),
 }));
 
+jest.mock('@microfox/usage-tracker', () => ({
+  createDefaultMicrofoxUsageTracker: jest.fn(() => ({
+    trackLLMUsage: jest.fn(),
+  })),
+  createMicrofoxUsageTracker: jest.fn(() => ({
+    trackLLMUsage: jest.fn(),
+  })),
+}));
+
 describe('OpenAiProvider', () => {
   const mockApiKey = 'test-api-key';
   let provider: OpenAiProvider;

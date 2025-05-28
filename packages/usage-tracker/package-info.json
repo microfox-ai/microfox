@@ -1,0 +1,21 @@
+{
+  "name": "@microfox/usage-tracker",
+  "title": "Microfox Usage Tracker",
+  "description": "Microfox AI usage tracker which tracks usage of any LLM and TypeScript AI SDK internally.",
+  "path": "packages/usage-tracker",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "authType": "none",
+  "documentation": "https://www.npmjs.com/package/@microfox/usage-tracker",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/upstash-icon.svg",
+  "constructors": [],
+  "keysInfo": [],
+  "extraInfo": [],
+  "readme_map": {
+    "path": "/README.md",
+    "functionalities": [],
+    "description": "No description provided",
+    "all_readmes": []
+  },
+  "platformType": "internal"
+}

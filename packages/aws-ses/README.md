@@ -16,6 +16,10 @@ The following environment variables are used by this SDK:
 - `AWS_SES_SECRET_ACCESS_KEY`: The AWS secret access key. Used to authenticate with AWS SES. (Required)
 - `AWS_SES_REGION`: The region in which the AWS SES server is "us-east-1"
 
+Optional environment variables
+
+- `AWS_SES_SENDER_MAIL_DOMAIN`: The domain of the sender email.
+
 ## Additional Information
 
 Use the `createSESClient` constructor to create a new AWS SES client.

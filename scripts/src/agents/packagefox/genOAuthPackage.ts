@@ -154,7 +154,7 @@ function createInitialPackageInfo(
     platformType: 'internal',
     path: `packages/${packageName.replace('@microfox/', '')}`,
     dependencies: ['zod'],
-    status: 'stable',
+    status: 'oauthConnector',
     authEndpoint: `/connect/${packageName.replace('@microfox/', '').replace('-oauth', '')}`,
     oauth2Scopes: [],
     documentation: `https://www.npmjs.com/package/${packageName}`,

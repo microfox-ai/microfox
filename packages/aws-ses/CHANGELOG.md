@@ -1,5 +1,19 @@
 # @microfox/aws-ses
 
+## 1.1.6
+
+### Patch Changes
+
+- 5128fc7: Changes from PR #336: updates
+
+## 1.1.5
+
+### Patch Changes
+
+- 266504b: Changes from PR #334: updates
+- Updated dependencies [266504b]
+  - @microfox/usage-tracker@1.0.2
+
 ## 1.1.4
 
 ### Patch Changes
