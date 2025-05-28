@@ -1,0 +1,2147 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Google Sheets SDK API",
+    "version": "1.0.0",
+    "description": "Single entry-point API for all Google Sheets SDK functions via a wrapper Lambda",
+    "contact": {
+      "name": "Microfox Dev Support",
+      "email": "support@microfox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.microfox.com/c/google-sheets",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "paths": {
+    "/validateAccessToken": {
+      "post": {
+        "operationId": "validateAccessToken",
+        "summary": "Validates and refreshes an access token if necessary.",
+        "description": "This function checks if the current access token is valid. If the token is not valid, it attempts to refresh the token using the refresh token. The function is useful for maintaining an active session and ensuring API requests have valid authentication.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the validateAccessToken sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": []
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isValid": {
+                      "type": "boolean",
+                      "description": "Indicates whether the access token is valid"
+                    }
+                  },
+                  "required": [
+                    "isValid"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/refreshAccessToken": {
+      "post": {
+        "operationId": "refreshAccessToken",
+        "summary": "Refreshes the access token using the refresh token.",
+        "description": "This function uses the refresh token to obtain a new access token. It returns a promise that resolves when the access token has been successfully refreshed. The function does not require any parameters and is typically used to maintain an active session without requiring the user to log in again.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the refreshAccessToken sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": []
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access token successfully refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token refreshed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid refresh token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getValues": {
+      "post": {
+        "operationId": "getValues",
+        "summary": "Retrieves values from a specified range in a Google Sheet.",
+        "description": "The getValues function fetches data from a given range in a Google Sheet. It takes a Range object as input, which includes the sheet ID and the A1 notation of the desired range. The function returns a promise that resolves to a two-dimensional array containing the values from the specified range, or an empty array if the range is empty.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "Range object specifying the sheet ID and range",
+                            "properties": {
+                              "sheetId": {
+                                "type": "string",
+                                "description": "The ID of the sheet"
+                              },
+                              "range": {
+                                "type": "string",
+                                "description": "The A1 notation of the range"
+                              }
+                            },
+                            "required": [
+                              "sheetId",
+                              "range"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "any"
+                    }
+                  },
+                  "description": "A two-dimensional array containing the values in the specified range"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/updateValues": {
+      "post": {
+        "operationId": "updateValues",
+        "summary": "Updates values in a specified range of a Google Sheet.",
+        "description": "This function updates the values in a specified range of a Google Sheet with the provided data. It takes an input object containing the range and values to update, along with an optional parameter to specify how the input data should be interpreted. The function returns a promise that resolves to an object containing information about the update operation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the updateValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "UpdateValuesInput - An object containing the range and values to update",
+                            "properties": {
+                              "range": {
+                                "type": "object",
+                                "description": "The range to update",
+                                "properties": {
+                                  "sheetId": {
+                                    "type": "string",
+                                    "description": "The ID of the sheet"
+                                  },
+                                  "range": {
+                                    "type": "string",
+                                    "description": "The A1 notation of the range"
+                                  }
+                                },
+                                "required": [
+                                  "sheetId",
+                                  "range"
+                                ]
+                              },
+                              "values": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {}
+                                },
+                                "description": "The values to be updated. Should be a two-dimensional array"
+                              }
+                            },
+                            "required": [
+                              "range",
+                              "values"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "description": "How the input data should be interpreted",
+                            "enum": [
+                              "USER_ENTERED",
+                              "RAW",
+                              "INPUT_VALUE_OPTION_UNSPECIFIED"
+                            ],
+                            "default": "USER_ENTERED"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spreadsheetId": {
+                      "type": "string",
+                      "description": "The ID of the spreadsheet"
+                    },
+                    "updatedRange": {
+                      "type": "string",
+                      "description": "The range that was updated"
+                    },
+                    "updatedRows": {
+                      "type": "number",
+                      "description": "The number of rows updated"
+                    },
+                    "updatedColumns": {
+                      "type": "number",
+                      "description": "The number of columns updated"
+                    },
+                    "updatedCells": {
+                      "type": "number",
+                      "description": "The number of cells updated"
+                    },
+                    "clearedRange": {
+                      "type": "string",
+                      "description": "The range that was cleared"
+                    }
+                  },
+                  "required": [
+                    "spreadsheetId"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server-side issue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appendValues": {
+      "post": {
+        "operationId": "appendValues",
+        "summary": "Appends values to a specified range in a Google Sheet.",
+        "description": "This function appends provided data to a specified range in a Google Sheet. It allows customization of how the input data should be interpreted and inserted. The function returns a promise that resolves to an object containing information about the append operation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the appendValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "AppendValuesInput object containing the range and values to append",
+                            "properties": {
+                              "range": {
+                                "type": "object",
+                                "description": "The range to append to",
+                                "properties": {
+                                  "sheetId": {
+                                    "type": "string",
+                                    "description": "The ID of the sheet"
+                                  },
+                                  "range": {
+                                    "type": "string",
+                                    "description": "The A1 notation of the range"
+                                  }
+                                },
+                                "required": [
+                                  "sheetId",
+                                  "range"
+                                ]
+                              },
+                              "values": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {}
+                                },
+                                "description": "The values to be appended (two-dimensional array)"
+                              }
+                            },
+                            "required": [
+                              "range",
+                              "values"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "USER_ENTERED",
+                              "RAW",
+                              "INPUT_VALUE_OPTION_UNSPECIFIED"
+                            ],
+                            "default": "USER_ENTERED",
+                            "description": "How the input data should be interpreted"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "INSERT_ROWS",
+                              "OVERWRITE"
+                            ],
+                            "default": "INSERT_ROWS",
+                            "description": "How the input data should be inserted"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spreadsheetId": {
+                      "type": "string",
+                      "description": "The ID of the spreadsheet that was modified"
+                    },
+                    "tableRange": {
+                      "type": "string",
+                      "description": "The range that was appended to"
+                    },
+                    "updates": {
+                      "type": "object",
+                      "properties": {
+                        "spreadsheetId": {
+                          "type": "string",
+                          "description": "The ID of the spreadsheet that was modified"
+                        },
+                        "updatedRange": {
+                          "type": "string",
+                          "description": "The range that was appended to"
+                        },
+                        "updatedRows": {
+                          "type": "integer",
+                          "description": "The number of rows that were appended"
+                        },
+                        "updatedColumns": {
+                          "type": "integer",
+                          "description": "The number of columns that were appended"
+                        },
+                        "updatedCells": {
+                          "type": "integer",
+                          "description": "The number of cells that were appended"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clearValues": {
+      "post": {
+        "operationId": "clearValues",
+        "summary": "Clears values from a specified range in a Google Sheet.",
+        "description": "The clearValues function removes all values from a designated range within a Google Sheet. It takes a single input object containing the sheet ID and the A1 notation of the range to be cleared. The function returns a promise that resolves to an object with information about the clear operation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the clearValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "ClearValuesInput - An object specifying the sheet ID and range",
+                            "properties": {
+                              "sheetId": {
+                                "type": "string",
+                                "description": "The ID of the sheet. This is a required field and should be a valid string."
+                              },
+                              "range": {
+                                "type": "string",
+                                "description": "The A1 notation of the range. This is a required field and should be a valid string."
+                              }
+                            },
+                            "required": [
+                              "sheetId",
+                              "range"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spreadsheetId": {
+                      "type": "string",
+                      "description": "The ID of the spreadsheet"
+                    },
+                    "clearedRange": {
+                      "type": "string",
+                      "description": "The range that was cleared"
+                    },
+                    "updatedCells": {
+                      "type": "integer",
+                      "description": "The number of cells that were cleared"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server-side issue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchGetValues": {
+      "post": {
+        "operationId": "batchGetValues",
+        "summary": "Batch retrieves values from multiple ranges in a Google Sheet.",
+        "description": "The batchGetValues function allows for efficient retrieval of data from multiple ranges within a Google Sheet using a single API call. It takes a sheet ID and an array of range notations as input, returning a three-dimensional array containing the values from the specified ranges. This function is particularly useful for retrieving data from non-contiguous ranges or multiple worksheets within the same spreadsheet.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the batchGetValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the sheet"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "An array of A1 notations of the ranges to retrieve"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "any"
+                      }
+                    }
+                  },
+                  "description": "A three-dimensional array containing the values in the specified ranges"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchUpdateValues": {
+      "post": {
+        "operationId": "batchUpdateValues",
+        "summary": "Batch updates values in multiple ranges of a Google Sheet.",
+        "description": "The batchUpdateValues function updates the values in multiple specified ranges of a Google Sheet with the provided data in a single batch request. It allows for efficient updating of multiple ranges within a sheet, reducing the number of API calls required for multiple updates.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the batchUpdateValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the sheet. This is a required field and should be a valid string."
+                          },
+                          {
+                            "type": "array",
+                            "description": "An array of objects, each containing the range and values to update. This is a required field.",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "range": {
+                                  "type": "object",
+                                  "properties": {
+                                    "sheetId": {
+                                      "type": "string"
+                                    },
+                                    "range": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "sheetId",
+                                    "range"
+                                  ]
+                                },
+                                "values": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "required": [
+                                "range",
+                                "values"
+                              ]
+                            }
+                          },
+                          {
+                            "type": "string",
+                            "description": "How the input data should be interpreted. Possible values: 'USER_ENTERED', 'RAW', 'INPUT_VALUE_OPTION_UNSPECIFIED'. Defaults to 'USER_ENTERED'.",
+                            "enum": [
+                              "USER_ENTERED",
+                              "RAW",
+                              "INPUT_VALUE_OPTION_UNSPECIFIED"
+                            ],
+                            "default": "USER_ENTERED"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful batch update operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "spreadsheetId": {
+                        "type": "string"
+                      },
+                      "updatedRange": {
+                        "type": "string"
+                      },
+                      "updatedRows": {
+                        "type": "integer"
+                      },
+                      "updatedColumns": {
+                        "type": "integer"
+                      },
+                      "updatedCells": {
+                        "type": "integer"
+                      },
+                      "updatedData": {
+                        "type": "object",
+                        "properties": {
+                          "range": {
+                            "type": "string"
+                          },
+                          "majorDimension": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batchClearValues": {
+      "post": {
+        "operationId": "batchClearValues",
+        "summary": "Batch clears values from multiple ranges in a Google Sheet.",
+        "description": "This function clears all values from multiple specified ranges in a Google Sheet using a single batch request. It takes a sheet ID and an array of range notations as input, and returns a promise that resolves to an object containing information about the clear operation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the batchClearValues sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the sheet"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "An array of A1 notations of the ranges to clear"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "spreadsheetId": {
+                      "type": "string",
+                      "description": "The ID of the spreadsheet"
+                    },
+                    "clearedRanges": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The ranges that were cleared"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/duplicateRowsDetection": {
+      "post": {
+        "operationId": "duplicateRowsDetection",
+        "summary": "Detects fully duplicated rows within a specified sheet range.",
+        "description": "This function analyzes a given range in a sheet to identify and return fully duplicated rows. It takes a single configuration object parameter specifying the sheet ID and the range to check, and returns a Promise that resolves to an array of duplicate rows found within that range.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the duplicateRowsDetection sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "Configuration object containing the range to check for duplicates",
+                            "properties": {
+                              "sheetId": {
+                                "type": "string",
+                                "description": "The ID of the sheet containing the range to check"
+                              },
+                              "range": {
+                                "type": "string",
+                                "description": "The range to check for duplicates (e.g. 'A1:B10')"
+                              }
+                            },
+                            "required": [
+                              "sheetId",
+                              "range"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "A duplicate row"
+                  },
+                  "description": "An array of duplicate rows detected in the specified range"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sanitizeSheetData": {
+      "post": {
+        "operationId": "sanitizeSheetData",
+        "summary": "Sanitizes sheet data by removing whitespace padding from string cells in a given range and updates the sheet.",
+        "description": "The sanitizeSheetData function cleans up data in a specified range of a Google Sheet by trimming whitespace from string values. It takes an input object containing the range and values to be cleaned, processes the data to remove leading and trailing spaces, and then updates the sheet with the sanitized values. This function is useful for standardizing data format and improving data quality in spreadsheets.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the sanitizeSheetData sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "UpdateValuesInput object containing the range and values to clean and update",
+                            "properties": {
+                              "range": {
+                                "type": "object",
+                                "description": "The range to update in the sheet",
+                                "properties": {
+                                  "sheetId": {
+                                    "type": "string",
+                                    "description": "The ID of the sheet"
+                                  },
+                                  "range": {
+                                    "type": "string",
+                                    "description": "The A1 notation of the range"
+                                  }
+                                },
+                                "required": [
+                                  "sheetId",
+                                  "range"
+                                ]
+                              },
+                              "values": {
+                                "type": "array",
+                                "description": "The values to update in the specified range",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "range",
+                              "values"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "GOOGLE_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of GOOGLE_REFRESH_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/google-sheets"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully sanitized and updated sheet data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Update result from Google Sheets API",
+                  "properties": {
+                    "updatedRange": {
+                      "type": "string",
+                      "description": "The range that was updated"
+                    },
+                    "updatedRows": {
+                      "type": "integer",
+                      "description": "The number of rows that were updated"
+                    },
+                    "updatedColumns": {
+                      "type": "integer",
+                      "description": "The number of columns that were updated"
+                    },
+                    "updatedCells": {
+                      "type": "integer",
+                      "description": "The number of cells that were updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

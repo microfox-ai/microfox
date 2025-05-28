@@ -1,14 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "gen-pkg-sls",
-      "query": "Generate sls for @microfox/google-sheets",
-      "url": "",
-      "notes": "Generate serverless function for the @microfox/google-sheets package.",
-      "issueNumber": 376,
-      "logs": "",
-      "error": "",
-      "packageName": "@microfox/google-sheets"
-    }
-  ]
+  "requests": []
 }
