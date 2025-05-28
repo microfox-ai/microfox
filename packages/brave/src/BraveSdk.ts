@@ -158,12 +158,10 @@ class BraveSDK {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    if (process.env.BRAVE_SEARCH_SECRET_TEMPLATE_TYPE === 'markup') {
-      const tracker = createDefaultMicrofoxUsageTracker();
-      tracker?.trackApi1Usage('brave', 'dataForSearch', {
-        requestCount: 1,
-      });
-    }
+    const tracker = createDefaultMicrofoxUsageTracker();
+    tracker?.trackApi1Usage('brave', 'dataForSearch', {
+      requestCount: 1,
+    });
 
     return response.json() as Promise<T>;
   }
