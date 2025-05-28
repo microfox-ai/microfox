@@ -207,7 +207,7 @@ async function handleWorkflow() {
           process.exit(1);
         }
         console.log(`Running gen-pkg-sls for package: "${packageName}"`);
-        await generateSLSStructure(packageName);
+        await generateSLSStructure(packageName.replace('@microfox/', ''));
         await cleanupUsage();
         break;
       default:
