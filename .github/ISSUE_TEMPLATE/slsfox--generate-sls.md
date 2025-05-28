@@ -1,6 +1,6 @@
 ---
-name: 'slsfox: {package}'
-about: Use this when you need sls for an existing @microfox/** package
+name: 'slsfox: public serverless'
+about: Use this when you need serverless for an existing @microfox/** package
 title: 'packagefox: Generate sls for {package}'
 labels: 'sls'
 assignees: ''
