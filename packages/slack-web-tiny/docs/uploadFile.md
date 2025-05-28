@@ -47,7 +47,7 @@ export interface FileUploadResponse {
 ```typescript
 // Example: Uploading a file from text content
 const uploadResponse = await sdk.uploadFile({
-  channels: '#general',
+  channels: 'channel_id_1,channel_id_2...',
   content: 'This is the file content.',
   filename: 'example.txt',
   filetype: 'txt',
