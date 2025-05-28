@@ -754,7 +754,9 @@ export async function generateSLSStructure(packageName: string, specificFunction
             if (invalidFunctions.length > 0) {
                 console.error(`❌ Functions not found in package functionalities: ${invalidFunctions.join(', ')}`);
                 console.error(`Available functions: ${functionalities.join(', ')}`);
-                return false;
+                console.log(`Removing invalid functions from specificFunctions: ${invalidFunctions.join(', ')}`);
+                specificFunctions = specificFunctions.filter(func => !invalidFunctions.includes(func));
+                console.log(`Updated specificFunctions: ${specificFunctions.join(', ')}`);
             }
         }
 
