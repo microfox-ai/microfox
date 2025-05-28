@@ -1,3 +1,14 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "type": "gen-pkg-sls",
+      "query": "Generate sls for @microfox/discord",
+      "url": "",
+      "notes": "Generate serverless function for the @microfox/discord package.",
+      "issueNumber": 383,
+      "logs": "",
+      "error": "",
+      "packageName": "@microfox/discord"
+    }
+  ]
 }
