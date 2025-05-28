@@ -194,11 +194,17 @@ export class SlackWebhookSdk {
     if (!this.secret) {
       throw new WebhookParseError('Secret is required');
     }
-    return isValidSlackRequest({
-      signingSecret: this.secret,
-      body: payload,
-      headers: headers,
-    });
+    let isValid = false;
+    try {
+      isValid = isValidSlackRequest({
+        signingSecret: this.secret,
+        body: payload,
+        headers: headers,
+      });
+    } catch (error) {
+      throw new WebhookVerificationError('Invalid webhook signature');
+    }
+    return isValid;
   }
 
   /**
@@ -221,7 +227,7 @@ export class SlackWebhookSdk {
           Number(headers['x-slack-request-timestamp']) ?? 0,
       })
     ) {
-      throw new WebhookVerificationError('Invalid webhook signature');
+      throw new WebhookVerificationError('Signature verification failed');
     }
     const body = JSON.parse(rawBody);
 

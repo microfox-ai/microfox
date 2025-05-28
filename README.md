@@ -9,16 +9,21 @@ Microfox is built on two core philosophies:
 1. **Microservices Architecture**: Breaking down complex systems into small, independent services
 2. **Deep Coding**: Creating code that writes code that writes code - enabling AI agents to build and maintain software
 
-Software should never be a MOAT, and we promise that all the SDKs here will be continously mainteained, tested & free for everyone to use.
+Software should never be a MOAT, and we promise that all the SDKs here will be continuously maintained, tested & free for everyone to use.
 
 [![Microfox Demo Video](https://img.youtube.com/vi/IbETPF_Ojcs/0.jpg)](https://www.youtube.com/watch?v=IbETPF_Ojcs)
+
+## What are all these micro-SDKs for ?
+
+Building Ai-agents, Ai-Tools or any new age SaaS would require it to be able to connect across platforms.
+
+With Microfox SDKS, developers can easily integrate any platform into their pipelines authentically.
 
 ### All our SDKs are:
 
 - Open source and free to use
-- Published under the `@microfox` scope on npm
+- Published under the `@microfox/` scope on npm
 - Bytesized to support serverless environments
-- Automatic version tracking and updates (in-progress)
 
 Our automated SDK creation system that:
 

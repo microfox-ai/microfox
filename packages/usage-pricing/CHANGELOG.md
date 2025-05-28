@@ -1,5 +1,23 @@
 # @microfox/usage-pricing
 
+## 0.0.5
+
+### Patch Changes
+
+- 608cdee: Changes from PR #368: updates
+
+## 0.0.4
+
+### Patch Changes
+
+- 10b8b8a: Changes from PR #365: updates
+
+## 0.0.3
+
+### Patch Changes
+
+- 9c9a795: Changes from PR #362: updates
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,6 +1,7 @@
 import { Redis } from '@upstash/redis';
 import { UsageTrackerConstructorOptions, Usage } from '@microfox/usage-tracker';
 import { attachPricing } from './pricing/pricing';
+import { UsageWithPricing } from './types';
 
 // return YYYY-MM-DD
 const getDateKey = () => {
@@ -46,53 +47,130 @@ export class MicrofoxUsagePricing {
       process.env.MICROFOX_BOT_PROJECT_ID;
   }
 
-  async getUsage(prefixDateKey: string, packageName?: string) {
-    const usageKey = `${this.prefix}:${prefixDateKey}`;
-    const dayUsageKeys = await this.redis.keys(usageKey);
-    const usages: Usage[] = (
+  private processUsageEntries(
+    usage: Record<string, unknown>,
+    packageName?: string,
+  ): UsageWithPricing[] {
+    return Object.entries(usage)
+      .map(([key, value]) => {
+        try {
+          let json = typeof value === 'string' ? JSON.parse(value) : value;
+          if ('model' in json) {
+            json.type = 'llm';
+          }
+          if ('requestKey' in json) {
+            json.type = 'api_1';
+          }
+          return {
+            ...json,
+            timestamp: key,
+          };
+        } catch {
+          console.error('Failed to parse usage entry', value);
+          return null;
+        }
+      })
+      .filter(entry => entry != null && entry !== undefined)
+      .filter(entry =>
+        packageName ? entry.package === cleanPackageName(packageName) : true,
+      ) as UsageWithPricing[];
+  }
+
+  async getUsage(
+    packageName?: string,
+    prefixDateKey?: string,
+    options?: {
+      limit?: number;
+      offset?: number;
+    },
+  ) {
+    const usageKey = `${this.prefix}:${prefixDateKey ?? '*'}`;
+    const limit = options?.limit ?? 100;
+    const offset = options?.offset ?? 0;
+
+    let cursor = '0';
+    const keys: string[] = [];
+    let totalItems = 0;
+
+    do {
+      const [nextCursor, matchedKeys] = await this.redis.scan(cursor, {
+        match: usageKey,
+        count: limit,
+      });
+      cursor = nextCursor;
+      keys.push(...matchedKeys);
+      totalItems += matchedKeys.length;
+    } while (cursor !== '0' && keys.length < offset + limit);
+
+    const pageKeys = keys.slice(offset, offset + limit);
+
+    const usages: UsageWithPricing[] = (
       await Promise.all(
-        dayUsageKeys.map(async usageKey => {
+        pageKeys.map(async usageKey => {
           const usage = await this.redis.hgetall(usageKey);
           if (!usage) return [];
-
-          const filteredEntries = Object.values(usage)
-            .map(entry => {
-              try {
-                let json = JSON.parse(entry as string);
-                if ('model' in json) {
-                  json.type = 'llm';
-                }
-                if ('requestKey' in json) {
-                  json.type = 'api_1';
-                }
-                return json;
-              } catch {
-                return null;
-              }
-            })
-            .filter(entry => entry != null)
-            .filter(entry =>
-              packageName
-                ? entry.package === cleanPackageName(packageName)
-                : true,
-            );
-          return filteredEntries as Usage[];
+          return this.processUsageEntries(usage, packageName);
         }),
       )
     ).flat();
+
+    return {
+      data: usages.map(attachPricing),
+      total: totalItems,
+      limit,
+      offset,
+      hasMore: totalItems > offset + limit,
+    };
+  }
+
+  async getDailyUsage(
+    packageName?: string,
+    options?: { limit?: number; offset?: number },
+  ) {
+    return this.getUsage(packageName, `${getDateKey()}:*`, options);
+  }
+
+  async getMonthlyUsage(
+    packageName?: string,
+    options?: { limit?: number; offset?: number },
+  ) {
+    return this.getUsage(packageName, `${getDateKeyUntilMonth()}*`, options);
+  }
+
+  async getYearlyUsage(
+    packageName?: string,
+    options?: { limit?: number; offset?: number },
+  ) {
+    return this.getUsage(packageName, `${getDateKeyUntilYear()}*`, options);
+  }
+
+  async getFullUsage(packageName?: string, prefixDateKey?: string) {
+    const usageKey = `${this.prefix}:${prefixDateKey ?? '*'}`;
+    const keys = await this.redis.keys(usageKey);
+
+    const usages: UsageWithPricing[] = (
+      await Promise.all(
+        keys.map(async usageKey => {
+          const usage = await this.redis.hgetall(usageKey);
+          if (!usage) return [];
+          return this.processUsageEntries(usage, packageName);
+        }),
+      )
+    ).flat();
+
     return usages.map(attachPricing);
   }
 
-  async getDailyUsage(packageName?: string) {
-    return this.getUsage(`${getDateKey()}:*`, packageName);
+  async getFullDailyUsage(packageName?: string) {
+    return this.getFullUsage(packageName, `${getDateKey()}:*`);
   }
 
-  async getMonthlyUsage(packageName?: string) {
-    return this.getUsage(`${getDateKeyUntilMonth()}*`, packageName);
+  async getFullMonthlyUsage(packageName?: string) {
+    return this.getFullUsage(packageName, `${getDateKeyUntilMonth()}*`);
   }
 
-  async getYearlyUsage(packageName?: string) {
-    return this.getUsage(`${getDateKeyUntilYear()}*`, packageName);
+  async getFullYearlyUsage(packageName?: string) {
+    return this.getFullUsage(packageName, `${getDateKeyUntilYear()}*`);
   }
 }
 

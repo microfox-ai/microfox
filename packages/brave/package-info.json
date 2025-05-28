@@ -122,19 +122,7 @@
         }
       ],
       "internalKeys": [],
-      "botConfig": [
-        {
-          "key": "BRAVE_SECRET_TEMPLATE_TYPE",
-          "displayName": "Template Type",
-          "description": "The type of template to use for the email.",
-          "required": false,
-          "ui": {
-            "type": "text",
-            "label": "Template Type",
-            "placeholder": "markup"
-          }
-        }
-      ],
+      "botConfig": [],
       "functionalities": [
         "request",
         "webSearch",

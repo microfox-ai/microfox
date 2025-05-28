@@ -53,12 +53,24 @@ export class MicrofoxUsageTracker {
       completionTokens: number;
     },
   ) {
+    if (
+      process.env[
+        `${packageName?.replace(/[- ]/g, '_')?.toUpperCase()}_SECRET_TRACKING`
+      ] != 'markup'
+    ) {
+      return;
+    }
+    const markupPercent =
+      process.env[
+        `${packageName?.replace(/[- ]/g, '_')?.toUpperCase()}_SECRET_MARKUP_PERCENT`
+      ];
     const usageKey = `${this.prefix}:${getDateKey()}:${modelId}`;
     await this.redis.hset(usageKey, {
       [getTimestampKey()]: JSON.stringify({
         ...usage,
         model: modelId,
         package: cleanPackageName(packageName),
+        markup: markupPercent ? parseFloat(markupPercent) : undefined,
       }),
     });
   }
@@ -71,12 +83,24 @@ export class MicrofoxUsageTracker {
       requestData?: number;
     },
   ) {
+    if (
+      process.env[
+        `${packageName?.replace(/[- ]/g, '_')?.toUpperCase()}_SECRET_TRACKING`
+      ] != 'markup'
+    ) {
+      return;
+    }
+    const markupPercent =
+      process.env[
+        `${packageName?.replace(/[- ]/g, '_')?.toUpperCase()}_SECRET_MARKUP_PERCENT`
+      ];
     const usageKey = `${this.prefix}:${getDateKey()}:${key}`;
     await this.redis.hset(usageKey, {
       [getTimestampKey()]: JSON.stringify({
         ...usage,
         requestKey: key,
         package: cleanPackageName(packageName),
+        markup: markupPercent ? parseFloat(markupPercent) : undefined,
       }),
     });
   }

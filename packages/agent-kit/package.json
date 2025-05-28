@@ -1,6 +1,6 @@
 {
   "name": "@microfox/agent-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Interconnecting agents with multiple platforms for communication and data exchange.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
