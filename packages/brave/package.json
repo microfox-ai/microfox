@@ -1,6 +1,6 @@
 {
   "name": "@microfox/brave",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "TypeScript SDK for Brave APIs.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

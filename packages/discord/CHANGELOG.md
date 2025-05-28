@@ -1,5 +1,12 @@
 # @microfox/discord
 
+## 1.1.2
+
+### Patch Changes
+
+- a86977c: Changes from PR #373: vwjt_slsfox_may_2025
+- 4d817e1: Changes from PR #361: vwjt_slsfox_may_2025
+
 ## 1.1.1
 
 ### Patch Changes
