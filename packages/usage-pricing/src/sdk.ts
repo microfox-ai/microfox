@@ -60,7 +60,6 @@ export class MicrofoxUsagePricing {
           if ('requestKey' in json) {
             json.type = 'api_1';
           }
-          console.log('json', json);
           return json;
         } catch {
           console.error('Failed to parse usage entry', entry);
