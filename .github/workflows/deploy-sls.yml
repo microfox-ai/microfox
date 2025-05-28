@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - vwjt_ip_whitelist_may_25
 
 jobs:
   deploy:
