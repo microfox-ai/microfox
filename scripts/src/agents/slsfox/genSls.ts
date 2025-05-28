@@ -4,6 +4,7 @@ import { generateObject } from 'ai';
 import { z } from 'zod';
 import { models } from '../../ai/models';
 import { getProjectRoot } from '../../utils/getProjectRoot';
+import { logUsage } from '../../ai/usage/usageLogger';
 
 // Types for package info structure
 interface PackageInfo {
@@ -229,6 +230,8 @@ Focus on the parameter structure - look for indentation patterns to determine if
             schema,
             maxRetries: 3,
         });
+
+        logUsage(models.claude35Sonnet.modelId, result.usage);
 
         // Build the complete OpenAPI path from AI-generated content + package info
         let aiContent = result.object;
@@ -540,14 +543,16 @@ Make sure to only use the environment variables that are available in the **Avai
 Map all package functions to the SDK instance.`;
 
     try {
-        const result = await generateObject({
+        const { object: result, usage } = await generateObject({
             model: models.claude35Sonnet,
             system: systemPrompt,
             prompt: userPrompt,
             schema,
         });
 
-        return result.object.sdkInitCode;
+        logUsage(models.claude35Sonnet.modelId, usage);
+
+        return result.sdkInitCode;
     } catch (error) {
         console.error(`❌ Error generating SDK init content:`, error);
         throw error;
@@ -660,7 +665,7 @@ async function updateFunctionsInOpenAPI(
 
             const docContent = fs.readFileSync(docPath, 'utf8');
             console.log(`🔧 Updating OpenAPI path for function: ${functionName}`);
-            
+
             try {
                 const pathKey = `/${functionName}`;
                 const pathSpec = await generateOpenAPIPath(functionName, docContent, packageInfo, packageName);
@@ -895,7 +900,7 @@ if (require.main === module) {
     }
 
     // Parse specific functions from comma-separated string
-    const specificFunctions = specificFunctionsArg 
+    const specificFunctions = specificFunctionsArg
         ? specificFunctionsArg.split(',').map(f => f.trim()).filter(f => f.length > 0)
         : undefined;
 
