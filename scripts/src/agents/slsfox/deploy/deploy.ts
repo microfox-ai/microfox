@@ -144,7 +144,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
 
     // Deploy using serverless framework
     console.log('Deploying with serverless framework...');
-    const deployCommand = `npx serverless deploy --stage ${STAGE}`;
+    const deployCommand = `npx serverless deploy --stage ${STAGE} --force`;
     console.log('Running command:', deployCommand);
 
     const output = execSync(deployCommand, { encoding: 'utf8' });
