@@ -45,11 +45,14 @@ const responses = await ses.sendBulkEmails({
   recipient: process.env.AWS_SES_RECEPIENT_EMAILS?.split(',') ??
     req.paramsreq.queryStringParams.recepientMail?.split(',') ?? [
       'recipient1@example.com',
-      'recipient2@example.com'
+      'recipient2@example.com',
+      'recipient3@example.com'
     ],
   subject: 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
+
+console.log(responses);
 ```
 
 ## Priorities for sender
