@@ -37,7 +37,7 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "EmailParams object containing all email sending parameters",
+                            "description": "EmailParams - Parameters for sending the email",
                             "properties": {
                               "sender": {
                                 "type": "string",
@@ -51,7 +51,7 @@
                               },
                               "displayName": {
                                 "type": "string",
-                                "description": "Optional display name for the sender"
+                                "description": "Optional. Display name for the sender (e.g., \"John Doe\" <john@example.com>)"
                               },
                               "subject": {
                                 "type": "string",
@@ -59,11 +59,11 @@
                               },
                               "bodyText": {
                                 "type": "string",
-                                "description": "Optional plain text version of the email body"
+                                "description": "Optional. Plain text version of the email body"
                               },
                               "bodyHtml": {
                                 "type": "string",
-                                "description": "Optional HTML version of the email body"
+                                "description": "Optional. HTML version of the email body"
                               }
                             },
                             "required": [
@@ -178,7 +178,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -194,7 +194,7 @@
             }
           },
           "500": {
-            "description": "Server error - failed to send email",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -202,7 +202,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -216,7 +216,7 @@
       "post": {
         "operationId": "sendBulkEmails",
         "summary": "Sends multiple emails in parallel using AWS SES service.",
-        "description": "This function sends multiple emails to a list of recipients using the AWS SES service. It takes a single configuration object containing sender details, recipients, subject, and optional body content. Emails are sent in parallel for improved performance.",
+        "description": "This function sends bulk emails to a list of recipients using AWS SES. It allows for parallel sending to improve performance and accepts various email parameters including sender, recipients, subject, and body content in both plain text and HTML formats.",
         "requestBody": {
           "required": true,
           "content": {
@@ -250,7 +250,7 @@
                               },
                               "displayName": {
                                 "type": "string",
-                                "description": "Display name for the sender (e.g., \"John Doe\" <john@example.com>)"
+                                "description": "Optional display name for the sender"
                               },
                               "subject": {
                                 "type": "string",
@@ -258,11 +258,11 @@
                               },
                               "bodyText": {
                                 "type": "string",
-                                "description": "Plain text version of the email body"
+                                "description": "Optional plain text version of the email body"
                               },
                               "bodyHtml": {
                                 "type": "string",
-                                "description": "HTML version of the email body"
+                                "description": "Optional HTML version of the email body"
                               }
                             },
                             "required": [
@@ -380,7 +380,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -388,7 +388,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "description": "Error message describing the issue with the request"
                     }
                   }
                 }
@@ -396,7 +396,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -404,7 +404,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
