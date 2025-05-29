@@ -61,5 +61,5 @@ await ses.sendEmail({
 
 1. if `AWS_SES_SENDER_MAIL_DOMAIN` exists, use this - req.params.senderSubDomain + '@' + process.env.AWS_SES_SENDER_MAIL_DOMAIN
 2. if the above does not exist, and `AWS_SES_SENDER_EMAIL` exists, use that env directly.
-3. if bothe of the above does not exists, try to create your own env variable or collect sender email from request body.
+3. if both of the above does not exists, try to create your own env variable or collect sender email from request body.
 4. as a last option, hard code it.
