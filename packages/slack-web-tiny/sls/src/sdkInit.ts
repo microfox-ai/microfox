@@ -9,14 +9,14 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
     // Initialize SDK with token
     const sdk = createSlackSDK({
         botToken: envVars['SLACK_BOT_TOKEN'],
-        authType: 'header', // Default to header authentication
+        authType: 'header' // Default to header authentication
     });
 
     // Map functions
     const sdkMap: Record<string, Function> = {
         sendMessage: sdk.sendMessage.bind(sdk),
         updateMessage: sdk.updateMessage.bind(sdk),
-        uploadFile: sdk.uploadFile.bind(sdk),
+        uploadFile: sdk.uploadFile.bind(sdk)
     };
 
     return sdkMap;

@@ -8,7 +8,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
 
     // Initialize SDK
     const sdk = createBraveSDK({
-        apiKey: envVars['BRAVE_API_KEY'],
+        apiKey: envVars['BRAVE_API_KEY']
     });
 
     // Map functions
@@ -22,7 +22,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         videoSearch: sdk.videoSearch.bind(sdk),
         newsSearch: sdk.newsSearch.bind(sdk),
         suggestSearch: sdk.suggestSearch.bind(sdk),
-        spellcheckSearch: sdk.spellcheckSearch.bind(sdk),
+        spellcheckSearch: sdk.spellcheckSearch.bind(sdk)
     };
 
     return sdkMap;

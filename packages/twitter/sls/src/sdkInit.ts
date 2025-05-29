@@ -14,7 +14,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         apiKey: envVars['X_API_KEY'],
         apiSecret: envVars['X_API_SECRET'],
         accessToken: envVars['X_ACCESS_TOKEN'],
-        accessSecret: envVars['X_ACCESS_SECRET'],
+        accessSecret: envVars['X_ACCESS_SECRET']
     });
 
     // Map functions
@@ -29,7 +29,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         getByIds: sdk.getByIds.bind(sdk),
         getMe: sdk.getMe.bind(sdk),
         upload: sdk.upload.bind(sdk),
-        generateOAuthHeader: sdk.generateOAuthHeader.bind(sdk),
+        generateOAuthHeader: sdk.generateOAuthHeader.bind(sdk)
     };
 
     return sdkMap;
