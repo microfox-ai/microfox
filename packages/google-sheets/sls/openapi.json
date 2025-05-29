@@ -19,8 +19,8 @@
     "/validateAccessToken": {
       "post": {
         "operationId": "validateAccessToken",
-        "summary": "Validates and refreshes an access token if necessary.",
-        "description": "This function checks if the current access token is valid. If the token is not valid, it attempts to refresh the token using the refresh token. The function is useful for maintaining authenticated sessions and ensuring API requests have valid credentials.",
+        "summary": "Validates and refreshes the access token if necessary.",
+        "description": "This function checks the validity of the current access token. If the token is invalid, it attempts to refresh it using the refresh token. The function is useful for maintaining an active session and ensuring API requests have valid authentication.",
         "requestBody": {
           "required": true,
           "content": {
@@ -133,16 +133,13 @@
                       "type": "boolean",
                       "description": "Indicates whether the access token is valid"
                     }
-                  },
-                  "required": [
-                    "isValid"
-                  ]
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input or unable to validate token",
+            "description": "Bad Request - Invalid input or unable to refresh token",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,10 +149,23 @@
                       "type": "string",
                       "description": "Error message describing the issue"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Both access token and refresh token are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
+                    }
+                  }
                 }
               }
             }
@@ -171,10 +181,7 @@
                       "type": "string",
                       "description": "Error message describing the server error"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -186,7 +193,7 @@
       "post": {
         "operationId": "refreshAccessToken",
         "summary": "Refreshes the access token using the refresh token.",
-        "description": "This function uses the refresh token to obtain a new access token. It returns a promise that resolves when the access token has been successfully refreshed. The function does not require any parameters and is typically used to maintain an active session without requiring the user to log in again.",
+        "description": "This function uses the refresh token to obtain a new access token. It is an asynchronous operation that returns a promise, which resolves when the access token has been successfully refreshed. This function is essential for maintaining continuous authentication in long-running applications.",
         "requestBody": {
           "required": true,
           "content": {
@@ -305,7 +312,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad request - Invalid refresh token or client error",
             "content": {
               "application/json": {
                 "schema": {
@@ -320,8 +327,8 @@
               }
             }
           },
-          "500": {
-            "description": "Server error",
+          "401": {
+            "description": "Unauthorized - Refresh token expired or invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -329,7 +336,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "example": "Internal server error"
+                      "example": "Refresh token expired"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error occurred while refreshing token"
                     }
                   }
                 }
@@ -343,7 +366,7 @@
       "post": {
         "operationId": "getValues",
         "summary": "Retrieves values from a specified range in a Google Sheet.",
-        "description": "The getValues function fetches data from a defined range within a Google Sheet. It takes a Range object as input, which includes the sheet ID and the A1 notation of the desired range. The function returns a promise that resolves to a two-dimensional array containing the values from the specified range, or an empty array if the range is empty.",
+        "description": "This function fetches data from a designated range within a Google Sheet. It requires the sheet ID and the A1 notation of the range as input parameters. The function returns a promise that resolves to a two-dimensional array containing the values from the specified range, or an empty array if the range is empty.",
         "requestBody": {
           "required": true,
           "content": {
@@ -473,7 +496,7 @@
                   "items": {
                     "type": "array",
                     "items": {
-                      "type": "any"
+                      "type": "string"
                     }
                   },
                   "description": "A two-dimensional array containing the values in the specified range"
@@ -497,6 +520,22 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found - Sheet or range not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the sheet or range was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -506,7 +545,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -537,49 +576,60 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "UpdateValuesInput - An object containing the range and values to update",
+                            "description": "An object containing the range and values to update",
                             "properties": {
-                              "range": {
+                              "input": {
                                 "type": "object",
-                                "description": "The range to update",
-                                "properties": {
-                                  "sheetId": {
-                                    "type": "string",
-                                    "description": "The ID of the sheet"
-                                  },
-                                  "range": {
-                                    "type": "string",
-                                    "description": "The A1 notation of the range"
-                                  }
-                                },
+                                "description": "UpdateValuesInput - An object containing the range and values to update",
                                 "required": [
-                                  "sheetId",
-                                  "range"
-                                ]
+                                  "range",
+                                  "values"
+                                ],
+                                "properties": {
+                                  "range": {
+                                    "type": "object",
+                                    "description": "The range to update",
+                                    "required": [
+                                      "sheetId",
+                                      "range"
+                                    ],
+                                    "properties": {
+                                      "sheetId": {
+                                        "type": "string",
+                                        "description": "The ID of the sheet"
+                                      },
+                                      "range": {
+                                        "type": "string",
+                                        "description": "The A1 notation of the range"
+                                      }
+                                    }
+                                  },
+                                  "values": {
+                                    "type": "array",
+                                    "description": "The values to be updated",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "any"
+                                      }
+                                    }
+                                  }
+                                }
                               },
-                              "values": {
-                                "type": "array",
-                                "items": {
-                                  "type": "array",
-                                  "items": {}
-                                },
-                                "description": "The values to be updated. Should be a two-dimensional array"
+                              "valueInputOption": {
+                                "type": "string",
+                                "description": "How the input data should be interpreted",
+                                "enum": [
+                                  "USER_ENTERED",
+                                  "RAW",
+                                  "INPUT_VALUE_OPTION_UNSPECIFIED"
+                                ],
+                                "default": "USER_ENTERED"
                               }
                             },
                             "required": [
-                              "range",
-                              "values"
+                              "input"
                             ]
-                          },
-                          {
-                            "type": "string",
-                            "description": "How the input data should be interpreted",
-                            "enum": [
-                              "USER_ENTERED",
-                              "RAW",
-                              "INPUT_VALUE_OPTION_UNSPECIFIED"
-                            ],
-                            "default": "USER_ENTERED"
                           }
                         ]
                       },
@@ -670,7 +720,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -709,7 +759,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -717,7 +767,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Sheet or range not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the sheet or range was not found"
                     }
                   }
                 }
@@ -725,7 +807,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -733,7 +815,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the server error"
                     }
                   }
                 }
@@ -764,7 +846,7 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "AppendValuesInput object containing the range and values to append",
+                            "description": "Input object containing the range and values to append",
                             "properties": {
                               "range": {
                                 "type": "object",
@@ -914,34 +996,34 @@
                   "properties": {
                     "spreadsheetId": {
                       "type": "string",
-                      "description": "The ID of the spreadsheet that was modified"
+                      "description": "The ID of the spreadsheet"
                     },
                     "tableRange": {
                       "type": "string",
-                      "description": "The range that was appended to"
+                      "description": "The range of the table that was appended to"
                     },
                     "updates": {
                       "type": "object",
                       "properties": {
                         "spreadsheetId": {
                           "type": "string",
-                          "description": "The ID of the spreadsheet that was modified"
+                          "description": "The ID of the spreadsheet"
                         },
                         "updatedRange": {
                           "type": "string",
-                          "description": "The range that was appended to"
+                          "description": "The range that was updated"
                         },
                         "updatedRows": {
                           "type": "integer",
-                          "description": "The number of rows that were appended"
+                          "description": "The number of rows that were updated"
                         },
                         "updatedColumns": {
                           "type": "integer",
-                          "description": "The number of columns that were appended"
+                          "description": "The number of columns that were updated"
                         },
                         "updatedCells": {
                           "type": "integer",
-                          "description": "The number of cells that were appended"
+                          "description": "The number of cells that were updated"
                         }
                       }
                     }
@@ -960,6 +1042,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - Sheet or range not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the sheet or range was not found"
                     }
                   }
                 }
@@ -989,7 +1103,7 @@
       "post": {
         "operationId": "clearValues",
         "summary": "Clears values from a specified range in a Google Sheet.",
-        "description": "The clearValues function removes all values from a designated range within a Google Sheet. It takes a single input object containing the sheet ID and the A1 notation of the range to be cleared. The function returns a promise that resolves to an object with information about the clear operation.",
+        "description": "This function clears all values from a specified range in a Google Sheet. It takes a single input object containing the sheet ID and the range in A1 notation. The function returns a promise that resolves to an object with information about the clear operation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1006,15 +1120,15 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "ClearValuesInput - An object specifying the sheet ID and range",
+                            "description": "Input object specifying the sheet ID and range",
                             "properties": {
                               "sheetId": {
                                 "type": "string",
-                                "description": "The ID of the sheet. This is a required field and should be a valid string."
+                                "description": "The ID of the sheet"
                               },
                               "range": {
                                 "type": "string",
-                                "description": "The A1 notation of the range. This is a required field and should be a valid string."
+                                "description": "The A1 notation of the range"
                               }
                             },
                             "required": [
@@ -1125,9 +1239,13 @@
                       "type": "string",
                       "description": "The range that was cleared"
                     },
-                    "updatedCells": {
+                    "clearedRows": {
                       "type": "integer",
-                      "description": "The number of cells that were cleared"
+                      "description": "The number of rows that were cleared"
+                    },
+                    "clearedColumns": {
+                      "type": "integer",
+                      "description": "The number of columns that were cleared"
                     }
                   }
                 }
@@ -1135,7 +1253,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1143,7 +1261,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to access the sheet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Sheet or range not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the sheet or range was not found"
                     }
                   }
                 }
@@ -1151,7 +1301,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1159,7 +1309,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -1173,7 +1323,7 @@
       "post": {
         "operationId": "batchGetValues",
         "summary": "Batch retrieves values from multiple ranges in a Google Sheet.",
-        "description": "The batchGetValues function allows for efficient retrieval of data from multiple ranges within a Google Sheet using a single API call. It takes a sheet ID and an array of range notations as input, returning a three-dimensional array containing the values from the specified ranges. This function is particularly useful for retrieving data from non-contiguous ranges or multiple worksheets within the same spreadsheet.",
+        "description": "This function allows for efficient retrieval of data from multiple ranges within a Google Sheet using a single batch request. It takes a sheet ID and an array of range notations, returning a three-dimensional array containing the values from each specified range. This approach minimizes API calls and improves performance when fetching data from multiple areas of a spreadsheet.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1190,14 +1340,19 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the sheet"
+                            "description": "The ID of the sheet",
+                            "example": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
                           },
                           {
                             "type": "array",
                             "items": {
                               "type": "string"
                             },
-                            "description": "An array of A1 notations of the ranges to retrieve"
+                            "description": "An array of A1 notations of the ranges to retrieve",
+                            "example": [
+                              "A1:B2",
+                              "C1:D2"
+                            ]
                           }
                         ]
                       },
@@ -1298,7 +1453,7 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "type": "any"
+                        "type": "string"
                       }
                     }
                   },
@@ -1308,7 +1463,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1317,6 +1472,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to access the sheet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Sheet or specified ranges not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found"
                     }
                   }
                 }
@@ -1332,7 +1519,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the server error"
                     }
                   }
                 }
@@ -1346,7 +1533,7 @@
       "post": {
         "operationId": "batchUpdateValues",
         "summary": "Batch updates values in multiple ranges of a Google Sheet.",
-        "description": "The batchUpdateValues function updates the values in multiple specified ranges of a Google Sheet with the provided data in a single batch request. It allows for efficient updating of multiple ranges within a sheet, reducing the number of API calls required for multiple updates.",
+        "description": "This function allows for updating values in multiple specified ranges of a Google Sheet with provided data in a single batch request. It takes the sheet ID, an array of update inputs, and an optional value input option. The function returns a promise that resolves to an array of API responses, each containing information about an update operation in the batch.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1380,7 +1567,7 @@
                                     },
                                     "range": {
                                       "type": "string",
-                                      "description": "The range to update in A1 notation"
+                                      "description": "The A1 notation of the values to update"
                                     }
                                   },
                                   "required": [
@@ -1396,7 +1583,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "description": "The values to update in the specified range"
+                                  "description": "The data to be written"
                                 }
                               },
                               "required": [
@@ -1504,7 +1691,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful batch update operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -1514,42 +1701,23 @@
                     "properties": {
                       "spreadsheetId": {
                         "type": "string",
-                        "description": "The ID of the spreadsheet that was updated"
+                        "description": "The ID of the spreadsheet that was updated."
                       },
                       "updatedRange": {
                         "type": "string",
-                        "description": "The range that was updated"
+                        "description": "The range (in A1 notation) that was updated."
                       },
                       "updatedRows": {
                         "type": "integer",
-                        "description": "The number of rows that were updated"
+                        "description": "The number of rows that were updated."
                       },
                       "updatedColumns": {
                         "type": "integer",
-                        "description": "The number of columns that were updated"
+                        "description": "The number of columns that were updated."
                       },
                       "updatedCells": {
-                        "type": "integer"
-                      },
-                      "updatedData": {
-                        "type": "object",
-                        "properties": {
-                          "range": {
-                            "type": "string"
-                          },
-                          "majorDimension": {
-                            "type": "string"
-                          },
-                          "values": {
-                            "type": "array",
-                            "items": {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "integer",
+                        "description": "The number of cells that were updated."
                       }
                     }
                   }
@@ -1573,6 +1741,38 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to access the sheet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Sheet ID not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the sheet was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -1582,7 +1782,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the server-side issue"
                     }
                   }
                 }
@@ -1596,7 +1796,7 @@
       "post": {
         "operationId": "batchClearValues",
         "summary": "Batch clears values from multiple ranges in a Google Sheet.",
-        "description": "This function clears all values from multiple specified ranges in a Google Sheet using a single batch request. It takes a sheet ID and an array of range notations as input, and returns a promise that resolves to an object containing information about the clear operation.",
+        "description": "This function clears all values from multiple specified ranges in a Google Sheet using a single batch request. It takes the sheet ID and an array of A1 notations for the ranges to be cleared, and returns a promise that resolves to an object containing information about the clear operation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1613,14 +1813,14 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the sheet"
+                            "description": "The ID of the sheet. This is a required field and should be a valid string."
                           },
                           {
                             "type": "array",
                             "items": {
                               "type": "string"
                             },
-                            "description": "An array of A1 notations of the ranges to clear"
+                            "description": "An array of A1 notations of the ranges to clear. This is a required field and should be an array of valid strings."
                           }
                         ]
                       },
@@ -1719,7 +1919,7 @@
                   "properties": {
                     "spreadsheetId": {
                       "type": "string",
-                      "description": "The ID of the spreadsheet"
+                      "description": "The ID of the spreadsheet that was modified"
                     },
                     "clearedRanges": {
                       "type": "array",
@@ -1742,7 +1942,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to access the sheet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Sheet or specified ranges not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the sheet or ranges were not found"
                     }
                   }
                 }
@@ -1758,7 +1990,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -1772,7 +2004,7 @@
       "post": {
         "operationId": "duplicateRowsDetection",
         "summary": "Detects fully duplicated rows within a specified sheet range.",
-        "description": "The detectDuplicateRows function identifies and returns fully duplicated rows from a given range in a specified sheet. It takes a single configuration object as a parameter, containing the sheet ID and the range to check. The function returns a Promise that resolves to an array of duplicate rows found within the specified range.",
+        "description": "This function identifies and returns fully duplicated rows from a given range in a spreadsheet. It takes a single parameter object containing the sheet ID and the range to check, and returns a Promise that resolves to an array of duplicate rows. This can be useful for data cleaning and analysis tasks in spreadsheet applications.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1789,15 +2021,15 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "Configuration object containing the range to check for duplicates",
+                            "description": "Configuration object containing sheet ID and range",
                             "properties": {
                               "sheetId": {
                                 "type": "string",
-                                "description": "The ID of the sheet containing the range to check"
+                                "description": "The ID of the sheet to check for duplicates"
                               },
                               "range": {
                                 "type": "string",
-                                "description": "The range to check for duplicates (e.g. 'A1:B10')"
+                                "description": "The range to check for duplicates (e.g., 'A1:B10')"
                               }
                             },
                             "required": [
@@ -1900,10 +2132,13 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
                     "description": "A duplicate row"
                   },
-                  "description": "An array of duplicate rows found in the specified range"
+                  "description": "An array of duplicate rows"
                 }
               }
             }
@@ -1918,6 +2153,22 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - sheet or range not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the sheet or range was not found"
                     }
                   }
                 }
@@ -1946,8 +2197,8 @@
     "/sanitizeSheetData": {
       "post": {
         "operationId": "sanitizeSheetData",
-        "summary": "Sanitizes sheet data by removing whitespace padding from string cells in a given range and updates the sheet.",
-        "description": "The sanitizeSheetData function cleans up data in a specified range of a Google Sheet by trimming whitespace from string cells. It takes an input object containing the range and values to be cleaned, processes the data to remove leading and trailing spaces, and then updates the sheet with the sanitized values. This function is useful for standardizing data format and improving data quality in spreadsheets.",
+        "summary": "Sanitizes sheet data by removing whitespace padding from string cells in a specified range.",
+        "description": "This function removes whitespace padding from all string cells within a given range in a Google Sheet and updates the sheet with the cleaned data. It takes an input object containing the range and values to be sanitized, processes the data, and then updates the sheet using the Google Sheets API.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1964,19 +2215,19 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "UpdateValuesInput object containing the range and values to clean and update",
+                            "description": "The input object containing the range and values to clean and update.",
                             "properties": {
                               "range": {
                                 "type": "object",
-                                "description": "The range to update in the sheet",
+                                "description": "The range in the sheet to be updated.",
                                 "properties": {
                                   "sheetId": {
                                     "type": "string",
-                                    "description": "The ID of the sheet"
+                                    "description": "The ID of the sheet to be updated."
                                   },
                                   "range": {
                                     "type": "string",
-                                    "description": "The A1 notation of the range"
+                                    "description": "The A1 notation of the range to be updated."
                                   }
                                 },
                                 "required": [
@@ -1986,7 +2237,7 @@
                               },
                               "values": {
                                 "type": "array",
-                                "description": "The values to update in the specified range",
+                                "description": "The 2D array of values to be sanitized and updated in the sheet.",
                                 "items": {
                                   "type": "array",
                                   "items": {
@@ -2089,28 +2340,32 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully sanitized and updated sheet data",
+            "description": "Successfully sanitized and updated the sheet data.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "description": "Update result from Google Sheets API",
+                  "description": "The update result from Google Sheets API.",
                   "properties": {
+                    "spreadsheetId": {
+                      "type": "string",
+                      "description": "The ID of the spreadsheet that was updated."
+                    },
                     "updatedRange": {
                       "type": "string",
-                      "description": "The range that was updated"
+                      "description": "The range that was updated in A1 notation."
                     },
                     "updatedRows": {
                       "type": "integer",
-                      "description": "The number of rows that were updated"
+                      "description": "The number of rows that were updated."
                     },
                     "updatedColumns": {
                       "type": "integer",
-                      "description": "The number of columns that were updated"
+                      "description": "The number of columns that were updated."
                     },
                     "updatedCells": {
                       "type": "integer",
-                      "description": "The number of cells that were updated"
+                      "description": "The number of cells that were updated."
                     }
                   }
                 }
@@ -2118,7 +2373,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request. This could occur if the input parameters are invalid or missing.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2126,7 +2381,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the issue with the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. The request is not authorized to access the sheet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of permission."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found. The specified sheet or range does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found."
                     }
                   }
                 }
@@ -2134,7 +2421,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal server error. An unexpected error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2142,7 +2429,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the internal server error"
+                      "description": "Error message describing the internal server error."
                     }
                   }
                 }
