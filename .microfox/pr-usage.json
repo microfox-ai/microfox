@@ -1,1 +1,10 @@
-{}
+{
+  "claude-3-5-sonnet-20240620": {
+    "usage": {
+      "promptTokens": 9585,
+      "completionTokens": 3231,
+      "totalTokens": 0
+    },
+    "cost": 0.07722
+  }
+}
