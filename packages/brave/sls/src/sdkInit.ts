@@ -3,7 +3,7 @@ import { createBraveSDK } from '@microfox/brave';
 export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
     // Environment variable validation
     if (!envVars['BRAVE_API_KEY']) {
-        throw new Error('BRAVE_API_KEY is required but not provided in the environment variables.');
+        throw new Error('BRAVE_API_KEY is required but not provided in the environment variables. Please set the BRAVE_API_KEY environment variable.');
     }
 
     // Initialize SDK
