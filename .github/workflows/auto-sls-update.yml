@@ -2,7 +2,7 @@ name: Auto SLS Update
 
 on:
   push:
-    branches: [main]
+    branches: [main, vwjt_slsfox_may_2025]
     paths:
       - 'packages/*/docs/*.md'
 
@@ -164,21 +164,17 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # Pull the latest changes from remote first
-        echo "Pulling latest changes from remote..."
-        git pull origin main --rebase
-        
-        # Read the SLS files to commit
+        # First, stage the SLS files to avoid unstaged changes during pull
         if [ -f /tmp/sls_files_to_commit.txt ]; then
           # Add only the SLS files that were modified
           while IFS= read -r file; do
             if [ -f "$file" ]; then
-              echo "Adding SLS file: $file"
+              echo "Staging SLS file: $file"
               git add "$file"
             fi
           done < /tmp/sls_files_to_commit.txt
         else
-          echo "No SLS files list found, checking for SLS changes again..."
+          echo "No SLS files list found, staging SLS files with pattern..."
           # Fallback: add only files in packages/*/sls/ directories
           git add 'packages/*/sls/*' || echo "No SLS files to add"
         fi
@@ -189,7 +185,11 @@ jobs:
           exit 0
         fi
         
-        # Commit only the staged SLS files
+        # Now pull latest changes (should work since SLS files are staged)
+        echo "Pulling latest changes from remote..."
+        git pull origin main --rebase
+        
+        # Commit the staged SLS files
         git commit -m "🤖 Auto-update SLS files for documentation changes"
         
         # Push with retry logic
