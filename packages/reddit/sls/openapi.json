@@ -20,7 +20,7 @@
       "post": {
         "operationId": "validateAccessToken",
         "summary": "Validates the current access token.",
-        "description": "This function checks if the current access token is valid. It performs a validation process on the existing access token and returns a boolean result. The function is useful for verifying the authenticity and expiration status of the token before making authenticated requests.",
+        "description": "This function checks if the current access token is valid. It performs a validation check on the access token associated with the current session or user. The function returns a boolean value indicating the token's validity.",
         "requestBody": {
           "required": true,
           "content": {
@@ -167,8 +167,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request - Invalid input or missing access token",
+          "401": {
+            "description": "Unauthorized - No valid access token provided",
             "content": {
               "application/json": {
                 "schema": {
@@ -176,7 +176,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message"
                     }
                   },
                   "required": [
@@ -187,7 +187,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -195,7 +195,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message"
                     }
                   },
                   "required": [
@@ -212,7 +212,7 @@
       "post": {
         "operationId": "refreshAccessToken",
         "summary": "Refreshes the access token using a refresh token.",
-        "description": "This function obtains a new access token using the provided refresh token. It is used to maintain continuous access to the API without requiring the user to re-authenticate. The function does not return a value, suggesting it updates the token internally.",
+        "description": "This function obtains a new access token using the provided refresh token. It is typically used when the current access token has expired or is about to expire, allowing continued access to protected resources without requiring the user to re-authenticate.",
         "requestBody": {
           "required": true,
           "content": {
@@ -229,7 +229,8 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The refresh token obtained during initial authorization."
+                            "description": "The refresh token obtained during initial authorization.",
+                            "name": "refreshToken"
                           }
                         ]
                       },
@@ -352,17 +353,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "accessToken": {
                       "type": "string",
-                      "example": "Access token refreshed successfully"
+                      "description": "The new access token"
+                    },
+                    "expiresIn": {
+                      "type": "integer",
+                      "description": "The number of seconds until the new access token expires"
                     }
-                  }
+                  },
+                  "required": [
+                    "accessToken",
+                    "expiresIn"
+                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - Invalid refresh token",
+            "description": "Bad request - invalid refresh token",
             "content": {
               "application/json": {
                 "schema": {
@@ -370,9 +379,31 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "example": "Invalid refresh token"
+                      "description": "Error message"
                     }
-                  }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - refresh token has expired or is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
@@ -386,9 +417,12 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "example": "An unexpected error occurred while refreshing the token"
+                      "description": "Error message"
                     }
-                  }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
@@ -400,7 +434,7 @@
       "post": {
         "operationId": "getMe",
         "summary": "Retrieves information about the currently authenticated user.",
-        "description": "This function fetches the user data for the authenticated user. It requires no parameters and returns an object containing the user's information. This is useful for getting details about the current user's account or profile.",
+        "description": "This function fetches the user data for the authenticated user. It requires no parameters and returns an object containing the user's information. This is useful for getting details about the current user's account, profile, or session.",
         "requestBody": {
           "required": true,
           "content": {
@@ -567,8 +601,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
             "content": {
               "application/json": {
                 "schema": {
@@ -576,12 +610,9 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "example": "Authentication required"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -595,12 +626,9 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "An unexpected error occurred"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -612,7 +640,7 @@
       "post": {
         "operationId": "getUserPreferences",
         "summary": "Retrieves the preferences of the currently authenticated user.",
-        "description": "This function fetches the user's preferences for the currently authenticated user. It does not require any parameters and returns an object containing various preference settings. The preferences are returned as key-value pairs, where the keys are preference names and the values can be of any type.",
+        "description": "This function fetches the user's preferences without requiring any input parameters. It returns an object containing various preference settings for the authenticated user. The function is useful for personalizing the user experience or applying user-specific configurations in the application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -741,7 +769,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with user preferences",
             "content": {
               "application/json": {
                 "schema": {
@@ -752,8 +780,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
             "content": {
               "application/json": {
                 "schema": {
@@ -761,7 +789,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "example": "Authentication required"
                     }
                   }
                 }
@@ -777,7 +805,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "An unexpected error occurred"
                     }
                   }
                 }
@@ -791,7 +819,7 @@
       "post": {
         "operationId": "updateUserPreferences",
         "summary": "Updates the preferences of the currently authenticated user.",
-        "description": "This function modifies the user's preferences by accepting a record of new preference settings. It updates the preferences for the authenticated user and returns an object containing the updated preferences.",
+        "description": "This function modifies the user's preferences by accepting a record of new preference settings. It allows users to customize their experience by updating various preference options. The function returns an object containing the updated preferences after the changes have been applied.",
         "requestBody": {
           "required": true,
           "content": {
@@ -808,17 +836,19 @@
                         "items": [
                           {
                             "type": "object",
+                            "description": "An object containing the new preferences",
                             "properties": {
                               "prefs": {
                                 "type": "object",
-                                "additionalProperties": true,
-                                "description": "An object containing the new preferences"
+                                "additionalProperties": {
+                                  "type": "unknown"
+                                },
+                                "description": "Record of preference key-value pairs"
                               }
                             },
                             "required": [
                               "prefs"
-                            ],
-                            "description": "Configuration object containing user preferences"
+                            ]
                           }
                         ]
                       },
@@ -935,19 +965,21 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response with updated user preferences",
+            "description": "Successful response with updated preferences",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": true,
-                  "description": "An object containing the updated preferences"
+                  "additionalProperties": {
+                    "type": "unknown"
+                  },
+                  "description": "Record containing the updated preferences"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request - invalid input",
             "content": {
               "application/json": {
                 "schema": {
@@ -956,6 +988,22 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - user not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
                     }
                   }
                 }
@@ -971,7 +1019,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -985,7 +1033,7 @@
       "post": {
         "operationId": "getUserKarma",
         "summary": "Retrieves the karma breakdown for the currently authenticated user.",
-        "description": "This function fetches the user's karma information, including both link and comment karma. It requires no input parameters and returns an object containing the karma breakdown for the authenticated user. The function is useful for applications that need to display or analyze a user's Reddit karma statistics.",
+        "description": "This function fetches the user's karma information, including both link and comment karma. It returns a record object containing the karma breakdown for the authenticated user. No parameters are required as it uses the current authentication context.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1114,7 +1162,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with user's karma breakdown",
             "content": {
               "application/json": {
                 "schema": {
@@ -1128,21 +1176,20 @@
                       },
                       "comment_karma": {
                         "type": "number",
-                        "description": "The user's karma from comments"
+                        "description": "The user's karma from submitted comments"
                       }
                     },
                     "required": [
                       "link_karma",
                       "comment_karma"
                     ]
-                  },
-                  "description": "An object containing the user's karma breakdown"
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
             "content": {
               "application/json": {
                 "schema": {
@@ -1150,12 +1197,9 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "example": "Authentication required"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -1169,12 +1213,9 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "An unexpected error occurred"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -1186,7 +1227,7 @@
       "post": {
         "operationId": "getUserTrophies",
         "summary": "Retrieves the trophies for the currently authenticated user.",
-        "description": "This function fetches the user's trophies for the currently authenticated user. It does not require any parameters and returns an object representing the user's trophies. The function is useful for displaying a user's achievements or rewards within an application.",
+        "description": "This function fetches the trophies associated with the authenticated user's account. It does not require any input parameters and returns an object representing the user's trophies. The function is useful for displaying a user's achievements or rewards within an application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1315,7 +1356,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response containing the user's trophies",
             "content": {
               "application/json": {
                 "schema": {
@@ -1327,7 +1368,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request - Client error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1335,7 +1376,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Authentication required"
                     }
                   }
                 }
@@ -1343,7 +1400,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1351,7 +1408,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "Internal server error occurred"
                     }
                   }
                 }
@@ -1365,7 +1422,7 @@
       "post": {
         "operationId": "getUser",
         "summary": "Retrieves information about a specific user.",
-        "description": "This function fetches user data for a specified username. It takes a single parameter 'username' and returns an object containing the user's information. The function is useful for obtaining detailed user data in applications that require user management or profile display.",
+        "description": "This function fetches user data for a specified username. It allows retrieving detailed information about a user account. The function takes a single parameter, the username, and returns an object containing the user's information.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1507,7 +1564,7 @@
                   "properties": {
                     "username": {
                       "type": "string",
-                      "description": "The username of the retrieved user"
+                      "description": "The username of the user"
                     },
                     "id": {
                       "type": "string",
@@ -1533,7 +1590,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid username provided",
+            "description": "Bad Request - Invalid username format",
             "content": {
               "application/json": {
                 "schema": {
@@ -1542,6 +1599,22 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating user not found"
                     }
                   }
                 }
@@ -1557,7 +1630,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -1571,7 +1644,7 @@
       "post": {
         "operationId": "getUserContent",
         "summary": "Retrieves content (posts and comments) submitted by a specific user.",
-        "description": "The getUserContent function fetches user-generated content from various sections of a user's profile. It allows for retrieval of posts, comments, and other user activities based on the specified section. The function also supports optional parameters for filtering and pagination of the results.",
+        "description": "This function fetches user-generated content, including posts and comments, based on the specified section. It allows for filtering and sorting of results through optional parameters, providing flexibility in content retrieval. The function returns an array of posts and comments submitted by the user, enabling detailed analysis of a user's Reddit activity.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1617,11 +1690,11 @@
                                 "description": "The full name of a thing to fetch before."
                               },
                               "count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of items already seen in this listing. Starts at 0."
                               },
                               "limit": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The maximum number of items to return in this slice of the listing."
                               },
                               "show": {
@@ -1758,7 +1831,7 @@
                     "oneOf": [
                       {
                         "type": "object",
-                        "description": "Post object",
+                        "description": "A Reddit post",
                         "properties": {
                           "id": {
                             "type": "string"
@@ -1768,21 +1841,33 @@
                           },
                           "content": {
                             "type": "string"
+                          },
+                          "subreddit": {
+                            "type": "string"
+                          },
+                          "created_utc": {
+                            "type": "number"
                           }
                         }
                       },
                       {
                         "type": "object",
-                        "description": "Comment object",
+                        "description": "A Reddit comment",
                         "properties": {
                           "id": {
                             "type": "string"
                           },
-                          "text": {
+                          "body": {
                             "type": "string"
                           },
-                          "parentId": {
+                          "post_id": {
                             "type": "string"
+                          },
+                          "subreddit": {
+                            "type": "string"
+                          },
+                          "created_utc": {
+                            "type": "number"
                           }
                         }
                       }
@@ -1794,6 +1879,36 @@
           },
           "400": {
             "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1846,7 +1961,298 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The name of the subreddit to retrieve information for"
+                            "description": "The name of the subreddit to retrieve information for",
+                            "example": "AskReddit"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "oauth2"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "REDDIT_CLIENT_ID"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of REDDIT_CLIENT_ID"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "REDDIT_CLIENT_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of REDDIT_CLIENT_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "REDDIT_REDIRECT_URI"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of REDDIT_REDIRECT_URI"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "REDDIT_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of REDDIT_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "REDDIT_REFRESH_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of REDDIT_REFRESH_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "SCOPES"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of SCOPES"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/reddit"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with subreddit information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the subreddit"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the subreddit"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the subreddit"
+                    },
+                    "subscribers": {
+                      "type": "integer",
+                      "description": "The number of subscribers to the subreddit"
+                    },
+                    "created_utc": {
+                      "type": "number",
+                      "description": "The creation date of the subreddit in Unix timestamp format"
+                    },
+                    "public_description": {
+                      "type": "string",
+                      "description": "The public description of the subreddit"
+                    },
+                    "over18": {
+                      "type": "boolean",
+                      "description": "Whether the subreddit is marked as NSFW (Not Safe For Work)"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "title",
+                    "subscribers"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid subreddit name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subreddit not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the subreddit was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/searchSubreddit": {
+      "post": {
+        "operationId": "searchSubreddit",
+        "summary": "Search for posts and content within a specific subreddit.",
+        "description": "This function allows users to search for posts and other content within a specified subreddit. It provides various parameters for filtering and sorting the search results, including options for time period, sorting method, and pagination.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the searchSubreddit sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The name of the subreddit to search within."
+                          },
+                          {
+                            "type": "string",
+                            "description": "The search query."
+                          },
+                          {
+                            "type": "object",
+                            "description": "Optional parameters for filtering and sorting the results.",
+                            "properties": {
+                              "after": {
+                                "type": "string",
+                                "description": "The full name of a thing to fetch after."
+                              },
+                              "before": {
+                                "type": "string",
+                                "description": "The full name of a thing to fetch before."
+                              },
+                              "count": {
+                                "type": "number",
+                                "description": "The number of items already seen in this listing. Starts at 0."
+                              },
+                              "limit": {
+                                "type": "number",
+                                "description": "The maximum number of items to return in this slice of the listing."
+                              },
+                              "show": {
+                                "type": "string",
+                                "description": "Show specific content (e.g., 'all', 'given')."
+                              },
+                              "sr_detail": {
+                                "type": "string",
+                                "description": "Expand subreddit information."
+                              },
+                              "sort": {
+                                "type": "string",
+                                "enum": [
+                                  "relevance",
+                                  "hot",
+                                  "top",
+                                  "new",
+                                  "comments"
+                                ],
+                                "description": "The sorting method for the search results."
+                              },
+                              "t": {
+                                "type": "string",
+                                "enum": [
+                                  "hour",
+                                  "day",
+                                  "week",
+                                  "month",
+                                  "year",
+                                  "all"
+                                ],
+                                "description": "The time period to search within."
+                              }
+                            }
                           }
                         ]
                       },
@@ -1967,290 +2373,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the subreddit"
-                    },
-                    "title": {
-                      "type": "string",
-                      "description": "The title of the subreddit"
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The description of the subreddit"
-                    },
-                    "subscribers": {
-                      "type": "integer",
-                      "description": "The number of subscribers to the subreddit"
-                    },
-                    "created_utc": {
-                      "type": "number",
-                      "description": "The creation date of the subreddit in UTC timestamp"
-                    },
-                    "public_description": {
-                      "type": "string",
-                      "description": "The public description of the subreddit"
-                    },
-                    "over18": {
-                      "type": "boolean",
-                      "description": "Whether the subreddit is marked as NSFW (Not Safe For Work)"
-                    }
-                  },
-                  "required": [
-                    "name",
-                    "title",
-                    "subscribers"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Invalid subreddit name",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error message describing the issue"
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error message describing the server error"
-                    }
-                  },
-                  "required": [
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/searchSubreddit": {
-      "post": {
-        "operationId": "searchSubreddit",
-        "summary": "Searches for posts and other content within a specific subreddit.",
-        "description": "The searchSubreddit function allows users to search for content within a specified subreddit using a given query. It provides optional parameters for filtering and sorting the results, including time period, sorting method, and pagination options. The function returns an array of search results matching the specified criteria.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the searchSubreddit sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "string",
-                            "description": "The name of the subreddit to search within"
-                          },
-                          {
-                            "type": "string",
-                            "description": "The search query"
-                          },
-                          {
-                            "type": "object",
-                            "description": "Optional parameters for filtering and sorting the results",
-                            "properties": {
-                              "after": {
-                                "type": "string",
-                                "description": "The full name of a thing to fetch after"
-                              },
-                              "before": {
-                                "type": "string",
-                                "description": "The full name of a thing to fetch before"
-                              },
-                              "count": {
-                                "type": "number",
-                                "description": "The number of items already seen in this listing. Starts at 0"
-                              },
-                              "limit": {
-                                "type": "number",
-                                "description": "The maximum number of items to return in this slice of the listing"
-                              },
-                              "show": {
-                                "type": "string",
-                                "description": "Show specific content (e.g., 'all', 'given')"
-                              },
-                              "sr_detail": {
-                                "type": "string",
-                                "description": "Expand subreddit information"
-                              },
-                              "sort": {
-                                "type": "string",
-                                "enum": [
-                                  "relevance",
-                                  "hot",
-                                  "top",
-                                  "new",
-                                  "comments"
-                                ],
-                                "description": "The sorting method for the search results"
-                              },
-                              "t": {
-                                "type": "string",
-                                "enum": [
-                                  "hour",
-                                  "day",
-                                  "week",
-                                  "month",
-                                  "year",
-                                  "all"
-                                ],
-                                "description": "The time period to search within"
-                              }
-                            }
-                          }
-                        ]
-                      },
-                      "auth": {
-                        "type": "object",
-                        "description": "Authentication object",
-                        "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": [
-                              "oauth2"
-                            ]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "REDDIT_CLIENT_ID"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of REDDIT_CLIENT_ID"
-                                  }
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "REDDIT_CLIENT_SECRET"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of REDDIT_CLIENT_SECRET"
-                                  }
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "REDDIT_REDIRECT_URI"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of REDDIT_REDIRECT_URI"
-                                  }
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "REDDIT_ACCESS_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of REDDIT_ACCESS_TOKEN"
-                                  }
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "REDDIT_REFRESH_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of REDDIT_REFRESH_TOKEN"
-                                  }
-                                }
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "SCOPES"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of SCOPES"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      },
-                      "packageName": {
-                        "type": "string",
-                        "description": "@microfox/reddit"
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful search operation",
-            "content": {
-              "application/json": {
-                "schema": {
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "description": "SearchResult",
                     "properties": {
                       "id": {
                         "type": "string",
@@ -2291,7 +2416,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -2299,7 +2424,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating unauthorized access"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Subreddit not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the subreddit was not found"
                     }
                   }
                 }
@@ -2315,7 +2472,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the internal server issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -2329,7 +2486,7 @@
       "post": {
         "operationId": "search",
         "summary": "Search across all of Reddit for posts and other content.",
-        "description": "This function allows users to search for posts and other content across all subreddits on Reddit. It provides options for filtering and sorting the search results, including parameters for pagination, sorting methods, and time periods. The function returns an array of search results matching the given query and optional parameters.",
+        "description": "This function allows users to search for content across all subreddits on Reddit. It provides various parameters for filtering and sorting the search results, including options for time periods and content types. The function returns an array of search results matching the specified criteria.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2361,11 +2518,11 @@
                                 "description": "The full name of a thing to fetch before"
                               },
                               "count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of items already seen in this listing. Starts at 0"
                               },
                               "limit": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The maximum number of items to return in this slice of the listing"
                               },
                               "show": {
@@ -2546,16 +2703,20 @@
                         "description": "UTC timestamp of when the content was created"
                       },
                       "score": {
-                        "type": "number",
-                        "description": "Score or upvotes of the content"
+                        "type": "integer",
+                        "description": "Score or number of upvotes for the content"
                       },
                       "url": {
                         "type": "string",
                         "description": "URL of the content"
                       },
                       "num_comments": {
-                        "type": "number",
+                        "type": "integer",
                         "description": "Number of comments on the post"
+                      },
+                      "selftext": {
+                        "type": "string",
+                        "description": "Text content of the post, if applicable"
                       }
                     }
                   }
@@ -2579,6 +2740,42 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating rate limit has been exceeded"
+                    },
+                    "retry_after": {
+                      "type": "integer",
+                      "description": "Number of seconds to wait before retrying the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -2588,7 +2785,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -2601,8 +2798,8 @@
     "/submitComment": {
       "post": {
         "operationId": "submitComment",
-        "summary": "Submits a comment to a post or another comment.",
-        "description": "This function adds a new comment to a specified post or existing comment. It takes the parent ID (which can be a post or comment ID) and the text content of the new comment as parameters. The function returns the newly created comment object upon successful submission.",
+        "summary": "Submit a comment to a post or another comment.",
+        "description": "This function allows users to add a new comment to an existing post or comment. It takes the parent ID and the comment text as input, and returns the newly created comment object. This enables interactive discussions and threaded conversations within the platform.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2619,11 +2816,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The full name of the parent post or comment (e.g., 't3_12345')"
+                            "description": "The full name of the parent post or comment (e.g., 't3_12345')."
                           },
                           {
                             "type": "string",
-                            "description": "The text of the comment"
+                            "description": "The text of the comment."
                           }
                         ]
                       },
@@ -2740,7 +2937,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful comment submission",
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -2748,15 +2945,19 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "The unique identifier of the submitted comment"
-                    },
-                    "text": {
-                      "type": "string",
-                      "description": "The text content of the submitted comment"
+                      "description": "Unique identifier of the submitted comment"
                     },
                     "parentId": {
                       "type": "string",
                       "description": "The ID of the parent post or comment"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The text content of the comment"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "The username of the comment author"
                     },
                     "createdAt": {
                       "type": "string",
@@ -2766,8 +2967,9 @@
                   },
                   "required": [
                     "id",
-                    "text",
                     "parentId",
+                    "text",
+                    "author",
                     "createdAt"
                   ]
                 }
@@ -2775,7 +2977,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -2783,7 +2985,45 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the reason for the bad request"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that authentication is required"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parent post or comment not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the specified parent post or comment does not exist"
                     }
                   },
                   "required": [
@@ -2802,7 +3042,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   },
                   "required": [
@@ -2819,7 +3059,7 @@
       "post": {
         "operationId": "submitPost",
         "summary": "Submits a new post to a specified subreddit.",
-        "description": "This function creates a new text or link post in the specified subreddit. It takes the subreddit name, post title, and content object as parameters. The content can be either text for a self post or a URL for a link post.",
+        "description": "This function creates a new text or link post in the specified subreddit. It allows users to submit either a text-based self post or a link post, depending on the content provided. The function returns the submitted post object upon successful creation.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2836,23 +3076,23 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The name of the subreddit to submit to"
+                            "description": "The name of the subreddit to submit to."
                           },
                           {
                             "type": "string",
-                            "description": "The title of the post"
+                            "description": "The title of the post."
                           },
                           {
                             "type": "object",
-                            "description": "The content of the post",
+                            "description": "The content of the post. Either 'text' or 'url' must be provided.",
                             "properties": {
                               "text": {
                                 "type": "string",
-                                "description": "The text content of a self post"
+                                "description": "The text content of a self post."
                               },
                               "url": {
                                 "type": "string",
-                                "description": "The URL of a link post"
+                                "description": "The URL of a link post."
                               }
                             },
                             "oneOf": [
@@ -2983,23 +3223,20 @@
         },
         "responses": {
           "200": {
-            "description": "Successful submission",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "description": "The submitted post object",
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Unique identifier of the submitted post"
+                      "description": "Unique identifier of the post"
                     },
                     "title": {
                       "type": "string",
-                      "description": "Title of the submitted post"
-                    },
-                    "subreddit": {
-                      "type": "string",
-                      "description": "Name of the subreddit where the post was submitted"
+                      "description": "Title of the post"
                     },
                     "content": {
                       "type": "object",
@@ -3014,6 +3251,14 @@
                         }
                       }
                     },
+                    "subreddit": {
+                      "type": "string",
+                      "description": "Name of the subreddit where the post was submitted"
+                    },
+                    "author": {
+                      "type": "string",
+                      "description": "Username of the post author"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time",
@@ -3023,8 +3268,9 @@
                   "required": [
                     "id",
                     "title",
-                    "subreddit",
                     "content",
+                    "subreddit",
+                    "author",
                     "createdAt"
                   ]
                 }
@@ -3032,7 +3278,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -3042,16 +3288,13 @@
                       "type": "string",
                       "description": "Error message describing the issue with the request"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
           },
-          "500": {
-            "description": "Server error",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -3059,12 +3302,41 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message indicating authentication failure"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of permission to post in the subreddit"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
+                    }
+                  }
                 }
               }
             }
@@ -3075,8 +3347,8 @@
     "/vote": {
       "post": {
         "operationId": "vote",
-        "summary": "Casts a vote on a post or comment.",
-        "description": "The vote function allows users to cast an upvote, downvote, or remove a vote on a specified post or comment. It takes the item's full name identifier and a numeric vote direction as parameters. This function is essential for user interaction and content ranking within the platform.",
+        "summary": "Cast a vote on a post or comment.",
+        "description": "This function allows users to vote on a post or comment by specifying the item's ID and the vote direction. It can be used to upvote, downvote, or remove a vote from a specific item on the platform.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3093,11 +3365,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The full name of the item to vote on (e.g., 't3_12345')"
+                            "description": "The full name of the item to vote on (e.g., 't3_12345')."
                           },
                           {
                             "type": "number",
-                            "description": "The vote direction (1 for upvote, -1 for downvote, 0 to remove vote)",
+                            "description": "The vote direction (1 for upvote, -1 for downvote, 0 to remove vote).",
                             "enum": [
                               1,
                               -1,
@@ -3235,7 +3507,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad request - invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -3244,6 +3516,22 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - the specified item does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the item was not found"
                     }
                   }
                 }
@@ -3259,7 +3547,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -3272,8 +3560,8 @@
     "/deletePost": {
       "post": {
         "operationId": "deletePost",
-        "summary": "Generate OpenAPI specification for the deletePost function",
-        "description": "Analyze the provided function documentation for deletePost and create a comprehensive OpenAPI specification. This includes generating a summary, description, arguments structure, and responses schema based on the given information.",
+        "summary": "Deletes a post or comment from Reddit.",
+        "description": "This function removes a specified post or comment from Reddit. It takes a single parameter which is the full name of the item to be deleted. The function does not return any value upon successful deletion.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3289,113 +3577,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "object",
-                            "properties": {
-                              "summary": {
-                                "type": "string",
-                                "description": "One clear sentence describing what this function does"
-                              },
-                              "description": {
-                                "type": "string",
-                                "description": "2-3 sentences explaining the function's purpose and behavior"
-                              },
-                              "arguments": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "array"
-                                    ]
-                                  },
-                                  "items": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        },
-                                        "description": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "required": [
-                                        "type",
-                                        "description"
-                                      ]
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "items"
-                                ]
-                              },
-                              "responses": {
-                                "type": "object",
-                                "properties": {
-                                  "200": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "content": {
-                                        "type": "object",
-                                        "properties": {
-                                          "application/json": {
-                                            "type": "object",
-                                            "properties": {
-                                              "schema": {
-                                                "type": "object"
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "required": [
-                                      "description",
-                                      "content"
-                                    ]
-                                  },
-                                  "400": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  },
-                                  "500": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "200",
-                                  "400",
-                                  "500"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "summary",
-                              "description",
-                              "arguments",
-                              "responses"
-                            ]
+                            "type": "string",
+                            "description": "The full name of the item to delete (e.g., 't3_12345')",
+                            "example": "t3_12345"
                           }
                         ]
                       },
@@ -3512,34 +3696,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful deletion of the post or comment",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "specification": {
-                      "type": "object",
-                      "properties": {
-                        "summary": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string"
-                        },
-                        "arguments": {
-                          "type": "object"
-                        },
-                        "responses": {
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "summary",
-                        "description",
-                        "arguments",
-                        "responses"
-                      ]
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the deletion was successful",
+                      "example": true
                     }
                   }
                 }
@@ -3547,10 +3713,72 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input"
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue",
+                      "example": "Invalid item ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - user does not have permission to delete the item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of permission",
+                      "example": "You do not have permission to delete this item"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - the specified post or comment does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the item was not found",
+                      "example": "The specified post or comment does not exist"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error",
+                      "example": "An unexpected error occurred while processing the request"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3558,8 +3786,8 @@
     "/editUserText": {
       "post": {
         "operationId": "editUserText",
-        "summary": "Edits the text content of a user's post or comment.",
-        "description": "This function allows modification of the text content for an existing post or comment. It takes the item's full name identifier and the new text as parameters, then returns the edited post or comment object.",
+        "summary": "Edit the text content of a user's post or comment.",
+        "description": "This function allows modification of the text content for an existing post or comment. It takes the full name identifier of the item to be edited and the new text content as input. The function returns the edited post or comment object after successful modification.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3576,11 +3804,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The full name of the item to edit (e.g., 't3_12345')"
+                            "description": "The full name of the item to edit (e.g., 't3_12345')."
                           },
                           {
                             "type": "string",
-                            "description": "The new text content"
+                            "description": "The new text content."
                           }
                         ]
                       },
@@ -3697,7 +3925,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -3711,26 +3939,25 @@
                       "type": "string",
                       "description": "The updated text content"
                     },
-                    "type": {
+                    "author": {
                       "type": "string",
-                      "enum": [
-                        "post",
-                        "comment"
-                      ],
-                      "description": "The type of the edited item"
+                      "description": "The username of the author"
+                    },
+                    "created_utc": {
+                      "type": "number",
+                      "description": "The creation timestamp in UTC"
+                    },
+                    "edited": {
+                      "type": "number",
+                      "description": "The edit timestamp"
                     }
-                  },
-                  "required": [
-                    "id",
-                    "text",
-                    "type"
-                  ]
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - Invalid input parameters",
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -3738,18 +3965,63 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to edit the item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - The specified item does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the item was not found"
+                    }
+                  }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3759,10 +4031,7 @@
                       "type": "string",
                       "description": "Error message describing the server error"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
@@ -3773,8 +4042,8 @@
     "/hidePost": {
       "post": {
         "operationId": "hidePost",
-        "summary": "Execute hidePost function",
-        "description": "Executes the hidePost function with provided parameters",
+        "summary": "Hide a post or comment from the user's view.",
+        "description": "This function hides a specified post or comment, removing it from the user's view. It takes a single parameter which is the full name identifier of the item to be hidden. The function does not return any value upon successful execution.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3790,8 +4059,13 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "name": "id",
+                            "in": "query",
+                            "description": "The full name of the item to hide (e.g., 't3_12345')",
+                            "required": true,
+                            "schema": {
+                              "type": "string"
+                            }
                           }
                         ]
                       },
@@ -3908,17 +4182,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Post or comment successfully hidden",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
+                      "type": "boolean",
+                      "description": "Indicates if the operation was successful",
+                      "example": true
                     }
                   }
                 }
@@ -3926,10 +4199,55 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Invalid item ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - item does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Item not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "An unexpected error occurred"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3937,8 +4255,8 @@
     "/unhidePost": {
       "post": {
         "operationId": "unhidePost",
-        "summary": "Execute unhidePost function",
-        "description": "Executes the unhidePost function with provided parameters",
+        "summary": "Unhides a previously hidden post or comment.",
+        "description": "This function unhides a post or comment that was previously hidden. It takes the full name of the item as a parameter and makes it visible again. The function is useful for restoring content that a user may have accidentally or temporarily hidden.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3954,8 +4272,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "string",
+                            "description": "The full name of the item to unhide (e.g., 't3_12345').",
+                            "example": "t3_12345"
                           }
                         ]
                       },
@@ -4072,17 +4391,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully unhidden the post or comment.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
+                      "type": "boolean",
+                      "description": "Indicates whether the unhide operation was successful.",
+                      "example": true
                     }
                   }
                 }
@@ -4090,10 +4408,55 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request. The provided item ID is invalid or missing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request.",
+                      "example": "Invalid item ID provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found. The specified item does not exist or is not accessible.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the item was not found.",
+                      "example": "The specified item does not exist or is not accessible."
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error. An unexpected error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error.",
+                      "example": "An unexpected error occurred while processing the request."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -4101,8 +4464,8 @@
     "/saveItem": {
       "post": {
         "operationId": "saveItem",
-        "summary": "Generate OpenAPI specification for the saveItem function",
-        "description": "Analyze the provided function documentation for saveItem and create an OpenAPI specification. This includes generating a summary, description, arguments structure, and responses schema based on the given information.",
+        "summary": "Save a post or comment for later viewing.",
+        "description": "This function allows users to save a post or comment for future reference. It takes the full name of the item as a required parameter and optionally allows categorization of the saved item. The function does not return any value upon successful execution.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4118,101 +4481,14 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "object",
-                            "properties": {
-                              "summary": {
-                                "type": "string",
-                                "description": "One clear sentence describing what this function does"
-                              },
-                              "description": {
-                                "type": "string",
-                                "description": "2-3 sentences explaining the function's purpose and behavior"
-                              },
-                              "arguments": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "array"
-                                    ]
-                                  },
-                                  "items": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object"
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "items"
-                                ]
-                              },
-                              "responses": {
-                                "type": "object",
-                                "properties": {
-                                  "200": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "content": {
-                                        "type": "object",
-                                        "properties": {
-                                          "application/json": {
-                                            "type": "object",
-                                            "properties": {
-                                              "schema": {
-                                                "type": "object"
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "required": [
-                                      "description",
-                                      "content"
-                                    ]
-                                  },
-                                  "400": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  },
-                                  "500": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "200",
-                                  "400",
-                                  "500"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "summary",
-                              "description",
-                              "arguments",
-                              "responses"
-                            ]
+                            "type": "string",
+                            "description": "The full name of the item to save (e.g., 't3_12345').",
+                            "example": "t3_12345"
+                          },
+                          {
+                            "type": "string",
+                            "description": "An optional category to save the item under.",
+                            "example": "Favorites"
                           }
                         ]
                       },
@@ -4329,34 +4605,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Item successfully saved",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "specification": {
-                      "type": "object",
-                      "properties": {
-                        "summary": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string"
-                        },
-                        "arguments": {
-                          "type": "object"
-                        },
-                        "responses": {
-                          "type": "object"
-                        }
-                      },
-                      "required": [
-                        "summary",
-                        "description",
-                        "arguments",
-                        "responses"
-                      ]
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the save operation was successful",
+                      "example": true
                     }
                   }
                 }
@@ -4364,10 +4622,55 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input"
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue",
+                      "example": "Invalid item ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the item was not found",
+                      "example": "The specified item does not exist"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error",
+                      "example": "An unexpected error occurred while saving the item"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -4375,8 +4678,8 @@
     "/unsaveItem": {
       "post": {
         "operationId": "unsaveItem",
-        "summary": "Execute unsaveItem function",
-        "description": "Executes the unsaveItem function with provided parameters",
+        "summary": "Unsaves a post or comment from the saved list.",
+        "description": "This function removes a specified post or comment from the user's saved list. It takes a single parameter which is the full name identifier of the item to be unsaved. The function does not return any value upon successful execution.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4392,8 +4695,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "string",
+                            "description": "The full name of the item to unsave (e.g., 't3_12345').",
+                            "example": "t3_12345"
                           }
                         ]
                       },
@@ -4510,17 +4814,16 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully unsaved the item",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
+                      "type": "boolean",
+                      "description": "Indicates if the unsave operation was successful",
+                      "example": true
                     }
                   }
                 }
@@ -4528,10 +4831,55 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue",
+                      "example": "Invalid item ID format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the item was not found",
+                      "example": "Item with the specified ID does not exist or is not saved"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error",
+                      "example": "An unexpected error occurred while processing the request"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -4539,8 +4887,8 @@
     "/reportItem": {
       "post": {
         "operationId": "reportItem",
-        "summary": "Reports a post or comment to Reddit moderators.",
-        "description": "The reportItem function allows users to report a post or comment on Reddit to the moderators. It takes two parameters: the full name of the item to report and the reason for reporting. This function is useful for flagging content that violates Reddit's rules or community guidelines.",
+        "summary": "Report a post or comment to Reddit moderators.",
+        "description": "This function allows users to report a specific post or comment on Reddit to the platform's moderators. It takes the full name of the item to be reported and the reason for reporting. The function is used to flag content that may violate Reddit's rules or community guidelines.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4557,11 +4905,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The full name of the item to report (e.g., 't3_12345')"
+                            "description": "The full name of the item to report (e.g., 't3_12345')."
                           },
                           {
                             "type": "string",
-                            "description": "The reason for reporting the item"
+                            "description": "The reason for reporting the item."
                           }
                         ]
                       },
@@ -4678,7 +5026,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully reported the item",
+            "description": "Item successfully reported.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4686,7 +5034,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the report was successful"
+                      "description": "Indicates if the report was successfully submitted."
                     }
                   }
                 }
@@ -4694,7 +5042,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad request. Invalid input parameters.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4702,7 +5050,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the issue with the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized. User must be authenticated to report items.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication is required."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found. The specified item does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the item was not found."
                     }
                   }
                 }
@@ -4710,7 +5090,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal server error.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4718,7 +5098,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error."
                     }
                   }
                 }
@@ -4731,8 +5111,8 @@
     "/getInfo": {
       "post": {
         "operationId": "getInfo",
-        "summary": "Retrieves information about multiple items (posts, comments, or subreddits) by their IDs.",
-        "description": "The getInfo function fetches data for multiple items at once using their full names. It accepts an array of item IDs and returns an array of objects containing detailed information about the requested items. This function is useful for batch retrieval of various Reddit entities like posts, comments, or subreddits.",
+        "summary": "Retrieves information about multiple Reddit items (posts, comments, or subreddits) by their IDs.",
+        "description": "The getInfo function fetches data for multiple Reddit items simultaneously using their full names. It accepts an array of item IDs and returns an array of objects containing detailed information about the requested items. This function is useful for efficiently gathering data on various Reddit entities in a single API call.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4895,10 +5275,52 @@
             }
           },
           "400": {
-            "description": "Bad request - Invalid input parameters"
+            "description": "Bad request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - One or more requested items do not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that one or more items were not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -4907,7 +5329,7 @@
       "post": {
         "operationId": "getMoreComments",
         "summary": "Retrieves additional comments for a specified post.",
-        "description": "The getMoreComments function fetches additional comments that are not initially loaded in a post's comment tree. It takes the post's full name and an array of comment IDs as input, allowing for targeted retrieval of specific comments. This function is useful for implementing \"load more comments\" functionality in Reddit-like applications.",
+        "description": "The getMoreComments function fetches additional comments that were not initially loaded in a post's comment tree. It takes the post's full name and an array of comment IDs as input, allowing for targeted retrieval of specific comments. This function is useful for implementing \"load more comments\" functionality in a Reddit-like application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4928,10 +5350,10 @@
                           },
                           {
                             "type": "array",
+                            "description": "An array of comment IDs to retrieve",
                             "items": {
                               "type": "string"
-                            },
-                            "description": "An array of comment IDs to retrieve"
+                            }
                           }
                         ]
                       },
@@ -5048,7 +5470,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful retrieval of additional comments",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -5067,11 +5489,11 @@
                       },
                       "author": {
                         "type": "string",
-                        "description": "Username of the comment author"
+                        "description": "The username of the comment author"
                       },
                       "created_utc": {
                         "type": "number",
-                        "description": "Timestamp of when the comment was created"
+                        "description": "The UTC timestamp of when the comment was created"
                       }
                     }
                   }
@@ -5080,7 +5502,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -5088,7 +5510,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post or comments not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the post or comments were not found"
                     }
                   }
                 }
@@ -5104,7 +5542,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -5118,7 +5556,7 @@
       "post": {
         "operationId": "getPost",
         "summary": "Retrieves a specific post by its ID.",
-        "description": "This function fetches a single post from the platform using its full name as the identifier. It allows users to retrieve detailed information about a specific post by providing its unique ID in the format 't3_12345'.",
+        "description": "This function fetches a single post from the system using its full name as the identifier. It allows users to retrieve detailed information about a specific post, which can be useful for displaying post content, analyzing post data, or performing operations on individual posts.",
         "requestBody": {
           "required": true,
           "content": {
@@ -5135,7 +5573,8 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The full name of the post to retrieve (e.g., 't3_12345')"
+                            "description": "The full name of the post to retrieve (e.g., 't3_12345').",
+                            "example": "t3_12345"
                           }
                         ]
                       },
@@ -5257,10 +5696,11 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "description": "The requested post object",
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "The full name of the post"
+                      "description": "The unique identifier of the post"
                     },
                     "title": {
                       "type": "string",
@@ -5292,7 +5732,7 @@
             }
           },
           "400": {
-            "description": "Bad request - Invalid post ID format",
+            "description": "Bad Request - Invalid post ID format",
             "content": {
               "application/json": {
                 "schema": {
@@ -5300,18 +5740,31 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Post with the given ID does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the post was not found"
+                    }
+                  }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -5319,12 +5772,9 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the internal server issue"
+                      "description": "Error message describing the internal server error"
                     }
-                  },
-                  "required": [
-                    "error"
-                  ]
+                  }
                 }
               }
             }
