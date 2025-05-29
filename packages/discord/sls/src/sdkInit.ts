@@ -8,7 +8,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
 
     // Initialize SDK with token
     const sdk = createDiscordSdk({
-        token: envVars['DISCORD_BOT_TOKEN'],
+        token: envVars['DISCORD_BOT_TOKEN']
     });
 
     // Map functions
@@ -43,7 +43,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         handleInteraction: sdk.handleInteraction.bind(sdk),
         respondToInteraction: sdk.respondToInteraction.bind(sdk),
         deferInteraction: sdk.deferInteraction.bind(sdk),
-        followUpInteraction: sdk.followUpInteraction.bind(sdk),
+        followUpInteraction: sdk.followUpInteraction.bind(sdk)
     };
 
     return sdkMap;

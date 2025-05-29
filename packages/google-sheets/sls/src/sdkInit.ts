@@ -14,7 +14,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         clientId: envVars['GOOGLE_CLIENT_ID'],
         clientSecret: envVars['GOOGLE_CLIENT_SECRET'],
         accessToken: envVars['GOOGLE_ACCESS_TOKEN'],
-        refreshToken: envVars['GOOGLE_REFRESH_TOKEN'],
+        refreshToken: envVars['GOOGLE_REFRESH_TOKEN']
     });
 
     // Map functions
@@ -29,7 +29,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         batchUpdateValues: sdk.batchUpdateValues.bind(sdk),
         batchClearValues: sdk.batchClearValues.bind(sdk),
         duplicateRowsDetection: sdk.duplicateRowsDetection.bind(sdk),
-        sanitizeSheetData: sdk.sanitizeSheetData.bind(sdk),
+        sanitizeSheetData: sdk.sanitizeSheetData.bind(sdk)
     };
 
     return sdkMap;

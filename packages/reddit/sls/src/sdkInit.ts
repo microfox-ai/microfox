@@ -1,7 +1,7 @@
 import { RedditSDK } from '@microfox/reddit';
 
 export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
-    // Environment variable validation
+    // Environment variables validation
     const requiredEnvVars = [
         'REDDIT_CLIENT_ID',
         'REDDIT_CLIENT_SECRET',
@@ -17,7 +17,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         }
     }
 
-    // Initialize SDK
+    // Initialize SDK with env vars
     const sdk = new RedditSDK({
         clientId: envVars['REDDIT_CLIENT_ID'],
         clientSecret: envVars['REDDIT_CLIENT_SECRET'],

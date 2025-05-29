@@ -4,14 +4,12 @@ on:
   push:
     branches:
       - main
-      - vwjt_slsfox_may_2025
   workflow_run:
     workflows: ['Auto SLS Update']
     types:
       - completed
     branches:
       - main
-      - vwjt_slsfox_may_2025
 jobs:
   deploy:
     runs-on: ubuntu-latest
