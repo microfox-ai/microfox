@@ -42,8 +42,11 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_BEFORE: ${{ github.event.before }}
-          GITHUB_AFTER: ${{ github.event.after }}
+          # Set GITHUB_BEFORE and GITHUB_AFTER based on trigger type
+          GITHUB_BEFORE: ${{ github.event_name == 'workflow_run' && 'HEAD~1' || github.event.before }}
+          GITHUB_AFTER: ${{ github.event_name == 'workflow_run' && 'HEAD' || github.event.after }}
+          # Flag to indicate this is an auto-update deployment
+          IS_AUTO_UPDATE: ${{ github.event_name == 'workflow_run' && 'true' || 'false' }}
         run: |
           cd scripts
           npm install

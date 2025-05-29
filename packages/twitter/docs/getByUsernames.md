@@ -37,9 +37,11 @@ Fetches multiple users from X using their usernames.
     - `title`: string (optional) - The title of the error.
     - `type`: string (optional) - The type of the error.
 
+
 **Examples:**
 
 ```typescript
 // Example: Get multiple users by usernames
 const users = await x.users.getByUsernames(['elonmusk', 'billgates']);
+console.log(users)
 ```
