@@ -160,10 +160,43 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
+        # Stash any uncommitted changes first
+        git stash push -m "Temporary stash for SLS updates"
+        
+        # Pull the latest changes from remote
+        echo "Pulling latest changes from remote..."
+        git pull origin main --rebase
+        
+        # Apply stashed changes back
+        if git stash list | grep -q "Temporary stash for SLS updates"; then
+          git stash pop
+        fi
+        
+        # Check if there are still changes to commit after the pull
+        if git diff --quiet && git diff --staged --quiet; then
+          echo "No changes to commit after pull"
+          exit 0
+        fi
+        
+        # Add and commit changes
         git add .
         git commit -m "🤖 Auto-update SLS files for documentation changes"
         
-        git push
+        # Push with retry logic
+        for i in {1..3}; do
+          if git push origin main; then
+            echo "Successfully pushed changes"
+            break
+          else
+            echo "Push failed, attempt $i/3. Pulling latest changes and retrying..."
+            git pull origin main --rebase
+            if [ $i -eq 3 ]; then
+              echo "Failed to push after 3 attempts"
+              exit 1
+            fi
+            sleep 2
+          fi
+        done
 
     - name: Summary
       if: steps.detect-changes.outputs.has_changes == 'true'
