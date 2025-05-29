@@ -20,7 +20,7 @@
       "post": {
         "operationId": "sendMessage",
         "summary": "Sends a message to a specified channel or user in Discord.",
-        "description": "This function allows sending messages to either a specific channel or directly to a user in Discord. It supports sending text messages, embedding images/links, and including rich embeds with customizable properties.",
+        "description": "This function allows sending messages to either a specific channel or directly to a user in Discord. It supports sending text content, embedding images/links, and including rich embeds. The function is versatile, enabling various types of message compositions for different communication needs.",
         "requestBody": {
           "required": true,
           "content": {
@@ -37,43 +37,43 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "Message configuration object",
+                            "description": "Message data object containing all parameters for sending a message",
                             "properties": {
                               "content": {
                                 "type": "string",
-                                "description": "The text content of the message"
+                                "description": "The text content of the message."
                               },
                               "userId": {
                                 "type": "string",
-                                "description": "The ID of the user to send a direct message to. If provided, channelId is ignored and a new DM channel is created"
+                                "description": "The ID of the user to send a direct message to. If provided, channelId is ignored and a new DM channel is created."
                               },
                               "channelId": {
                                 "type": "string",
-                                "description": "The ID of the channel to send the message to. Required if userId is not provided"
+                                "description": "The ID of the channel to send the message to. Required if userId is not provided."
                               },
                               "fileUrl": {
                                 "type": "string",
-                                "description": "A URL to an image or file to embed in the message. If provided, it will be displayed as an embed"
+                                "description": "A URL to an image or file to embed in the message. If provided, it will be displayed as an embed."
                               },
                               "embed": {
                                 "type": "object",
-                                "description": "A rich embed object to include in the message",
+                                "description": "A rich embed object to include in the message.",
                                 "properties": {
                                   "title": {
                                     "type": "string",
-                                    "description": "The title of the embed"
+                                    "description": "The title of the embed."
                                   },
                                   "description": {
                                     "type": "string",
-                                    "description": "The description of the embed"
+                                    "description": "The description of the embed."
                                   },
                                   "color": {
                                     "type": "number",
-                                    "description": "The color of the embed (decimal)"
+                                    "description": "The color of the embed (decimal)."
                                   },
                                   "image": {
                                     "type": "string",
-                                    "description": "A URL to an image to display in the embed"
+                                    "description": "A URL to an image to display in the embed."
                                   }
                                 }
                               }
@@ -142,7 +142,7 @@
                     },
                     "content": {
                       "type": "string",
-                      "description": "The text content of the sent message"
+                      "description": "The content of the sent message"
                     },
                     "channelId": {
                       "type": "string",
@@ -159,7 +159,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid input parameters",
+            "description": "Bad request - invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -168,6 +168,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - lack of permissions to send the message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - channel or user not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the channel or user was not found"
                     }
                   }
                 }
@@ -197,7 +229,7 @@
       "post": {
         "operationId": "editMessage",
         "summary": "Edits an existing message in a Discord channel, allowing modification of text content and embedded media.",
-        "description": "The editMessage function updates the content of a previously sent message in a specified Discord channel. It allows for modification of both text content and embedded media, supporting the addition or replacement of image or file embeds. This function is useful for correcting mistakes, updating information, or enhancing messages with new media content.",
+        "description": "This function updates the content of a previously sent message in a specified Discord channel. It allows for modification of both text content and embedded media. The function can replace the existing text with new content and optionally update or add an embedded image or file.",
         "requestBody": {
           "required": true,
           "content": {
@@ -214,20 +246,20 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel containing the message"
+                            "description": "The ID of the channel containing the message."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the message to edit"
+                            "description": "The ID of the message to edit."
                           },
                           {
                             "type": "string",
-                            "description": "The new text content for the message"
+                            "description": "The new text content for the message."
                           },
                           {
                             "type": "string",
-                            "description": "A new URL to an image or file to embed in the message (optional)",
-                            "nullable": true
+                            "description": "A new URL to an image or file to embed in the message. If provided, it will replace the existing embed.",
+                            "optional": true
                           }
                         ]
                       },
@@ -293,14 +325,17 @@
                       "type": "string",
                       "description": "The updated text content of the message"
                     },
-                    "channelId": {
+                    "channel_id": {
                       "type": "string",
                       "description": "The ID of the channel containing the message"
                     },
-                    "embed": {
-                      "type": "object",
-                      "nullable": true,
-                      "description": "The embedded media object, if present"
+                    "embeds": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Embedded media in the message"
+                      },
+                      "description": "Array of embeds in the message"
                     }
                   }
                 }
@@ -316,15 +351,15 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
                     }
                   }
                 }
               }
             }
           },
-          "500": {
-            "description": "Server error",
+          "403": {
+            "description": "Forbidden - insufficient permissions to edit the message",
             "content": {
               "application/json": {
                 "schema": {
@@ -332,7 +367,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Internal server error message"
+                      "description": "Error message indicating lack of permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Message or channel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -345,8 +412,8 @@
     "/deleteMessage": {
       "post": {
         "operationId": "deleteMessage",
-        "summary": "Deletes a specific message from a Discord channel.",
-        "description": "The deleteMessage function removes a specified message from a given Discord channel. It takes two parameters: the channel ID and the message ID. This function returns a Promise that resolves when the message is successfully deleted.",
+        "summary": "Delete a specific message from a Discord channel.",
+        "description": "This function removes a specified message from a given Discord channel. It takes the channel ID and message ID as parameters and returns a Promise that resolves when the deletion is complete. This allows for programmatic management of channel content.",
         "requestBody": {
           "required": true,
           "content": {
@@ -363,11 +430,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel containing the message."
+                            "description": "The ID of the channel containing the message to be deleted."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the message to delete."
+                            "description": "The ID of the message to be deleted."
                           }
                         ]
                       },
@@ -427,7 +494,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the message was successfully deleted"
+                      "description": "Indicates whether the deletion was successful"
                     }
                   }
                 }
@@ -444,6 +511,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions to delete the message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the permission issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - channel or message does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found"
                     }
                   }
                 }
@@ -490,12 +589,12 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel to fetch messages from"
+                            "description": "The ID of the channel to fetch messages from."
                           },
                           {
                             "type": "number",
-                            "description": "The maximum number of messages to fetch (default is 10)",
-                            "optional": true
+                            "description": "The maximum number of messages to fetch (default is 10).",
+                            "default": 10
                           }
                         ]
                       },
@@ -547,7 +646,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully fetched messages",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -558,7 +657,7 @@
                     "properties": {
                       "id": {
                         "type": "string",
-                        "description": "Unique identifier for the message"
+                        "description": "Unique identifier of the message"
                       },
                       "content": {
                         "type": "string",
@@ -590,7 +689,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid channelId or limit",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -605,8 +704,8 @@
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
+          "403": {
+            "description": "Forbidden - Not authorized to access the channel",
             "content": {
               "application/json": {
                 "schema": {
@@ -614,7 +713,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message indicating lack of permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Channel does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the channel was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -628,7 +759,7 @@
       "post": {
         "operationId": "reactToMessage",
         "summary": "Adds an emoji reaction to a specific message in a Discord channel.",
-        "description": "The reactToMessage function allows users to add an emoji reaction to a specific message within a Discord channel. It takes the channel ID, message ID, and the desired emoji as parameters, supporting both Unicode emojis and custom emoji IDs. The function returns a Promise that resolves when the reaction is successfully added.",
+        "description": "This function allows adding a reaction emoji to a specified message within a Discord channel. It supports both Unicode emojis and custom emoji IDs, providing flexibility in reaction options. The function returns a Promise that resolves when the reaction is successfully added.",
         "requestBody": {
           "required": true,
           "content": {
@@ -645,15 +776,18 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel containing the message"
+                            "description": "The ID of the channel containing the message",
+                            "name": "channelId"
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the message to react to"
+                            "description": "The ID of the message to react to",
+                            "name": "messageId"
                           },
                           {
                             "type": "string",
-                            "description": "The emoji to react with (can be a Unicode emoji or a custom emoji ID)"
+                            "description": "The emoji to react with (can be a Unicode emoji or a custom emoji ID)",
+                            "name": "emoji"
                           }
                         ]
                       },
@@ -705,7 +839,7 @@
         },
         "responses": {
           "200": {
-            "description": "Reaction successfully added to the message",
+            "description": "Reaction successfully added",
             "content": {
               "application/json": {
                 "schema": {
@@ -713,7 +847,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates whether the reaction was successfully added"
+                      "description": "Indicates if the reaction was successfully added"
                     }
                   }
                 }
@@ -736,8 +870,8 @@
               }
             }
           },
-          "500": {
-            "description": "Server error occurred while processing the request",
+          "404": {
+            "description": "Not found - channel or message does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -745,7 +879,43 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message indicating the resource was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests - rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating rate limit has been exceeded"
+                    },
+                    "retry_after": {
+                      "type": "number",
+                      "description": "Number of seconds to wait before retrying the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -759,7 +929,7 @@
       "post": {
         "operationId": "createThread",
         "summary": "Creates a new thread in a Discord channel.",
-        "description": "This function creates a thread within a specified Discord channel, branching off from a specific message. It allows users to start focused discussions on particular topics or messages within a channel, enhancing conversation organization.",
+        "description": "This function creates a thread within a specified Discord channel, branching off from a specific message. It allows users to start focused discussions on particular topics or messages within a channel, enhancing conversation organization and management.",
         "requestBody": {
           "required": true,
           "content": {
@@ -776,15 +946,15 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel to create the thread in"
+                            "description": "The ID of the channel to create the thread in."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the message to create the thread from"
+                            "description": "The ID of the message to create the thread from."
                           },
                           {
                             "type": "string",
-                            "description": "The name of the new thread"
+                            "description": "The name of the new thread."
                           }
                         ]
                       },
@@ -850,41 +1020,27 @@
                       "type": "string",
                       "description": "The name of the created thread"
                     },
-                    "parentId": {
+                    "channelId": {
                       "type": "string",
-                      "description": "The ID of the parent channel"
+                      "description": "The ID of the channel where the thread was created"
                     },
-                    "ownerId": {
+                    "parentMessageId": {
                       "type": "string",
-                      "description": "The ID of the thread creator"
-                    },
-                    "messageCount": {
-                      "type": "integer",
-                      "description": "The number of messages in the thread"
-                    },
-                    "memberCount": {
-                      "type": "integer",
-                      "description": "The number of members in the thread"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "The creation timestamp of the thread"
+                      "description": "The ID of the message from which the thread was created"
                     }
                   },
                   "required": [
                     "id",
                     "name",
-                    "parentId",
-                    "ownerId",
-                    "createdAt"
+                    "channelId",
+                    "parentMessageId"
                   ]
                 }
               }
             }
           },
           "400": {
-            "description": "Bad Request - Invalid parameters provided",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -892,7 +1048,45 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of necessary permissions"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Channel or message not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the channel or message was not found"
                     }
                   },
                   "required": [
@@ -911,7 +1105,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message describing the internal server error"
                     }
                   },
                   "required": [
@@ -927,8 +1121,8 @@
     "/fetchGuildInfo": {
       "post": {
         "operationId": "fetchGuildInfo",
-        "summary": "Generate OpenAPI specification for fetchGuildInfo function",
-        "description": "Analyze the provided function documentation for fetchGuildInfo and create an OpenAPI specification. This includes generating a summary, description, arguments schema, and responses schema based on the given information.",
+        "summary": "Fetches information about a specific Discord guild (server).",
+        "description": "This function retrieves detailed information about a specified Discord guild using its unique identifier. It returns comprehensive data about the guild, including its name, icon, members, and channels. The function is asynchronous and returns a Promise that resolves to a guild object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -944,47 +1138,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "object",
-                            "properties": {
-                              "summary": {
-                                "type": "string",
-                                "description": "One clear sentence describing what this function does"
-                              },
-                              "description": {
-                                "type": "string",
-                                "description": "2-3 sentences explaining the function's purpose and behavior"
-                              },
-                              "arguments": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "array"
-                                    ],
-                                    "description": "Type must be array"
-                                  },
-                                  "items": {
-                                    "type": "array",
-                                    "description": "Array of parameter schemas"
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "items"
-                                ]
-                              },
-                              "responses": {
-                                "type": "object",
-                                "description": "OpenAPI responses object"
-                              }
-                            },
-                            "required": [
-                              "summary",
-                              "description",
-                              "arguments",
-                              "responses"
-                            ]
+                            "type": "string",
+                            "description": "The ID of the guild to fetch information about.",
+                            "name": "guildId"
                           }
                         ]
                       },
@@ -1036,34 +1192,96 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successful response with guild information",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "summary": {
-                      "type": "string"
+                    "id": {
+                      "type": "string",
+                      "description": "The unique identifier of the guild"
                     },
-                    "description": {
-                      "type": "string"
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the guild"
                     },
-                    "arguments": {
-                      "type": "object"
+                    "icon": {
+                      "type": "string",
+                      "description": "The icon hash of the guild"
                     },
-                    "responses": {
-                      "type": "object"
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Member object"
+                      },
+                      "description": "Array of guild members"
+                    },
+                    "channels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "description": "Channel object"
+                      },
+                      "description": "Array of guild channels"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid guild ID provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request"
+          "404": {
+            "description": "Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1071,8 +1289,8 @@
     "/fetchUserInfo": {
       "post": {
         "operationId": "fetchUserInfo",
-        "summary": "Execute fetchUserInfo function",
-        "description": "Executes the fetchUserInfo function with provided parameters",
+        "summary": "Fetches information about a specific user.",
+        "description": "This function retrieves detailed information about a user based on their user ID. It returns a Promise that resolves to a user object containing data such as username, avatar, and discriminator. The function is part of a Discord SDK and is useful for obtaining user-specific information in Discord-related applications.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1088,8 +1306,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "string",
+                            "description": "The ID of the user to fetch information about.",
+                            "name": "userId"
                           }
                         ]
                       },
@@ -1147,22 +1366,78 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
-                      "type": "boolean"
+                    "id": {
+                      "type": "string",
+                      "description": "The user's ID"
                     },
-                    "data": {
-                      "type": "any"
+                    "username": {
+                      "type": "string",
+                      "description": "The user's username"
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "description": "The user's avatar URL"
+                    },
+                    "discriminator": {
+                      "type": "string",
+                      "description": "The user's discriminator"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "username"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid user ID provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request"
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1171,7 +1446,7 @@
       "post": {
         "operationId": "registerSlashCommand",
         "summary": "Registers a slash command for a Discord bot in a specific guild.",
-        "description": "This function creates and registers a new slash command for a Discord bot within a specified guild. It allows for the definition of command properties including name, description, options, and permissions, enabling customized interaction with users through the Discord interface.",
+        "description": "This function creates and registers a new slash command for a Discord bot within a specified guild. It allows for the definition of the command's name, description, options, and permissions. The function returns a Promise that resolves to the registered command object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1188,65 +1463,69 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild to register the command in"
+                            "description": "The ID of the guild to register the command in."
                           },
                           {
                             "type": "object",
-                            "description": "An object defining the command's properties",
+                            "description": "An object defining the command's properties.",
                             "properties": {
                               "name": {
                                 "type": "string",
-                                "description": "The name of the command"
+                                "description": "The name of the command."
                               },
                               "description": {
                                 "type": "string",
-                                "description": "The description of the command"
+                                "description": "The description of the command."
                               },
                               "options": {
                                 "type": "array",
-                                "description": "An array of options for the command",
+                                "description": "An array of options for the command.",
                                 "items": {
                                   "type": "object",
                                   "properties": {
                                     "name": {
                                       "type": "string",
-                                      "description": "The name of the option"
+                                      "description": "The name of the option."
                                     },
                                     "description": {
                                       "type": "string",
-                                      "description": "The description of the option"
+                                      "description": "The description of the option."
                                     },
                                     "type": {
                                       "type": "number",
-                                      "description": "The type of the option (refer to Discord API documentation for option types)"
+                                      "description": "The type of the option (refer to Discord API documentation for option types)."
                                     },
                                     "required": {
                                       "type": "boolean",
-                                      "description": "Whether the option is required"
+                                      "description": "Whether the option is required."
                                     },
                                     "choices": {
                                       "type": "array",
-                                      "description": "An array of choices for the option",
+                                      "description": "An array of choices for the option.",
                                       "items": {
                                         "type": "object",
                                         "properties": {
                                           "name": {
                                             "type": "string",
-                                            "description": "The name of the choice"
+                                            "description": "The name of the choice."
                                           },
                                           "value": {
                                             "type": [
                                               "string",
                                               "number"
                                             ],
-                                            "description": "The value of the choice"
+                                            "description": "The value of the choice."
                                           }
-                                        }
+                                        },
+                                        "required": [
+                                          "name",
+                                          "value"
+                                        ]
                                       }
                                     },
                                     "options": {
                                       "type": "array",
-                                      "description": "Sub-options for subcommands",
+                                      "description": "Sub-options for subcommands.",
                                       "items": {
                                         "$ref": "#/components/schemas/DiscordSlashCommandOptionSchema"
                                       }
@@ -1261,11 +1540,11 @@
                               },
                               "default_member_permissions": {
                                 "type": "string",
-                                "description": "Default permissions required to use the command"
+                                "description": "Default permissions required to use the command."
                               },
                               "dm_permission": {
                                 "type": "boolean",
-                                "description": "Whether the command can be used in DMs"
+                                "description": "Whether the command can be used in DMs."
                               }
                             },
                             "required": [
@@ -1368,13 +1647,21 @@
                       "type": "string",
                       "description": "The version of the command"
                     }
-                  }
+                  },
+                  "required": [
+                    "id",
+                    "application_id",
+                    "guild_id",
+                    "name",
+                    "description",
+                    "version"
+                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad Request - Invalid parameters provided",
             "content": {
               "application/json": {
                 "schema": {
@@ -1384,13 +1671,16 @@
                       "type": "string",
                       "description": "Error message describing the issue with the request"
                     }
-                  }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
           },
-          "500": {
-            "description": "Internal server error",
+          "403": {
+            "description": "Forbidden - Bot doesn't have permission to create slash commands in the guild",
             "content": {
               "application/json": {
                 "schema": {
@@ -1398,9 +1688,50 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message indicating lack of permissions"
                     }
-                  }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - The specified guild ID does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the guild was not found"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
@@ -1411,8 +1742,8 @@
     "/registerGlobalSlashCommand": {
       "post": {
         "operationId": "registerGlobalSlashCommand",
-        "summary": "Execute registerGlobalSlashCommand function",
-        "description": "Executes the registerGlobalSlashCommand function with provided parameters",
+        "summary": "Registers a global slash command for a Discord bot.",
+        "description": "This function creates a new slash command that can be used in any guild where the bot is present. It takes a single object parameter defining the command's properties and returns a Promise that resolves to the registered command object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1428,8 +1759,22 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "object",
+                            "description": "An object defining the command's properties",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the slash command"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "A description of what the command does"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "description"
+                            ]
                           }
                         ]
                       },
@@ -1481,17 +1826,28 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Successfully registered the global slash command",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "description": "The registered command object",
                   "properties": {
-                    "success": {
-                      "type": "boolean"
+                    "id": {
+                      "type": "string",
+                      "description": "The unique identifier of the registered command"
                     },
-                    "data": {
-                      "type": "any"
+                    "application_id": {
+                      "type": "string",
+                      "description": "The ID of the application the command belongs to"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the registered command"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the registered command"
                     }
                   }
                 }
@@ -1499,10 +1855,72 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad Request - Invalid command properties provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid bot token or lacking required permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating rate limit exceeded"
+                    },
+                    "retry_after": {
+                      "type": "number",
+                      "description": "Number of seconds to wait before retrying"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1511,7 +1929,7 @@
       "post": {
         "operationId": "deleteSlashCommand",
         "summary": "Deletes a slash command from a specific guild.",
-        "description": "This function removes a previously registered slash command from a specified guild. It takes the guild ID and command ID as parameters and returns a Promise that resolves when the command is successfully deleted.",
+        "description": "This function removes a previously registered slash command from a specified guild in Discord. It requires both the guild ID and the command ID to identify and delete the specific command. The operation is asynchronous and returns a Promise that resolves when the deletion is complete.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1528,11 +1946,13 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild where the command is registered"
+                            "description": "The ID of the guild where the command is registered.",
+                            "name": "guildId"
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the command to delete"
+                            "description": "The ID of the command to delete.",
+                            "name": "commandId"
                           }
                         ]
                       },
@@ -1590,9 +2010,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "description": "Indicates if the command was successfully deleted"
+                    "message": {
+                      "type": "string",
+                      "example": "Slash command deleted successfully"
                     }
                   }
                 }
@@ -1608,7 +2028,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "example": "Invalid guild ID or command ID"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions to delete the command",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Insufficient permissions to delete the command"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - guild or command does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Guild or command not found"
                     }
                   }
                 }
@@ -1624,7 +2076,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "An unexpected error occurred while processing the request"
                     }
                   }
                 }
@@ -1637,8 +2089,8 @@
     "/deleteGlobalSlashCommand": {
       "post": {
         "operationId": "deleteGlobalSlashCommand",
-        "summary": "Execute deleteGlobalSlashCommand function",
-        "description": "Executes the deleteGlobalSlashCommand function with provided parameters",
+        "summary": "Deletes a global slash command.",
+        "description": "This function removes a previously registered global slash command from Discord. It takes the command ID as a parameter and returns a Promise that resolves when the deletion is complete. This allows for programmatic management of global slash commands in a Discord application.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1654,8 +2106,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "string",
+                            "description": "The ID of the command to delete.",
+                            "name": "commandId"
                           }
                         ]
                       },
@@ -1707,17 +2160,15 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Command successfully deleted",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
+                      "type": "boolean",
+                      "description": "Indicates if the command was successfully deleted"
                     }
                   }
                 }
@@ -1725,10 +2176,52 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - invalid command ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Command not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the command was not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1737,7 +2230,7 @@
       "post": {
         "operationId": "moderateUser",
         "summary": "Performs a moderation action on a user in a Discord guild.",
-        "description": "This function allows for various moderation actions on a user within a Discord guild, including banning, kicking, timing out, and warning users. It takes the guild ID, user ID, and a moderation action object as parameters. The function returns a Promise that resolves when the moderation action is complete.",
+        "description": "The moderateUser function allows administrators to execute various moderation actions on users within a Discord guild. It supports actions such as banning, kicking, timing out, and warning users, with optional parameters for specifying reasons, durations, and message deletion.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1754,15 +2247,15 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild where the user is located"
+                            "description": "The ID of the guild where the user is located."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the user to moderate"
+                            "description": "The ID of the user to moderate."
                           },
                           {
                             "type": "object",
-                            "description": "The moderation action to perform",
+                            "description": "The moderation action to perform.",
                             "properties": {
                               "type": {
                                 "type": "string",
@@ -1772,19 +2265,19 @@
                                   "timeout",
                                   "warn"
                                 ],
-                                "description": "The type of moderation action"
+                                "description": "The type of moderation action."
                               },
                               "reason": {
                                 "type": "string",
-                                "description": "The reason for the moderation action"
+                                "description": "The reason for the moderation action."
                               },
                               "duration": {
                                 "type": "number",
-                                "description": "The duration of the timeout in milliseconds"
+                                "description": "The duration of the timeout in milliseconds."
                               },
                               "delete_message_days": {
                                 "type": "number",
-                                "description": "The number of days of messages to delete (for bans)"
+                                "description": "The number of days of messages to delete (for bans)."
                               }
                             },
                             "required": [
@@ -1849,11 +2342,11 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the moderation action was successful"
+                      "description": "Indicates if the moderation action was successful."
                     },
                     "message": {
                       "type": "string",
-                      "description": "A message describing the result of the moderation action"
+                      "description": "A message describing the result of the moderation action."
                     }
                   }
                 }
@@ -1861,7 +2354,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -1869,7 +2362,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the issue with the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating lack of required permissions."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - User or guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the user or guild was not found."
                     }
                   }
                 }
@@ -1877,7 +2402,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1885,7 +2410,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error."
                     }
                   }
                 }
@@ -1899,7 +2424,7 @@
       "post": {
         "operationId": "createChannel",
         "summary": "Creates a new channel in a specified Discord guild.",
-        "description": "This function adds a new channel to a specified Discord guild using the provided guild ID and channel data. It allows for customization of various channel properties such as name, type, permissions, and more. The function returns a Promise that resolves to the created channel object.",
+        "description": "This function adds a new channel to a specified Discord guild using the provided channel data. It allows for customization of various channel properties such as type, name, topic, and permissions. The function returns a Promise that resolves to the created channel object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1916,56 +2441,62 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild to create the channel in"
+                            "description": "The ID of the guild to create the channel in."
                           },
                           {
                             "type": "object",
-                            "description": "The channel data object",
+                            "description": "The channel data object containing channel properties.",
                             "properties": {
                               "id": {
                                 "type": "string",
-                                "description": "The channel ID"
+                                "description": "The channel ID."
                               },
                               "type": {
                                 "type": "number",
-                                "description": "The channel type (refer to Discord API documentation for channel types)"
+                                "description": "The channel type (refer to Discord API documentation for channel types)."
                               },
                               "name": {
                                 "type": "string",
-                                "description": "The channel name"
+                                "description": "The channel name."
                               },
                               "topic": {
                                 "type": "string",
-                                "description": "The channel topic"
+                                "description": "The channel topic.",
+                                "optional": true
                               },
                               "nsfw": {
                                 "type": "boolean",
-                                "description": "Whether the channel is NSFW"
+                                "description": "Whether the channel is NSFW.",
+                                "optional": true
                               },
                               "parent_id": {
                                 "type": "string",
-                                "description": "The ID of the parent category"
+                                "description": "The ID of the parent category.",
+                                "optional": true
                               },
                               "permission_overwrites": {
                                 "type": "array",
+                                "description": "Permission overwrites for the channel.",
                                 "items": {
                                   "type": "object",
                                   "properties": {
                                     "id": {
                                       "type": "string",
-                                      "description": "The role or user ID"
+                                      "description": "The role or user ID."
                                     },
                                     "type": {
                                       "type": "number",
-                                      "description": "The type (0 for role, 1 for user)"
+                                      "description": "The type (0 for role, 1 for user)."
                                     },
                                     "allow": {
                                       "type": "string",
-                                      "description": "Allowed permissions"
+                                      "description": "Allowed permissions.",
+                                      "optional": true
                                     },
                                     "deny": {
                                       "type": "string",
-                                      "description": "Denied permissions"
+                                      "description": "Denied permissions.",
+                                      "optional": true
                                     }
                                   },
                                   "required": [
@@ -1973,15 +2504,17 @@
                                     "type"
                                   ]
                                 },
-                                "description": "Permission overwrites for the channel"
+                                "optional": true
                               },
                               "rate_limit_per_user": {
                                 "type": "number",
-                                "description": "Slowmode rate limit"
+                                "description": "Slowmode rate limit.",
+                                "optional": true
                               },
                               "position": {
                                 "type": "number",
-                                "description": "Channel position"
+                                "description": "Channel position.",
+                                "optional": true
                               }
                             },
                             "required": [
@@ -2060,7 +2593,7 @@
                     },
                     "topic": {
                       "type": "string",
-                      "description": "The topic of the created channel"
+                      "description": "The topic of the created channel (if set)"
                     },
                     "nsfw": {
                       "type": "boolean",
@@ -2068,7 +2601,7 @@
                     },
                     "parent_id": {
                       "type": "string",
-                      "description": "The ID of the parent category for the created channel"
+                      "description": "The ID of the parent category (if set)"
                     },
                     "permission_overwrites": {
                       "type": "array",
@@ -2097,7 +2630,7 @@
                     },
                     "rate_limit_per_user": {
                       "type": "number",
-                      "description": "Slowmode rate limit for the created channel"
+                      "description": "Slowmode rate limit of the created channel"
                     },
                     "position": {
                       "type": "number",
@@ -2109,7 +2642,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad Request - Invalid parameters provided",
             "content": {
               "application/json": {
                 "schema": {
@@ -2118,6 +2651,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to create a channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - The specified guild does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the guild was not found"
                     }
                   }
                 }
@@ -2147,7 +2712,7 @@
       "post": {
         "operationId": "updateChannel",
         "summary": "Updates the settings of an existing Discord channel.",
-        "description": "This function modifies the properties of an existing Discord channel. It takes the channel ID and a partial object containing the updated channel data, allowing for flexible updates to various channel settings.",
+        "description": "This function modifies the properties of an existing Discord channel. It allows updating various channel attributes such as name, NSFW status, and other properties defined in the DiscordChannelSchema. The function takes the channel ID and a partial object containing the properties to be updated.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2164,19 +2729,19 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the channel to update"
+                            "description": "The ID of the channel to update."
                           },
                           {
                             "type": "object",
-                            "description": "The updated channel data (partial DiscordChannelSchema)",
+                            "description": "The updated channel data (partial DiscordChannelSchema).",
                             "properties": {
                               "name": {
                                 "type": "string",
-                                "description": "The new name for the channel"
+                                "description": "The new name for the channel."
                               },
                               "nsfw": {
                                 "type": "boolean",
-                                "description": "Whether the channel is NSFW"
+                                "description": "Whether the channel should be marked as NSFW."
                               }
                             },
                             "additionalProperties": true
@@ -2248,7 +2813,7 @@
                     },
                     "nsfw": {
                       "type": "boolean",
-                      "description": "Whether the channel is NSFW"
+                      "description": "Whether the channel is marked as NSFW"
                     }
                   },
                   "additionalProperties": true
@@ -2257,7 +2822,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2266,6 +2831,22 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Channel does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the channel was not found"
                     }
                   }
                 }
@@ -2281,7 +2862,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -2294,8 +2875,8 @@
     "/deleteChannel": {
       "post": {
         "operationId": "deleteChannel",
-        "summary": "Execute deleteChannel function",
-        "description": "Executes the deleteChannel function with provided parameters",
+        "summary": "Deletes a channel from a guild.",
+        "description": "This function removes a specified channel from the guild. It takes a channel ID as input and returns a Promise that resolves when the deletion is complete. This operation is irreversible and should be used with caution.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2311,8 +2892,9 @@
                         "type": "array",
                         "items": [
                           {
-                            "type": "any",
-                            "description": "Function parameters"
+                            "type": "string",
+                            "description": "The ID of the channel to delete.",
+                            "name": "channelId"
                           }
                         ]
                       },
@@ -2364,17 +2946,15 @@
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Channel successfully deleted",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
+                      "type": "boolean",
+                      "description": "Indicates if the channel was successfully deleted"
                     }
                   }
                 }
@@ -2382,10 +2962,68 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request - Invalid channel ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to delete the channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the permission issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Channel with the given ID does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the channel was not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2394,7 +3032,7 @@
       "post": {
         "operationId": "createRole",
         "summary": "Creates a new role in a specified Discord guild.",
-        "description": "This function adds a new role to a specified Discord guild using the provided role data. It allows customization of various role properties such as name, color, permissions, and position. The function returns a Promise that resolves to the created role object.",
+        "description": "This function adds a new role to a specified Discord guild with customizable properties. It allows setting various attributes of the role such as name, color, permissions, and position. The function returns a Promise that resolves to the created role object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2411,47 +3049,48 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild to create the role in"
+                            "description": "The ID of the guild to create the role in."
                           },
                           {
                             "type": "object",
-                            "description": "The role data object containing role properties",
+                            "description": "The role data object containing role properties.",
                             "properties": {
                               "id": {
                                 "type": "string",
-                                "description": "The role ID"
+                                "description": "The role ID."
                               },
                               "name": {
                                 "type": "string",
-                                "description": "The role name"
+                                "description": "The role name."
                               },
                               "color": {
-                                "type": "number",
-                                "description": "The role color"
+                                "type": "integer",
+                                "description": "The role color."
                               },
                               "hoist": {
                                 "type": "boolean",
-                                "description": "Whether the role is hoisted"
+                                "description": "Whether the role is hoisted."
                               },
                               "position": {
-                                "type": "number",
-                                "description": "The role position"
+                                "type": "integer",
+                                "description": "The role position."
                               },
                               "permissions": {
                                 "type": "string",
-                                "description": "The role permissions"
+                                "description": "The role permissions."
                               },
                               "mentionable": {
                                 "type": "boolean",
-                                "description": "Whether the role is mentionable"
+                                "description": "Whether the role is mentionable."
                               },
                               "managed": {
                                 "type": "boolean",
-                                "description": "Whether the role is managed"
+                                "description": "Whether the role is managed."
                               },
                               "description": {
                                 "type": "string",
-                                "description": "The role description (optional)"
+                                "description": "The role description.",
+                                "optional": true
                               }
                             },
                             "required": [
@@ -2523,39 +3162,39 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "The role ID"
+                      "description": "The ID of the created role"
                     },
                     "name": {
                       "type": "string",
-                      "description": "The role name"
+                      "description": "The name of the created role"
                     },
                     "color": {
-                      "type": "number",
-                      "description": "The role color"
+                      "type": "integer",
+                      "description": "The color of the created role"
                     },
                     "hoist": {
                       "type": "boolean",
-                      "description": "Whether the role is hoisted"
+                      "description": "Whether the created role is hoisted"
                     },
                     "position": {
-                      "type": "number",
-                      "description": "The role position"
+                      "type": "integer",
+                      "description": "The position of the created role"
                     },
                     "permissions": {
                       "type": "string",
-                      "description": "The role permissions"
+                      "description": "The permissions of the created role"
                     },
                     "mentionable": {
                       "type": "boolean",
-                      "description": "Whether the role is mentionable"
+                      "description": "Whether the created role is mentionable"
                     },
                     "managed": {
                       "type": "boolean",
-                      "description": "Whether the role is managed"
+                      "description": "Whether the created role is managed"
                     },
                     "description": {
                       "type": "string",
-                      "description": "The role description (if provided)"
+                      "description": "The description of the created role (if provided)"
                     }
                   },
                   "required": [
@@ -2588,6 +3227,38 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to create a role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the guild was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -2597,7 +3268,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -2611,7 +3282,7 @@
       "post": {
         "operationId": "updateRole",
         "summary": "Updates the settings of an existing role in a Discord guild.",
-        "description": "The updateRole function modifies the properties of an existing role within a specified Discord guild. It allows for partial updates to the role's attributes, such as name and color, without requiring all fields to be specified. This function is useful for dynamically adjusting role properties based on server management needs.",
+        "description": "This function modifies the properties of an existing role within a specified Discord guild. It allows updating various attributes of the role such as name, color, permissions, etc. The function returns a Promise that resolves to the updated role object.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2628,23 +3299,23 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild containing the role"
+                            "description": "The ID of the guild containing the role."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the role to update"
+                            "description": "The ID of the role to update."
                           },
                           {
                             "type": "object",
-                            "description": "The updated role data (partial DiscordRoleSchema)",
+                            "description": "The updated role data (partial object with properties to be updated).",
                             "properties": {
                               "name": {
                                 "type": "string",
-                                "description": "The new name for the role"
+                                "description": "The new name for the role."
                               },
                               "color": {
                                 "type": "integer",
-                                "description": "The new color for the role (as an integer)"
+                                "description": "The new color for the role, as an integer representation of hexadecimal color code."
                               }
                             },
                             "additionalProperties": true
@@ -2725,7 +3396,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad Request - Invalid parameters provided",
             "content": {
               "application/json": {
                 "schema": {
@@ -2734,6 +3405,38 @@
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to update the role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild or role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the guild or role was not found"
                     }
                   }
                 }
@@ -2749,7 +3452,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message indicating a server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -2762,8 +3465,8 @@
     "/deleteRole": {
       "post": {
         "operationId": "deleteRole",
-        "summary": "Deletes a role from a guild.",
-        "description": "This function removes a specified role from a guild in Discord. It takes the guild ID and role ID as parameters and returns a Promise that resolves when the role is successfully deleted.",
+        "summary": "Delete a role from a guild in Discord.",
+        "description": "This function removes a specified role from a Discord guild. It takes the guild ID and role ID as parameters and returns a Promise that resolves when the role is successfully deleted. This operation is irreversible and should be used with caution.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2780,11 +3483,13 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild containing the role"
+                            "description": "The ID of the guild containing the role.",
+                            "name": "guildId"
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the role to delete"
+                            "description": "The ID of the role to delete.",
+                            "name": "roleId"
                           }
                         ]
                       },
@@ -2842,9 +3547,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "description": "Indicates if the role was successfully deleted"
+                    "message": {
+                      "type": "string",
+                      "example": "Role deleted successfully"
                     }
                   }
                 }
@@ -2860,7 +3565,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "example": "Invalid guild ID or role ID"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions to delete the role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Insufficient permissions to delete the role"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - guild or role does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Guild or role not found"
                     }
                   }
                 }
@@ -2876,7 +3613,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "example": "An unexpected error occurred"
                     }
                   }
                 }
@@ -2889,8 +3626,8 @@
     "/addRoleToUser": {
       "post": {
         "operationId": "addRoleToUser",
-        "summary": "Adds a specific role to a user in a Discord guild.",
-        "description": "This function assigns a specified role to a user within a Discord guild. It takes the guild ID, user ID, and role ID as required parameters, with an optional reason for audit log purposes. The function returns a Promise that resolves when the role is successfully added to the user.",
+        "summary": "Adds a role to a user in a specified guild.",
+        "description": "This function assigns a specific role to a user within a Discord guild. It takes the guild ID, user ID, and role ID as required parameters, with an optional reason for audit log purposes. The function returns a Promise that resolves when the role is successfully added to the user.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2907,19 +3644,19 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild where the user and role are located"
+                            "description": "The ID of the guild where the user and role are located."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the user to add the role to"
+                            "description": "The ID of the user to add the role to."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the role to add"
+                            "description": "The ID of the role to add."
                           },
                           {
                             "type": "string",
-                            "description": "The reason for adding the role (audit log purposes)",
+                            "description": "The reason for adding the role (audit log purposes).",
                             "optional": true
                           }
                         ]
@@ -2981,6 +3718,10 @@
                     "success": {
                       "type": "boolean",
                       "description": "Indicates if the role was successfully added"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message confirming the role addition"
                     }
                   }
                 }
@@ -2988,7 +3729,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad Request - Invalid input parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -2996,7 +3737,39 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to add the role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild, user, or role not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found"
                     }
                   }
                 }
@@ -3004,7 +3777,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3012,7 +3785,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server error"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -3025,8 +3798,8 @@
     "/removeRoleFromUser": {
       "post": {
         "operationId": "removeRoleFromUser",
-        "summary": "Removes a specific role from a user in a Discord guild.",
-        "description": "This function revokes a specified role from a user within a Discord guild. It takes the guild ID, user ID, and role ID as required parameters, with an optional reason for audit log purposes. The function returns a Promise that resolves when the role is successfully removed.",
+        "summary": "Removes a specific role from a user in a guild.",
+        "description": "This function revokes a designated role from a user within a specified guild. It allows for optional audit log documentation by providing a reason for the role removal. The function returns a Promise that resolves upon successful role removal.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3043,19 +3816,19 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild where the user and role are located"
+                            "description": "The ID of the guild where the user and role are located."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the user to remove the role from"
+                            "description": "The ID of the user to remove the role from."
                           },
                           {
                             "type": "string",
-                            "description": "The ID of the role to remove"
+                            "description": "The ID of the role to remove."
                           },
                           {
                             "type": "string",
-                            "description": "The reason for removing the role (audit log purposes)",
+                            "description": "The reason for removing the role (audit log purposes).",
                             "optional": true
                           }
                         ]
@@ -3108,7 +3881,7 @@
         },
         "responses": {
           "200": {
-            "description": "Role successfully removed from the user",
+            "description": "Role successfully removed from the user.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3116,7 +3889,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the role was successfully removed"
+                      "description": "Indicates if the role was successfully removed."
                     }
                   }
                 }
@@ -3124,7 +3897,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad request. This could occur if the provided IDs are invalid or if the user doesn't have the specified role.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3132,7 +3905,571 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue"
+                      "description": "Error message describing the issue with the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden. The bot doesn't have the necessary permissions to remove roles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The specified guild, user, or role doesn't exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the resource was not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. An unexpected error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetchChannels": {
+      "post": {
+        "operationId": "fetchChannels",
+        "summary": "Fetches all channels in a specified guild.",
+        "description": "This function retrieves a list of all channels within a specific guild on Discord. It takes a guild ID as input and returns a Promise that resolves to an array of channel objects. This can be useful for obtaining information about the structure and available communication channels within a particular Discord server.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the fetchChannels sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the guild to fetch channels from.",
+                            "name": "guildId"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "DISCORD_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of DISCORD_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/discord"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Channel object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the channel"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the channel"
+                      },
+                      "type": {
+                        "type": "integer",
+                        "description": "The type of the channel"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid guild ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions to access the guild",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetchRoles": {
+      "post": {
+        "operationId": "fetchRoles",
+        "summary": "Fetches all roles in a Discord guild.",
+        "description": "This function retrieves a list of all roles within a specific Discord guild. It takes a guild ID as input and returns a Promise that resolves to an array of role objects. This can be useful for managing permissions, displaying role information, or performing role-based operations within a Discord bot or application.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the fetchRoles sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the guild to fetch roles from.",
+                            "name": "guildId"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "DISCORD_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of DISCORD_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/discord"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Role object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the role"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the role"
+                      },
+                      "color": {
+                        "type": "integer",
+                        "description": "The color of the role"
+                      },
+                      "hoist": {
+                        "type": "boolean",
+                        "description": "Whether the role is hoisted"
+                      },
+                      "position": {
+                        "type": "integer",
+                        "description": "The position of the role"
+                      },
+                      "permissions": {
+                        "type": "string",
+                        "description": "The permissions of the role as a string"
+                      },
+                      "managed": {
+                        "type": "boolean",
+                        "description": "Whether the role is managed by an integration"
+                      },
+                      "mentionable": {
+                        "type": "boolean",
+                        "description": "Whether the role is mentionable"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid guild ID provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Bot lacks permissions to fetch roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetchSlashCommands": {
+      "post": {
+        "operationId": "fetchSlashCommands",
+        "summary": "Fetches all slash commands for a specific guild.",
+        "description": "This function retrieves a list of all slash commands registered for the bot in a specified guild. It takes the guild ID as a parameter and returns a Promise that resolves to an array of slash command objects. This allows developers to inspect and manage the bot's slash commands for a particular guild.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the fetchSlashCommands sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the guild to fetch commands from.",
+                            "name": "guildId"
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "DISCORD_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of DISCORD_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/discord"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully fetched slash commands",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Slash command object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The unique identifier of the slash command"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the slash command"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "A description of what the slash command does"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "Command options"
+                        },
+                        "description": "An array of command options"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid guild ID provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Bot does not have permission to access guild commands",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
                     }
                   }
                 }
@@ -3141,6 +4478,176 @@
           },
           "500": {
             "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetchGlobalSlashCommands": {
+      "post": {
+        "operationId": "fetchGlobalSlashCommands",
+        "summary": "Fetches all global slash commands for the bot.",
+        "description": "This function retrieves a list of all global slash commands registered for the bot. It returns a Promise that resolves to an array of slash command objects. This allows developers to easily access and manage the bot's global slash commands.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the fetchGlobalSlashCommands sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": []
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "DISCORD_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of DISCORD_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/discord"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "Slash command object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Unique identifier for the slash command"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the slash command"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the slash command"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "Command options"
+                        },
+                        "description": "Array of command options"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Client error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating authentication failure"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3158,617 +4665,11 @@
         }
       }
     },
-    "/fetchChannels": {
-      "post": {
-        "operationId": "fetchChannels",
-        "summary": "Execute fetchChannels function",
-        "description": "Executes the fetchChannels function with provided parameters",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the fetchChannels sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "any",
-                            "description": "Function parameters"
-                          }
-                        ]
-                      },
-                      "auth": {
-                        "type": "object",
-                        "description": "Authentication object",
-                        "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "DISCORD_BOT_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of DISCORD_BOT_TOKEN"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      },
-                      "packageName": {
-                        "type": "string",
-                        "description": "@microfox/discord"
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/fetchRoles": {
-      "post": {
-        "operationId": "fetchRoles",
-        "summary": "Generate OpenAPI specification for fetchRoles function",
-        "description": "Analyze the provided function documentation for fetchRoles and create an OpenAPI specification. This includes generating a summary, description, arguments structure, and responses schema based on the given information.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the fetchRoles sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "summary": {
-                                "type": "string",
-                                "description": "One clear sentence describing what this function does"
-                              },
-                              "description": {
-                                "type": "string",
-                                "description": "2-3 sentences explaining the function's purpose and behavior"
-                              },
-                              "arguments": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "array"
-                                    ]
-                                  },
-                                  "items": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object"
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "items"
-                                ]
-                              },
-                              "responses": {
-                                "type": "object",
-                                "properties": {
-                                  "200": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "content": {
-                                        "type": "object",
-                                        "properties": {
-                                          "application/json": {
-                                            "type": "object",
-                                            "properties": {
-                                              "schema": {
-                                                "type": "object"
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    },
-                                    "required": [
-                                      "description",
-                                      "content"
-                                    ]
-                                  },
-                                  "400": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  },
-                                  "500": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "200",
-                                  "400",
-                                  "500"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "summary",
-                              "description",
-                              "arguments",
-                              "responses"
-                            ]
-                          }
-                        ]
-                      },
-                      "auth": {
-                        "type": "object",
-                        "description": "Authentication object",
-                        "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "DISCORD_BOT_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of DISCORD_BOT_TOKEN"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      },
-                      "packageName": {
-                        "type": "string",
-                        "description": "@microfox/discord"
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "summary": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "arguments": {
-                      "type": "object"
-                    },
-                    "responses": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/fetchSlashCommands": {
-      "post": {
-        "operationId": "fetchSlashCommands",
-        "summary": "Generate OpenAPI specification for fetchSlashCommands function",
-        "description": "Analyze the provided function documentation for fetchSlashCommands and generate an OpenAPI specification. This includes creating a summary, description, arguments structure, and responses schema based on the given information.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the fetchSlashCommands sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "object",
-                            "properties": {
-                              "summary": {
-                                "type": "string",
-                                "description": "One clear sentence describing what this function does"
-                              },
-                              "description": {
-                                "type": "string",
-                                "description": "2-3 sentences explaining the function's purpose and behavior"
-                              },
-                              "arguments": {
-                                "type": "object",
-                                "properties": {
-                                  "type": {
-                                    "type": "string",
-                                    "enum": [
-                                      "array"
-                                    ]
-                                  },
-                                  "items": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        },
-                                        "description": {
-                                          "type": "string"
-                                        }
-                                      },
-                                      "required": [
-                                        "type",
-                                        "description"
-                                      ]
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "items"
-                                ]
-                              },
-                              "responses": {
-                                "type": "object",
-                                "properties": {
-                                  "200": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      },
-                                      "content": {
-                                        "type": "object",
-                                        "properties": {
-                                          "application/json": {
-                                            "type": "object",
-                                            "properties": {
-                                              "schema": {
-                                                "type": "object"
-                                              }
-                                            },
-                                            "required": [
-                                              "schema"
-                                            ]
-                                          }
-                                        },
-                                        "required": [
-                                          "application/json"
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "description",
-                                      "content"
-                                    ]
-                                  },
-                                  "400": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  },
-                                  "500": {
-                                    "type": "object",
-                                    "properties": {
-                                      "description": {
-                                        "type": "string"
-                                      }
-                                    },
-                                    "required": [
-                                      "description"
-                                    ]
-                                  }
-                                },
-                                "required": [
-                                  "200",
-                                  "400",
-                                  "500"
-                                ]
-                              }
-                            },
-                            "required": [
-                              "summary",
-                              "description",
-                              "arguments",
-                              "responses"
-                            ]
-                          }
-                        ]
-                      },
-                      "auth": {
-                        "type": "object",
-                        "description": "Authentication object",
-                        "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "DISCORD_BOT_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of DISCORD_BOT_TOKEN"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      },
-                      "packageName": {
-                        "type": "string",
-                        "description": "@microfox/discord"
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "summary": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "arguments": {
-                      "type": "object"
-                    },
-                    "responses": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/fetchGlobalSlashCommands": {
-      "post": {
-        "operationId": "fetchGlobalSlashCommands",
-        "summary": "Execute fetchGlobalSlashCommands function",
-        "description": "Executes the fetchGlobalSlashCommands function with provided parameters",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the fetchGlobalSlashCommands sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "items": [
-                          {
-                            "type": "any",
-                            "description": "Function parameters"
-                          }
-                        ]
-                      },
-                      "auth": {
-                        "type": "object",
-                        "description": "Authentication object",
-                        "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "DISCORD_BOT_TOKEN"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of DISCORD_BOT_TOKEN"
-                                  }
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      },
-                      "packageName": {
-                        "type": "string",
-                        "description": "@microfox/discord"
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "data": {
-                      "type": "any"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
     "/registerCommand": {
       "post": {
         "operationId": "registerCommand",
-        "summary": "Registers a function to handle a specific slash command in a Discord guild.",
-        "description": "This function registers a command handler for a specific slash command in a Discord guild. It allows developers to define custom commands with names, descriptions, options, and handler functions. The function returns a Promise that resolves when the command is successfully registered.",
+        "summary": "Registers a command handler for a specific slash command in a Discord guild.",
+        "description": "This function registers a function to handle a specific slash command in a Discord guild. It allows for the creation of custom commands with various options and permissions. The function returns a Promise that resolves when the command is successfully registered.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3785,19 +4686,19 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The ID of the guild to register the command in"
+                            "description": "The ID of the guild to register the command in."
                           },
                           {
                             "type": "object",
-                            "description": "The command handler data",
+                            "description": "The command handler data.",
                             "properties": {
                               "name": {
                                 "type": "string",
-                                "description": "The name of the command"
+                                "description": "The name of the command."
                               },
                               "description": {
                                 "type": "string",
-                                "description": "The description of the command"
+                                "description": "The description of the command."
                               },
                               "options": {
                                 "type": "array",
@@ -3805,19 +4706,19 @@
                                   "type": "object",
                                   "description": "DiscordSlashCommandOptionSchema"
                                 },
-                                "description": "An array of options for the command (same structure as in `registerSlashCommand`)"
+                                "description": "An array of options for the command (same structure as in `registerSlashCommand`)."
                               },
                               "handler": {
                                 "type": "object",
-                                "description": "The function to handle the command interaction",
+                                "description": "The function to handle the command interaction.",
                                 "properties": {
                                   "interaction": {
                                     "type": "object",
-                                    "description": "The interaction object (DiscordSlashCommandInteractionSchema)"
+                                    "description": "DiscordSlashCommandInteractionSchema"
                                   },
                                   "options": {
                                     "type": "object",
-                                    "description": "An object containing the values of the command options"
+                                    "description": "An object containing the values of the command options."
                                   }
                                 },
                                 "required": [
@@ -3827,11 +4728,11 @@
                               },
                               "default_member_permissions": {
                                 "type": "string",
-                                "description": "Default permissions required to use the command"
+                                "description": "Default permissions required to use the command."
                               },
                               "dm_permission": {
                                 "type": "boolean",
-                                "description": "Whether the command can be used in DMs"
+                                "description": "Whether the command can be used in DMs."
                               }
                             },
                             "required": [
@@ -3910,7 +4811,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -3925,8 +4826,40 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden - Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating insufficient permissions"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Guild not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the guild was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3947,8 +4880,8 @@
     "/registerGlobalCommand": {
       "post": {
         "operationId": "registerGlobalCommand",
-        "summary": "Registers a global slash command handler for Discord.",
-        "description": "This function registers a handler for a specific global slash command in Discord. It takes a command object containing the command's name, description, and an async handler function. The function returns a Promise that resolves when the command is successfully registered.",
+        "summary": "Registers a global command handler for Discord slash commands.",
+        "description": "This function registers a function to handle a specific global slash command in Discord. It takes a command handler object as a parameter and returns a Promise that resolves when the command is successfully registered. The function allows developers to define custom global commands that can be used across all guilds where the bot is present.",
         "requestBody": {
           "required": true,
           "content": {
@@ -3965,33 +4898,25 @@
                         "items": [
                           {
                             "type": "object",
+                            "description": "The command handler data",
                             "properties": {
-                              "command": {
-                                "type": "object",
-                                "description": "The command handler data (same structure as in `registerCommand`).",
-                                "properties": {
-                                  "name": {
-                                    "type": "string",
-                                    "description": "The name of the global slash command"
-                                  },
-                                  "description": {
-                                    "type": "string",
-                                    "description": "A description of the global slash command"
-                                  },
-                                  "handler": {
-                                    "type": "function",
-                                    "description": "An async function to handle the command interaction"
-                                  }
-                                },
-                                "required": [
-                                  "name",
-                                  "description",
-                                  "handler"
-                                ]
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the global command"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "A description of what the command does"
+                              },
+                              "handler": {
+                                "type": "function",
+                                "description": "An async function that handles the command interaction"
                               }
                             },
                             "required": [
-                              "command"
+                              "name",
+                              "description",
+                              "handler"
                             ]
                           }
                         ]
@@ -4044,7 +4969,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully registered the global command",
+            "description": "Command registered successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -4052,7 +4977,11 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the command was successfully registered"
+                      "description": "Indicates if the command was registered successfully"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A message confirming the registration"
                     }
                   }
                 }
@@ -4076,7 +5005,7 @@
             }
           },
           "500": {
-            "description": "Server error occurred while registering the command",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -4084,7 +5013,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -4098,7 +5027,7 @@
       "post": {
         "operationId": "handleInteraction",
         "summary": "Handles a slash command interaction in a Discord bot.",
-        "description": "This function is called when a user interacts with a slash command in a Discord bot. It retrieves the corresponding command handler for the interaction and executes it, managing the entire process of handling user-initiated slash commands.",
+        "description": "This function processes a slash command interaction received from Discord. It retrieves the corresponding command handler for the interaction and executes it, managing the lifecycle of slash command interactions in a Discord bot.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4122,7 +5051,9 @@
                                 "description": "Function to check if the interaction is a chat input command"
                               }
                             },
-                            "additionalProperties": true
+                            "required": [
+                              "isChatInputCommand"
+                            ]
                           }
                         ]
                       },
@@ -4209,6 +5140,22 @@
               }
             }
           },
+          "404": {
+            "description": "Command handler not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the command handler was not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -4231,8 +5178,8 @@
     "/respondToInteraction": {
       "post": {
         "operationId": "respondToInteraction",
-        "summary": "Responds to a Discord slash command interaction with a customizable message.",
-        "description": "This function sends a response back to the user who interacted with a Discord slash command. It allows for customization of the response content, including text, embeds, and interactive components, with an option to make the response ephemeral.",
+        "summary": "Responds to a slash command interaction in Discord.",
+        "description": "This function sends a response back to the user who interacted with a slash command in Discord. It allows for customization of the response content, including text, embeds, and components, with an option to make the response ephemeral. The function returns a Promise that resolves when the response is successfully sent.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4249,27 +5196,33 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The interaction token received from Discord"
+                            "description": "The interaction token received from Discord."
                           },
                           {
                             "type": "object",
-                            "description": "The response data object",
+                            "description": "The response data object containing various optional properties.",
                             "properties": {
                               "content": {
                                 "type": "string",
-                                "description": "The text content of the response"
+                                "description": "The text content of the response."
                               },
                               "embeds": {
                                 "type": "array",
-                                "description": "An array of embed objects"
+                                "description": "An array of embed objects.",
+                                "items": {
+                                  "type": "object"
+                                }
                               },
                               "components": {
                                 "type": "array",
-                                "description": "An array of component objects (buttons, menus, etc.)"
+                                "description": "An array of component objects (buttons, menus, etc.).",
+                                "items": {
+                                  "type": "object"
+                                }
                               },
                               "ephemeral": {
                                 "type": "boolean",
-                                "description": "Whether the response should be ephemeral (only visible to the user who triggered the command)"
+                                "description": "Whether the response should be ephemeral (only visible to the user who triggered the command)."
                               }
                             }
                           }
@@ -4323,7 +5276,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully sent the response to the interaction",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
@@ -4331,7 +5284,7 @@
                   "properties": {
                     "success": {
                       "type": "boolean",
-                      "description": "Indicates if the response was sent successfully"
+                      "description": "Indicates if the response was sent successfully."
                     }
                   }
                 }
@@ -4339,7 +5292,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -4347,7 +5300,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the issue with the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid interaction token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating an invalid or expired interaction token."
                     }
                   }
                 }
@@ -4355,7 +5324,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -4363,7 +5332,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the internal server error"
+                      "description": "Error message describing the internal server error."
                     }
                   }
                 }
@@ -4394,11 +5363,11 @@
                         "items": [
                           {
                             "type": "string",
-                            "description": "The interaction token received from Discord"
+                            "description": "The interaction token received from Discord."
                           },
                           {
                             "type": "boolean",
-                            "description": "Whether the deferred response should be ephemeral",
+                            "description": "Whether the deferred response should be ephemeral.",
                             "optional": true
                           }
                         ]
@@ -4467,7 +5436,7 @@
             }
           },
           "400": {
-            "description": "Bad request - invalid parameters",
+            "description": "Bad request - invalid interaction token or parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -4475,7 +5444,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the issue"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or expired interaction token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating unauthorized access"
                     }
                   }
                 }
@@ -4483,7 +5468,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -4491,7 +5476,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }
@@ -4505,7 +5490,7 @@
       "post": {
         "operationId": "followUpInteraction",
         "summary": "Sends a follow-up message to a deferred Discord interaction.",
-        "description": "The followUpInteraction function allows sending a message after an interaction has been deferred. It takes an interaction token and a response object as parameters. This function is useful for scenarios where the initial response to an interaction was delayed and a follow-up message needs to be sent.",
+        "description": "This function allows sending a follow-up message after a Discord interaction has been deferred. It takes an interaction token and a response object to construct and send the follow-up message. The function is useful for scenarios where the initial response to an interaction was delayed and additional information needs to be sent.",
         "requestBody": {
           "required": true,
           "content": {
@@ -4615,8 +5600,8 @@
               }
             }
           },
-          "500": {
-            "description": "Server error",
+          "401": {
+            "description": "Unauthorized - invalid interaction token",
             "content": {
               "application/json": {
                 "schema": {
@@ -4624,7 +5609,23 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message indicating an invalid or expired interaction token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
                     }
                   }
                 }

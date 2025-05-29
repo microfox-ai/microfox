@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { models } from '../../ai/models';
 import { getProjectRoot } from '../../utils/getProjectRoot';
 import { logUsage } from '../../ai/usage/usageLogger';
+import dedent from 'dedent';
 
 // Types for package info structure
 interface PackageInfo {
@@ -121,10 +122,10 @@ async function generateOpenAPIPath(
     const schema = z.object({
         summary: z.string().describe('One clear sentence describing what this function does'),
         description: z.string().describe('2-3 sentences explaining the function purpose and behavior'),
-        arguments: z.object({
+        parameters: z.object({
             type: z.literal('array').describe('Type must be array'),
             items: z.array(z.any()).describe('Array of parameter schemas')
-        }).describe('Arguments object with type array and items'),
+        }).describe('Parameters object with type array and items'),
         responses: z.record(z.object({
             description: z.string().describe('Response description'),
             content: z.record(z.object({
@@ -133,22 +134,35 @@ async function generateOpenAPIPath(
         })).describe('OpenAPI responses object'),
     }).catchall(z.any());
 
-    const systemPrompt = `You are an expert at analyzing function documentation and generating OpenAPI specifications.
+    const systemPrompt = dedent`You are an expert at analyzing function documentation and generating OpenAPI specifications.
 
-Your task is to analyze function documentation and generate:
-1. A clear summary (one sentence)
-2. A detailed description (2-3 sentences)
-3. Arguments with type "array" and items array representing function parameters
-4. A complete OpenAPI responses schema
+
+## Principles
+1. First carefully analyze the function documentation
+2. Plan what needs to be done, including:
+   - Identifying ALL parameters of the function
+   - Planning the OpenAPI request body schema based on the parameters
+   - Planning the OpenAPI responses schema for the function
+3. Criticize your plan and refine it to be specific to this task
+4. Write complete, production-ready code with no TODOs or placeholders
+5. Recheck your code for any linting or TypeScript errors
+
+
+## Process
+Your task is to analyze function documentation and generate OpenAPI path for the function:
+1. Generate a clear summary (one sentence)
+2. Generate a detailed description (2-3 sentences)
+3. Generate parameters with type "array" and items array representing function parameters
+4. Generate a complete OpenAPI responses schema
 
 ## CRITICAL ANALYSIS RULES:
 
 ### Parameter Pattern Recognition:
-- **SINGLE OBJECT Parameter**: If you see ONE main parameter with nested sub-items (indented), generate ONE object in arguments.items
-- **MULTIPLE INDIVIDUAL Parameters**: If you see MULTIPLE main parameters at the same level, generate MULTIPLE items in arguments.items
+- **SINGLE OBJECT Parameter**: If you see ONE main parameter with nested sub-items (indented), generate ONE object in parameters.items
+- **MULTIPLE INDIVIDUAL Parameters**: If you see MULTIPLE main parameters at the same level, generate MULTIPLE items in parameters.items
 
-### Arguments Structure:
-The arguments object should have:
+### Parameters Structure:
+The parameters object should always have:
 - type: "array"
 - items: Array where each item represents one function parameter in the exact order they appear
 
@@ -203,9 +217,10 @@ Generate complete OpenAPI responses with:
 - 200: Success response with appropriate schema
 - 400: Client error (bad request)
 - 500: Server error
+- and any other status codes that are relevant to the function
 `;
 
-    const userPrompt = `Analyze this function documentation and generate the required specification:
+    const userPrompt = dedent`Analyze this function documentation and generate the required specification:
 
 **Function:** ${functionName}
 
@@ -217,8 +232,8 @@ ${docContent}
 Please analyze the Parameters section carefully and generate:
 1. summary: One clear sentence describing what this function does
 2. description: 2-3 sentences explaining the function's purpose and behavior
-3. arguments: Object with type "array" and items array where each item represents one function parameter (analyze if it's single object or multiple parameters)
-4. responses: Complete OpenAPI responses schema with 200, 400, 500 status codes
+3. parameters: Object with type "array" and items array where each item represents one function parameter (analyze if it's single object or multiple parameters)
+4. responses: Complete OpenAPI responses schema with 200, 400, 500 status codes and any other status codes that are relevant to the function
 
 Focus on the parameter structure - look for indentation patterns to determine if it's a single configuration object or multiple individual parameters.`;
 
@@ -236,21 +251,21 @@ Focus on the parameter structure - look for indentation patterns to determine if
         // Build the complete OpenAPI path from AI-generated content + package info
         let aiContent = result.object;
 
-        // Handle unknown argument item types by converting them to 'any'
-        if (aiContent.arguments && aiContent.arguments.items) {
-            aiContent.arguments.items = aiContent.arguments.items.map((item: any) => {
-                if (!item || typeof item !== 'object') {
-                    return { type: 'any', description: 'Parameter' };
-                }
-                return item;
-            });
-        } else {
-            // Fallback if arguments structure is missing or invalid
-            aiContent.arguments = {
-                type: 'array',
-                items: [{ type: 'any', description: 'Function parameters' }]
-            };
-        }
+        // Handle unknown parameter item types by converting them to 'any'
+        // if (aiContent.parameters && aiContent.parameters.items) {
+        //     aiContent.parameters.items = aiContent.parameters.items.map((item: any) => {
+        //         if (!item || typeof item !== 'object') {
+        //             return { type: 'any', description: 'Parameter' };
+        //         }
+        //         return item;
+        //     });
+        // } else {
+        //     // Fallback if parameters structure is missing or invalid
+        //     aiContent.parameters = {
+        //         type: 'array',
+        //         items: [{ type: 'any', description: 'Function parameters' }]
+        //     };
+        // }
 
         // Build auth variables array - specific objects for each required key
         const authVariables = keysInfo.map(key => ({
@@ -283,7 +298,7 @@ Focus on the parameter structure - look for indentation patterns to determine if
                                         type: 'object',
                                         description: `Body of the ${functionName} sls call`,
                                         properties: {
-                                            arguments: aiContent.arguments,
+                                            arguments: aiContent.parameters,
                                             auth: {
                                                 type: 'object',
                                                 description: 'Authentication object',
@@ -317,95 +332,96 @@ Focus on the parameter structure - look for indentation patterns to determine if
         };
     } catch (error) {
         console.error(`❌ Error generating OpenAPI path for ${functionName}:`, error);
-        console.log(`🔄 Creating fallback OpenAPI path for ${functionName}...`);
+        throw `Error generating OpenAPI path for ${functionName}: ${error}`;
 
         // Create a fallback OpenAPI path with basic structure
-        const authVariables = keysInfo.map(key => ({
-            type: 'object',
-            properties: {
-                key: {
-                    type: 'string',
-                    description: key.key,
-                },
-                value: {
-                    type: 'string',
-                    description: `value of ${key.key}`,
-                },
-            },
-        }));
+        // console.log(`🔄 Creating fallback OpenAPI path for ${functionName}...`);
+        // const authVariables = keysInfo.map(key => ({
+        //     type: 'object',
+        //     properties: {
+        //         key: {
+        //             type: 'string',
+        //             description: key.key,
+        //         },
+        //         value: {
+        //             type: 'string',
+        //             description: `value of ${key.key}`,
+        //         },
+        //     },
+        // }));
 
-        return {
-            post: {
-                operationId: functionName,
-                summary: `Execute ${functionName} function`,
-                description: `Executes the ${functionName} function with provided parameters`,
-                requestBody: {
-                    required: true,
-                    content: {
-                        'application/json': {
-                            schema: {
-                                type: 'object',
-                                properties: {
-                                    body: {
-                                        type: 'object',
-                                        description: `Body of the ${functionName} sls call`,
-                                        properties: {
-                                            arguments: {
-                                                type: 'array',
-                                                items: [{ type: 'any', description: 'Function parameters' }]
-                                            },
-                                            auth: {
-                                                type: 'object',
-                                                description: 'Authentication object',
-                                                properties: {
-                                                    strategy: {
-                                                        type: 'string',
-                                                        description: 'Authentication strategy',
-                                                        enum: [constructor.auth],
-                                                    },
-                                                    variables: {
-                                                        type: 'array',
-                                                        description: 'Variables for the authentication strategy',
-                                                        items: authVariables,
-                                                    },
-                                                },
-                                            },
-                                            packageName: {
-                                                type: 'string',
-                                                description: `@microfox/${packageName}`,
-                                            },
-                                        },
-                                        required: ['arguments'],
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                responses: {
-                    '200': {
-                        description: 'Successful response',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'object',
-                                    properties: {
-                                        success: { type: 'boolean' },
-                                        data: { type: 'any' }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    '400': {
-                        description: 'Bad request'
-                    },
-                    '500': {
-                        description: 'Internal server error'
-                    }
-                },
-            },
-        };
+        // return {
+        //     post: {
+        //         operationId: functionName,
+        //         summary: `Execute ${functionName} function`,
+        //         description: `Executes the ${functionName} function with provided parameters`,
+        //         requestBody: {
+        //             required: true,
+        //             content: {
+        //                 'application/json': {
+        //                     schema: {
+        //                         type: 'object',
+        //                         properties: {
+        //                             body: {
+        //                                 type: 'object',
+        //                                 description: `Body of the ${functionName} sls call`,
+        //                                 properties: {
+        //                                     arguments: {
+        //                                         type: 'array',
+        //                                         items: [{ type: 'any', description: 'Function parameters' }]
+        //                                     },
+        //                                     auth: {
+        //                                         type: 'object',
+        //                                         description: 'Authentication object',
+        //                                         properties: {
+        //                                             strategy: {
+        //                                                 type: 'string',
+        //                                                 description: 'Authentication strategy',
+        //                                                 enum: [constructor.auth],
+        //                                             },
+        //                                             variables: {
+        //                                                 type: 'array',
+        //                                                 description: 'Variables for the authentication strategy',
+        //                                                 items: authVariables,
+        //                                             },
+        //                                         },
+        //                                     },
+        //                                     packageName: {
+        //                                         type: 'string',
+        //                                         description: `@microfox/${packageName}`,
+        //                                     },
+        //                                 },
+        //                                 required: ['arguments'],
+        //                             },
+        //                         },
+        //                     },
+        //                 },
+        //             },
+        //         },
+        //         responses: {
+        //             '200': {
+        //                 description: 'Successful response',
+        //                 content: {
+        //                     'application/json': {
+        //                         schema: {
+        //                             type: 'object',
+        //                             properties: {
+        //                                 success: { type: 'boolean' },
+        //                                 data: { type: 'any' }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             },
+        //             '400': {
+        //                 description: 'Bad request'
+        //             },
+        //             '500': {
+        //                 description: 'Internal server error'
+        //             }
+        //         },
+        //     },
+        // };
     }
 }
 
@@ -548,6 +564,7 @@ Map all package functions to the SDK instance.`;
             system: systemPrompt,
             prompt: userPrompt,
             schema,
+            maxRetries: 3,
         });
 
         logUsage(models.claude35Sonnet.modelId, usage);

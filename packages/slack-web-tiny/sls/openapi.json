@@ -20,7 +20,7 @@
       "post": {
         "operationId": "sendMessage",
         "summary": "Sends a message to a specified Slack channel.",
-        "description": "The sendMessage function posts a message to a specified Slack channel using the Slack API. It accepts a SlackMessage object containing message details such as the channel, text, optional blocks, attachments, and threading information. The function returns a promise that resolves to a SlackMessageResponse object with the API response details.",
+        "description": "This function posts a message to a Slack channel using the provided SlackMessage object. It supports sending simple text messages, messages with Block Kit blocks, threaded replies, and interactive elements like buttons. The function returns a promise that resolves to a SlackMessageResponse containing details about the sent message.",
         "requestBody": {
           "required": true,
           "content": {
@@ -41,33 +41,33 @@
                             "properties": {
                               "channel": {
                                 "type": "string",
-                                "description": "Channel ID or name"
+                                "description": "Channel ID or name where the message will be sent"
                               },
                               "text": {
                                 "type": "string",
-                                "description": "Message text"
+                                "description": "Message text content"
                               },
                               "blocks": {
                                 "type": "array",
                                 "items": {
                                   "type": "object"
                                 },
-                                "description": "Block Kit blocks (optional)"
+                                "description": "Optional Block Kit blocks for rich message formatting"
                               },
                               "attachments": {
                                 "type": "array",
                                 "items": {
                                   "type": "object"
                                 },
-                                "description": "Legacy attachments (optional)"
+                                "description": "Optional legacy attachments for message formatting"
                               },
                               "thread_ts": {
                                 "type": "string",
-                                "description": "Timestamp of parent message for threading (optional)"
+                                "description": "Optional timestamp of parent message for threading"
                               },
                               "reply_broadcast": {
                                 "type": "boolean",
-                                "description": "Broadcast reply in thread (optional)"
+                                "description": "Optional flag to broadcast reply in thread"
                               }
                             },
                             "required": [
@@ -137,11 +137,11 @@
                     },
                     "channel": {
                       "type": "string",
-                      "description": "Channel ID"
+                      "description": "Channel ID where the message was sent"
                     },
                     "ts": {
                       "type": "string",
-                      "description": "Message timestamp"
+                      "description": "Timestamp of the sent message"
                     },
                     "message": {
                       "type": "object",
@@ -169,7 +169,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "description": "Error message"
+                      "description": "Error message describing the issue"
                     }
                   },
                   "required": [
@@ -180,8 +180,8 @@
               }
             }
           },
-          "500": {
-            "description": "Server error",
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication token",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,7 +193,55 @@
                     },
                     "error": {
                       "type": "string",
-                      "description": "Error message"
+                      "const": "invalid_auth"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "const": "rate_limited"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server issue"
                     }
                   },
                   "required": [
@@ -211,7 +259,7 @@
       "post": {
         "operationId": "updateMessage",
         "summary": "Updates an existing message in a Slack channel.",
-        "description": "The updateMessage function modifies the content of a previously sent message in a Slack channel. It allows updating the text, blocks, or attachments of an existing message identified by its channel ID and timestamp. This function is useful for dynamically changing message content after it has been sent.",
+        "description": "This function modifies the content of a previously sent message in a Slack channel. It allows updating the message text, blocks, and attachments. The function returns a promise that resolves to the Slack API response, containing information about the updated message.",
         "requestBody": {
           "required": true,
           "content": {
@@ -236,7 +284,7 @@
                               },
                               "ts": {
                                 "type": "string",
-                                "description": "Message timestamp to identify the message to update"
+                                "description": "Message timestamp"
                               },
                               "text": {
                                 "type": "string",
@@ -367,6 +415,30 @@
               }
             }
           },
+          "404": {
+            "description": "Message or channel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
           "500": {
             "description": "Server error",
             "content": {
@@ -397,8 +469,8 @@
     "/uploadFile": {
       "post": {
         "operationId": "uploadFile",
-        "summary": "Uploads a file to Slack channels or conversations.",
-        "description": "The uploadFile function allows users to share a file in Slack channels or conversations. It accepts a single FileUpload object containing various optional parameters such as channels, content, filename, and more. The function returns a promise that resolves to a FileUploadResponse object.",
+        "summary": "Upload a file to Slack channels or conversations.",
+        "description": "This function allows users to upload and share files in Slack channels or conversations. It supports various file upload options including content, filename, file type, and additional metadata. The function returns a promise that resolves to the Slack API response containing file details or error information.",
         "requestBody": {
           "required": true,
           "content": {
@@ -415,11 +487,11 @@
                         "items": [
                           {
                             "type": "object",
-                            "description": "FileUpload object containing the file upload details",
+                            "description": "File upload configuration object",
                             "properties": {
                               "channels": {
                                 "type": "string",
-                                "description": "Comma-separated channel IDs"
+                                "description": "Comma-separated channel IDs where the file will be shared"
                               },
                               "content": {
                                 "type": "string",
@@ -427,7 +499,7 @@
                               },
                               "filename": {
                                 "type": "string",
-                                "description": "Filename"
+                                "description": "Name of the file being uploaded"
                               },
                               "filetype": {
                                 "type": "string",
@@ -435,15 +507,15 @@
                               },
                               "initial_comment": {
                                 "type": "string",
-                                "description": "Initial comment"
+                                "description": "Initial comment to be added with the file"
                               },
                               "thread_ts": {
                                 "type": "string",
-                                "description": "Thread timestamp"
+                                "description": "Thread timestamp if the file is being added to a thread"
                               },
                               "title": {
                                 "type": "string",
-                                "description": "File title"
+                                "description": "Title of the file"
                               }
                             }
                           }
@@ -505,17 +577,17 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "description": "Success indicator"
+                      "description": "Indicates if the upload was successful"
                     },
                     "file": {
                       "type": "object",
                       "properties": {
                         "id": {
                           "type": "string",
-                          "description": "Uploaded file ID"
+                          "description": "Unique identifier of the uploaded file"
                         }
                       },
-                      "description": "File details"
+                      "description": "Details of the uploaded file"
                     }
                   },
                   "required": [
@@ -538,7 +610,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "description": "Error message"
+                      "description": "Error message describing the issue with the request"
                     }
                   },
                   "required": [
@@ -562,7 +634,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "description": "Error message"
+                      "description": "Error message describing the server-side issue"
                     }
                   },
                   "required": [
