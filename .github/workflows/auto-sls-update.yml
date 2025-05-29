@@ -16,11 +16,10 @@ jobs:
       with:
         fetch-depth: 0  # Fetch full history for proper diff
 
-    - name: Setup Node.js
+    - name: Use Node.js 23.x
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
-        cache: 'npm'
+        node-version: '23'
 
     - name: Install dependencies
       run: |

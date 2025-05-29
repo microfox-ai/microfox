@@ -198,7 +198,6 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         failed: 0,
         errors: [] as { path: string, method: string, error: any }[]
       };
-      console.log('docsData paths', docsData.paths);
 
       for (const [path, methods] of Object.entries(docsData.paths)) {
         console.log(`Processing path: ${path}`);
@@ -327,18 +326,25 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
               }
             }
             console.log('results after', method, path, results);
-            return true;
           } catch (error) {
-            console.error(`Error deploying sls function for package ${packageName}:`, error);
+            console.error(`Error processing endpoint ${method.toUpperCase()} ${path}:`, error);
             console.log('results after', method, path, results);
             results.failed++;
             results.errors.push({ path, method, error });
-            return false;
           }
         }
         console.log('results after', path, results);
       }
       console.log('results', results);
+      
+      // Return based on overall results
+      if (results.failed > 0) {
+        console.log(`Deployment completed with errors: ${results.success} succeeded, ${results.failed} failed`);
+        return false;
+      } else {
+        console.log(`All endpoints processed successfully: ${results.success} succeeded`);
+        return true;
+      }
     }
     return true;
   } catch (error) {
