@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const UsageWithPricingSchema = z
   .object({
     priceUSD: z.number(),
-    timestamp: z.string(),
+    originalPriceUSD: z.number().optional(),
   })
   .and(UsageSchema);
 

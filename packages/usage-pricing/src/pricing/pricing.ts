@@ -10,17 +10,20 @@ export const PricingConfig = {
   ...BravePricingConfig,
 };
 
-export const attachPricingApi1 = (
-  usage: UsageWithPricing,
-): UsageWithPricing => {
+export const attachPricingApi1 = (usage: Usage): UsageWithPricing => {
   if (usage.type !== 'api_1' || !usage.requestKey) {
-    return usage;
+    return {
+      ...usage,
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
   }
   const pricingPkgConfig = (PricingConfig as any)[usage.package];
   if (!pricingPkgConfig) {
     return {
       ...usage,
       priceUSD: 0,
+      originalPriceUSD: 0,
     };
   }
   const pricingKeyConfig = (pricingPkgConfig as any)[usage.requestKey];
@@ -28,6 +31,7 @@ export const attachPricingApi1 = (
     return {
       ...usage,
       priceUSD: 0,
+      originalPriceUSD: 0,
     };
   }
   let usagePriceUSD = 0;
@@ -51,25 +55,35 @@ export const attachPricingApi1 = (
   }
   return {
     ...usage,
-    priceUSD: usagePriceUSD,
+    priceUSD: usagePriceUSD * (1 - (usage.markup ?? 0) / 100),
+    originalPriceUSD: usagePriceUSD,
   } as UsageWithPricing;
 };
 
-export const attachPricingLLM = (usage: UsageWithPricing): UsageWithPricing => {
+export const attachPricingLLM = (usage: Usage): UsageWithPricing => {
   const pricingConfig = (PricingConfig as any)[usage.package];
   if (!pricingConfig) {
     return {
       ...usage,
       priceUSD: 0,
+      originalPriceUSD: 0,
     };
   }
   let usagePriceUSD = 0;
   if (usage.type != 'llm' || !usage.model) {
-    return usage;
+    return {
+      ...usage,
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
   }
   let modelPricingConfig = (pricingConfig as any)[usage.model];
   if (!modelPricingConfig) {
-    return usage;
+    return {
+      ...usage,
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
   }
   usagePriceUSD +=
     modelPricingConfig.promptToken.basePriceUSD *
@@ -79,11 +93,12 @@ export const attachPricingLLM = (usage: UsageWithPricing): UsageWithPricing => {
     (usage.completionTokens / modelPricingConfig.completionToken.per);
   return {
     ...usage,
-    priceUSD: usagePriceUSD,
+    priceUSD: usagePriceUSD * (1 - (usage.markup ?? 0) / 100),
+    originalPriceUSD: usagePriceUSD,
   };
 };
 
-export const attachPricing = (usage: UsageWithPricing): UsageWithPricing => {
+export const attachPricing = (usage: Usage): UsageWithPricing => {
   if (usage.type === 'llm') {
     return attachPricingLLM(usage);
   }
