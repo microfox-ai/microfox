@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { PACKAGES_PATH } from './constants';
+import { getProjectRoot } from '../../../utils/getProjectRoot';
 
 interface PackagePath {
   packageName: string;
@@ -14,11 +14,13 @@ interface PackagePath {
  * @returns {Array<string>} - Array of paths to sls folders with changes
  */
 function detectChangedPackageSls(): PackagePath[] {
+  const projectRoot = getProjectRoot();
+  const packagesPath = path.join(projectRoot, 'packages');
   // Get all request directories and their functions
   const allPackages = fs
-    .readdirSync(PACKAGES_PATH)
+    .readdirSync(packagesPath)
     .filter((name) => {
-      const fullPath = path.join(PACKAGES_PATH, name);
+      const fullPath = path.join(packagesPath, name);
       return (
         fs.statSync(fullPath).isDirectory() &&
         fs.existsSync(path.join(fullPath, 'sls'))
@@ -26,7 +28,7 @@ function detectChangedPackageSls(): PackagePath[] {
     })
     .map((packageName) => {
       console.log('packageName', packageName);
-      const packagePath = path.join(PACKAGES_PATH, packageName);
+      const packagePath = path.join(packagesPath, packageName);
 
       return { packageName, packagePath };
     });

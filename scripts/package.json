@@ -22,7 +22,7 @@
     "embed:docs": "ts-node src/embeddings/embedDocs.ts",
     "embed:query": "ts-node src/embeddings/queryDocs.ts",
     "workflow:packagefox": "ts-node src/handleWorkflow.ts",
-    "deploy:sls": "ts-node src/serverless/deploy/ci.ts",
+    "deploy:sls": "ts-node src/agents/slsfox/deploy/ci.ts",
     "gen:sls": "ts-node src/agents/slsfox/genSls.ts",
     "api:query": "ts-node src/embeddings/queryApis.ts"
   },

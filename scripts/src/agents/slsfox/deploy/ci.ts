@@ -4,8 +4,8 @@ import * as path from 'path';
 import deployPackageSls from './deploy';
 import removePackageSls from './remove';
 import { detectChangedPackageSls } from './detect-changes';
-import { PACKAGES_PATH } from './constants';
 import { setEnvironmentVariables } from './environment';
+import { getProjectRoot } from '../../../utils/getProjectRoot';
 
 interface OverwriteConfigPackage {
   enabled?: boolean;
@@ -23,7 +23,7 @@ interface OverwriteConfig {
  * @returns {Promise<boolean>} - Success status
  */
 async function processPackage(packageName: string, packageConfig: OverwriteConfigPackage = {}): Promise<boolean> {
-  const packagePath = path.join(PACKAGES_PATH, packageName);
+  const packagePath = path.join(getProjectRoot(), 'packages', packageName);
   const slsPath = path.join(packagePath, `sls`);
 
   console.log(`Setting environment variables for ${packageName}`);

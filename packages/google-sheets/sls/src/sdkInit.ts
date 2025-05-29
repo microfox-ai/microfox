@@ -5,7 +5,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
     const requiredEnvVars = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_ACCESS_TOKEN', 'GOOGLE_REFRESH_TOKEN'];
     for (const envVar of requiredEnvVars) {
         if (!envVars[envVar]) {
-            throw new Error(`Missing required environment variable: ${envVar}`);
+            throw new Error(`Missing required environment variable: ${envVar}. Please set the ${envVar} environment variable.`);
         }
     }
 

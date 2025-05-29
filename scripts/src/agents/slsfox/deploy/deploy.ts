@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { STAGE } from './constants';
 import { createClient } from '@supabase/supabase-js';
-import { embed } from '../../embeddings/geminiEmbed';
+import { embed } from '../../../embeddings/geminiEmbed';
 import { OpenAPIDoc } from './types';
 
 interface FunctionMetadata {
@@ -44,11 +44,11 @@ function formatSchemaToMarkdown(schema: any, indent: number = 0): string {
     if (schema.description) {
       result += `${spaces}- Description: ${schema.description}\n`;
     }
-    
+
     for (const [propName, propSchema] of Object.entries(schema.properties)) {
       const isRequired = schema.required?.includes(propName) ? ' *(required)*' : ' *(optional)*';
       result += `${spaces}- \`${propName}\`${isRequired}:\n`;
-      
+
       if (typeof propSchema === 'object' && propSchema !== null) {
         const prop = propSchema as any;
         if (prop.description) {
@@ -63,7 +63,7 @@ function formatSchemaToMarkdown(schema: any, indent: number = 0): string {
         if (prop.enum) {
           result += `${spaces}  - Enum: ${prop.enum.map((e: any) => `\`${e}\``).join(', ')}\n`;
         }
-        
+
         // Handle nested objects and arrays
         if (prop.type === 'object' && prop.properties) {
           result += formatSchemaToMarkdown(prop, indent + 2);
@@ -198,6 +198,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         failed: 0,
         errors: [] as { path: string, method: string, error: any }[]
       };
+      console.log('docsData paths', docsData.paths);
 
       for (const [path, methods] of Object.entries(docsData.paths)) {
         console.log(`Processing path: ${path}`);
@@ -325,13 +326,19 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                 results.success++;
               }
             }
+            console.log('results after', method, path, results);
             return true;
           } catch (error) {
             console.error(`Error deploying sls function for package ${packageName}:`, error);
+            console.log('results after', method, path, results);
+            results.failed++;
+            results.errors.push({ path, method, error });
             return false;
           }
         }
+        console.log('results after', path, results);
       }
+      console.log('results', results);
     }
     return true;
   } catch (error) {
