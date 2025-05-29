@@ -185,21 +185,28 @@ jobs:
           exit 0
         fi
         
-        # Now pull latest changes (should work since SLS files are staged)
-        echo "Pulling latest changes from remote..."
-        git pull origin main --rebase
-        
-        # Commit the staged SLS files
+        # Commit the staged SLS files first (before pulling)
         git commit -m "🤖 Auto-update SLS files for documentation changes"
         
-        # Push with retry logic
+        # Now pull and push with retry logic to handle any conflicts
         for i in {1..3}; do
+          echo "Attempt $i/3: Pulling latest changes and pushing..."
+          
+          # Pull with rebase to get latest changes
+          if git pull origin main --rebase; then
+            echo "Successfully rebased with remote changes"
+          else
+            echo "Rebase failed, trying merge strategy..."
+            git rebase --abort 2>/dev/null || true
+            git pull origin main --no-rebase
+          fi
+          
+          # Try to push
           if git push origin main; then
             echo "Successfully pushed SLS changes"
             break
           else
-            echo "Push failed, attempt $i/3. Pulling latest changes and retrying..."
-            git pull origin main --rebase
+            echo "Push failed on attempt $i/3"
             if [ $i -eq 3 ]; then
               echo "Failed to push after 3 attempts"
               exit 1
