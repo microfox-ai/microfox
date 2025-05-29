@@ -273,6 +273,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
             const metadata = {
               openApiSchema: docsData,
               endpointSchema: op,
+              package_name: packageName,
               function_type: "lambda",
             };
 
