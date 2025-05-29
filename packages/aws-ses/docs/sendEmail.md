@@ -53,7 +53,7 @@ await ses.sendEmail({
     'sender@example.com',
   recipient: req.params.recepientMail ?? 'recipient@example.com',
   subject: process.env.AWS_SES_SUBJECT ?? 'Hello from SES!',
-  bodyHtml: '<body>This is an HTML email body.</body>',
+  bodyHtml: '<p>This is an HTML email body.</p>',
 });
 ```
 
