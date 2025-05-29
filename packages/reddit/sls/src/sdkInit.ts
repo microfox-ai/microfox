@@ -13,7 +13,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
 
     for (const envVar of requiredEnvVars) {
         if (!envVars[envVar]) {
-            throw new Error(`Missing required environment variable: ${envVar}.`);
+            throw new Error(`Missing required environment variables: ${requiredEnvVars.join(', ')}.`);
         }
     }
 
