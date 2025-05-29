@@ -164,71 +164,25 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # First, stage the SLS files to avoid unstaged changes during pull
-        if [ -f /tmp/sls_files_to_commit.txt ]; then
-          # Add only the SLS files that were modified
-          while IFS= read -r file; do
-            if [ -f "$file" ]; then
-              echo "Staging SLS file: $file"
-              git add "$file"
-            fi
-          done < /tmp/sls_files_to_commit.txt
-        else
-          echo "No SLS files list found, staging SLS files with pattern..."
-          # Fallback: add only files in packages/*/sls/ directories
-          git add 'packages/*/sls/*' || echo "No SLS files to add"
-        fi
+        # Stash all changes (including SLS files)
+        git stash push -m "SLS auto-update changes"
         
-        # Check if there are staged changes to commit
-        if git diff --staged --quiet; then
-          echo "No SLS changes to commit after filtering"
-          exit 0
-        fi
+        # Clean any remaining unstaged changes
+        git clean -fd
+        git checkout -- .
         
-        # Commit the staged SLS files first (before pulling)
+        # Pull latest changes
+        git pull origin $(git branch --show-current)
+        
+        # Unstash the SLS changes
+        git stash pop
+        
+        # Add only SLS files and commit
+        git add 'packages/*/sls/*'
         git commit -m "🤖 Auto-update SLS files for documentation changes"
         
-        # Stash any remaining unstaged changes (like tracking files)
-        if ! git diff --quiet; then
-          echo "Stashing remaining unstaged changes..."
-          git stash push -m "Temporary stash for non-SLS changes"
-          STASHED_CHANGES=true
-        else
-          STASHED_CHANGES=false
-        fi
-        
-        # Now pull and push with retry logic to handle any conflicts
-        for i in {1..3}; do
-          echo "Attempt $i/3: Pulling latest changes and pushing..."
-          
-          # Pull with rebase to get latest changes
-          if git pull origin main --rebase; then
-            echo "Successfully rebased with remote changes"
-          else
-            echo "Rebase failed, trying merge strategy..."
-            git rebase --abort 2>/dev/null || true
-            git pull origin main --no-rebase
-          fi
-          
-          # Try to push
-          if git push origin main; then
-            echo "Successfully pushed SLS changes"
-            break
-          else
-            echo "Push failed on attempt $i/3"
-            if [ $i -eq 3 ]; then
-              echo "Failed to push after 3 attempts"
-              exit 1
-            fi
-            sleep 2
-          fi
-        done
-        
-        # Restore stashed changes if any were stashed
-        if [ "$STASHED_CHANGES" = "true" ]; then
-          echo "Restoring stashed changes..."
-          git stash pop || echo "Failed to restore stashed changes (they may no longer be relevant)"
-        fi
+        # Push to current branch
+        git push origin $(git branch --show-current)
 
     - name: Summary
       if: steps.detect-changes.outputs.has_changes == 'true'
