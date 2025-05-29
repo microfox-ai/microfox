@@ -51,6 +51,8 @@ const responses = await ses.sendBulkEmails({
   subject: 'Hello from SES!',
   bodyText: 'This is a plain text email body.',
 });
+
+console.log(responses);
 ```
 
 ## Priorities for sender

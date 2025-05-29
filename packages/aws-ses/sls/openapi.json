@@ -380,15 +380,15 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "message": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the bad request"
                     }
                   }
                 }
@@ -396,15 +396,15 @@
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "message": {
                       "type": "string",
-                      "description": "Error message describing the internal server error"
+                      "description": "Error message describing the server error"
                     }
                   }
                 }
