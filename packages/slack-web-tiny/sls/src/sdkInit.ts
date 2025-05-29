@@ -6,7 +6,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         throw new Error('SLACK_BOT_TOKEN is required but not provided in the environment variables.');
     }
 
-    // Initialize SDK with token
+    // Initialize SDK with bot token
     const sdk = createSlackSDK({
         botToken: envVars['SLACK_BOT_TOKEN'],
         authType: 'header' // Default to header authentication
