@@ -1290,7 +1290,7 @@
     "/getByUsernames": {
       "post": {
         "operationId": "getByUsernames",
-        "summary": "Retrieves multiple users by their usernames from X.",
+        "summary": "Retrieve multiple users by their usernames",
         "description": "This function fetches multiple users from X using their usernames. It allows for retrieving information about up to 100 users in a single request, with optional expansions for additional data. The function returns detailed user information including profile data and public metrics.",
         "requestBody": {
           "required": true,
@@ -1442,7 +1442,8 @@
                           },
                           "created_at": {
                             "type": "string",
-                            "description": "The creation time of the user's account"
+                            "description": "The creation time of the user's account",
+                            "format": "date-time"
                           },
                           "protected": {
                             "type": "boolean",
@@ -1476,19 +1477,19 @@
                             "type": "object",
                             "properties": {
                               "followers_count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of followers the user has"
                               },
                               "following_count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of users the user is following"
                               },
                               "tweet_count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of tweets the user has posted"
                               },
                               "listed_count": {
-                                "type": "number",
+                                "type": "integer",
                                 "description": "The number of lists the user is included in"
                               }
                             }
@@ -1511,7 +1512,7 @@
                             "description": "A detailed description of the error"
                           },
                           "status": {
-                            "type": "number",
+                            "type": "integer",
                             "description": "The HTTP status code of the error"
                           },
                           "title": {
@@ -1540,11 +1541,30 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error message describing the bad request"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
-                  }
+                  },
+                  "required": [
+                    "errors"
+                  ]
                 }
               }
             }
@@ -1556,11 +1576,30 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string",
-                      "description": "Error message describing the server error"
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
-                  }
+                  },
+                  "required": [
+                    "errors"
+                  ]
                 }
               }
             }
