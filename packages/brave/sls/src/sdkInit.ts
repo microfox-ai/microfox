@@ -6,7 +6,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         throw new Error('BRAVE_API_KEY is required but not provided in the environment variables.');
     }
 
-    // Initialize SDK
+    // Initialize SDK with api key
     const sdk = createBraveSDK({
         apiKey: envVars['BRAVE_API_KEY']
     });
