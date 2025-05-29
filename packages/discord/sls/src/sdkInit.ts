@@ -3,7 +3,7 @@ import { createDiscordSdk } from '@microfox/discord';
 export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
     // Environment variable validation
     if (!envVars['DISCORD_BOT_TOKEN']) {
-        throw new Error('DISCORD_BOT_TOKEN is required but not provided in the environment variables. Please set the DISCORD_BOT_TOKEN environment variable.');
+        throw new Error('DISCORD_BOT_TOKEN is required but not provided in the environment variables.');
     }
 
     // Initialize SDK
