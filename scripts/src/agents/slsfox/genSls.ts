@@ -237,20 +237,20 @@ Focus on the parameter structure - look for indentation patterns to determine if
         let aiContent = result.object;
 
         // Handle unknown argument item types by converting them to 'any'
-        if (aiContent.arguments && aiContent.arguments.items) {
-            aiContent.arguments.items = aiContent.arguments.items.map((item: any) => {
-                if (!item || typeof item !== 'object') {
-                    return { type: 'any', description: 'Parameter' };
-                }
-                return item;
-            });
-        } else {
-            // Fallback if arguments structure is missing or invalid
-            aiContent.arguments = {
-                type: 'array',
-                items: [{ type: 'any', description: 'Function parameters' }]
-            };
-        }
+        // if (aiContent.arguments && aiContent.arguments.items) {
+        //     aiContent.arguments.items = aiContent.arguments.items.map((item: any) => {
+        //         if (!item || typeof item !== 'object') {
+        //             return { type: 'any', description: 'Parameter' };
+        //         }
+        //         return item;
+        //     });
+        // } else {
+        //     // Fallback if arguments structure is missing or invalid
+        //     aiContent.arguments = {
+        //         type: 'array',
+        //         items: [{ type: 'any', description: 'Function parameters' }]
+        //     };
+        // }
 
         // Build auth variables array - specific objects for each required key
         const authVariables = keysInfo.map(key => ({
@@ -319,93 +319,94 @@ Focus on the parameter structure - look for indentation patterns to determine if
         console.error(`❌ Error generating OpenAPI path for ${functionName}:`, error);
         console.log(`🔄 Creating fallback OpenAPI path for ${functionName}...`);
 
+        throw `Error generating OpenAPI path for ${functionName}: ${error}`;
         // Create a fallback OpenAPI path with basic structure
-        const authVariables = keysInfo.map(key => ({
-            type: 'object',
-            properties: {
-                key: {
-                    type: 'string',
-                    description: key.key,
-                },
-                value: {
-                    type: 'string',
-                    description: `value of ${key.key}`,
-                },
-            },
-        }));
+        // const authVariables = keysInfo.map(key => ({
+        //     type: 'object',
+        //     properties: {
+        //         key: {
+        //             type: 'string',
+        //             description: key.key,
+        //         },
+        //         value: {
+        //             type: 'string',
+        //             description: `value of ${key.key}`,
+        //         },
+        //     },
+        // }));
 
-        return {
-            post: {
-                operationId: functionName,
-                summary: `Execute ${functionName} function`,
-                description: `Executes the ${functionName} function with provided parameters`,
-                requestBody: {
-                    required: true,
-                    content: {
-                        'application/json': {
-                            schema: {
-                                type: 'object',
-                                properties: {
-                                    body: {
-                                        type: 'object',
-                                        description: `Body of the ${functionName} sls call`,
-                                        properties: {
-                                            arguments: {
-                                                type: 'array',
-                                                items: [{ type: 'any', description: 'Function parameters' }]
-                                            },
-                                            auth: {
-                                                type: 'object',
-                                                description: 'Authentication object',
-                                                properties: {
-                                                    strategy: {
-                                                        type: 'string',
-                                                        description: 'Authentication strategy',
-                                                        enum: [constructor.auth],
-                                                    },
-                                                    variables: {
-                                                        type: 'array',
-                                                        description: 'Variables for the authentication strategy',
-                                                        items: authVariables,
-                                                    },
-                                                },
-                                            },
-                                            packageName: {
-                                                type: 'string',
-                                                description: `@microfox/${packageName}`,
-                                            },
-                                        },
-                                        required: ['arguments'],
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                responses: {
-                    '200': {
-                        description: 'Successful response',
-                        content: {
-                            'application/json': {
-                                schema: {
-                                    type: 'object',
-                                    properties: {
-                                        success: { type: 'boolean' },
-                                        data: { type: 'any' }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    '400': {
-                        description: 'Bad request'
-                    },
-                    '500': {
-                        description: 'Internal server error'
-                    }
-                },
-            },
-        };
+        // return {
+        //     post: {
+        //         operationId: functionName,
+        //         summary: `Execute ${functionName} function`,
+        //         description: `Executes the ${functionName} function with provided parameters`,
+        //         requestBody: {
+        //             required: true,
+        //             content: {
+        //                 'application/json': {
+        //                     schema: {
+        //                         type: 'object',
+        //                         properties: {
+        //                             body: {
+        //                                 type: 'object',
+        //                                 description: `Body of the ${functionName} sls call`,
+        //                                 properties: {
+        //                                     arguments: {
+        //                                         type: 'array',
+        //                                         items: [{ type: 'any', description: 'Function parameters' }]
+        //                                     },
+        //                                     auth: {
+        //                                         type: 'object',
+        //                                         description: 'Authentication object',
+        //                                         properties: {
+        //                                             strategy: {
+        //                                                 type: 'string',
+        //                                                 description: 'Authentication strategy',
+        //                                                 enum: [constructor.auth],
+        //                                             },
+        //                                             variables: {
+        //                                                 type: 'array',
+        //                                                 description: 'Variables for the authentication strategy',
+        //                                                 items: authVariables,
+        //                                             },
+        //                                         },
+        //                                     },
+        //                                     packageName: {
+        //                                         type: 'string',
+        //                                         description: `@microfox/${packageName}`,
+        //                                     },
+        //                                 },
+        //                                 required: ['arguments'],
+        //                             },
+        //                         },
+        //                     },
+        //                 },
+        //             },
+        //         },
+        //         responses: {
+        //             '200': {
+        //                 description: 'Successful response',
+        //                 content: {
+        //                     'application/json': {
+        //                         schema: {
+        //                             type: 'object',
+        //                             properties: {
+        //                                 success: { type: 'boolean' },
+        //                                 data: { type: 'any' }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             },
+        //             '400': {
+        //                 description: 'Bad request'
+        //             },
+        //             '500': {
+        //                 description: 'Internal server error'
+        //             }
+        //         },
+        //     },
+        // };
     }
 }
 
@@ -548,6 +549,7 @@ Map all package functions to the SDK instance.`;
             system: systemPrompt,
             prompt: userPrompt,
             schema,
+            maxRetries: 3,
         });
 
         logUsage(models.claude35Sonnet.modelId, usage);
