@@ -6,7 +6,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         throw new Error('DISCORD_BOT_TOKEN is required but not provided in the environment variables.');
     }
 
-    // Initialize SDK with token
+    // Initialize SDK with bot token
     const sdk = createDiscordSdk({
         token: envVars['DISCORD_BOT_TOKEN']
     });

@@ -15,7 +15,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         throw new Error('X_ACCESS_SECRET is required');
     }
 
-    // Initialize SDK
+    // Initialize SDK with env vars
     const sdk = createXSDK({
         apiKey: envVars['X_API_KEY'],
         apiSecret: envVars['X_API_SECRET'],

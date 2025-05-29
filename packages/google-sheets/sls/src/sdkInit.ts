@@ -9,7 +9,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         }
     }
 
-    // Initialize SDK
+    // Initialize SDK with env vars
     const sdk = createGoogleSheetsSdk({
         clientId: envVars['GOOGLE_CLIENT_ID'],
         clientSecret: envVars['GOOGLE_CLIENT_SECRET'],

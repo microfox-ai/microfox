@@ -12,7 +12,7 @@ export const sdkInit = (envVars: Record<string, string>): Record<string, Functio
         throw new Error('AWS_SES_REGION is required');
     }
 
-    // Initialize SDK
+    // Initialize SDK with env vars
     const sdk = createSESSdk({
         accessKeyId: envVars['AWS_SES_ACCESS_KEY_ID'],
         secretAccessKey: envVars['AWS_SES_SECRET_ACCESS_KEY'],
