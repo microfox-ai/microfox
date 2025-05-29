@@ -140,8 +140,10 @@ jobs:
       if: steps.detect-changes.outputs.has_changes == 'true'
       id: check-sls-changes
       run: |
-        # Check if any SLS files were modified
-        if git diff --quiet; then
+        # Check if any SLS files were modified (exclude tracking files)
+        SLS_CHANGES=$(git diff --name-only | grep -E '^packages/.*/sls/' || true)
+        
+        if [ -z "$SLS_CHANGES" ]; then
           echo "No SLS files were modified"
           echo "has_sls_changes=false" >> $GITHUB_OUTPUT
         else
@@ -149,8 +151,11 @@ jobs:
           echo "has_sls_changes=true" >> $GITHUB_OUTPUT
           
           # Show what changed
-          echo "Modified files:"
-          git diff --name-only
+          echo "Modified SLS files:"
+          echo "$SLS_CHANGES"
+          
+          # Store the SLS files for commit
+          echo "$SLS_CHANGES" > /tmp/sls_files_to_commit.txt
         fi
 
     - name: Commit and push SLS changes
@@ -159,32 +164,38 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # Stash any uncommitted changes first
-        git stash push -m "Temporary stash for SLS updates"
-        
-        # Pull the latest changes from remote
+        # Pull the latest changes from remote first
         echo "Pulling latest changes from remote..."
         git pull origin main --rebase
         
-        # Apply stashed changes back
-        if git stash list | grep -q "Temporary stash for SLS updates"; then
-          git stash pop
+        # Read the SLS files to commit
+        if [ -f /tmp/sls_files_to_commit.txt ]; then
+          # Add only the SLS files that were modified
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              echo "Adding SLS file: $file"
+              git add "$file"
+            fi
+          done < /tmp/sls_files_to_commit.txt
+        else
+          echo "No SLS files list found, checking for SLS changes again..."
+          # Fallback: add only files in packages/*/sls/ directories
+          git add 'packages/*/sls/*' || echo "No SLS files to add"
         fi
         
-        # Check if there are still changes to commit after the pull
-        if git diff --quiet && git diff --staged --quiet; then
-          echo "No changes to commit after pull"
+        # Check if there are staged changes to commit
+        if git diff --staged --quiet; then
+          echo "No SLS changes to commit after filtering"
           exit 0
         fi
         
-        # Add and commit changes
-        git add .
+        # Commit only the staged SLS files
         git commit -m "🤖 Auto-update SLS files for documentation changes"
         
         # Push with retry logic
         for i in {1..3}; do
           if git push origin main; then
-            echo "Successfully pushed changes"
+            echo "Successfully pushed SLS changes"
             break
           else
             echo "Push failed, attempt $i/3. Pulling latest changes and retrying..."
