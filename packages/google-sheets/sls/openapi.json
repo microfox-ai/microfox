@@ -20,7 +20,7 @@
       "post": {
         "operationId": "validateAccessToken",
         "summary": "Validates and refreshes an access token if necessary.",
-        "description": "This function checks if the current access token is valid. If the token is not valid, it attempts to refresh the token using the refresh token. The function is useful for maintaining an active session and ensuring API requests have valid authentication.",
+        "description": "This function checks if the current access token is valid. If the token is not valid, it attempts to refresh the token using the refresh token. The function is useful for maintaining authenticated sessions and ensuring API requests have valid credentials.",
         "requestBody": {
           "required": true,
           "content": {
@@ -142,7 +142,7 @@
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request - Invalid input or unable to validate token",
             "content": {
               "application/json": {
                 "schema": {
@@ -150,7 +150,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the bad request"
+                      "description": "Error message describing the issue"
                     }
                   },
                   "required": [
@@ -161,7 +161,7 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
                 "schema": {
@@ -343,7 +343,7 @@
       "post": {
         "operationId": "getValues",
         "summary": "Retrieves values from a specified range in a Google Sheet.",
-        "description": "The getValues function fetches data from a given range in a Google Sheet. It takes a Range object as input, which includes the sheet ID and the A1 notation of the desired range. The function returns a promise that resolves to a two-dimensional array containing the values from the specified range, or an empty array if the range is empty.",
+        "description": "The getValues function fetches data from a defined range within a Google Sheet. It takes a Range object as input, which includes the sheet ID and the A1 notation of the desired range. The function returns a promise that resolves to a two-dimensional array containing the values from the specified range, or an empty array if the range is empty.",
         "requestBody": {
           "required": true,
           "content": {
@@ -482,7 +482,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad Request - Invalid parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -506,7 +506,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the internal server error"
+                      "description": "Error message describing the server-side issue"
                     }
                   }
                 }
@@ -1135,7 +1135,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - Invalid input parameters",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -1143,7 +1143,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the issue with the request"
+                      "description": "Error message describing the bad request"
                     }
                   }
                 }
@@ -1151,7 +1151,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1159,7 +1159,7 @@
                   "properties": {
                     "error": {
                       "type": "string",
-                      "description": "Error message describing the server-side issue"
+                      "description": "Error message describing the server error"
                     }
                   }
                 }
@@ -1375,10 +1375,12 @@
                                   "type": "object",
                                   "properties": {
                                     "sheetId": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "The ID of the sheet"
                                     },
                                     "range": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "description": "The range to update in A1 notation"
                                     }
                                   },
                                   "required": [
@@ -1393,7 +1395,8 @@
                                     "items": {
                                       "type": "string"
                                     }
-                                  }
+                                  },
+                                  "description": "The values to update in the specified range"
                                 }
                               },
                               "required": [
@@ -1404,13 +1407,13 @@
                           },
                           {
                             "type": "string",
-                            "description": "How the input data should be interpreted. Possible values: 'USER_ENTERED', 'RAW', 'INPUT_VALUE_OPTION_UNSPECIFIED'. Defaults to 'USER_ENTERED'.",
                             "enum": [
                               "USER_ENTERED",
                               "RAW",
                               "INPUT_VALUE_OPTION_UNSPECIFIED"
                             ],
-                            "default": "USER_ENTERED"
+                            "default": "USER_ENTERED",
+                            "description": "How the input data should be interpreted. Defaults to 'USER_ENTERED'."
                           }
                         ]
                       },
@@ -1510,16 +1513,20 @@
                     "type": "object",
                     "properties": {
                       "spreadsheetId": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The ID of the spreadsheet that was updated"
                       },
                       "updatedRange": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "The range that was updated"
                       },
                       "updatedRows": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "The number of rows that were updated"
                       },
                       "updatedColumns": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "The number of columns that were updated"
                       },
                       "updatedCells": {
                         "type": "integer"
@@ -1558,7 +1565,8 @@
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
                     }
                   }
                 }
@@ -1573,7 +1581,8 @@
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
                     }
                   }
                 }
@@ -1763,7 +1772,7 @@
       "post": {
         "operationId": "duplicateRowsDetection",
         "summary": "Detects fully duplicated rows within a specified sheet range.",
-        "description": "This function analyzes a given range in a sheet to identify and return fully duplicated rows. It takes a single configuration object parameter specifying the sheet ID and the range to check, and returns a Promise that resolves to an array of duplicate rows found within that range.",
+        "description": "The detectDuplicateRows function identifies and returns fully duplicated rows from a given range in a specified sheet. It takes a single configuration object as a parameter, containing the sheet ID and the range to check. The function returns a Promise that resolves to an array of duplicate rows found within the specified range.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1894,7 +1903,7 @@
                     "type": "object",
                     "description": "A duplicate row"
                   },
-                  "description": "An array of duplicate rows detected in the specified range"
+                  "description": "An array of duplicate rows found in the specified range"
                 }
               }
             }
@@ -1938,7 +1947,7 @@
       "post": {
         "operationId": "sanitizeSheetData",
         "summary": "Sanitizes sheet data by removing whitespace padding from string cells in a given range and updates the sheet.",
-        "description": "The sanitizeSheetData function cleans up data in a specified range of a Google Sheet by trimming whitespace from string values. It takes an input object containing the range and values to be cleaned, processes the data to remove leading and trailing spaces, and then updates the sheet with the sanitized values. This function is useful for standardizing data format and improving data quality in spreadsheets.",
+        "description": "The sanitizeSheetData function cleans up data in a specified range of a Google Sheet by trimming whitespace from string cells. It takes an input object containing the range and values to be cleaned, processes the data to remove leading and trailing spaces, and then updates the sheet with the sanitized values. This function is useful for standardizing data format and improving data quality in spreadsheets.",
         "requestBody": {
           "required": true,
           "content": {
