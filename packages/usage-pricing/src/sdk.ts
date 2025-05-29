@@ -50,7 +50,7 @@ export class MicrofoxUsagePricing {
   private processUsageEntries(
     usage: Record<string, unknown>,
     packageName?: string,
-  ): UsageWithPricing[] {
+  ): Usage[] {
     return Object.entries(usage)
       .map(([key, value]) => {
         try {
@@ -73,7 +73,7 @@ export class MicrofoxUsagePricing {
       .filter(entry => entry != null && entry !== undefined)
       .filter(entry =>
         packageName ? entry.package === cleanPackageName(packageName) : true,
-      ) as UsageWithPricing[];
+      ) as Usage[];
   }
 
   async getUsage(
@@ -104,7 +104,7 @@ export class MicrofoxUsagePricing {
 
     const pageKeys = keys.slice(offset, offset + limit);
 
-    const usages: UsageWithPricing[] = (
+    const usages: Usage[] = (
       await Promise.all(
         pageKeys.map(async usageKey => {
           const usage = await this.redis.hgetall(usageKey);
@@ -148,7 +148,7 @@ export class MicrofoxUsagePricing {
     const usageKey = `${this.prefix}:${prefixDateKey ?? '*'}`;
     const keys = await this.redis.keys(usageKey);
 
-    const usages: UsageWithPricing[] = (
+    const usages: Usage[] = (
       await Promise.all(
         keys.map(async usageKey => {
           const usage = await this.redis.hgetall(usageKey);
