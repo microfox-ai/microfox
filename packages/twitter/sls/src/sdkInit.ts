@@ -2,19 +2,25 @@ import { createXSDK } from '@microfox/twitter';
 
 export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
     // Environment variable validation
-    const requiredEnvVars = ['X_API_KEY', 'X_API_SECRET', 'X_ACCESS_TOKEN', 'X_ACCESS_SECRET'];
-    for (const envVar of requiredEnvVars) {
-        if (!envVars[envVar]) {
-            throw new Error(`Missing required environment variable: ${envVar}.`);
-        }
+    if (!envVars.X_API_KEY) {
+        throw new Error('X_API_KEY is required');
+    }
+    if (!envVars.X_API_SECRET) {
+        throw new Error('X_API_SECRET is required');
+    }
+    if (!envVars.X_ACCESS_TOKEN) {
+        throw new Error('X_ACCESS_TOKEN is required');
+    }
+    if (!envVars.X_ACCESS_SECRET) {
+        throw new Error('X_ACCESS_SECRET is required');
     }
 
     // Initialize SDK
     const sdk = createXSDK({
-        apiKey: envVars['X_API_KEY'],
-        apiSecret: envVars['X_API_SECRET'],
-        accessToken: envVars['X_ACCESS_TOKEN'],
-        accessSecret: envVars['X_ACCESS_SECRET'],
+        apiKey: envVars.X_API_KEY,
+        apiSecret: envVars.X_API_SECRET,
+        accessToken: envVars.X_ACCESS_TOKEN,
+        accessSecret: envVars.X_ACCESS_SECRET,
     });
 
     // Map functions
