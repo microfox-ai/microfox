@@ -22,13 +22,9 @@ interface OverwriteConfig {
  * @param {object} packageConfig - Package configuration from overwrite.json
  * @returns {Promise<boolean>} - Success status
  */
-async function processPackage(packageName: string, packageConfig: OverwriteConfigPackage = {}): Promise<boolean> {
-  const projectRoot = getProjectRoot();
-  console.log('projectRoot', projectRoot);
+async function processPackage(packageName: string, projectRoot: string, packageConfig: OverwriteConfigPackage = {}): Promise<boolean> {
   const packagePath = path.join(projectRoot, 'packages', packageName);
-  console.log('packagePath', packagePath);
   const slsPath = path.join(packagePath, `sls`);
-  console.log('slsPath', slsPath);
 
   console.log(`Setting environment variables for ${packageName}`);
   setEnvironmentVariables(slsPath)
@@ -81,10 +77,12 @@ async function main(): Promise<void> {
 
     // Process each package directory
     const packageNames = changedPackagesSls.map(({ packageName }) => packageName);
+    const projectRoot = getProjectRoot();
     const results = await Promise.all(
       packageNames.map(packageName =>
         processPackage(
           packageName,
+          projectRoot,
           overwriteConfig[packageName]
         )
       )
