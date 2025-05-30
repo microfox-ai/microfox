@@ -1,5 +1,11 @@
 # @microfox/usage-pricing
 
+## 0.0.9
+
+### Patch Changes
+
+- 76138e5: release: fix: correct JSON formatting in packagefox-build.json and update AI provider keys in pricing configuration
+
 ## 0.0.8
 
 ### Patch Changes
