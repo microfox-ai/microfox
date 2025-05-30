@@ -227,7 +227,7 @@ export class CryptoVault {
 
     try {
       // Parse header to get algorithm
-      const header = JSON.parse(Buffer.from(this.decodeBase64Url(base64Header)).toString('utf8'));
+      const header = JSON.parse(Buffer.from(this.decodeBase64Url(base64Header || '')).toString('utf8'));
       const hmacAlgo = header.alg === 'HS256' ? 'sha256' : 'sha512';
 
       // Verify signature
@@ -242,7 +242,7 @@ export class CryptoVault {
       if (base64Signature !== expectedBase64Signature) return null;
 
       // Decode payload
-      const payload = JSON.parse(Buffer.from(this.decodeBase64Url(base64Payload)).toString('utf8'));
+      const payload = JSON.parse(Buffer.from(this.decodeBase64Url(base64Payload || '')).toString('utf8'));
 
       // Check expiration
       const now = Math.floor(Date.now() / 1000);
@@ -284,7 +284,7 @@ export class CryptoVault {
   verifyPassword(password: string, hash: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const [saltHex, hashHex] = hash.split(':');
-      const salt = Buffer.from(saltHex, 'hex');
+      const salt = Buffer.from(saltHex || '', 'hex');
 
       crypto.pbkdf2(password, salt, 10 * 1000, 64, this.hashAlgo, (err, derivedKey) => {
         if (err) return reject(err);
