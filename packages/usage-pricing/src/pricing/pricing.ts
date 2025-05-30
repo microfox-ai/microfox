@@ -5,6 +5,7 @@ import { BravePricingConfig } from './brave';
 import { UsageWithPricing } from '../types';
 import { AnthropicAIPricingConfig } from './ai-provider-anthropic';
 import { GoogleAIPricingConfig } from './ai-provider-google';
+import { DeepSeekAIPricingConfig } from './ai-provider-deepseek';
 
 /**
  * Configuration object containing pricing information for different services and providers.
@@ -15,6 +16,7 @@ export const PricingConfig = {
   ...OpenAIPricingConfig,
   ...GoogleAIPricingConfig,
   ...AnthropicAIPricingConfig,
+  ...DeepSeekAIPricingConfig,
   ...BravePricingConfig,
 };
 
