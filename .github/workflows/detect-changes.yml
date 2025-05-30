@@ -12,8 +12,10 @@ permissions:
 jobs:
   detect-changes:
     # Only run on merge commits to main and skip if PR title starts with "Version Changes"
-    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Merge pull request ') && !contains(github.event.head_commit.message, '/changeset-release/')
+    if: github.event_name == 'push' && (startsWith(github.event.head_commit.message, 'Merge pull request ') || startsWith(github.event.head_commit.message, 'release:')) && !contains(github.event.head_commit.message, '/changeset-release/')
     runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Debug Event
         run: |
@@ -206,3 +208,38 @@ jobs:
           git add .microfox/
           git commit -m "Reset microfox files after merge to main"
           git push
+
+  auto-release:
+    name: Auto Release
+    needs: detect-changes
+    if: |
+      github.event_name == 'push' && 
+      startsWith(github.event.head_commit.message, 'release:') && 
+      needs.detect-changes.outputs.any_changed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          npm i
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run ci:version
+          publish: npm run ci:release
+          ignore: microfox-scripts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}
