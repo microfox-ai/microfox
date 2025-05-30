@@ -1,5 +1,11 @@
 # @microfox/webhook-octokit
 
+## 1.0.3
+
+### Patch Changes
+
+- 3ee0dc6: release: fix: update import paths to include file extensions for OctokitWebhook and types
+
 ## 1.0.2
 
 ### Patch Changes
