@@ -1,5 +1,11 @@
 # @microfox/usage-pricing
 
+## 0.0.10
+
+### Patch Changes
+
+- ac4fd49: release: feat: add DeepSeek AI provider configuration and extend AIPricingConfig interface
+
 ## 0.0.9
 
 ### Patch Changes
