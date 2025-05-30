@@ -174,3 +174,35 @@ export const attachPricing = (usage: Usage): UsageWithPricing => {
   }
   return usage;
 };
+
+export const getPricingForLLM = (props: {
+  model: string;
+  promptTokens: number;
+  completionTokens: number;
+  markup?: number;
+}) => {
+  const _package = fetchProviderPackage(props.model);
+  if (!_package) {
+    return {
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
+  }
+  const pricingConfig = (PricingConfig as any)[_package];
+  if (!pricingConfig || !pricingConfig[props.model]) {
+    return {
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
+  }
+  const modelPricingConfig = (pricingConfig as any)[props.model];
+  const usagePriceUSD =
+    modelPricingConfig.promptToken.basePriceUSD *
+      (props.promptTokens / modelPricingConfig.promptToken.per) +
+    modelPricingConfig.completionToken.basePriceUSD *
+      (props.completionTokens / modelPricingConfig.completionToken.per);
+  return {
+    priceUSD: usagePriceUSD * (1 - (props.markup ?? 0) / 100),
+    originalPriceUSD: usagePriceUSD,
+  };
+};

@@ -14,7 +14,7 @@ export const AnthropicAIPricingConfig = {
   ['ai-provider-anthropic']: {
     type: 'llm',
     // Claude 4 Models
-    ['claude-opus-4-20250514']: {
+    ['claude-4-opus-20250514']: {
       promptToken: {
         basePriceUSD: 15.0,
         ...commonPricingPrompt,
@@ -24,7 +24,7 @@ export const AnthropicAIPricingConfig = {
         ...commonPricingCompletion,
       },
     },
-    ['claude-sonnet-4-20250514']: {
+    ['laude-4-sonnet-20250514']: {
       promptToken: {
         basePriceUSD: 3.0,
         ...commonPricingPrompt,
