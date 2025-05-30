@@ -1,5 +1,11 @@
 # @microfox/usage-pricing
 
+## 0.0.8
+
+### Patch Changes
+
+- f74e07e: release: refactor: update LLMUsageWithBase type to allow optional package and type fields
+
 ## 0.0.7
 
 ### Patch Changes
