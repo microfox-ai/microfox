@@ -1,6 +1,6 @@
 import { Webhooks } from '@octokit/webhooks';
-import { EventPayloadMap } from '@octokit/webhooks/dist-types/generated/webhook-identifiers';
-import { WebhookEvents } from '@octokit/webhooks/dist-types/types';
+import { EventPayloadMap } from '@octokit/webhooks/dist-types/generated/webhook-identifiers.js';
+import { WebhookEvents } from '@octokit/webhooks/dist-types/types.js';
 
 export class OctokitWebhook {
   private webhook: Webhooks;
