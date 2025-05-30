@@ -1,5 +1,13 @@
 # @microfox/usage-pricing
 
+## 0.0.6
+
+### Patch Changes
+
+- 409ba70: Changes from PR #397: shard
+- Updated dependencies [409ba70]
+  - @microfox/usage-tracker@0.0.4
+
 ## 0.0.5
 
 ### Patch Changes
