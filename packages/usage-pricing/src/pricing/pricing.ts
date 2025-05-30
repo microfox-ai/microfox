@@ -6,6 +6,10 @@ import { UsageWithPricing } from '../types';
 import { AnthropicAIPricingConfig } from './ai-provider-anthropic';
 import { GoogleAIPricingConfig } from './ai-provider-google';
 
+/**
+ * Configuration object containing pricing information for different services and providers.
+ * Includes configurations for AWS SES, OpenAI, Google AI, Anthropic AI, and Brave.
+ */
 export const PricingConfig = {
   ...AwsSesPricingConfig,
   ...OpenAIPricingConfig,
@@ -17,6 +21,13 @@ export const PricingConfig = {
 // Create a type that combines the base usage fields with LLM usage fields
 type LLMUsageWithBase = Omit<LLMUsage, 'package' | 'type'> & BaseUsage;
 
+/**
+ * Attaches pricing information to API usage data.
+ * Calculates the price based on request count and request data if available.
+ *
+ * @param usage - The usage data to attach pricing to
+ * @returns Usage data with attached pricing information including priceUSD and originalPriceUSD
+ */
 export const attachPricingApi1 = (usage: Usage): UsageWithPricing => {
   if (usage.type !== 'api_1' || !usage.requestKey) {
     return {
@@ -67,6 +78,13 @@ export const attachPricingApi1 = (usage: Usage): UsageWithPricing => {
   } as UsageWithPricing;
 };
 
+/**
+ * Fetches the provider package name for a given model.
+ * Searches through all LLM configurations to find the matching provider.
+ *
+ * @param model - The model name to find the provider for
+ * @returns The provider package name or undefined if not found
+ */
 export const fetchProviderPackage = (model: string) => {
   const allLLmConfigs = Object.entries(PricingConfig)
     .map(([key, config]) => ({
@@ -79,6 +97,14 @@ export const fetchProviderPackage = (model: string) => {
   )?.key;
   return pricingConfigPackage;
 };
+
+/**
+ * Attaches pricing information to LLM usage data.
+ * Calculates the price based on prompt tokens and completion tokens.
+ *
+ * @param usage - The LLM usage data to attach pricing to
+ * @returns Usage data with attached pricing information including priceUSD and originalPriceUSD
+ */
 export const attachPricingLLM = (usage: LLMUsageWithBase): UsageWithPricing => {
   let _package: string | undefined = usage.package;
   if (!usage.model) {
@@ -128,6 +154,13 @@ export const attachPricingLLM = (usage: LLMUsageWithBase): UsageWithPricing => {
   } as UsageWithPricing;
 };
 
+/**
+ * Main function to attach pricing information to any type of usage data.
+ * Routes the usage data to the appropriate pricing calculator based on the usage type.
+ *
+ * @param usage - The usage data to attach pricing to
+ * @returns Usage data with attached pricing information
+ */
 export const attachPricing = (usage: Usage): UsageWithPricing => {
   if (usage.type === 'llm') {
     return attachPricingLLM(usage);
