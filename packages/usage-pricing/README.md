@@ -46,6 +46,65 @@ import { createDefaultMicrofoxUsagePricing } from '@microfox/usage-pricing';
 const usagePricing = createDefaultMicrofoxUsagePricing();
 ```
 
+### Using Pricing Functions
+
+The SDK provides several functions to calculate pricing for different types of usage:
+
+```typescript
+import {
+  attachPricing,
+  attachPricingApi1,
+  attachPricingLLM,
+} from '@microfox/usage-pricing';
+
+// Calculate pricing for any type of usage
+const usageWithPricing = attachPricing({
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+});
+
+// Calculate pricing specifically for API usage
+const apiUsageWithPricing = attachPricingApi1({
+  type: 'api_1',
+  package: 'aws-ses',
+  requestKey: 'send-email',
+  requestCount: 100,
+  requestData: 5000,
+});
+
+// Calculate pricing specifically for LLM usage
+const llmUsageWithPricing = attachPricingLLM({
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+});
+```
+
+The pricing functions return an object that includes:
+
+- All original usage data
+- `priceUSD`: The final price in USD after applying any markup
+- `originalPriceUSD`: The base price in USD before markup
+
+Example response:
+
+```typescript
+{
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+  priceUSD: 0.012, // Price after markup
+  originalPriceUSD: 0.015 // Original price before markup
+}
+```
+
 ### API Reference
 
 #### Get Usage Data
