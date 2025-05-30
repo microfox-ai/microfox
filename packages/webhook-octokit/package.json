@@ -1,6 +1,6 @@
 {
   "name": "@microfox/webhook-octokit",
-  "version": "1.0.9",
+  "version": "1.0.0",
   "description": "A TypeScript package for receiving webhooks from Octokit.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
