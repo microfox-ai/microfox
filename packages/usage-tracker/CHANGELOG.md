@@ -1,5 +1,11 @@
 # @microfox/usage-tracker
 
+## 0.0.4
+
+### Patch Changes
+
+- 409ba70: Changes from PR #397: shard
+
 ## 0.0.3
 
 ### Patch Changes
