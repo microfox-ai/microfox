@@ -1,7 +1,4 @@
 import crypto from 'crypto';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export type EncryptionAlgorithm = 'aes-256-gcm' | 'aes-256-cbc' | 'aes-128-gcm' | 'aes-128-cbc';
 export type HashAlgorithm = 'sha256' | 'sha512' | 'md5' | 'sha1';
