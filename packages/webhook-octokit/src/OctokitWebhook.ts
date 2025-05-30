@@ -1,4 +1,5 @@
 import { Webhooks } from '@octokit/webhooks';
+import { EventPayloadMap } from '@octokit/webhooks/dist-types/generated/webhook-identifiers';
 import { WebhookEvents } from '@octokit/webhooks/dist-types/types';
 
 export class OctokitWebhook {
@@ -20,13 +21,21 @@ export class OctokitWebhook {
 
   async on(
     event: WebhookEvents | WebhookEvents[],
-    handler: (event: { id: string; name: WebhookEvents; payload: any }) => void,
+    handler: (event: {
+      id: string;
+      name: WebhookEvents;
+      payload: EventPayloadMap[WebhookEvents];
+    }) => void,
   ) {
     return this.webhook.on(event, handler);
   }
 
   async onAny(
-    handler: (event: { id: string; name: WebhookEvents; payload: any }) => void,
+    handler: (event: {
+      id: string;
+      name: WebhookEvents;
+      payload: EventPayloadMap[WebhookEvents];
+    }) => void,
   ) {
     return this.webhook.onAny(handler);
   }
