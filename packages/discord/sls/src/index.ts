@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { CryptoVault } from '@microfox/crypto-sdk';
-import { sdkInit } from './sdkInit';
+import { sdkInit } from './sdkInit.js';
 
 dotenv.config(); // for any local vars
 
