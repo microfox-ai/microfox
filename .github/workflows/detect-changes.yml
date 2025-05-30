@@ -212,34 +212,52 @@ jobs:
   auto-release:
     name: Auto Release
     needs: detect-changes
+    runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' && 
       startsWith(github.event.head_commit.message, 'release:') && 
       needs.detect-changes.outputs.any_changed == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
         with:
-          fetch-depth: 0
+          app_id: ${{ secrets.PACKAGEFOX_APP_ID }}
+          private_key: ${{ secrets.PACKAGEFOX_PRIVATE_KEY }}
 
-      - name: Setup Node.js 20.x
-        uses: actions/setup-node@v2
+      - name: Checkout main branch
+        uses: actions/checkout@v4
         with:
-          node-version: 20
+          # Checkout the main branch explicitly
+          ref: main
+          # Use the GITHUB_TOKEN for authentication, permissions are set above
+          token: ${{ steps.generate_token.outputs.token }}
 
-      - name: Install Dependencies
+      - name: Create dummy changeset file
         run: |
-          npm i
+          mkdir -p .changeset
+          # Use printf to correctly handle newline characters
+          printf -- "---\n---\n\nTriggered by issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}\n" > .changeset/trigger-${{ github.event.issue.number }}.md
+          echo "Created .changeset/trigger-${{ github.event.issue.number }}.md"
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: npm run ci:version
-          publish: npm run ci:release
-          ignore: microfox-scripts
+      - name: Commit and push changeset file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .changeset/trigger-${{ github.event.issue.number }}.md
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: create changeset trigger file for issue #${{ github.event.issue.number }}"
+            git push origin main
+            echo "Changes pushed to main branch."
+          fi
+
+      - name: Close the issue
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close $ISSUE_NUMBER --comment "Changeset file created and pushed. Closing issue."
+          echo "Issue #${ISSUE_NUMBER} closed."
