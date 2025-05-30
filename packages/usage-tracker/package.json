@@ -1,6 +1,6 @@
 {
   "name": "@microfox/usage-tracker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A TypeScript SDK for Tracking Usage of any LLM and TypeScript AI SDK internally.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
