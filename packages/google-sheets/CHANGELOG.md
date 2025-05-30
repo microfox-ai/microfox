@@ -1,5 +1,12 @@
 # @microfox/google-sheets
 
+## 1.1.3
+
+### Patch Changes
+
+- 0e76275: Changes from PR #395: vwjt_slsfox_may_2025
+- eef1616: Changes from PR #396: vwjt_slsfox_may_2025
+
 ## 1.1.2
 
 ### Patch Changes
