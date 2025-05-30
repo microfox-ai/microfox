@@ -19,7 +19,11 @@ export const PricingConfig = {
 };
 
 // Create a type that combines the base usage fields with LLM usage fields
-type LLMUsageWithBase = Omit<LLMUsage, 'package' | 'type'> & BaseUsage;
+type LLMUsageWithBase = Omit<LLMUsage, 'type'> &
+  Omit<BaseUsage, 'package'> & {
+    package?: string;
+    type?: 'llm';
+  };
 
 /**
  * Attaches pricing information to API usage data.
