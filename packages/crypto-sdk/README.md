@@ -21,7 +21,7 @@ npm install @microfox/crypto-sdk
 ## Quick Start
 
 ```typescript
-import { CryptoVault } from '@your-org/crypto-sdk';
+import { CryptoVault } from '@microfox/crypto-sdk';
 
 // Generate a secure key
 const key = CryptoVault.generateKey(32, 'base64');
