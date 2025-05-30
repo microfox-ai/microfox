@@ -153,6 +153,7 @@ export const attachPricingLLM = (usage: LLMUsageWithBase): UsageWithPricing => {
     ((usage.completionTokens ?? 0) / modelPricingConfig.completionToken.per);
   return {
     ...usage,
+    package: _package,
     priceUSD: usagePriceUSD * (1 - (usage.markup ?? 0) / 100),
     originalPriceUSD: usagePriceUSD,
   } as UsageWithPricing;
@@ -202,6 +203,7 @@ export const getPricingForLLM = (props: {
     modelPricingConfig.completionToken.basePriceUSD *
       (props.completionTokens / modelPricingConfig.completionToken.per);
   return {
+    provider: _package?.replace('ai-provider-', ''),
     priceUSD: usagePriceUSD * (1 - (props.markup ?? 0) / 100),
     originalPriceUSD: usagePriceUSD,
   };
