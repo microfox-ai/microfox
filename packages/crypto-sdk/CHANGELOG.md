@@ -1,5 +1,11 @@
 # @microfox/crypto-sdk
 
+## 1.0.3
+
+### Patch Changes
+
+- 625193c: Changes from PR #416: vwjt_sls_fixes_may_2025
+
 ## 1.0.2
 
 ### Patch Changes

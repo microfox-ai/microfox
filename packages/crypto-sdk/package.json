@@ -1,6 +1,6 @@
 {
   "name": "@microfox/crypto-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Crypto SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
