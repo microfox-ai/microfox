@@ -1,5 +1,11 @@
 # @microfox/usage-pricing
 
+## 0.0.11
+
+### Patch Changes
+
+- 839c730: release: feat: add cache pricing configurations for Anthropic AI models
+
 ## 0.0.10
 
 ### Patch Changes
