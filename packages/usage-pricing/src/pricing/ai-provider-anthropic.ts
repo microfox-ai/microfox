@@ -10,6 +10,24 @@ const commonPricingCompletion = {
   description: 'Per 1 million completion token',
 };
 
+const commonPricingCache5m = {
+  dataUnit: 'token',
+  per: 1_000_000,
+  description: 'Per 1 million tokens for 5-minute cache writes',
+};
+
+const commonPricingCache1h = {
+  dataUnit: 'token',
+  per: 1_000_000,
+  description: 'Per 1 million tokens for 1-hour cache writes',
+};
+
+const commonPricingCacheHits = {
+  dataUnit: 'token',
+  per: 1_000_000,
+  description: 'Per 1 million tokens for cache hits & refreshes',
+};
+
 export const AnthropicAIPricingConfig = {
   ['ai-provider-anthropic']: {
     type: 'llm',
@@ -23,8 +41,20 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 75.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 18.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 30.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 1.5,
+        ...commonPricingCacheHits,
+      },
     },
-    ['laude-4-sonnet-20250514']: {
+    ['claude-4-sonnet-20250514']: {
       promptToken: {
         basePriceUSD: 3.0,
         ...commonPricingPrompt,
@@ -32,6 +62,18 @@ export const AnthropicAIPricingConfig = {
       completionToken: {
         basePriceUSD: 15.0,
         ...commonPricingCompletion,
+      },
+      cache5mToken: {
+        basePriceUSD: 3.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 6.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCacheHits,
       },
     },
     // Claude 3.7 Models
@@ -44,6 +86,18 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 15.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 3.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 6.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCacheHits,
+      },
     },
     // Claude 3.5 Models
     ['claude-3-5-sonnet-20241022']: {
@@ -55,6 +109,18 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 15.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 3.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 6.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCacheHits,
+      },
     },
     ['claude-3-5-sonnet-20240620']: {
       promptToken: {
@@ -65,6 +131,18 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 15.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 3.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 6.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCacheHits,
+      },
     },
     ['claude-3-5-haiku-20241022']: {
       promptToken: {
@@ -74,6 +152,18 @@ export const AnthropicAIPricingConfig = {
       completionToken: {
         basePriceUSD: 4.0,
         ...commonPricingCompletion,
+      },
+      cache5mToken: {
+        basePriceUSD: 1.0,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 1.6,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.08,
+        ...commonPricingCacheHits,
       },
     },
     // Claude 3 Models
@@ -86,6 +176,18 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 75.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 18.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 30.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 1.5,
+        ...commonPricingCacheHits,
+      },
     },
     ['claude-3-sonnet-20240229']: {
       promptToken: {
@@ -96,6 +198,18 @@ export const AnthropicAIPricingConfig = {
         basePriceUSD: 15.0,
         ...commonPricingCompletion,
       },
+      cache5mToken: {
+        basePriceUSD: 3.75,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 6.0,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCacheHits,
+      },
     },
     ['claude-3-haiku-20240307']: {
       promptToken: {
@@ -105,6 +219,18 @@ export const AnthropicAIPricingConfig = {
       completionToken: {
         basePriceUSD: 1.25,
         ...commonPricingCompletion,
+      },
+      cache5mToken: {
+        basePriceUSD: 0.3,
+        ...commonPricingCache5m,
+      },
+      cache1hToken: {
+        basePriceUSD: 0.5,
+        ...commonPricingCache1h,
+      },
+      cacheHitsToken: {
+        basePriceUSD: 0.03,
+        ...commonPricingCacheHits,
       },
     },
   },
