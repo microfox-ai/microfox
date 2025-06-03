@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - main
-      - vwjt_packageInfo_indexing_june_2025
     paths:
       - '**/package-info.json'
   pull_request:
     branches:
       - main
-      - vwjt_packageInfo_indexing_june_2025
     types:
       - opened
       - synchronize
