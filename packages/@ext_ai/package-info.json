@@ -271,7 +271,7 @@
         "wrap_language_model",
         "zod_schema"
       ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/default.md"
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/README.md"
     }
   ],
   "keysInfo": [],

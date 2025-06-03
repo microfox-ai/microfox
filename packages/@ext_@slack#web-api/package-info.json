@@ -66,7 +66,7 @@
       "functionalities": [
         "allFunctionalities"
       ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack#web-api/docs/WebClient.md"
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack%23web-api/README.md"
     },
     {
       "name": "OAuthWebClient",
@@ -148,7 +148,7 @@
       "functionalities": [
         "allFunctionalities"
       ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack#web-api/docs/OAuthWebClient.md"
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack%23web-api/README.md"
     }
   ],
   "keysInfo": [

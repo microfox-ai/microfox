@@ -53,7 +53,7 @@
       "internalKeys": [],
       "botConfigComponent": "NotionBotConfig",
       "botConfig": [],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@notionhq#client/README.md"
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@notionhq%23client/README.md"
     }
   ],
   "keysInfo": [
