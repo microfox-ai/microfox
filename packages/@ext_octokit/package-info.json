@@ -40,13 +40,19 @@
         }
       ],
       "internalKeys": [],
-      "functionalities": ["rest", "request"]
+      "functionalities": [
+        "rest",
+        "request"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_octokit/README.md"
     }
   ],
   "keysInfo": [
     {
       "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
-      "constructors": ["Octokit"],
+      "constructors": [
+        "Octokit"
+      ],
       "description": "Your GitHub personal access token or OAuth access token.",
       "required": true
     }

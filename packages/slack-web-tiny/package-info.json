@@ -3,7 +3,9 @@
   "title": "Microfox Slack Web Tiny",
   "description": "A lightweight, type-safe SDK for interacting with the Slack Web API",
   "path": "packages/slack-web-tiny",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
   "authType": "apikey",
   "authEndpoint": "/connect/slack",
@@ -85,7 +87,12 @@
           }
         }
       ],
-      "functionalities": ["sendMessage", "updateMessage", "uploadFile"]
+      "functionalities": [
+        "sendMessage",
+        "updateMessage",
+        "uploadFile"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/createSlackSDK.md"
     },
     {
       "name": "OAuthWebClient",
@@ -164,13 +171,18 @@
           }
         }
       ],
-      "functionalities": ["allFunctionalities"]
+      "functionalities": [
+        "allFunctionalities"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/OAuthWebClient.md"
     }
   ],
   "keysInfo": [
     {
       "key": "SLACK_BOT_TOKEN",
-      "constructors": ["createSlackSDK"],
+      "constructors": [
+        "createSlackSDK"
+      ],
       "description": "The bot token for authenticating with the Slack API.",
       "required": true
     }

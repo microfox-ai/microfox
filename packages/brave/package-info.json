@@ -135,13 +135,16 @@
         "suggestSearch",
         "spellcheckSearch",
         "createBraveSDK"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/createBraveSDK.md"
     }
   ],
   "keysInfo": [
     {
       "key": "BRAVE_API_KEY",
-      "constructors": ["BraveSDK"],
+      "constructors": [
+        "BraveSDK"
+      ],
       "description": "Your Brave Search API key.  Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/.",
       "required": true
     }

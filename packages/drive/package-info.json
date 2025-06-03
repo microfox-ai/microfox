@@ -3,7 +3,11 @@
   "title": "Microfox Drive SDK",
   "description": "Google Drive SDK for Microfox",
   "path": "packages/drive",
-  "dependencies": ["@microfox/google", "@microfox/rest-sdk", "zod"],
+  "dependencies": [
+    "@microfox/google",
+    "@microfox/rest-sdk",
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/drive",
@@ -47,37 +51,48 @@
           "displayName": "Client Secret",
           "description": "The client secret for the Google Drive client"
         }
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/drive/docs/createDriveSDKWithTokens.md"
     }
   ],
   "keysInfo": [
     {
       "key": "DRIVE_ACCESS_TOKEN",
-      "constructors": ["createDriveSDKWithTokens"],
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
       "description": "The access token for the Google Drive client",
       "required": true
     },
     {
       "key": "DRIVE_REFRESH_TOKEN",
-      "constructors": ["createDriveSDKWithTokens"],
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
       "description": "The refresh token for the Google Drive client",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["createDriveSDKWithTokens"],
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
       "description": "The client ID for the Google Drive client",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["createDriveSDKWithTokens"],
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
       "description": "The client secret for the Google Drive client",
       "required": true
     },
     {
       "key": "SCOPES",
-      "constructors": ["createDriveSDKWithTokens"],
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
       "description": "The scopes for the Google Drive client",
       "required": true
     }

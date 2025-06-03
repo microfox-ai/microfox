@@ -111,6 +111,7 @@ export const Constructor = z
   .object({
     name: z.string().describe('The name of the constructor'),
     description: z.string().describe('The description of the constructor'),
+    docUrl: z.string().url().optional(),
     auth: z
       .enum(['oauth2', 'apikey', 'none'])
       .describe('The authentication method of the constructor'),

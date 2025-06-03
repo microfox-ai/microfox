@@ -3,7 +3,10 @@
   "title": "Youtube Analytics V3",
   "description": "A TypeScript SDK for interacting with the YouTube Analytics V3 API. Supports functionalities such as retrieving analyticsreports, managing groups and group items.  Provides methods for getReports, listGroups, insertGroup, updateGroup, deleteGroup, listGroupItems, insertGroupItem, deleteGroupItem, refreshAccessToken, and validateAccessToken.",
   "path": "packages/youtube-analytics",
-  "dependencies": ["@microfox/google-oauth", "zod"],
+  "dependencies": [
+    "@microfox/google-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
@@ -168,43 +171,56 @@
         "deleteGroupItem",
         "refreshAccessToken",
         "validateAccessToken"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/YoutubeAnalyticsSDK.md"
     }
   ],
   "keysInfo": [
     {
       "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The access token for authenticating with the YouTube Analytics API.",
       "required": true
     },
     {
       "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The refresh token used to obtain a new access token when the current one expires.",
       "required": false
     },
     {
       "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The client ID of your OAuth 2.0 credentials.",
       "required": true
     },
     {
       "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The client secret of your OAuth 2.0 credentials.",
       "required": true
     },
     {
       "key": "GOOGLE_REDIRECT_URI",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The redirect URI configured for your OAuth 2.0 credentials.",
       "required": true
     },
     {
       "key": "SCOPES",
-      "constructors": ["YoutubeAnalyticsSDK"],
+      "constructors": [
+        "YoutubeAnalyticsSDK"
+      ],
       "description": "The scopes required by the SDK",
       "required": true,
       "defaultValue": [

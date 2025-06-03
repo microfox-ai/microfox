@@ -3,7 +3,11 @@
   "title": "Microfox X SDK",
   "description": "A lightweight, type-safe SDK for interacting with the X (Twitter) API v2",
   "path": "packages/twitter",
-  "dependencies": ["crypto", "https", "zod"],
+  "dependencies": [
+    "crypto",
+    "https",
+    "zod"
+  ],
   "authType": "apikey",
   "status": "partial",
   "authEndpoint": "/connect/x",
@@ -155,31 +159,40 @@
         "getMe",
         "upload",
         "generateOAuthHeader"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/createXSDK.md"
     }
   ],
   "keysInfo": [
     {
       "key": "X_API_KEY",
-      "constructors": ["createXSDK"],
+      "constructors": [
+        "createXSDK"
+      ],
       "description": "Your X API key.",
       "required": true
     },
     {
       "key": "X_API_SECRET",
-      "constructors": ["createXSDK"],
+      "constructors": [
+        "createXSDK"
+      ],
       "description": "Your X API secret key.",
       "required": true
     },
     {
       "key": "X_ACCESS_TOKEN",
-      "constructors": ["createXSDK"],
+      "constructors": [
+        "createXSDK"
+      ],
       "description": "Your X access token.",
       "required": true
     },
     {
       "key": "X_ACCESS_SECRET",
-      "constructors": ["createXSDK"],
+      "constructors": [
+        "createXSDK"
+      ],
       "description": "Your X access token secret.",
       "required": true
     }

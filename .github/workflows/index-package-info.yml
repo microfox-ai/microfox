@@ -1,0 +1,44 @@
+name: Index Changed Package Info
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/package-info.json'
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+    paths:
+      - '**/package-info.json'
+
+jobs:
+  index-package-info:
+    name: 🔄 Index Package Info on PR
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Get the full git history for accurate git-based timestamps
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # 2) Install Node.js
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # 3) Run your savePackageInfo script
+      - name: Index changed package info
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "Running savePackageInfo.ts to sync changed package-info.json files…"
+          cd scripts
+          npm i
+          npm run save:package-info 
