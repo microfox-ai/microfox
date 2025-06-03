@@ -53,15 +53,6 @@ function getGithubUrl(relativePath: string): string {
   return `${GITHUB_BASE_URL}${relativePath.replace(/\\/g, '/')}`;
 }
 
-function validatePackageInfo(packageInfo: any, filePath: string): PackageInfo {
-  try {
-    return PackageInfo.parse(packageInfo);
-  } catch (error) {
-    console.error(`❌ Invalid package-info.json at ${filePath}:`, error);
-    throw error;
-  }
-}
-
 function walkPackageInfoFiles() {
   const results: Array<{
     packageName: string;
@@ -85,19 +76,18 @@ function walkPackageInfoFiles() {
     if (fs.existsSync(packageInfoPath) && fs.statSync(pkgDir).isDirectory()) {
       try {
         const rawContent = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
-        const validatedContent = validatePackageInfo(rawContent, packageInfoPath);
         
         const mtime = getGitLastModified(packageInfoPath);
         const relativePath = path.relative(PACKAGES_DIR, packageInfoPath);
         const githubUrl = getGithubUrl(relativePath);
 
         results.push({
-          packageName: validatedContent.name,
+          packageName: rawContent.name,
           filePath: relativePath,
           githubUrl,
           fullPath: packageInfoPath,
           mtime,
-          content: validatedContent,
+          content: rawContent,
           rawContent,
         });
       } catch (error) {
