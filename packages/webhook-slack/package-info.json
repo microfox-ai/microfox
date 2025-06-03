@@ -13,7 +13,8 @@
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/webhook-slack.svg",
   "readme_map": {
     "path": "/README.md",
-    "description": "The full README for the Microfox Slack Webhook"
+    "description": "The full README for the Microfox Slack Webhook",
+    "functionalities": []
   },
   "constructors": [],
   "keysInfo": [],

@@ -3,7 +3,9 @@
   "title": "Microfox Slack OAuth",
   "description": "TypeScript package simplifying Slack OAuth 2.0, providing methods for authorization URL generation, token exchange, validation, and revocation.",
   "path": "packages/slack-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authEndpoint": "/connect/slack",
   "oauth2Scopes": [
@@ -115,31 +117,40 @@
         "exchangeCodeForToken",
         "validateToken",
         "revokeToken"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/SlackOAuthSdk.md"
     }
   ],
   "keysInfo": [
     {
       "key": "SLACK_CLIENT_ID",
-      "constructors": ["SlackOAuthSdk"],
+      "constructors": [
+        "SlackOAuthSdk"
+      ],
       "description": "Your Slack app's Client ID.",
       "required": true
     },
     {
       "key": "SLACK_CLIENT_SECRET",
-      "constructors": ["SlackOAuthSdk"],
+      "constructors": [
+        "SlackOAuthSdk"
+      ],
       "description": "Your Slack app's Client Secret.",
       "required": true
     },
     {
       "key": "SLACK_REDIRECT_URI",
-      "constructors": ["SlackOAuthSdk"],
+      "constructors": [
+        "SlackOAuthSdk"
+      ],
       "description": "The redirect URI you configured for your Slack app.",
       "required": true
     },
     {
       "key": "SCOPES",
-      "constructors": ["SlackOAuthSdk"],
+      "constructors": [
+        "SlackOAuthSdk"
+      ],
       "description": "The scopes for your Slack app.",
       "required": true,
       "defaultValue": [

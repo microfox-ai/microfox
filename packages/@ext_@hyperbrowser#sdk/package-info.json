@@ -3,7 +3,12 @@
   "title": "@hyperbrowser/sdk",
   "description": "Node SDK for Hyperbrowser API",
   "path": "packages/@ext_@hyperbrowser#sdk",
-  "dependencies": ["form-data", "node-fetch", "zod", "zod-to-json-schema"],
+  "dependencies": [
+    "form-data",
+    "node-fetch",
+    "zod",
+    "zod-to-json-schema"
+  ],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@hyperbrowser/sdk",
@@ -78,13 +83,16 @@
         "claude_computer_use",
         "environment-variables",
         "openai_cua"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/Hyperbrowser.md"
     }
   ],
   "keysInfo": [
     {
       "key": "HYPERBROWSER_API_KEY",
-      "constructors": ["Hyperbrowser"],
+      "constructors": [
+        "Hyperbrowser"
+      ],
       "description": "The API key for Hyperbrowser.",
       "required": true
     }

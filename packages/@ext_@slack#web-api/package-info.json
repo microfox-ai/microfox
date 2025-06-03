@@ -63,7 +63,10 @@
           }
         }
       ],
-      "functionalities": ["allFunctionalities"]
+      "functionalities": [
+        "allFunctionalities"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack#web-api/docs/WebClient.md"
     },
     {
       "name": "OAuthWebClient",
@@ -142,13 +145,18 @@
           }
         }
       ],
-      "functionalities": ["allFunctionalities"]
+      "functionalities": [
+        "allFunctionalities"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@slack#web-api/docs/OAuthWebClient.md"
     }
   ],
   "keysInfo": [
     {
       "key": "SLACK_BOT_TOKEN",
-      "constructors": ["WebClient"],
+      "constructors": [
+        "WebClient"
+      ],
       "description": "The bot token for authenticating with the Slack API.",
       "required": true
     }

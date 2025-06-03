@@ -3,7 +3,9 @@
   "title": "OpenAI Provider",
   "description": "A comprehensive TypeScript SDK providing convenient access to OpenAI Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/ai-provider-openai",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -17,7 +19,9 @@
     "functionalities": [],
     "all_readmes": []
   },
-  "addedDependencies": ["ai"],
+  "addedDependencies": [
+    "ai"
+  ],
   "constructors": [
     {
       "name": "OpenAiProvider",
@@ -34,13 +38,16 @@
       ],
       "internalKeys": [],
       "botConfig": [],
-      "functionalities": []
+      "functionalities": [],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-openai/docs/OpenAiProvider.md"
     }
   ],
   "keysInfo": [
     {
       "key": "OPENAI_API_KEY",
-      "constructors": ["OpenAIPROVIDER"],
+      "constructors": [
+        "OpenAIPROVIDER"
+      ],
       "description": "OpenAI API Key. Obtain from your OpenAI account dashboard.",
       "required": true
     }

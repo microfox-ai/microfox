@@ -3,7 +3,9 @@
   "title": "Microfox Instagram FB Business OAuth",
   "description": "A lightweight, type-safe SDK for interacting with the Instagram Business API through Facebook OAuth",
   "path": "packages/instagram-fb-business-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authType": "oauth2",
   "authEndpoint": "/connect/instagram-fb",
@@ -53,43 +55,56 @@
           "displayName": "Instagram FB Refresh Token",
           "description": "The refresh token for Instagram FB Business OAuth"
         }
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb-business-oauth/docs/InstagramFbBusinessOAuthSdk.md"
     }
   ],
   "keysInfo": [
     {
       "key": "INSTAGRAM_FB_CLIENT_ID",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The client ID for Instagram FB Business OAuth",
       "required": true
     },
     {
       "key": "INSTAGRAM_FB_CLIENT_SECRET",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The client secret for Instagram FB Business OAuth",
       "required": true
     },
     {
       "key": "INSTAGRAM_FB_REDIRECT_URI",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The redirect URI for Instagram FB Business OAuth",
       "required": true
     },
     {
       "key": "INSTAGRAM_FB_SCOPES",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The scopes for Instagram FB Business OAuth",
       "required": true
     },
     {
       "key": "INSTAGRAM_FB_ACCESS_TOKEN",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The access token for Instagram FB Business OAuth",
       "required": true
     },
     {
       "key": "INSTAGRAM_FB_REFRESH_TOKEN",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
+      "constructors": [
+        "InstagramFbBusinessOAuthSdk"
+      ],
       "description": "The refresh token for Instagram FB Business OAuth",
       "required": true
     }

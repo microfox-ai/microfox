@@ -3,7 +3,10 @@
   "title": "Reddit TypeScript SDK",
   "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "path": "packages/reddit",
-  "dependencies": ["@microfox/reddit-oauth", "zod"],
+  "dependencies": [
+    "@microfox/reddit-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit-oauth",
@@ -313,43 +316,56 @@
         "getInfo",
         "getMoreComments",
         "getPost"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/RedditSDK.md"
     }
   ],
   "keysInfo": [
     {
       "key": "REDDIT_CLIENT_ID",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "Your Reddit application's client ID.",
       "required": true
     },
     {
       "key": "REDDIT_CLIENT_SECRET",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "Your Reddit application's client secret.",
       "required": true
     },
     {
       "key": "REDDIT_REDIRECT_URI",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "The redirect URI you specified when creating the app.",
       "required": true
     },
     {
       "key": "REDDIT_ACCESS_TOKEN",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "The access token for authenticating requests.",
       "required": true
     },
     {
       "key": "REDDIT_REFRESH_TOKEN",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "The refresh token obtained during initial authorization.",
       "required": true
     },
     {
       "key": "SCOPES",
-      "constructors": ["RedditSDK"],
+      "constructors": [
+        "RedditSDK"
+      ],
       "description": "A comma-separated list of scopes defining the permissions requested.",
       "required": true
     }
