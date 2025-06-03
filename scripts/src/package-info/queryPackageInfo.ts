@@ -68,8 +68,8 @@ async function getPackageByName(packageName: string) {
   console.log(`   Auth: ${data.auth_type || 'none'}`);
   console.log(`   Description: ${data.description}`);
   console.log(`   Documentation: ${data.documentation}`);
-  console.log(`   Dependencies: ${JSON.parse(data.dependencies || '[]').join(', ')}`);
-  console.log(`   Constructors: ${JSON.parse(data.constructors).map((c: any) => c.name).join(', ')}`);
+  console.log(`   Dependencies: ${Array.isArray(data.dependencies) ? data.dependencies.join(', ') : 'none'}`);
+  console.log(`   Constructors: ${Array.isArray(data.constructors) ? data.constructors.map((c: any) => c.name).join(', ') : 'none'}`);
   console.log(`   Updated: ${new Date(data.updated_at).toLocaleDateString()}`);
 }
 
