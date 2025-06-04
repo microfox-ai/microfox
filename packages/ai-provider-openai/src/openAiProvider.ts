@@ -1,4 +1,8 @@
-import { createOpenAI, type OpenAIProvider as OpenAIP } from '@ai-sdk/openai';
+import {
+  createOpenAI,
+  OpenAIProviderSettings,
+  type OpenAIProvider as OpenAIP,
+} from '@ai-sdk/openai';
 import {
   LanguageModelV1,
   LanguageModelV1Middleware,
@@ -65,6 +69,47 @@ export type OpenAIEmbeddingModelId =
   | 'text-embedding-ada-002'
   | (string & {});
 
+export interface OpenAIChatSettings {
+  logitBias?: Record<number, number>;
+  logprobs?: boolean | number;
+  /**
+Whether to enable parallel function calling during tool use. Default to true.
+   */
+  parallelToolCalls?: boolean;
+  /**
+Whether to use structured outputs. Defaults to false.
+
+When enabled, tool calls and object generation will be strict and follow the provided schema.
+ */
+  structuredOutputs?: boolean;
+  /**
+A unique identifier representing your end-user, which can help OpenAI to
+monitor and detect abuse. Learn more.
+*/
+  user?: string;
+  /**
+Automatically download images and pass the image as data to the model.
+OpenAI supports image URLs for public models, so this is only needed for
+private models or when the images are not publicly accessible.
+
+Defaults to `false`.
+   */
+  downloadImages?: boolean;
+  /**
+Simulates streaming by using a normal generate call and returning it as a stream.
+Enable this if the model that you are using does not support streaming.
+
+Defaults to `false`.
+
+@deprecated Use `simulateStreamingMiddleware` instead.
+   */
+  simulateStreaming?: boolean;
+  /**
+Reasoning effort for reasoning models. Defaults to `medium`.
+   */
+  reasoningEffort?: 'low' | 'medium' | 'high';
+}
+
 export class OpenAiProvider {
   private middleware: LanguageModelV1Middleware;
   private apiKey: string;
@@ -113,9 +158,12 @@ export class OpenAiProvider {
     this.middleware = middleware;
   }
 
-  languageModel(modelId: OpenAILanguageModelId) {
+  languageModel(modelId: OpenAILanguageModelId, settings?: OpenAIChatSettings) {
     return wrapLanguageModel({
-      model: this.openaiProvider.languageModel(modelId),
+      model: this.openaiProvider.languageModel(modelId, {
+        ...(settings ?? {}),
+        structuredOutputs: true,
+      }),
       middleware: this.middleware,
     });
   }
