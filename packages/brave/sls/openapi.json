@@ -4,6 +4,7 @@
     "title": "Brave SDK API",
     "version": "1.0.0",
     "description": "Single entry-point API for all Brave SDK functions via a wrapper Lambda",
+    "toolsPromptUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/sls/ToolsPrompt.md",
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
