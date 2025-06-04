@@ -1,5 +1,11 @@
 # @microfox/ai-provider-openai
 
+## 1.0.9
+
+### Patch Changes
+
+- ff19156: release: feat: add OpenAIChatSettings interface and update languageModel method to accept settings
+
 ## 1.0.8
 
 ### Patch Changes
