@@ -1,0 +1,91 @@
+name: Sync Docs and Package Info
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/*/docs/**/*.md'
+      - '**/package-info.json'
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+    paths:
+      - 'packages/*/docs/**/*.md'
+      - '**/package-info.json'
+
+jobs:
+  sync-docs-and-package-info:
+    name: 🔄 Sync Docs and Package Info
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Get the full git history for accurate git-based timestamps
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2) Install Node.js
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # 3) Install dependencies
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm i
+
+      # 4) Check if we have docs changes and update package-info.json files
+      - name: Update package-info.json for docs changes
+        run: |
+          echo "Updating package-info.json files for docs changes..."
+          cd scripts
+          npm run update:readme-map
+
+      # 5) Commit updated package-info.json files if there are changes
+      - name: Commit updated package-info.json files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update package-info.json readme_map for docs changes"
+            git push
+          fi
+
+      # 6) Index package info in database
+      - name: Index updated package info
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "Indexing updated package info..."
+          cd scripts
+          npm run save:package-info
+
+      # 7) Index docs in database
+      - name: Index docs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "Indexing docs..."
+          cd scripts
+          npm run embed:docs
+
+      # 8) Summary
+      - name: Summary
+        run: |
+          echo "✅ Successfully synced docs and package info!"
+          echo "📚 Updated package-info.json files for docs changes"
+          echo "🔍 Indexed package info in database"
+          echo "📖 Indexed docs in database" 
