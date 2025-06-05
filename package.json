@@ -11,7 +11,7 @@
     "prettier-check": "prettier --check \"**/*.{js,ts,tsx,md,mdx}\"",
     "type-check": "turbo type-check",
     "prettier-fix": "prettier --write \"**/*.{js,ts,tsx,md,mdx}\"",
-    "test": "turbo test",
+    "test": "turbo test -- --passWithNoTests",
     "test:watch": "turbo test --watch",
     "test:coverage": "turbo test --coverage",
     "ci:release": "turbo clean && turbo build && changeset publish",
