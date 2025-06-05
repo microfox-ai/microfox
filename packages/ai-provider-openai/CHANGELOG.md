@@ -1,5 +1,11 @@
 # @microfox/ai-provider-openai
 
+## 1.0.10
+
+### Patch Changes
+
+- 85e8788: release: update package-lock.json and add new AI provider packages for Anthropic and Google
+
 ## 1.0.9
 
 ### Patch Changes
