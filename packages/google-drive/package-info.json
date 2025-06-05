@@ -4,24 +4,13 @@
   "description": "Manage Google Drive resources (drives, files, and access proposals) using the Google Drive API.",
   "platformType": "tool",
   "path": "packages/google-drive",
-  "dependencies": [
-    "@microfox/google-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
-    "https://www.googleapis.com/auth/drive",
-    "https://www.googleapis.com/auth/drive.appdata",
     "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive.metadata",
-    "https://www.googleapis.com/auth/drive.metadata.readonly",
-    "https://www.googleapis.com/auth/drive.photos.readonly",
-    "https://www.googleapis.com/auth/drive.readonly",
-    "https://www.googleapis.com/auth/docs",
-    "https://www.googleapis.com/auth/drive.apps.readonly",
-    "https://www.googleapis.com/auth/drive.apps",
-    "https://www.googleapis.com/auth/drive.meet.readonly"
+    "https://www.googleapis.com/auth/drive.appdata",
+    "https://www.googleapis.com/auth/drive.install"
   ],
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/google-drive",
@@ -204,17 +193,9 @@
           "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
           "required": true,
           "defaultValue": [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.appdata",
             "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.metadata",
-            "https://www.googleapis.com/auth/drive.metadata.readonly",
-            "https://www.googleapis.com/auth/drive.photos.readonly",
-            "https://www.googleapis.com/auth/drive.readonly",
-            "https://www.googleapis.com/auth/docs",
-            "https://www.googleapis.com/auth/drive.apps.readonly",
-            "https://www.googleapis.com/auth/drive.apps",
-            "https://www.googleapis.com/auth/drive.meet.readonly"
+            "https://www.googleapis.com/auth/drive.appdata",
+            "https://www.googleapis.com/auth/drive.install"
           ]
         },
         {
@@ -250,78 +231,10 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_DRIVE_CLIENT_ID",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "Client ID for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_DRIVE_CLIENT_SECRET",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "Client Secret for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_DRIVE_REDIRECT_URI",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "The redirect URI registered in your Google Cloud project for the OAuth 2.0 client. This URI is where Google will redirect the user after they authorize the application.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_DRIVE_SCOPES",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
-      "required": true,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/drive",
-        "https://www.googleapis.com/auth/drive.appdata",
-        "https://www.googleapis.com/auth/drive.file",
-        "https://www.googleapis.com/auth/drive.metadata",
-        "https://www.googleapis.com/auth/drive.metadata.readonly",
-        "https://www.googleapis.com/auth/drive.photos.readonly",
-        "https://www.googleapis.com/auth/drive.readonly",
-        "https://www.googleapis.com/auth/docs",
-        "https://www.googleapis.com/auth/drive.apps.readonly",
-        "https://www.googleapis.com/auth/drive.apps",
-        "https://www.googleapis.com/auth/drive.meet.readonly"
-      ]
-    },
-    {
-      "key": "GOOGLE_DRIVE_ACCESS_TOKEN",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "Optional. An OAuth 2.0 access token for Google Drive API. If not provided, the SDK may attempt to use a refresh token or require an OAuth flow.",
-      "required": false
-    },
-    {
-      "key": "GOOGLE_DRIVE_REFRESH_TOKEN",
-      "constructors": [
-        "GoogleDriveSdk"
-      ],
-      "description": "Optional. An OAuth 2.0 refresh token for Google Drive API. Used to obtain new access tokens without requiring user re-authentication.",
-      "required": false
-    }
-  ],
   "keyInstructions": {
     "link": "",
     "setupInfo": "To use the Google Drive SDK, you need to set up OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Drive API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleDriveSDK } from '@microfox/google-drive';\n\nconst sdk = createGoogleDriveSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n```\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token\n\nMake sure to keep your client secret and tokens secure and never expose them in client-side code."
   },
   "extraInfo": [],
-  "devDependencies": [
-    "@microfox/tsconfig",
-    "@types/node",
-    "tsup",
-    "typescript"
-  ]
+  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
 }

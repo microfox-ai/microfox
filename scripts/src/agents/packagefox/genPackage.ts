@@ -240,7 +240,6 @@ function createInitialPackageInfo(
       functionalities: [],
     },
     constructors: [],
-    keysInfo: [],
     keyInstructions: {
       link: '',
       setupInfo: '',

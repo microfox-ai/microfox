@@ -3,16 +3,11 @@
   "title": "Google Sheets SDK",
   "description": "A TypeScript SDK for interacting with Google Sheets.",
   "path": "packages/google-sheets",
-  "dependencies": [
-    "@microfox/google-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "stable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/spreadsheets"
-  ],
+  "oauth2Scopes": ["https://www.googleapis.com/auth/spreadsheets"],
   "documentation": "https://www.npmjs.com/package/@microfox/google-sheets",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-sheets-icon.svg",
   "readme_map": {
@@ -153,9 +148,7 @@
           "key": "SCOPES",
           "displayName": "Scopes",
           "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs.",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/spreadsheets"
-          ]
+          "defaultValue": ["https://www.googleapis.com/auth/spreadsheets"]
         }
       ],
       "functionalities": [
@@ -171,40 +164,6 @@
         "detectDuplicateRows",
         "sanitizeSheetData"
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "createGoogleSheetsSdk"
-      ],
-      "description": "The client ID for Google OAuth.  You can obtain this from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "createGoogleSheetsSdk"
-      ],
-      "description": "The client secret for Google OAuth. You can obtain this from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": [
-        "createGoogleSheetsSdk"
-      ],
-      "description": "The access token for Google OAuth. This token is used to authenticate requests to the Google Sheets API.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": [
-        "createGoogleSheetsSdk"
-      ],
-      "description": "The refresh token for Google OAuth. This token is used to refresh the access token when it expires.",
-      "required": true
     }
   ],
   "extraInfo": [

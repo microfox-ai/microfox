@@ -81,14 +81,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "HYPERBROWSER_API_KEY",
-      "constructors": ["Hyperbrowser"],
-      "description": "The API key for Hyperbrowser.",
-      "required": true
-    }
-  ],
   "extraInfo": [],
   "keyInstructions": {
     "link": "https://docs.hyperbrowser.ai/agents"

@@ -114,26 +114,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "REDDIT_CLIENT_ID",
-      "constructors": ["createRedditOAuth"],
-      "description": "Your Reddit application's client ID. Obtain this from your Reddit app settings.",
-      "required": true
-    },
-    {
-      "key": "REDDIT_CLIENT_SECRET",
-      "constructors": ["createRedditOAuth"],
-      "description": "Your Reddit application's client secret. Obtain this from your Reddit app settings.",
-      "required": true
-    },
-    {
-      "key": "REDDIT_REDIRECT_URI",
-      "constructors": ["createRedditOAuth"],
-      "description": "The redirect URI you specified when creating your Reddit app.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To obtain OAuth credentials for Reddit:",
     "1. Go to https://www.reddit.com/prefs/apps",

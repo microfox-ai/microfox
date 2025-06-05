@@ -86,26 +86,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "FILLOUT_CLIENT_ID",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The client ID for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_CLIENT_SECRET",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The client secret for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_REDIRECT_URI",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The redirect URI for your Fillout application.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To obtain OAuth credentials for Fillout:",
     "1. Sign up for a Fillout account at https://www.fillout.com/",

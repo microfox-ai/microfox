@@ -201,32 +201,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "INSTAGRAM_CLIENT_ID",
-      "constructors": ["InstagramSDK"],
-      "description": "Your Facebook App ID. Obtain this from your Facebook Developer account.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_CLIENT_SECRET",
-      "constructors": ["InstagramSDK"],
-      "description": "Your Facebook App Secret. Obtain this from your Facebook Developer account.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_REDIRECT_URI",
-      "constructors": ["InstagramSDK"],
-      "description": "Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_ACCESS_TOKEN",
-      "constructors": ["InstagramSDK"],
-      "description": "A valid access token for the Instagram Graph API. Obtain this through the OAuth flow.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To use this SDK, you need to set up a Facebook Developer account and create an app that uses the Instagram Graph API.",
     "Visit https://developers.facebook.com/ to create your app and obtain the necessary credentials.",

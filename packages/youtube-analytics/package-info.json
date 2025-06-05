@@ -171,50 +171,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The access token for authenticating with the YouTube Analytics API.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The refresh token used to obtain a new access token when the current one expires.",
-      "required": false
-    },
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The client ID of your OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The client secret of your OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REDIRECT_URI",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The redirect URI configured for your OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "SCOPES",
-      "constructors": ["YoutubeAnalyticsSDK"],
-      "description": "The scopes required by the SDK",
-      "required": true,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/yt-analytics.readonly",
-        "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
-        "https://www.googleapis.com/auth/youtube",
-        "https://www.googleapis.com/auth/youtubepartner"
-      ]
-    }
-  ],
   "extraInfo": [
     "To use the YouTube Analytics SDK, follow these steps:\n\n1. Set up a Google Cloud Project:\n   - Go to the Google Cloud Console (https://console.cloud.google.com/)\n   - Create a new project or select an existing one\n   - Enable the YouTube Analytics API for your project\n\n2. Create OAuth 2.0 credentials:\n   - In the Google Cloud Console, go to \"APIs & Services\" > \"Credentials\"\n   - Click \"Create Credentials\" and select \"OAuth client ID\"\n   - Choose \"Web application\" as the application type\n   - Set the authorized redirect URIs (include your application's callback URL)\n   - Note down the Client ID and Client Secret\n\n3. Set up environment variables:\n   - GOOGLE_CLIENT_ID: Your OAuth 2.0 client ID\n   - GOOGLE_CLIENT_SECRET: Your OAuth 2.0 client secret\n   - GOOGLE_REDIRECT_URI: Your application's redirect URI\n\n4. Install the SDK:\n   ```\n   npm install @yourdomain/youtube-analytics-sdk\n   ```\n\n5. Initialize the SDK:\n   ```typescript\n   import { createYoutubeAnalyticsSDK } from '@yourdomain/youtube-analytics-sdk';\n\n   const sdk = createYoutubeAnalyticsSDK({\n     accessToken: 'YOUR_ACCESS_TOKEN',\n     refreshToken: 'YOUR_REFRESH_TOKEN',\n     clientId: process.env.GOOGLE_CLIENT_ID!,\n     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,\n     redirectUri: process.env.GOOGLE_REDIRECT_URI!,\n   });\n   ```\n\n6. Use the SDK methods to interact with the YouTube Analytics API:\n   ```typescript\n   const reports = await sdk.getReports({\n     ids: 'channel==MINE',\n     startDate: '2023-01-01',\n     endDate: '2023-12-31',\n     metrics: 'views,likes,dislikes',\n   });\n   ```\n\nImportant notes:\n- Ensure you have the necessary OAuth scopes for the operations you want to perform.\n- The SDK automatically handles token validation and refreshing.\n- Be aware of YouTube Analytics API quotas and rate limits (https://developers.google.com/youtube/analytics/v2/quota)\n- For detailed API documentation, refer to the official YouTube Analytics API documentation (https://developers.google.com/youtube/analytics)\n\nError handling:\n- The SDK throws errors for invalid inputs, API errors, and authentication issues.\n- Always wrap SDK method calls in try-catch blocks to handle potential errors gracefully.\n\nSecurity best practices:\n- Never hardcode or expose your Client ID, Client Secret, or tokens in client-side code.\n- Use secure storage for tokens and refresh them as needed.\n- Implement proper OAuth 2.0 flow for obtaining and managing tokens."
   ],

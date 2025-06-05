@@ -145,14 +145,6 @@
       "functionalities": ["allFunctionalities"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "SLACK_BOT_TOKEN",
-      "constructors": ["WebClient"],
-      "description": "The bot token for authenticating with the Slack API.",
-      "required": true
-    }
-  ],
   "extraInfo": [],
   "platformType": "communication"
 }

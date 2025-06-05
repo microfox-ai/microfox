@@ -56,44 +56,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "INSTAGRAM_FB_CLIENT_ID",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The client ID for Instagram FB Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_FB_CLIENT_SECRET",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The client secret for Instagram FB Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_FB_REDIRECT_URI",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The redirect URI for Instagram FB Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_FB_SCOPES",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The scopes for Instagram FB Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_FB_ACCESS_TOKEN",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The access token for Instagram FB Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_FB_REFRESH_TOKEN",
-      "constructors": ["InstagramFbBusinessOAuthSdk"],
-      "description": "The refresh token for Instagram FB Business OAuth",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `InstagramFbBusinessOAuthSdk` constructor to create a new Instagram FB Business OAuth client.",
     "The SDK supports OAuth2 authentication for Instagram Business API."

@@ -117,14 +117,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "FILLOUT_API_KEY",
-      "constructors": ["FilloutSDK"],
-      "description": "Fillout API Key",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "",
     "setupInfo": "To use the Fillout SDK, you need to obtain an API key from your Fillout dashboard. \n\n1. Log in to your Fillout account.\n2. Navigate to the API settings section.\n3. Generate a new API key.\n4. Store this API key securely, as it will be used to authenticate your requests.\n\nWhen initializing the SDK, you can provide the API key in one of two ways:\n\n1. As an environment variable:\n   Set the environment variable FILLOUT_API_KEY with your API key.\n\n2. Directly in the SDK constructor:\n   Pass the API key as a parameter when creating the SDK instance.\n\nExample usage:\n\n```typescript\nimport { createFilloutSDK } from '@microfox/fillout';\n\n// Using environment variable\nconst sdk = createFilloutSDK();\n\n// Or, passing the API key directly\nconst sdk = createFilloutSDK({ apiKey: 'your-api-key-here' });\n```\n\nMake sure to keep your API key confidential and never expose it in client-side code or public repositories."

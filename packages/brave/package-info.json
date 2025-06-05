@@ -150,14 +150,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "BRAVE_API_KEY",
-      "constructors": ["BraveSDK"],
-      "description": "Your Brave Search API key.  Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/.",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://brave.com/search/api/",
     "setupInfo": "To use the Brave SDK, you need to obtain an API key (X-Subscription-Token) by subscribing to a plan (including the free plan) at https://brave.com/search/api/.\n\nOnce you have your API key, you can use it to initialize the SDK:\n\n```typescript\nimport { createBraveSDK } from '@microfox/brave';\n\nconst braveSDK = createBraveSDK({\n  apiKey: 'your-api-key-here',\n});\n```\n\nAlternatively, you can set the API key as an environment variable:\n\n```\nBRAVE_API_KEY=your-api-key-here\n```\n\nAnd then initialize the SDK without passing the API key:\n\n```typescript\nconst braveSDK = createBraveSDK();\n```\n\nThe SDK will automatically use the API key from the environment variable if it's not provided in the constructor.\n\nNote: Some endpoints require specific subscription plans (e.g., Pro plan for Local Search, Pro AI plan for Summarizer). Make sure you have the appropriate subscription for the endpoints you intend to use."

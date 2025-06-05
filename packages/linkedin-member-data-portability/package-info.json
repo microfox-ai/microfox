@@ -125,44 +125,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "LINKEDIN_CLIENT_ID",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "Your LinkedIn app's Client ID.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_CLIENT_SECRET",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "Your LinkedIn app's Client Secret.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_REDIRECT_URI",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "The redirect URI registered in your LinkedIn app.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "The OAuth 2.0 access token for authenticated requests.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_REFRESH_TOKEN",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "The refresh token to obtain new access tokens.",
-      "required": false
-    },
-    {
-      "key": "SCOPES",
-      "constructors": ["LinkedInDataPortabilitySDK"],
-      "description": "The scopes for OAuth requests",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To use this SDK, you need to obtain LinkedIn API credentials. Follow these steps:",
     "1. Go to the LinkedIn Developer Portal (https://developer.linkedin.com/) and sign in.",

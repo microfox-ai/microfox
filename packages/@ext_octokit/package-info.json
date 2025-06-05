@@ -43,13 +43,5 @@
       "functionalities": ["rest", "request"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
-      "constructors": ["Octokit"],
-      "description": "Your GitHub personal access token or OAuth access token.",
-      "required": true
-    }
-  ],
   "extraInfo": []
 }

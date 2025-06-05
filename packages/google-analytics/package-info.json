@@ -261,32 +261,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ANALYTICS_CLIENT_ID",
-      "constructors": ["GoogleAnalyticsSDK"],
-      "description": "The client ID for your Google Cloud project.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ANALYTICS_CLIENT_SECRET",
-      "constructors": ["GoogleAnalyticsSDK"],
-      "description": "The client secret for your Google Cloud project.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ANALYTICS_REDIRECT_URI",
-      "constructors": ["GoogleAnalyticsSDK"],
-      "description": "The redirect URI for your OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ANALYTICS_ACCESS_TOKEN",
-      "constructors": ["GoogleAnalyticsSDK"],
-      "description": "The access token for authenticating with the Google Analytics Data API.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To use this Google Analytics SDK, you need to set up a Google Cloud project and enable the Google Analytics Data API.",
     "Visit the Google Cloud Console (https://console.cloud.google.com/) to create a new project or select an existing one.",

@@ -89,26 +89,6 @@
       "functionalities": ["sendEmail", "sendBulkEmails"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "AWS_SES_ACCESS_KEY_ID",
-      "constructors": ["createSESSdk"],
-      "description": "The AWS access key ID.  Used to authenticate with AWS SES.",
-      "required": true
-    },
-    {
-      "key": "AWS_SES_SECRET_ACCESS_KEY",
-      "constructors": ["createSESSdk"],
-      "description": "The AWS secret access key. Used to authenticate with AWS SES.",
-      "required": true
-    },
-    {
-      "key": "AWS_SES_REGION",
-      "constructors": ["createSESSdk"],
-      "description": "The AWS region to use. Used to authenticate with AWS SES.",
-      "required": false
-    }
-  ],
   "extraInfo": [
     "Use the `createSESClient` constructor to create a new AWS SES client.",
     "All email addresses must be verified in AWS SES before sending."

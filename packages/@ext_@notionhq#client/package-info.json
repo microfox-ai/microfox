@@ -52,14 +52,6 @@
       "botConfig": []
     }
   ],
-  "keysInfo": [
-    {
-      "key": "NOTION_TOKEN",
-      "constructors": ["Client"],
-      "description": "The token for the Notion API",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://www.notion.so/profile/integrations"
   },

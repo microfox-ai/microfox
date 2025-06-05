@@ -49,14 +49,6 @@
       "functionalities": []
     }
   ],
-  "keysInfo": [
-    {
-      "key": "OPENAI_API_KEY",
-      "constructors": ["OpenAIPROVIDER"],
-      "description": "OpenAI API Key. Obtain from your OpenAI account dashboard.",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://platform.openai.com/api-keys",
     "setupInfo": "To use the OpenAI SDK, you need to obtain an API key from the OpenAI account dashboard.\n\n1. Sign up for a OpenAI account at https://platform.openai.com/api-keys\n2. Once you have an account, navigate to your dashboard to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-openai`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createOpenAiProvider } from '@microfox/ai-provider-openai';\n\nconst provider = createOpenAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the OpenAI API:\n\n```typescript\nconst response = await provider.generateText({ model: 'gpt-4o', prompt: 'Hello, world!' });\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `OPENAI_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."

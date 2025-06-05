@@ -118,38 +118,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "SLACK_CLIENT_ID",
-      "constructors": ["SlackOAuthSdk"],
-      "description": "Your Slack app's Client ID.",
-      "required": true
-    },
-    {
-      "key": "SLACK_CLIENT_SECRET",
-      "constructors": ["SlackOAuthSdk"],
-      "description": "Your Slack app's Client Secret.",
-      "required": true
-    },
-    {
-      "key": "SLACK_REDIRECT_URI",
-      "constructors": ["SlackOAuthSdk"],
-      "description": "The redirect URI you configured for your Slack app.",
-      "required": true
-    },
-    {
-      "key": "SCOPES",
-      "constructors": ["SlackOAuthSdk"],
-      "description": "The scopes for your Slack app.",
-      "required": true,
-      "defaultValue": [
-        "chat:write",
-        "channels:read",
-        "incoming-webhook",
-        "commands"
-      ]
-    }
-  ],
   "extraInfo": [
     "To obtain OAuth credentials for Slack:",
     "1. Go to https://api.slack.com/apps and create a new app or select an existing one.",

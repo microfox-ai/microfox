@@ -168,7 +168,6 @@ function createInitialPackageInfo(
       description: `The full README for the ${title}`,
     },
     constructors: [],
-    keysInfo: [],
     extraInfo: [],
   };
 }

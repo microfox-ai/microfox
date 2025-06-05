@@ -26,14 +26,6 @@
       "functionalities": ["post", "getUserId"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": ["LinkedinShareSdk"],
-      "description": "The LinkedIn access token required for authentication.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createLinkedInShareClient` constructor to create a new LinkedIn Share client for posting content to LinkedIn."
   ],

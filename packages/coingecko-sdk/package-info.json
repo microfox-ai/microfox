@@ -163,14 +163,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "COINGECKO_API_KEY",
-      "constructors": ["CoinGeckoSDK"],
-      "description": "CoinGecko API Key. Obtain from your CoinGecko account dashboard.",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://docs.coingecko.com/reference/setting-up-your-api-key",
     "setupInfo": "To use the CoinGecko SDK, you need to obtain an API key from the CoinGecko Pro API.\n\n1. Sign up for a CoinGecko Pro account at https://www.coingecko.com/en/api/pricing\n2. Once you have an account, navigate to your dashboard to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/coingecko-sdk`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createCoinGeckoSDK } from '@microfox/coingecko-sdk';\n\nconst sdk = createCoinGeckoSDK({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the CoinGecko API:\n\n```typescript\nconst bitcoinPrice = await sdk.getSimplePrice({ ids: 'bitcoin', vs_currencies: 'usd' });\nconsole.log(bitcoinPrice);\n```\n\nNote: Some endpoints are only available for paid plans. Make sure you have the appropriate subscription level to access all features.\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `COINGECKO_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."

@@ -4,10 +4,7 @@
   "description": "No description available",
   "platformType": "tool",
   "path": "packages/@ext_@gitbook#api",
-  "dependencies": [
-    "event-iterator",
-    "eventsource-parser"
-  ],
+  "dependencies": ["event-iterator", "eventsource-parser"],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@gitbook/api",
@@ -19,6 +16,5 @@
     "description": "The full README for the package"
   },
   "constructors": [],
-  "keysInfo": [],
   "extraInfo": []
 }

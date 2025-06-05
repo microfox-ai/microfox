@@ -155,44 +155,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["createGmailSDK"],
-      "description": "Your Google OAuth client ID",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["createGmailSDK"],
-      "description": "Your Google OAuth client secret",
-      "required": true
-    },
-    {
-      "key": "GMAIL_ACCESS_TOKEN",
-      "constructors": ["createGmailSDK"],
-      "description": "The access token for the Google OAuth application",
-      "required": false
-    },
-    {
-      "key": "GMAIL_REFRESH_TOKEN",
-      "constructors": ["createGmailSDK"],
-      "description": "The refresh token for the Google OAuth application",
-      "required": false
-    },
-    {
-      "key": "SCOPES",
-      "constructors": ["createGmailSDK"],
-      "description": "The scopes for the Google OAuth application",
-      "required": false,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/gmail.readonly",
-        "https://www.googleapis.com/auth/gmail.compose",
-        "https://www.googleapis.com/auth/gmail.modify",
-        "https://www.googleapis.com/auth/gmail.insert"
-      ]
-    }
-  ],
   "extraInfo": [
     "To use this SDK, you need to set up a Google Cloud project and enable the Gmail API. Follow these steps:",
     "1. Go to the Google Cloud Console (https://console.cloud.google.com/)",

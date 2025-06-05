@@ -167,14 +167,6 @@
       "functionalities": ["allFunctionalities"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "SLACK_BOT_TOKEN",
-      "constructors": ["createSlackSDK"],
-      "description": "The bot token for authenticating with the Slack API.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createSlackSDK` constructor to create a new Slack Web Tiny client.",
     "The SDK supports both header and query-based authentication methods."

@@ -160,38 +160,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "WHATSAPP_BUSINESS_PHONE_NUMBER",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "Your whatsapp business phone number to send the text from",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_PHONE_NUMBER_ID",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The phone number ID for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The business account ID for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_ACCESS_TOKEN",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The access token for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_WEBHOOK_VERIFY_TOKEN",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The verify token for the WhatsApp Webhook",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `WhatsAppBusinessSDK` constructor to create a new WhatsApp Business API client.",
     "The SDK supports sending various types of messages including text, media, and templates.",

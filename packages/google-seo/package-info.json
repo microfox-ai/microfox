@@ -171,32 +171,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["GoogleSearchConsoleSDK"],
-      "description": "Your Google OAuth 2.0 client ID. Obtain this value from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["GoogleSearchConsoleSDK"],
-      "description": "Your Google OAuth 2.0 client secret. Obtain this value from the Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REDIRECT_URI",
-      "constructors": ["GoogleSearchConsoleSDK"],
-      "description": "The redirect URI you specified in your Google Cloud Console.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["GoogleSearchConsoleSDK"],
-      "description": "Your Google OAuth 2.0 access token. Obtain this value through the OAuth 2.0 flow.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "To use this SDK, you need to obtain Google OAuth 2.0 credentials (client ID and client secret) from the Google Cloud Console (https://console.cloud.google.com/).",
     "Enable the Google Search Console API in your Google Cloud project.",

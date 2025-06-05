@@ -158,32 +158,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "X_API_KEY",
-      "constructors": ["createXSDK"],
-      "description": "Your X API key.",
-      "required": true
-    },
-    {
-      "key": "X_API_SECRET",
-      "constructors": ["createXSDK"],
-      "description": "Your X API secret key.",
-      "required": true
-    },
-    {
-      "key": "X_ACCESS_TOKEN",
-      "constructors": ["createXSDK"],
-      "description": "Your X access token.",
-      "required": true
-    },
-    {
-      "key": "X_ACCESS_SECRET",
-      "constructors": ["createXSDK"],
-      "description": "Your X access token secret.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createXSDK` constructor to create a new X client.",
     "The SDK supports both v2 API endpoints for tweets and users.",

@@ -54,32 +54,6 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The access token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The refresh token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client ID for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client secret for the YouTube client",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createYouTubeSDKWithTokens` constructor to create a new YouTube client."
   ],
