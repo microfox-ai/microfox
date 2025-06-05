@@ -14,6 +14,8 @@
     "packages/webhook-slack"
   ],
   "stablePackages": [
+    "packages/ai-provider-anthropic",
+    "packages/ai-provider-google",
     "packages/ai-provider-openai",
     "packages/aws-ses",
     "packages/brave",
@@ -62,6 +64,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 49,
-  "generatedAt": "2025-05-30T16:58:46.611Z"
+  "total": 51,
+  "generatedAt": "2025-06-05T08:58:49.177Z"
 }
