@@ -42,7 +42,8 @@
           "displayName": "Scopes",
           "description": "The scopes for the Google client"
         }
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-oauth/docs/GoogleOAuthSdk.md"
     }
   ],
   "extraInfo": [

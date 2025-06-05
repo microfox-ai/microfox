@@ -1,7 +1,7 @@
 {
-  "name": "slack-public-api",
-  "version": "1.0.7",
-  "description": "Send messages to Slack channels and users",
+  "name": "public-slack-web-tiny-api",
+  "version": "1.0.0",
+  "description": "A lightweight, type-safe SDK for interacting with the Slack Web API",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -16,8 +16,9 @@
     "lint": "eslint  --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@microfox/slack-web-tiny": "^1.2.0",
-    "dotenv": "^16.4.5"
+    "@microfox/crypto-sdk": "^1.0.3",
+    "dotenv": "^16.4.5",
+    "@microfox/slack-web-tiny": "^1.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",

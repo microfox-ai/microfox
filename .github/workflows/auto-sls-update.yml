@@ -1,0 +1,211 @@
+name: Auto SLS Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/*/docs/*.md'
+
+jobs:
+  detect-and-update:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history for proper diff
+
+    - name: Use Node.js 23.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: '23'
+
+    - name: Install dependencies
+      run: |
+        cd scripts
+        npm i
+
+    - name: Detect changed documentation files
+      id: detect-changes
+      run: |
+        # For push events, compare with previous commit
+        BASE_SHA="${{ github.event.before }}"
+        
+        echo "Comparing against base: $BASE_SHA"
+        
+        # Get changed files
+        CHANGED_FILES=$(git diff --name-only $BASE_SHA HEAD)
+        echo "Changed files:"
+        echo "$CHANGED_FILES"
+        
+        # Filter for .md files in packages/*/docs/ directories
+        DOC_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^packages/[^/]+/docs/[^/]+\.md$' || true)
+        
+        if [ -z "$DOC_CHANGES" ]; then
+          echo "No documentation changes detected"
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        echo "Documentation changes detected:"
+        echo "$DOC_CHANGES"
+        
+        # Group changes by package, but only for packages with existing sls directory
+        declare -A PACKAGE_FUNCTIONS
+        
+        while IFS= read -r file; do
+          if [[ $file =~ ^packages/([^/]+)/docs/([^/]+)\.md$ ]]; then
+            PACKAGE_NAME="${BASH_REMATCH[1]}"
+            FUNCTION_NAME="${BASH_REMATCH[2]}"
+            
+            # Check if package has sls directory
+            if [ -d "packages/$PACKAGE_NAME/sls" ]; then
+              echo "✅ Package $PACKAGE_NAME has sls directory, including function: $FUNCTION_NAME"
+              
+              if [[ -n "${PACKAGE_FUNCTIONS[$PACKAGE_NAME]}" ]]; then
+                PACKAGE_FUNCTIONS[$PACKAGE_NAME]="${PACKAGE_FUNCTIONS[$PACKAGE_NAME]},$FUNCTION_NAME"
+              else
+                PACKAGE_FUNCTIONS[$PACKAGE_NAME]="$FUNCTION_NAME"
+              fi
+            else
+              echo "⏭️ Package $PACKAGE_NAME has no sls directory, skipping function: $FUNCTION_NAME"
+            fi
+          fi
+        done <<< "$DOC_CHANGES"
+        
+        # Check if we have any packages to process
+        if [ ${#PACKAGE_FUNCTIONS[@]} -eq 0 ]; then
+          echo "No packages with sls directory found in changes"
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Create update commands
+        UPDATE_COMMANDS=""
+        for package in "${!PACKAGE_FUNCTIONS[@]}"; do
+          functions="${PACKAGE_FUNCTIONS[$package]}"
+          if [ -n "$UPDATE_COMMANDS" ]; then
+            UPDATE_COMMANDS="$UPDATE_COMMANDS;"
+          fi
+          UPDATE_COMMANDS="${UPDATE_COMMANDS}${package}:${functions}"
+        done
+        
+        echo "Update commands: $UPDATE_COMMANDS"
+        echo "has_changes=true" >> $GITHUB_OUTPUT
+        echo "update_commands=$UPDATE_COMMANDS" >> $GITHUB_OUTPUT
+
+    - name: Run SLS updates
+      if: steps.detect-changes.outputs.has_changes == 'true'
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      run: |
+        UPDATE_COMMANDS="${{ steps.detect-changes.outputs.update_commands }}"
+        
+        if [ -z "$UPDATE_COMMANDS" ]; then
+          echo "No update commands to execute"
+          exit 0
+        fi
+        
+        echo "Executing SLS updates..."
+        
+        # Split commands by semicolon
+        IFS=';' read -ra COMMANDS <<< "$UPDATE_COMMANDS"
+        
+        for cmd in "${COMMANDS[@]}"; do
+          if [[ $cmd =~ ^([^:]+):(.+)$ ]]; then
+            PACKAGE_NAME="${BASH_REMATCH[1]}"
+            FUNCTIONS="${BASH_REMATCH[2]}"
+            
+            echo "🔧 Updating SLS for package: $PACKAGE_NAME, functions: $FUNCTIONS"
+            
+            # Run the SLS generation script with ts-node
+            cd scripts
+            npm run gen:sls "$PACKAGE_NAME" "$FUNCTIONS"
+            
+            if [ $? -eq 0 ]; then
+              echo "✅ Successfully updated SLS for $PACKAGE_NAME"
+            else
+              echo "❌ Failed to update SLS for $PACKAGE_NAME"
+              exit 1
+            fi
+            
+            cd ..
+          fi
+        done
+
+    - name: Check for SLS changes
+      if: steps.detect-changes.outputs.has_changes == 'true'
+      id: check-sls-changes
+      run: |
+        # Check if any SLS files were modified (exclude tracking files)
+        SLS_CHANGES=$(git diff --name-only | grep -E '^packages/.*/sls/' || true)
+        
+        if [ -z "$SLS_CHANGES" ]; then
+          echo "No SLS files were modified"
+          echo "has_sls_changes=false" >> $GITHUB_OUTPUT
+        else
+          echo "SLS files were modified"
+          echo "has_sls_changes=true" >> $GITHUB_OUTPUT
+          
+          # Show what changed
+          echo "Modified SLS files:"
+          echo "$SLS_CHANGES"
+          
+          # Store the SLS files for commit
+          echo "$SLS_CHANGES" > /tmp/sls_files_to_commit.txt
+        fi
+
+    - name: Commit and push SLS changes
+      if: steps.check-sls-changes.outputs.has_sls_changes == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        # Stash all changes (including SLS files)
+        git stash push -m "SLS auto-update changes"
+        
+        # Clean any remaining unstaged changes
+        git clean -fd
+        git checkout -- .
+        
+        # Pull latest changes
+        git pull origin $(git branch --show-current)
+        
+        # Unstash the SLS changes
+        git stash pop
+        
+        # Add only SLS files and commit
+        git add 'packages/*/sls/*'
+        git commit -m "🤖 Auto-update SLS files for documentation changes"
+        
+        # Push to current branch
+        git push origin $(git branch --show-current)
+
+    - name: Summary
+      if: steps.detect-changes.outputs.has_changes == 'true'
+      run: |
+        echo "## SLS Update Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        UPDATE_COMMANDS="${{ steps.detect-changes.outputs.update_commands }}"
+        IFS=';' read -ra COMMANDS <<< "$UPDATE_COMMANDS"
+        
+        echo "### Updated Packages:" >> $GITHUB_STEP_SUMMARY
+        for cmd in "${COMMANDS[@]}"; do
+          if [[ $cmd =~ ^([^:]+):(.+)$ ]]; then
+            PACKAGE_NAME="${BASH_REMATCH[1]}"
+            FUNCTIONS="${BASH_REMATCH[2]}"
+            echo "- **$PACKAGE_NAME**: $FUNCTIONS" >> $GITHUB_STEP_SUMMARY
+          fi
+        done
+        
+        if [ "${{ steps.check-sls-changes.outputs.has_sls_changes }}" = "true" ]; then
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ SLS files were successfully updated and committed." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "ℹ️ No SLS file changes were needed." >> $GITHUB_STEP_SUMMARY
+        fi 

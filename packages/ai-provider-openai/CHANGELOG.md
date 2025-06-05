@@ -1,5 +1,25 @@
 # @microfox/ai-provider-openai
 
+## 1.0.10
+
+### Patch Changes
+
+- 85e8788: release: update package-lock.json and add new AI provider packages for Anthropic and Google
+
+## 1.0.9
+
+### Patch Changes
+
+- ff19156: release: feat: add OpenAIChatSettings interface and update languageModel method to accept settings
+
+## 1.0.8
+
+### Patch Changes
+
+- 82d5fb7: Changes from PR #370: updates
+- Updated dependencies [82d5fb7]
+  - @microfox/usage-tracker@0.0.3
+
 ## 1.0.7
 
 ### Patch Changes

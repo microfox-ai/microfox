@@ -320,7 +320,8 @@
         "respondToInteraction",
         "deferInteraction",
         "followUpInteraction"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createDiscordSdk.md"
     }
   ],
   "extraInfo": [

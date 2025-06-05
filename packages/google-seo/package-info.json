@@ -168,7 +168,8 @@
         "deleteSitemap",
         "querySearchAnalytics",
         "inspectUrl"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/GoogleSearchConsoleSDK.md"
     }
   ],
   "extraInfo": [

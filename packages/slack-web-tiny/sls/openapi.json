@@ -1,9 +1,10 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Microfox SDK Unified API",
+    "title": "Microfox Slack Web Tiny API",
     "version": "1.0.0",
-    "description": "Single entry-point API for all Microfox SDK functions via a wrapper Lambda",
+    "mcp_version": "1.0.1",
+    "description": "Single entry-point API for all Microfox Slack Web Tiny functions via a wrapper Lambda",
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
@@ -19,8 +20,8 @@
     "/sendMessage": {
       "post": {
         "operationId": "sendMessage",
-        "summary": "Send a message to a Slack channel",
-        "description": "Posts a message to a specified Slack channel using the Slack SDK.",
+        "summary": "Sends a message to a specified Slack channel.",
+        "description": "This function posts a message to a Slack channel using the provided SlackMessage object. It supports sending simple text messages, messages with Block Kit blocks, threaded replies, and interactive elements like buttons. The function returns a promise that resolves to a SlackMessageResponse containing details about the sent message.",
         "requestBody": {
           "required": true,
           "content": {
@@ -28,63 +29,238 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "channel": {
-                    "type": "string",
-                    "description": "Channel ID or name"
-                  },
-                  "text": { "type": "string", "description": "Message text" },
-                  "blocks": {
-                    "type": "array",
-                    "items": { "type": "object" },
-                    "description": "Block Kit blocks (optional)"
-                  },
-                  "attachments": {
-                    "type": "array",
-                    "items": { "type": "object" },
-                    "description": "Legacy attachments (optional)"
-                  },
-                  "thread_ts": {
-                    "type": "string",
-                    "description": "Timestamp for thread replies (optional)"
-                  },
-                  "reply_broadcast": {
-                    "type": "boolean",
-                    "description": "Broadcast reply in thread (optional)"
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the sendMessage sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "SlackMessage object containing message details",
+                            "properties": {
+                              "channel": {
+                                "type": "string",
+                                "description": "Channel ID or name where the message will be sent"
+                              },
+                              "text": {
+                                "type": "string",
+                                "description": "Message text content"
+                              },
+                              "blocks": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Optional Block Kit blocks for rich message formatting"
+                              },
+                              "attachments": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Optional legacy attachments for message formatting"
+                              },
+                              "thread_ts": {
+                                "type": "string",
+                                "description": "Optional timestamp of parent message for threading"
+                              },
+                              "reply_broadcast": {
+                                "type": "boolean",
+                                "description": "Optional flag to broadcast reply in thread"
+                              }
+                            },
+                            "required": [
+                              "channel",
+                              "text"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "SLACK_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of SLACK_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/slack-web-tiny"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
                   }
-                },
-                "required": ["channel", "text"]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Message sent successfully",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "ok": { "type": "boolean" },
-                    "channel": { "type": "string" },
-                    "ts": { "type": "string" },
-                    "message": { "type": "object" },
-                    "error": { "type": "string" }
-                  }
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Success indicator"
+                    },
+                    "channel": {
+                      "type": "string",
+                      "description": "Channel ID where the message was sent"
+                    },
+                    "ts": {
+                      "type": "string",
+                      "description": "Timestamp of the sent message"
+                    },
+                    "message": {
+                      "type": "object",
+                      "description": "Message details",
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
                 }
               }
             }
           },
-          "400": { "description": "Missing or invalid parameters" },
-          "500": { "description": "Internal server error" }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "const": "invalid_auth"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "const": "rate_limited"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server issue"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
         }
       }
     },
     "/updateMessage": {
       "post": {
         "operationId": "updateMessage",
-        "summary": "Update an existing Slack message",
-        "description": "Modifies the content of a previously sent Slack message.",
+        "summary": "Updates an existing message in a Slack channel.",
+        "description": "This function modifies the content of a previously sent message in a Slack channel. It allows updating the message text, blocks, and attachments. The function returns a promise that resolves to the Slack API response, containing information about the updated message.",
         "requestBody": {
           "required": true,
           "content": {
@@ -92,59 +268,210 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "channel": { "type": "string", "description": "Channel ID" },
-                  "ts": {
-                    "type": "string",
-                    "description": "Message timestamp"
-                  },
-                  "text": {
-                    "type": "string",
-                    "description": "New message text (optional)"
-                  },
-                  "blocks": {
-                    "type": "array",
-                    "items": { "type": "object" },
-                    "description": "Updated blocks (optional)"
-                  },
-                  "attachments": {
-                    "type": "array",
-                    "items": { "type": "object" },
-                    "description": "Updated attachments (optional)"
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the updateMessage sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "An object containing the updated message data",
+                            "properties": {
+                              "channel": {
+                                "type": "string",
+                                "description": "Channel ID where the message is located"
+                              },
+                              "ts": {
+                                "type": "string",
+                                "description": "Message timestamp"
+                              },
+                              "text": {
+                                "type": "string",
+                                "description": "New message text (optional)"
+                              },
+                              "blocks": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Updated blocks (optional)"
+                              },
+                              "attachments": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object"
+                                },
+                                "description": "Updated attachments (optional)"
+                              }
+                            },
+                            "required": [
+                              "channel",
+                              "ts"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "SLACK_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of SLACK_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/slack-web-tiny"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
                   }
-                },
-                "required": ["channel", "ts"]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Message updated successfully",
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "ok": { "type": "boolean" },
-                    "channel": { "type": "string" },
-                    "ts": { "type": "string" },
-                    "message": { "type": "object" },
-                    "error": { "type": "string" }
-                  }
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Success indicator"
+                    },
+                    "channel": {
+                      "type": "string",
+                      "description": "Channel ID"
+                    },
+                    "ts": {
+                      "type": "string",
+                      "description": "Message timestamp"
+                    },
+                    "message": {
+                      "type": "object",
+                      "description": "Message details",
+                      "additionalProperties": true
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
                 }
               }
             }
           },
-          "400": { "description": "Missing or invalid parameters" },
-          "500": { "description": "Internal server error" }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Message or channel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
         }
       }
     },
     "/uploadFile": {
       "post": {
         "operationId": "uploadFile",
-        "summary": "Upload a file to Slack",
-        "description": "Shares a file in a Slack channel or conversation.",
+        "summary": "Upload a file to Slack channels or conversations.",
+        "description": "This function allows users to upload and share files in Slack channels or conversations. It supports various file upload options including content, filename, file type, and additional metadata. The function returns a promise that resolves to the Slack API response containing file details or error information.",
         "requestBody": {
           "required": true,
           "content": {
@@ -152,33 +479,89 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "channels": {
-                    "type": "string",
-                    "description": "Comma-separated channel IDs (optional)"
-                  },
-                  "content": {
-                    "type": "string",
-                    "description": "File content as string (optional)"
-                  },
-                  "filename": {
-                    "type": "string",
-                    "description": "Filename (optional)"
-                  },
-                  "filetype": {
-                    "type": "string",
-                    "description": "File type identifier (optional)"
-                  },
-                  "initial_comment": {
-                    "type": "string",
-                    "description": "Initial comment (optional)"
-                  },
-                  "thread_ts": {
-                    "type": "string",
-                    "description": "Thread timestamp (optional)"
-                  },
-                  "title": {
-                    "type": "string",
-                    "description": "File title (optional)"
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the uploadFile sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "File upload configuration object",
+                            "properties": {
+                              "channels": {
+                                "type": "string",
+                                "description": "Comma-separated channel IDs where the file will be shared"
+                              },
+                              "content": {
+                                "type": "string",
+                                "description": "File content as string"
+                              },
+                              "filename": {
+                                "type": "string",
+                                "description": "Name of the file being uploaded"
+                              },
+                              "filetype": {
+                                "type": "string",
+                                "description": "File type identifier"
+                              },
+                              "initial_comment": {
+                                "type": "string",
+                                "description": "Initial comment to be added with the file"
+                              },
+                              "thread_ts": {
+                                "type": "string",
+                                "description": "Thread timestamp if the file is being added to a thread"
+                              },
+                              "title": {
+                                "type": "string",
+                                "description": "Title of the file"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "SLACK_BOT_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of SLACK_BOT_TOKEN"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/slack-web-tiny"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
                   }
                 }
               }
@@ -187,25 +570,82 @@
         },
         "responses": {
           "200": {
-            "description": "File uploaded successfully",
+            "description": "Successful file upload",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "ok": { "type": "boolean" },
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Indicates if the upload was successful"
+                    },
                     "file": {
                       "type": "object",
-                      "properties": { "id": { "type": "string" } }
-                    },
-                    "error": { "type": "string" }
-                  }
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique identifier of the uploaded file"
+                        }
+                      },
+                      "description": "Details of the uploaded file"
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
                 }
               }
             }
           },
-          "400": { "description": "Missing or invalid parameters" },
-          "500": { "description": "Internal server error" }
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server-side issue"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
         }
       }
     }

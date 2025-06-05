@@ -20,9 +20,12 @@
     "update:package-info": "ts-node src/agents/metafox/updateRootPackageInfo.ts",
     "update:package": "npm run update:package-list && npm run update:package-info",
     "embed:docs": "ts-node src/embeddings/embedDocs.ts",
+    "save:package-info": "ts-node src/package-info/savePackageInfo.ts",
+    "query:package-info": "ts-node src/package-info/queryPackageInfo.ts",
     "embed:query": "ts-node src/embeddings/queryDocs.ts",
     "workflow:packagefox": "ts-node src/handleWorkflow.ts",
-    "deploy:sls": "ts-node src/serverless/deploy/ci.ts",
+    "deploy:sls": "ts-node src/agents/slsfox/deploy/ci.ts",
+    "gen:sls": "ts-node src/agents/slsfox/genSls.ts",
     "api:query": "ts-node src/embeddings/queryApis.ts"
   },
   "dependencies": {

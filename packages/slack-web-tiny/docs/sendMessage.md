@@ -41,6 +41,7 @@ export interface SlackMessageResponse {
 }
 ```
 
+
 **Examples:**
 
 ```typescript

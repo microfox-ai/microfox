@@ -1,50 +1,60 @@
 {
   "name": "@microfox/usage-tracker",
-  "version": "1.0.2",
-  "description": "Microfox AI usage tracker which tracks usage of any LLM and TypeScript AI SDK internally.",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/microfox-ai/microfox.git"
-  },
-  "type": "module",
-  "source": "./src/index.ts",
+  "version": "0.0.5",
+  "description": "A TypeScript SDK for Tracking Usage of any LLM and TypeScript AI SDK internally.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    }
-  },
   "files": [
     "dist/**/*",
     "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
+    "build:watch": "tsup --watch",
     "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
     "prettier-check": "prettier --check \"./**/*.ts*\""
   },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "dependencies": {
+    "zod": "^3.24.2",
     "@upstash/redis": "*"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "eslint": "^8.0.0"
   },
-  "keywords": [
-    "microfox",
-    "ai",
-    "sdk",
-    "usage",
-    "tracker"
-  ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "usage",
+    "tracker",
+    "llm",
+    "ai",
+    "sdk",
+    "microfox",
+    "sdk"
+  ]
 }

@@ -152,7 +152,8 @@
         "sendMessage",
         "listThreads",
         "getThread"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/gmail/docs/createGmailSDK.md"
     }
   ],
   "extraInfo": [

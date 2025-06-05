@@ -12,8 +12,10 @@ permissions:
 jobs:
   detect-changes:
     # Only run on merge commits to main and skip if PR title starts with "Version Changes"
-    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Merge pull request ') && !contains(github.event.head_commit.message, '/changeset-release/')
+    if: github.event_name == 'push' && (startsWith(github.event.head_commit.message, 'Merge pull request ') || startsWith(github.event.head_commit.message, 'release:')) && !contains(github.event.head_commit.message, '/changeset-release/')
     runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Debug Event
         run: |
@@ -194,6 +196,11 @@ jobs:
           chmod +x scripts/reset-microfox-files.sh
           ./scripts/reset-microfox-files.sh
 
+      - name: Clean up  & reset .microfox files
+        run: |
+          echo '{"requests": []}' > .microfox/packagefox-build.json
+          echo "{}" > .microfox/pr-usage.json
+
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
@@ -201,3 +208,56 @@ jobs:
           git add .microfox/
           git commit -m "Reset microfox files after merge to main"
           git push
+
+  auto-release:
+    name: Auto Release
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' && 
+      startsWith(github.event.head_commit.message, 'release:') && 
+      needs.detect-changes.outputs.any_changed == 'true'
+    steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.PACKAGEFOX_APP_ID }}
+          private_key: ${{ secrets.PACKAGEFOX_PRIVATE_KEY }}
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          # Checkout the main branch explicitly
+          ref: main
+          # Use the GITHUB_TOKEN for authentication, permissions are set above
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Create dummy changeset file
+        run: |
+          mkdir -p .changeset
+          # Use printf to correctly handle newline characters
+          printf -- "---\n---\n\nTriggered by issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}\n" > .changeset/trigger-${{ github.event.issue.number }}.md
+          echo "Created .changeset/trigger-${{ github.event.issue.number }}.md"
+
+      - name: Commit and push changeset file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .changeset/trigger-${{ github.event.issue.number }}.md
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: create changeset trigger file for issue #${{ github.event.issue.number }}"
+            git push origin main
+            echo "Changes pushed to main branch."
+          fi
+
+      - name: Close the issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close $ISSUE_NUMBER --comment "Changeset file created and pushed. Closing issue."
+          echo "Issue #${ISSUE_NUMBER} closed."

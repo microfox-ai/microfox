@@ -1,0 +1,21 @@
+import { CONSTRUCTOR_NAME } from 'PACKAGE_NAME';
+
+export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
+    // VALIDATION_BLOCK: Environment variable validation will be inserted here
+
+    // Initialize SDK
+    const sdk = CONSTRUCTOR_NAME({
+        // CONSTRUCTOR_PARAMS: Constructor parameters will be inserted here
+        apiKey: envVars['API_KEY'],
+        apiKey2: envVars['API_KEY2'],
+    });
+
+    // Map functions
+    const sdkMap: Record<string, Function> = {
+        // FUNCTION_MAPPINGS: Function mappings will be inserted here
+        functionName: sdk.functionName.bind(sdk),
+        functionName2: sdk.functionName2.bind(sdk),
+    };
+
+    return sdkMap;
+} 

@@ -1,0 +1,110 @@
+{
+  "name": "@microfox/drive",
+  "title": "Microfox Drive SDK",
+  "description": "Google Drive SDK for Microfox",
+  "path": "packages/drive",
+  "dependencies": [
+    "@microfox/google",
+    "@microfox/rest-sdk",
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "/connect/google-oauth",
+  "documentation": "https://www.npmjs.com/package/@microfox/drive",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg",
+  "constructors": [
+    {
+      "name": "createDriveSDKWithTokens",
+      "description": "Create a new Drive client",
+      "zodSecretSchema": "DriveSDKOptionsSchema",
+      "auth": "oauth2",
+      "authEndpoint": "/connect/google-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "SCOPES",
+          "displayName": "Scopes",
+          "description": "The scopes for the Google Drive client",
+          "defaultValue": [
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/drive.readonly",
+            "https://www.googleapis.com/auth/drive.photos.readonly"
+          ]
+        },
+        {
+          "key": "DRIVE_ACCESS_TOKEN",
+          "displayName": "Access Token",
+          "description": "The access token for the Google Drive client"
+        },
+        {
+          "key": "DRIVE_REFRESH_TOKEN",
+          "displayName": "Refresh Token",
+          "description": "The refresh token for the Google Drive client"
+        },
+        {
+          "key": "GOOGLE_CLIENT_ID",
+          "displayName": "Client ID",
+          "description": "The client ID for the Google Drive client"
+        },
+        {
+          "key": "GOOGLE_CLIENT_SECRET",
+          "displayName": "Client Secret",
+          "description": "The client secret for the Google Drive client"
+        }
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/drive/docs/createDriveSDKWithTokens.md"
+    }
+  ],
+  "keysInfo": [
+    {
+      "key": "DRIVE_ACCESS_TOKEN",
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
+      "description": "The access token for the Google Drive client",
+      "required": true
+    },
+    {
+      "key": "DRIVE_REFRESH_TOKEN",
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
+      "description": "The refresh token for the Google Drive client",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_CLIENT_ID",
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
+      "description": "The client ID for the Google Drive client",
+      "required": true
+    },
+    {
+      "key": "GOOGLE_CLIENT_SECRET",
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
+      "description": "The client secret for the Google Drive client",
+      "required": true
+    },
+    {
+      "key": "SCOPES",
+      "constructors": [
+        "createDriveSDKWithTokens"
+      ],
+      "description": "The scopes for the Google Drive client",
+      "required": true
+    }
+  ],
+  "extraInfo": [
+    "Use the `createDriveSDKWithTokens` constructor to create a new Drive client."
+  ],
+  "readme_map": {
+    "path": "/README.md",
+    "functionalities": [],
+    "description": "No description provided",
+    "all_readmes": []
+  },
+  "platformType": "tool"
+}

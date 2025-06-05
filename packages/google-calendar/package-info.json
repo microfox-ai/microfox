@@ -380,7 +380,8 @@
         "watchCalendarList",
         "watchEvents",
         "watchSettings"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md"
     }
   ],
   "keyInstructions": {

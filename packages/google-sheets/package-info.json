@@ -163,7 +163,8 @@
         "batchClearValues",
         "detectDuplicateRows",
         "sanitizeSheetData"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/createGoogleSheetsSdk.md"
     }
   ],
   "extraInfo": [

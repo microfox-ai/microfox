@@ -1,5 +1,21 @@
 # @microfox/aws-ses
 
+## 1.1.8
+
+### Patch Changes
+
+- 0e76275: Changes from PR #395: vwjt_slsfox_may_2025
+- eed2cd5: Changes from PR #393: vwjt_slsfox_may_2025
+- eef1616: Changes from PR #396: vwjt_slsfox_may_2025
+
+## 1.1.7
+
+### Patch Changes
+
+- 82d5fb7: Changes from PR #370: updates
+- Updated dependencies [82d5fb7]
+  - @microfox/usage-tracker@0.0.3
+
 ## 1.1.6
 
 ### Patch Changes

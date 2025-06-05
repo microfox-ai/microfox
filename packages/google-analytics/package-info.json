@@ -258,7 +258,8 @@
         "getReportTask",
         "listReportTasks",
         "refreshAccessToken"
-      ]
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-analytics/docs/GoogleAnalyticsSDK.md"
     }
   ],
   "extraInfo": [

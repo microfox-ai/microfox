@@ -1,24 +1,214 @@
 # @microfox/usage-pricing
 
-This package contains pricing configurations for various AI providers and services used in the Microfox platform.
+A TypeScript SDK for tracking and managing usage-based pricing in Microfox applications. This SDK provides functionality to track, retrieve, and analyze usage data with built-in pricing calculations.
+
+## Installation
+
+```bash
+npm install @microfox/usage-pricing
+# or
+yarn add @microfox/usage-pricing
+```
+
+## Configuration
+
+The SDK requires Redis configuration for storing and retrieving usage data. You can provide the configuration in two ways:
+
+1. Through environment variables:
+
+```env
+MICROFOX_REDIS_URL_TRACKER=your_redis_url
+MICROFOX_REDIS_TOKEN_TRACKER=your_redis_token
+MICROFOX_CLIENT_REQUEST_ID=your_client_id
+```
+
+2. Through constructor options:
+
+```typescript
+import { createMicrofoxUsagePricing } from '@microfox/usage-pricing';
+
+const usagePricing = createMicrofoxUsagePricing({
+  redisOptions: {
+    url: 'your_redis_url',
+    token: 'your_redis_token',
+  },
+  prefix: 'your_prefix',
+});
+```
 
 ## Usage
 
-```typescript
-import { OpenAIPricingConfig } from '@microfox/usage-pricing';
+### Basic Usage
 
-// Access pricing configurations
-const openAIPricing = OpenAIPricingConfig['ai-provider-openai'];
+```typescript
+import { createDefaultMicrofoxUsagePricing } from '@microfox/usage-pricing';
+
+const usagePricing = createDefaultMicrofoxUsagePricing();
 ```
 
-## Structure
+### Using Pricing Functions
 
-The package is organized by provider, with each provider having its own pricing configuration file in the `src/pricing` directory.
+The SDK provides several functions to calculate pricing for different types of usage:
 
-## Adding New Pricing Configurations
+```typescript
+import {
+  attachPricing,
+  attachPricingApi1,
+  attachPricingLLM,
+} from '@microfox/usage-pricing';
 
-To add a new pricing configuration:
+// Calculate pricing for any type of usage
+const usageWithPricing = attachPricing({
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+});
 
-1. Create a new file in `src/pricing` for the provider
-2. Export the configuration from the file
-3. Add the export to `src/index.ts`
+// Calculate pricing specifically for API usage
+const apiUsageWithPricing = attachPricingApi1({
+  type: 'api_1',
+  package: 'aws-ses',
+  requestKey: 'send-email',
+  requestCount: 100,
+  requestData: 5000,
+});
+
+// Calculate pricing specifically for LLM usage
+const llmUsageWithPricing = attachPricingLLM({
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+});
+```
+
+The pricing functions return an object that includes:
+
+- All original usage data
+- `priceUSD`: The final price in USD after applying any markup
+- `originalPriceUSD`: The base price in USD before markup
+
+Example response:
+
+```typescript
+{
+  type: 'llm',
+  model: 'gpt-4',
+  promptTokens: 100,
+  completionTokens: 50,
+  package: 'openai',
+  priceUSD: 0.012, // Price after markup
+  originalPriceUSD: 0.015 // Original price before markup
+}
+```
+
+### API Reference
+
+#### Get Usage Data
+
+```typescript
+// Get usage with pagination
+const usage = await usagePricing.getUsage(packageName, prefixDateKey, {
+  limit: 100,
+  offset: 0,
+});
+
+// Get daily usage
+const dailyUsage = await usagePricing.getDailyUsage(packageName, {
+  limit: 100,
+  offset: 0,
+});
+
+// Get monthly usage
+const monthlyUsage = await usagePricing.getMonthlyUsage(packageName, {
+  limit: 100,
+  offset: 0,
+});
+
+// Get yearly usage
+const yearlyUsage = await usagePricing.getYearlyUsage(packageName, {
+  limit: 100,
+  offset: 0,
+});
+```
+
+#### Get Full Usage Data
+
+```typescript
+// Get full usage data
+const fullUsage = await usagePricing.getFullUsage(packageName, prefixDateKey);
+
+// Get full daily usage
+const fullDailyUsage = await usagePricing.getFullDailyUsage(packageName);
+
+// Get full monthly usage
+const fullMonthlyUsage = await usagePricing.getFullMonthlyUsage(packageName);
+
+// Get full yearly usage
+const fullYearlyUsage = await usagePricing.getFullYearlyUsage(packageName);
+```
+
+### Response Format
+
+The usage data is returned in the following format:
+
+```typescript
+{
+  data: Usage[], // Array of usage entries with pricing information
+  total: number, // Total number of items
+  limit: number, // Number of items per page
+  offset: number, // Current offset
+  hasMore: boolean // Whether there are more items to fetch
+}
+```
+
+Each usage entry includes:
+
+- Usage metrics
+- Package information
+- Timestamp
+- Pricing information (automatically attached)
+
+## Types
+
+### UsageTrackerConstructorOptions
+
+```typescript
+interface UsageTrackerConstructorOptions {
+  redisOptions?: {
+    url?: string;
+    token?: string;
+  };
+  prefix?: string;
+}
+```
+
+### Usage
+
+The Usage type represents a single usage entry with pricing information attached.
+
+## Error Handling
+
+The SDK handles various error cases:
+
+- Invalid Redis configuration
+- Missing environment variables
+- Invalid usage data format
+
+## Best Practices
+
+1. Always provide proper Redis configuration
+2. Use appropriate pagination parameters to manage large datasets
+3. Handle the response data appropriately in your application
+4. Monitor usage patterns using the different time-based methods
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.

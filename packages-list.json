@@ -8,10 +8,24 @@
     "packages/@ext_octokit",
     "packages/@ext_puppeteer"
   ],
-  "semiStablePackages": [
+  "webhookConnectorPackages": [
+    "packages/agent-kit",
+    "packages/webhook-octokit",
+    "packages/webhook-slack"
+  ],
+  "stablePackages": [
+    "packages/ai-provider-anthropic",
+    "packages/ai-provider-google",
     "packages/ai-provider-openai",
-    "packages/amazon-rekognition-face-detection",
+    "packages/aws-ses",
     "packages/brave",
+    "packages/google-sheets",
+    "packages/linkedin-share",
+    "packages/slack-web-tiny",
+    "packages/whatsapp-business"
+  ],
+  "semiStablePackages": [
+    "packages/amazon-rekognition-face-detection",
     "packages/coingecko-sdk",
     "packages/discord",
     "packages/drive",
@@ -28,18 +42,17 @@
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
   ],
-  "stablePackages": [
-    "packages/aws-ses",
-    "packages/google-sheets",
-    "packages/linkedin-share",
-    "packages/slack-web-tiny",
-    "packages/whatsapp-business"
-  ],
   "partialPackages": [
     "packages/core",
     "packages/gravatar",
     "packages/stdlib",
     "packages/twitter"
+  ],
+  "internalPackages": [
+    "packages/crypto-sdk",
+    "packages/rest-sdk",
+    "packages/usage-pricing",
+    "packages/usage-tracker"
   ],
   "oauthConnectorPackages": [
     "packages/fillout-oauth",
@@ -51,14 +64,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "internalPackages": [
-    "packages/rest-sdk",
-    "packages/usage-pricing",
-    "packages/usage-tracker"
-  ],
-  "webhookConnectorPackages": [
-    "packages/webhook-slack"
-  ],
-  "total": 46,
-  "generatedAt": "2025-05-26T09:50:39.433Z"
+  "total": 51,
+  "generatedAt": "2025-06-05T08:58:49.177Z"
 }

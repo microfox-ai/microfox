@@ -11,6 +11,7 @@ import { generateExternalDocs } from './agents/docfox/genExtDocs';
 import { generateDocs } from './agents/docfox/genDocs';
 import { generateOAuthPackage } from './agents/packagefox/genOAuthPackage';
 import { regenPackage } from './agents/packagefox/regenPackage';
+import { generateSLSStructure } from './agents/slsfox/genSls';
 
 /**
  * This script is used to handle the PackageFox workflow.
@@ -20,10 +21,11 @@ import { regenPackage } from './agents/packagefox/regenPackage';
  * The available requests are:
  * 1. pkg-create: Generate a new package
  * 2. pkg-build: Build the package
- * 3. bug: Fix a bug in the package
- * 4. genExt: Generate an extension package
- * 5. genExtDocs: Generate extension documentation
- * 6. genDocs: Generate documentation
+ * 3. gen-pkg-sls: Generate SLS files for a package
+ * 4. bug: Fix a bug in the package
+ * 5. genExt: Generate an extension package
+ * 6. genExtDocs: Generate extension documentation
+ * 7. genDocs: Generate documentation
  */
 async function handleWorkflow() {
   const configPath = path.join(
@@ -197,6 +199,15 @@ async function handleWorkflow() {
           'utf8',
         );
         await generateDocs(code, packageInfo, packageDir);
+        await cleanupUsage();
+        break;
+      case 'gen-pkg-sls':
+        if (!packageName) {
+          console.error('Error: Missing PACKAGE_NAME for gen-pkg-sls');
+          process.exit(1);
+        }
+        console.log(`Running gen-pkg-sls for package: "${packageName}"`);
+        await generateSLSStructure(packageName.replace('@microfox/', ''));
         await cleanupUsage();
         break;
       default:

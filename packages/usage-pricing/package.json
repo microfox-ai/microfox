@@ -1,23 +1,62 @@
 {
   "name": "@microfox/usage-pricing",
-  "version": "0.1.1",
-  "private": true,
+  "version": "0.0.11",
+  "description": "A TypeScript SDK for Tracking Pricing & Usage of any LLM and TypeScript AI SDK internally.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch",
-    "lint": "eslint src/",
-    "clean": "rm -rf dist"
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
   "dependencies": {
+    "zod": "^3.24.2",
     "@microfox/usage-tracker": "*",
     "@upstash/redis": "*"
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "tsup": "^8",
+    "typescript": "5.6.3",
     "eslint": "^8.0.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "usage",
+    "pricing",
+    "llm",
+    "ai",
+    "sdk",
+    "typescript",
+    "microfox",
+    "sdk"
+  ]
 }

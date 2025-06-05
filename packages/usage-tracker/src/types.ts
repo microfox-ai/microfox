@@ -33,7 +33,8 @@ const API1UsageSchema = z.object({
 
 const BaseUsageSchema = z.object({
   package: z.string(),
-  priceUSD: z.number().optional(),
+  timestamp: z.string().optional(),
+  markup: z.number().optional(),
 });
 
 export const UsageSchema = BaseUsageSchema.and(
@@ -44,3 +45,4 @@ export type Usage = z.infer<typeof UsageSchema>;
 
 export type LLMUsage = z.infer<typeof LLMUsageSchema>;
 export type API1Usage = z.infer<typeof API1UsageSchema>;
+export type BaseUsage = z.infer<typeof BaseUsageSchema>;
