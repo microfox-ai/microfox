@@ -3,6 +3,7 @@
   "info": {
     "title": "Brave SDK API",
     "version": "1.0.0",
+    "mcp_version": "1.0.1",
     "description": "Single entry-point API for all Brave SDK functions via a wrapper Lambda",
     "contact": {
       "name": "Microfox Dev Support",
