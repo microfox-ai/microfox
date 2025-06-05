@@ -7,11 +7,28 @@
   "status": "oauthConnector",
   "authEndpoint": "/connect/slack",
   "oauth2Scopes": [
+    "app_mentions:read",
+    "assistant:write",
+    "channels:history",
+    "channels:join",
     "chat:write",
-    "channels:read",
-    "incoming-webhook",
-    "commands"
+    "chat:write.customize",
+    "commands",
+    "files:read",
+    "files:write",
+    "groups:history",
+    "groups:read",
+    "groups:write",
+    "groups:write.invites",
+    "im:history",
+    "im:write",
+    "reactions:read",
+    "reactions:write",
+    "reminders:read",
+    "reminders:write",
+    "identify"
   ],
+  "installUrl": "https://slack.com/oauth?client_id=1613705032464.8883888765120&scope=app_mentions:read,channels:history,channels:join,chat:write,chat:write.customize,commands,files:read,files:write,groups:history,groups:read,groups:write,im:history,im:write,reactions:read,reactions:write,reminders:read,reminders:write&user_scope=identify&redirect_uri=https%3A%2F%2Fstaging.microfox.app%2Fconnect%2Fslack-oauth%2Fcallback&state=&granular_bot_scope=1&single_channel=0&install_redirect=&tracked=1&team=",
   "documentation": "https://www.npmjs.com/package/@microfox/slack-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack.svg",
   "readme_map": {
@@ -96,10 +113,25 @@
           "description": "The scopes for your Slack app.",
           "required": true,
           "defaultValue": [
+            "app_mentions:read",
+            "assistant:write",
+            "channels:history",
+            "channels:join",
             "chat:write",
-            "channels:read",
-            "incoming-webhook",
-            "commands"
+            "chat:write.customize",
+            "commands",
+            "files:read",
+            "files:write",
+            "groups:history",
+            "groups:read",
+            "groups:write",
+            "groups:write.invites",
+            "im:history",
+            "im:write",
+            "reactions:read",
+            "reactions:write",
+            "reminders:read",
+            "reminders:write"
           ]
         },
         {
@@ -107,7 +139,7 @@
           "displayName": "Slack User Scopes",
           "description": "The user scopes for your Slack app.",
           "required": false,
-          "defaultValue": []
+          "defaultValue": ["identify"]
         }
       ],
       "functionalities": [
