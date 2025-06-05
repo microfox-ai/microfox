@@ -11,17 +11,11 @@
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
-    "https://www.googleapis.com/auth/calendar.readonly",
-    "https://www.googleapis.com/auth/calendar.acls.readonly",
-    "https://www.googleapis.com/auth/calendar.events",
-    "https://www.googleapis.com/auth/calendar.events.readonly",
-    "https://www.googleapis.com/auth/calendar.events.owned",
-    "https://www.googleapis.com/auth/calendar.events.public.readonly",
-    "https://www.googleapis.com/auth/calendar.events.owned.readonly",
-    "https://www.googleapis.com/auth/calendar.freebusy",
+    "https://www.googleapis.com/auth/calendar.app.created",
+    "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
     "https://www.googleapis.com/auth/calendar.events.freebusy",
-    "https://www.googleapis.com/auth/calendar.settings.readonly",
-    "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+    "https://www.googleapis.com/auth/calendar.freebusy",
+    "https://www.googleapis.com/auth/calendar.events.owned"
   ],
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/google-calendar",
@@ -336,17 +330,11 @@
           "description": "A space-separated list of scopes required for Google Calendar API access. Defaults to a predefined set of calendar scopes if not provided. Example: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events'",
           "required": false,
           "defaultValue": [
-            "https://www.googleapis.com/auth/calendar.readonly",
-            "https://www.googleapis.com/auth/calendar.acls.readonly",
-            "https://www.googleapis.com/auth/calendar.events",
-            "https://www.googleapis.com/auth/calendar.events.readonly",
-            "https://www.googleapis.com/auth/calendar.events.owned",
-            "https://www.googleapis.com/auth/calendar.events.public.readonly",
-            "https://www.googleapis.com/auth/calendar.events.owned.readonly",
-            "https://www.googleapis.com/auth/calendar.freebusy",
+            "https://www.googleapis.com/auth/calendar.app.created",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
             "https://www.googleapis.com/auth/calendar.events.freebusy",
-            "https://www.googleapis.com/auth/calendar.settings.readonly",
-            "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+            "https://www.googleapis.com/auth/calendar.freebusy",
+            "https://www.googleapis.com/auth/calendar.events.owned"
           ]
         }
       ],
@@ -428,17 +416,11 @@
       "description": "A space-separated list of scopes required for Google Calendar API access. Defaults to a predefined set of calendar scopes if not provided. Example: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events'",
       "required": false,
       "defaultValue": [
-        "https://www.googleapis.com/auth/calendar.readonly",
-        "https://www.googleapis.com/auth/calendar.acls.readonly",
-        "https://www.googleapis.com/auth/calendar.events",
-        "https://www.googleapis.com/auth/calendar.events.readonly",
-        "https://www.googleapis.com/auth/calendar.events.owned",
-        "https://www.googleapis.com/auth/calendar.events.public.readonly",
-        "https://www.googleapis.com/auth/calendar.events.owned.readonly",
-        "https://www.googleapis.com/auth/calendar.freebusy",
+        "https://www.googleapis.com/auth/calendar.app.created",
+        "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
         "https://www.googleapis.com/auth/calendar.events.freebusy",
-        "https://www.googleapis.com/auth/calendar.settings.readonly",
-        "https://www.googleapis.com/auth/calendar.calendarlist.readonly"
+        "https://www.googleapis.com/auth/calendar.freebusy",
+        "https://www.googleapis.com/auth/calendar.events.owned"
       ]
     }
   ],
