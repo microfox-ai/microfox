@@ -38,14 +38,6 @@
       "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-google/docs/GoogleAiProvider.md"
     }
   ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_API_KEY",
-      "constructors": ["GoogleAiProvider"],
-      "description": "Google API Key. Obtain from your Google Cloud Console.",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://console.cloud.google.com/apis/credentials",
     "setupInfo": "To use the Google AI SDK, you need to obtain an API key from the Google Cloud Console.\n\n1. Sign up for a Google Cloud account at https://console.cloud.google.com/apis/credentials\n2. Once you have an account, navigate to your credentials page to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-google`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createGoogleAiProvider } from '@microfox/ai-provider-google';\n\nconst provider = createGoogleAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Google AI API:\n\n```typescript\nconst response = await provider.generateText({ model: 'gemini-pro', prompt: 'Hello, world!' });\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `GOOGLE_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
