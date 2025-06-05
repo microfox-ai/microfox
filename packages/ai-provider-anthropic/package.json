@@ -1,0 +1,66 @@
+{
+  "name": "@microfox/ai-provider-anthropic",
+  "version": "1.0.0",
+  "description": "A Wrapped Anthropic AI Provider for Vercels AI SDK",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@microfox/usage-tracker": "*",
+    "ai": "^4.3.16",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^18",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "anthropic",
+    "claude",
+    "provider",
+    "ai",
+    "sdk",
+    "microfox",
+    "typescript"
+  ]
+}
