@@ -179,41 +179,41 @@ function createReadmeInfo(packageName: string, functionality: string): ReadmeInf
   if (!fs.existsSync(filePath)) {
     return null;
   }
-  
-  // Try to extract description from the file content
-  let description = `Documentation for ${functionality}`;
-  try {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const lines = content.split('\n');
     
-    // Look for first paragraph or description
-    for (let i = 0; i < Math.min(10, lines.length); i++) {
-      const line = lines[i].trim();
-      if (line && !line.startsWith('#') && !line.startsWith('```') && line.length > 20) {
-        description = line;
-        break;
+    // Try to extract description from the file content
+    let description = `Documentation for ${functionality}`;
+    try {
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const lines = content.split('\n');
+      
+      // Look for first paragraph or description
+      for (let i = 0; i < Math.min(10, lines.length); i++) {
+        const line = lines[i].trim();
+        if (line && !line.startsWith('#') && !line.startsWith('```') && line.length > 20) {
+          description = line;
+          break;
+        }
       }
+    } catch (error) {
+      console.warn(`Could not read ${filePath} for description`);
     }
-  } catch (error) {
-    console.warn(`Could not read ${filePath} for description`);
-  }
 
-  // Determine type based on common patterns
-  let type: 'main' | 'constructor' | 'functionality' = 'functionality';
-  if (functionality.toLowerCase().includes('create') || 
-      functionality.toLowerCase().includes('init') ||
-      functionality.toLowerCase().includes('sdk')) {
-    type = 'constructor';
-  }
+    // Determine type based on common patterns
+    let type: 'main' | 'constructor' | 'functionality' = 'functionality';
+    if (functionality.toLowerCase().includes('create') || 
+        functionality.toLowerCase().includes('init') ||
+        functionality.toLowerCase().includes('sdk')) {
+      type = 'constructor';
+    }
 
   const githubPath = `${GITHUB_BASE_URL}${packageName}/docs/${functionality}.md`;
 
   return {
-    path: githubPath,
-    type,
-    extension: 'md',
-    functionality,
-    description
+      path: githubPath,
+      type,
+      extension: 'md',
+      functionality,
+      description
   };
 }
 
@@ -295,10 +295,10 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
         (a.functionality || '').localeCompare(b.functionality || '')
       );
 
-      // Write updated package-info.json
-      fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
+    // Write updated package-info.json
+    fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
       console.log(`✅ Updated package-info.json for ${packageName}`);
-      return true;
+    return true;
     } else {
       console.log(`ℹ️ No changes needed for ${packageName}`);
       return false;
