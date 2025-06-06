@@ -28,6 +28,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref || github.ref }}
 
       # 2) Install Node.js
       - name: Use Node.js 23.x
@@ -50,16 +51,14 @@ jobs:
 
       # 5) Commit updated package-info.json files if there are changes
       - name: Commit updated package-info.json files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore: update package-info.json readme_map for docs changes"
-            git push
-          fi
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: update package-info.json readme_map for docs changes'
+          file_pattern: '**/package-info.json'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          skip_dirty_check: false
 
       # 6) Index package info in database
       - name: Index updated package info
