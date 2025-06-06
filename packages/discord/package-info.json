@@ -47,7 +47,7 @@
       "removeRoleFromUser",
       "respondToInteraction",
       "sendMessage",
-      "test2",
+      "test",
       "updateChannel",
       "updateRole"
     ],
@@ -263,11 +263,11 @@
         "description": "Sends a message to a specified channel or user."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/test2.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/test.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "test2",
-        "description": "Documentation for test2"
+        "functionality": "test",
+        "description": "Documentation for test"
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateChannel.md",
@@ -329,7 +329,7 @@
         "removeRoleFromUser",
         "respondToInteraction",
         "sendMessage",
-        "test2",
+        "test",
         "updateChannel",
         "updateRole"
       ],
