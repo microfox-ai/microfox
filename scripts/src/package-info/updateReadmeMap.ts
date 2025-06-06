@@ -25,29 +25,45 @@ interface FileChange {
  * Get changed files with their change types from GitHub Actions or git
  */
 function getChangedFiles(): { added: string[], removed: string[], modified: string[] } {
-  // Check if we have GitHub Actions environment variables with file changes
-  const addedDocs = process.env.ADDED_DOCS || '';
-  const removedDocs = process.env.REMOVED_DOCS || '';
-  const modifiedDocs = process.env.MODIFIED_DOCS || '';
+  // Check if we have GitHub before/after commit SHAs
+  const githubBefore = process.env.GITHUB_BEFORE;
+  const githubAfter = process.env.GITHUB_AFTER;
   
-  if (addedDocs || removedDocs || modifiedDocs) {
-    console.log('🔧 Using GitHub Actions file change detection');
+  if (githubBefore && githubAfter && githubBefore !== '0000000000000000000000000000000000000000') {
+    console.log('🔧 Using GitHub before/after commit comparison');
+    console.log(`📋 Comparing: ${githubBefore.substring(0, 8)} → ${githubAfter.substring(0, 8)}`);
     
-    // Split by both space and newline to handle different formats
-    const added = addedDocs.split(/[\s\n]+/).filter(Boolean);
-    const removed = removedDocs.split(/[\s\n]+/).filter(Boolean);
-    const modified = modifiedDocs.split(/[\s\n]+/).filter(Boolean);
-    
-    console.log(`🔍 Found changes from GitHub Actions:`);
-    console.log(`  ✅ Added: ${added.length} files${added.length > 0 ? ':\n    ' + added.join('\n    ') : ''}`);
-    console.log(`  🗑️ Removed: ${removed.length} files${removed.length > 0 ? ':\n    ' + removed.join('\n    ') : ''}`);
-    console.log(`  ✏️ Modified: ${modified.length} files${modified.length > 0 ? ':\n    ' + modified.join('\n    ') : ''}`);
-    
-    return { added, removed, modified };
+    try {
+      const output = execSync(`git diff --name-status ${githubBefore} ${githubAfter}`, { encoding: 'utf-8' });
+      const lines = output.split('\n').filter(Boolean);
+      
+      let addedFiles: string[] = [];
+      let removedFiles: string[] = [];
+      let modifiedFiles: string[] = [];
+      
+      lines.forEach(line => {
+        const parts = line.split('\t');
+        const status = parts[0];
+        const filePath = parts[1];
+        
+        if (status === 'A') addedFiles.push(filePath);
+        else if (status === 'D') removedFiles.push(filePath);
+        else if (status === 'M') modifiedFiles.push(filePath);
+      });
+      
+      console.log(`🔍 Found changes from GitHub comparison:`);
+      console.log(`  ✅ Added: ${addedFiles.length} files${addedFiles.length > 0 ? ':\n    ' + addedFiles.join('\n    ') : ''}`);
+      console.log(`  🗑️ Removed: ${removedFiles.length} files${removedFiles.length > 0 ? ':\n    ' + removedFiles.join('\n    ') : ''}`);
+      console.log(`  ✏️ Modified: ${modifiedFiles.length} files${modifiedFiles.length > 0 ? ':\n    ' + modifiedFiles.join('\n    ') : ''}`);
+      
+      return { added: addedFiles, removed: removedFiles, modified: modifiedFiles };
+    } catch (error) {
+      console.warn('Failed to get GitHub diff, falling back to other methods');
+    }
   }
   
-  // Fallback to git detection for local development
-  console.log('🔧 Using git-based file change detection');
+  // Fallback to other git detection methods for local development
+  console.log('🔧 Using fallback git-based file change detection');
   
   try {
     let addedFiles: string[] = [];
