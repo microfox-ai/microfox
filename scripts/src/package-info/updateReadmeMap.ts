@@ -244,60 +244,52 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
 
     let hasChanges = false;
 
-    // Process each change - only handle adds and removes
+    // Process each change
     changes.forEach(change => {
       const { functionality, action } = change;
       
       if (action === 'added') {
-        // Add new functionality only if it doesn't already exist
+        // Add functionality to functionalities array
         if (!packageInfo.readme_map!.functionalities.includes(functionality)) {
           packageInfo.readme_map!.functionalities.push(functionality);
           hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to functionalities array`);
+          console.log(`  ✅ Added ${functionality} to functionalities`);
         }
         
-        // Add new readme info only if it doesn't already exist
-        const existingReadme = packageInfo.readme_map!.all_readmes?.find(
-          r => r.functionality === functionality
-        );
-        if (!existingReadme) {
-          const readmeInfo = createReadmeInfo(packageName, functionality);
-          if (readmeInfo) {
-            if (!packageInfo.readme_map!.all_readmes) {
-              packageInfo.readme_map!.all_readmes = [];
-            }
-            packageInfo.readme_map!.all_readmes.push(readmeInfo);
-            hasChanges = true;
-            console.log(`  ✅ Added ${functionality} to all_readmes array`);
+        // Create and add readme info to all_readmes array
+        const readmeInfo = createReadmeInfo(packageName, functionality);
+        if (readmeInfo && !packageInfo.readme_map!.all_readmes?.find(r => r.functionality === functionality)) {
+          if (!packageInfo.readme_map!.all_readmes) {
+            packageInfo.readme_map!.all_readmes = [];
           }
+          packageInfo.readme_map!.all_readmes.push(readmeInfo);
+          hasChanges = true;
+          console.log(`  ✅ Added ${functionality} to all_readmes`);
         }
         
       } else if (action === 'removed') {
-        // Remove functionality if it exists
+        // Remove functionality from functionalities array
         const functIndex = packageInfo.readme_map!.functionalities.indexOf(functionality);
         if (functIndex > -1) {
           packageInfo.readme_map!.functionalities.splice(functIndex, 1);
           hasChanges = true;
-          console.log(`  🗑️ Removed ${functionality} from functionalities array`);
+          console.log(`  🗑️ Removed ${functionality} from functionalities`);
         }
         
-        // Remove readme info if it exists
+        // Remove readme info from all_readmes array
         if (packageInfo.readme_map!.all_readmes) {
-          const originalLength = packageInfo.readme_map!.all_readmes.length;
-          packageInfo.readme_map!.all_readmes = packageInfo.readme_map!.all_readmes.filter(
-            r => r.functionality !== functionality
-          );
-          if (packageInfo.readme_map!.all_readmes.length < originalLength) {
+          const readmeIndex = packageInfo.readme_map!.all_readmes.findIndex(r => r.functionality === functionality);
+          if (readmeIndex > -1) {
+            packageInfo.readme_map!.all_readmes.splice(readmeIndex, 1);
             hasChanges = true;
-            console.log(`  🗑️ Removed ${functionality} from all_readmes array`);
+            console.log(`  🗑️ Removed ${functionality} from all_readmes`);
           }
         }
       }
-      // Note: 'modified' action is intentionally ignored - we don't change anything for file modifications
     });
 
     if (hasChanges) {
-      // Sort only the arrays we modified for consistency
+      // Sort arrays alphabetically by functionality name
       packageInfo.readme_map!.functionalities.sort();
       packageInfo.readme_map!.all_readmes?.sort((a, b) => 
         (a.functionality || '').localeCompare(b.functionality || '')
