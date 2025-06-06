@@ -25,7 +25,6 @@
       "deleteChannel",
       "deleteGlobalSlashCommand",
       "deleteMessage",
-      "deleteRole",
       "deleteSlashCommand",
       "editMessage",
       "fetchChannels",
@@ -105,13 +104,6 @@
         "extension": "md",
         "functionality": "deleteMessage",
         "description": "Deletes a message in a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteRole.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteRole",
-        "description": "Deletes a role."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteSlashCommand.md",
