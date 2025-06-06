@@ -16,8 +16,18 @@
     "title": "OpenAI Provider",
     "description": "The full README for the OpenAI Provider",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-openai/README.md",
-    "functionalities": [],
-    "all_readmes": []
+    "functionalities": [
+      "models"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-openai/docs/models.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "models",
+        "description": "- chatgpt-4o-latest, o1-mini & o1-preview do not support object generation & tool usage"
+      }
+    ]
   },
   "addedDependencies": [
     "ai"

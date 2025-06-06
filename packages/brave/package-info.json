@@ -14,89 +14,26 @@
     "description": "The full README for the Brave SDK",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/README.md",
     "functionalities": [
-      "BraveSDK",
-      "request",
-      "webSearch",
-      "localPoiSearch",
-      "localDescriptionsSearch",
-      "summarizerSearch",
+      "batchProcess",
+      "createBraveSDK",
+      "headers",
       "imageSearch",
-      "videoSearch",
+      "localDescriptionsSearch",
+      "localPoiSearch",
       "newsSearch",
-      "suggestSearch",
       "spellcheckSearch",
-      "createBraveSDK"
+      "suggestSearch",
+      "summarizerSearch",
+      "videoSearch",
+      "webSearch"
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/request.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/batchProcess.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "request",
-        "description": "Sends a request to the Brave Search API."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/webSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "webSearch",
-        "description": "Performs a web search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localPoiSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "localPoiSearch",
-        "description": "Performs a local POI (Points of Interest) search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localDescriptionsSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "localDescriptionsSearch",
-        "description": "Performs a local descriptions search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/summarizerSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "summarizerSearch",
-        "description": "Performs a summarizer search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/imageSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "imageSearch",
-        "description": "Performs an image search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/videoSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "videoSearch",
-        "description": "Performs a video search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/newsSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "newsSearch",
-        "description": "Performs a news search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/suggestSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "suggestSearch",
-        "description": "Retrieves search suggestions."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/spellcheckSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "spellcheckSearch",
-        "description": "Performs a spell check."
+        "functionality": "batchProcess",
+        "description": "The batch processing functionality allows you to process multiple requests sequentially with configurable delays and progress tracking. This is particularly useful for handling rate limits and managing multiple API calls efficiently."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/createBraveSDK.md",
@@ -104,6 +41,76 @@
         "extension": "md",
         "functionality": "createBraveSDK",
         "description": "Creates a new instance of the Brave SDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/headers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "headers",
+        "description": "The Brave SDK allows you to configure custom headers for API requests. Headers can be set either manually or using helper functions."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/imageSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "imageSearch",
+        "description": "The `imageSearch` function enables image search capabilities through the Brave Search API, allowing you to find and retrieve images based on search queries."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localDescriptionsSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "localDescriptionsSearch",
+        "description": "The `localDescriptionsSearch` function enables searching for local descriptions using the Brave Search API, allowing you to retrieve detailed information about specific locations based on their IDs."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localPoiSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "localPoiSearch",
+        "description": "Performs a local POI (Points of Interest) search using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/newsSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "newsSearch",
+        "description": "Performs a news search using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/spellcheckSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "spellcheckSearch",
+        "description": "Performs a spell check using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/suggestSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "suggestSearch",
+        "description": "Retrieves search suggestions using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/summarizerSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "summarizerSearch",
+        "description": "Performs a summarizer search using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/videoSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "videoSearch",
+        "description": "Performs a video search using the Brave Search API."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/webSearch.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "webSearch",
+        "description": "Performs a web search using the Brave Search API."
       }
     ]
   },

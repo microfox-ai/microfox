@@ -20,55 +20,20 @@
     "description": "The full README for the Google Sheets SDK",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/README.md",
     "functionalities": [
-      "createGoogleSheetsSdk",
-      "validateAccessToken",
-      "refreshAccessToken",
-      "getValues",
-      "updateValues",
       "appendValues",
-      "clearValues",
+      "batchClearValues",
       "batchGetValues",
       "batchUpdateValues",
-      "batchClearValues",
+      "clearValues",
+      "createGoogleSheetsSdk",
       "duplicateRowsDetection",
-      "sanitizeSheetData"
+      "getValues",
+      "refreshAccessToken",
+      "sanitizeSheetData",
+      "updateValues",
+      "validateAccessToken"
     ],
     "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/createGoogleSheetsSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createGoogleSheetsSdk",
-        "description": "Creates an instance of the Google Sheets SDK. The constructor initializes the SDK with the provided configuration and sets up the necessary components for interacting with the Google Sheets API."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the access token and refreshes it if necessary."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken",
-        "description": "Refreshes the access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/getValues.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getValues",
-        "description": "Gets values from a range in a Google Sheet."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/updateValues.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateValues",
-        "description": "Updates values in a range of a Google Sheet."
-      },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/appendValues.md",
         "type": "functionality",
@@ -77,11 +42,11 @@
         "description": "Appends values to a Google Sheet."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/clearValues.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/batchClearValues.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "clearValues",
-        "description": "Clears values from a range in a Google Sheet."
+        "functionality": "batchClearValues",
+        "description": "Batch clears values from multiple ranges in a Google Sheet."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/batchGetValues.md",
@@ -98,25 +63,60 @@
         "description": "Batch updates values in multiple ranges of a Google Sheet."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/batchClearValues.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/clearValues.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "batchClearValues",
-        "description": "Batch clears values from multiple ranges in a Google Sheet."
+        "functionality": "clearValues",
+        "description": "Clears values from a range in a Google Sheet."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/detectDuplicateRows.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/createGoogleSheetsSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createGoogleSheetsSdk",
+        "description": "Creates an instance of the Google Sheets SDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/duplicateRowsDetection.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "detectDuplicateRows",
-        "description": "Detects duplicate rows based on full match from a range."
+        "functionality": "duplicateRowsDetection",
+        "description": "Detects fully duplicated rows from a specified sheet range."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/getValues.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getValues",
+        "description": "Gets values from a range in a Google Sheet."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/refreshAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes the access token."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/sanitizeSheetData.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "sanitizeSheetData",
-        "description": "Sanitizes cell strings by trimming whitespace before update."
+        "description": "Removes whitespace padding from all string cells in a given range and updates the sheet."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/updateValues.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateValues",
+        "description": "Updates values in a range of a Google Sheet."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-sheets/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the access token and refreshes it if necessary."
       }
     ]
   },

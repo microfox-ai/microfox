@@ -22,10 +22,10 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/README.md",
     "functionalities": [
       "SlackOAuthSdk",
-      "getAuthorizationUrl",
-      "exchangeCodeForToken",
-      "validateToken",
-      "revokeToken"
+      "exchangeCodeForTokens",
+      "getAuthUrl",
+      "revokeToken",
+      "validateAccessToken"
     ],
     "all_readmes": [
       {
@@ -33,28 +33,21 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "SlackOAuthSdk",
-        "description": "Constructor for the SlackOAuthSdk class. This class handles the OAuth flow for Slack, including generating authorization URLs, exchanging codes for tokens, validating tokens, and revoking tokens."
+        "description": "Initializes a new instance of the `SlackOAuthSdk` class."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/getAuthorizationUrl.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/exchangeCodeForTokens.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getAuthorizationUrl",
-        "description": "Generates the authorization URL for the Slack OAuth flow."
+        "functionality": "exchangeCodeForTokens",
+        "description": "Exchanges the authorization code received from Slack for an access token."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/exchangeCodeForToken.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/getAuthUrl.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "exchangeCodeForToken",
-        "description": "Exchanges the authorization code for an access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/validateToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateToken",
-        "description": "Validates a Slack access token."
+        "functionality": "getAuthUrl",
+        "description": "Generates the authorization URL to initiate the Slack OAuth flow."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/revokeToken.md",
@@ -62,6 +55,13 @@
         "extension": "md",
         "functionality": "revokeToken",
         "description": "Revokes a Slack access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates a Slack access token."
       }
     ]
   },

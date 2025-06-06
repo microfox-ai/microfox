@@ -41,46 +41,52 @@
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/createRedditOAuth.md",
         "type": "constructor",
         "extension": "md",
-        "functionality": "createRedditOAuth"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl"
+        "functionality": "createRedditOAuth",
+        "description": "Initializes a new instance of the RedditOAuthSdk."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAccessToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getAccessToken"
+        "functionality": "getAccessToken",
+        "description": "Retrieves an access token from Reddit using the authorization code obtained from the redirect URI."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAuthorizationUrl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAuthorizationUrl",
+        "description": "Generates the authorization URL used to initiate the OAuth 2.0 flow."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/refreshAccessToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "refreshAccessToken"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken"
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes an existing access token using a refresh token."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/revokeToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "revokeToken"
+        "functionality": "revokeToken",
+        "description": "Revokes an access token or refresh token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates an access token by making a request to the Reddit API."
       }
     ],
     "functionalities": [
       "createRedditOAuth",
-      "getAuthorizationUrl",
       "getAccessToken",
+      "getAuthorizationUrl",
       "refreshAccessToken",
-      "validateAccessToken",
-      "revokeToken"
+      "revokeToken",
+      "validateAccessToken"
     ]
   },
   "constructors": [

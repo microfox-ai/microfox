@@ -39,31 +39,31 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/README.md",
     "functionalities": [
       "RedditSDK",
-      "validateAccessToken",
-      "refreshAccessToken",
-      "getMe",
-      "getUserPreferences",
-      "updateUserPreferences",
-      "getUserKarma",
-      "getUserTrophies",
-      "getUser",
-      "getUserContent",
-      "getSubredditInfo",
-      "searchSubreddit",
-      "search",
-      "submitComment",
-      "submitPost",
-      "vote",
       "deletePost",
       "editUserText",
-      "hidePost",
-      "unhidePost",
-      "saveItem",
-      "unsaveItem",
-      "reportItem",
       "getInfo",
+      "getMe",
       "getMoreComments",
-      "getPost"
+      "getPost",
+      "getSubredditInfo",
+      "getUser",
+      "getUserContent",
+      "getUserKarma",
+      "getUserPreferences",
+      "getUserTrophies",
+      "hidePost",
+      "refreshAccessToken",
+      "reportItem",
+      "saveItem",
+      "search",
+      "searchSubreddit",
+      "submitComment",
+      "submitPost",
+      "unhidePost",
+      "unsaveItem",
+      "updateUserPreferences",
+      "validateAccessToken",
+      "vote"
     ],
     "all_readmes": [
       {
@@ -71,112 +71,7 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "RedditSDK",
-        "description": "Initializes a new instance of the RedditSDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the current access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken",
-        "description": "Refreshes the access token using a refresh token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getMe.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getMe",
-        "description": "Retrieves information about the currently authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserPreferences.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserPreferences",
-        "description": "Retrieves the preferences of the currently authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/updateUserPreferences.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateUserPreferences",
-        "description": "Updates the preferences of the currently authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserKarma.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserKarma",
-        "description": "Retrieves the karma breakdown for the currently authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserTrophies.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserTrophies",
-        "description": "Retrieves the trophies for the currently authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUser.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUser",
-        "description": "Retrieves information about a specific user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserContent.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserContent",
-        "description": "Retrieves content (posts and comments) submitted by a specific user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getSubredditInfo.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getSubredditInfo",
-        "description": "Retrieves information about a specific subreddit."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/searchSubreddit.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "searchSubreddit",
-        "description": "Searches within a specific subreddit."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/search.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "search",
-        "description": "Searches across all of Reddit."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitComment.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "submitComment",
-        "description": "Submits a comment to a post or comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitPost.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "submitPost",
-        "description": "Submits a new post to a subreddit."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/vote.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "vote",
-        "description": "Votes on a post or comment."
+        "description": "Initializes a new instance of the `RedditSDK` class."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/deletePost.md",
@@ -193,46 +88,18 @@
         "description": "Edits the text of a self post or comment."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/hidePost.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "hidePost",
-        "description": "Hides a post or comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unhidePost.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "unhidePost",
-        "description": "Unhides a post or comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/saveItem.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "saveItem",
-        "description": "Saves a post or comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unsaveItem.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "unsaveItem",
-        "description": "Unsaves a post or comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/reportItem.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "reportItem",
-        "description": "Reports a post or comment."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getInfo.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getInfo",
         "description": "Retrieves information about multiple items (posts, comments, or subreddits) by their IDs."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getMe.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMe",
+        "description": "Retrieves information about the currently authenticated user."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getMoreComments.md",
@@ -247,6 +114,139 @@
         "extension": "md",
         "functionality": "getPost",
         "description": "Retrieves a specific post by its ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getSubredditInfo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSubredditInfo",
+        "description": "Retrieves information about a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUser",
+        "description": "Retrieves information about a specific user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserContent.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserContent",
+        "description": "Retrieves content (posts and comments) submitted by a specific user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserKarma.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserKarma",
+        "description": "Retrieves the karma breakdown for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserPreferences.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserPreferences",
+        "description": "Retrieves the preferences of the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserTrophies.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserTrophies",
+        "description": "Retrieves the trophies for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/hidePost.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hidePost",
+        "description": "Hides a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/refreshAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes the access token using a refresh token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/reportItem.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reportItem",
+        "description": "Reports a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/saveItem.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "saveItem",
+        "description": "Saves a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/search.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "search",
+        "description": "Searches across all of Reddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/searchSubreddit.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "searchSubreddit",
+        "description": "Searches within a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "submitComment",
+        "description": "Submits a comment to a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitPost.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "submitPost",
+        "description": "Submits a new post to a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unhidePost.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unhidePost",
+        "description": "Unhides a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unsaveItem.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unsaveItem",
+        "description": "Unsaves a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/updateUserPreferences.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateUserPreferences",
+        "description": "Updates the preferences of the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the current access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/vote.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "vote",
+        "description": "Votes on a post or comment."
       }
     ]
   },

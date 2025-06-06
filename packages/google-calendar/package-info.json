@@ -25,8 +25,8 @@
     "description": "The full README for the Google Calendar",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/README.md",
     "functionalities": [
-      "createGoogleCalendarSDK",
       "clearCalendar",
+      "createGoogleCalendarSDK",
       "deleteAclRule",
       "deleteCalendar",
       "deleteCalendarFromList",
@@ -39,6 +39,7 @@
       "getSetting",
       "importEvent",
       "insertAclRule",
+      "insertCalendar",
       "insertCalendarToList",
       "insertEvent",
       "listAclRules",
@@ -61,18 +62,18 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createGoogleCalendarSDK",
-        "description": "Factory function to create an instance of the `GoogleCalendarSdk`. This function simplifies the instantiation of the SDK by accepting a configuration object."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/clearCalendar.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "clearCalendar",
         "description": "Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account. It cannot be used on secondary calendars."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createGoogleCalendarSDK",
+        "description": "Factory function to create an instance of the `GoogleCalendarSdk`. This function simplifies the instantiation of the SDK by accepting a configuration object."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteAclRule.md",
@@ -157,6 +158,13 @@
         "extension": "md",
         "functionality": "insertAclRule",
         "description": "Inserts an access control list (ACL) rule into a calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "insertCalendar",
+        "description": "Creates a new secondary calendar. This function cannot be used to create a primary calendar, as primary calendars are automatically created for each Google account."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertCalendarToList.md",

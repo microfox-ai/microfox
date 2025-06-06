@@ -50,185 +50,185 @@
     "all_readmes": [
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/ai_sdk_core.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "ai_sdk_core",
-        "description": "The full README for the ai ai_sdk_core functionality"
+        "description": "Generates text and calls tools from a language model."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/core_message.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "core_message",
-        "description": "The full README for the ai core_message functionality"
+        "description": "Represents the fundamental message structure used with AI SDK Core functions. It encompasses various message types that can be used in the `messages` field of any AI SDK Core functions.  You can access the Zod schema for `CoreMessage` with the `coreMessageSchema` export."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/cosine_similarity.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "cosine_similarity",
-        "description": "The full README for the ai cosine_similarity functionality"
+        "description": "Calculates the cosine similarity between two vectors. This function is useful for comparing the similarity of embeddings, where a high value (close to 1) indicates high similarity and a low value (close to -1) indicates dissimilarity."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/create_id_generator.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "create_id_generator",
-        "description": "The full README for the ai create_id_generator functionality"
+        "description": "Creates a customizable ID generator function.  This function allows you to configure various aspects of the generated IDs, such as the character set (alphabet), a prefix, a separator between the prefix and the random part, and the length of the random part."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/create_mcp_client.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "create_mcp_client",
-        "description": "The full README for the ai create_mcp_client functionality"
+        "description": "Creates a lightweight Model Context Protocol (MCP) client that connects to an MCP server. The client's primary purpose is tool conversion between MCP tools and AI SDK tools. It currently does not support accepting notifications from an MCP server, and custom configuration of the client."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/custom_provider.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "custom_provider",
-        "description": "The full README for the ai custom_provider functionality"
+        "description": "Creates a custom provider that allows mapping IDs to any model, enabling custom model configurations, aliases, and fallback mechanisms."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/default_settings_middleware.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "default_settings_middleware",
-        "description": "The full README for the ai default_settings_middleware functionality"
+        "description": "Applies default settings to language model calls. This is useful for establishing consistent default parameters across multiple model invocations."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/embed.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "embed",
-        "description": "The full README for the ai embed functionality"
+        "description": "Generate an embedding for a single value using an embedding model. This is ideal for use cases where you need to embed a single value to, for example, retrieve similar items or to use the embedding in a downstream task."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/embed_many.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "embed_many",
-        "description": "The full README for the ai embed_many functionality"
+        "description": "Embeds several values using an embedding model. The function automatically splits large requests into smaller chunks if the model has a limit on how many embeddings can be generated in a single call. The type of the value is defined by the embedding model."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_id.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "generate_id",
-        "description": "The full README for the ai generate_id functionality"
+        "description": "Generates a unique identifier. You can optionally provide the length of the ID (although this parameter is deprecated). This is the same ID generator used internally by the AI SDK."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_image.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "generate_image",
-        "description": "The full README for the ai generate_image functionality"
+        "description": "Generates images based on a given prompt using an image model. This function is experimental."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_object.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "generate_object",
-        "description": "The full README for the ai generate_object functionality"
+        "description": "Generates a typed, structured object for a given prompt and schema using a language model. It can be used to force the language model to return structured data, suitable for tasks like information extraction, synthetic data generation, or classification."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_speech.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "generate_speech",
-        "description": "The full README for the ai generate_speech functionality"
+        "description": "Generates speech audio from text. This is an experimental feature."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/generate_text.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "generate_text",
-        "description": "The full README for the ai generate_text functionality"
+        "description": "Generates text and calls tools for a given prompt using a language model. It is ideal for non-interactive use cases such as automation tasks where you need to write text (e.g., drafting emails or summarizing web pages) and for agents that use tools."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/json_schema.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "json_schema",
-        "description": "The full README for the ai json_schema functionality"
+        "description": "Creates a JSON schema object compatible with the AI SDK. This function allows you to define and validate structured data using JSON Schema, offering flexibility for dynamic situations (e.g., using OpenAPI definitions) or integration with other validation libraries. It serves as an alternative to Zod schemas.  It can be used with `generateObject` and `streamObject` to generate structured data and in tools."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/language_model_v1_middleware.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "language_model_v1_middleware",
-        "description": "The full README for the ai language_model_v1_middleware functionality"
+        "description": "Provides a way to enhance the behavior of language models by intercepting and modifying calls to the language model. It can be used to add features like guardrails, RAG, caching, and logging in a language model-agnostic way.  This is an experimental feature."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/provider_registry.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "provider_registry",
-        "description": "The full README for the ai provider_registry functionality"
+        "description": "Creates a registry for managing multiple AI providers and their models. This allows accessing models using simple string IDs in the format `providerId:modelId`."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/simulate_readable_stream.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "simulate_readable_stream",
-        "description": "The full README for the ai simulate_readable_stream functionality"
+        "description": "Creates a ReadableStream that emits provided values sequentially with configurable delays. This is useful for testing streaming functionality or simulating time-delayed data streams."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/simulate_streaming_middleware.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "simulate_streaming_middleware",
-        "description": "The full README for the ai simulate_streaming_middleware functionality"
+        "description": "Simulates streaming behavior for non-streaming language models. This allows you to use a consistent streaming interface regardless of the model's native streaming capabilities.  It converts a complete response from a non-streaming model into a simulated stream of chunks."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/smooth_stream.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "smooth_stream",
-        "description": "The full README for the ai smooth_stream functionality"
+        "description": "Creates a TransformStream for the `streamText` transform option to smooth out text streaming by buffering and releasing complete words or lines with configurable delays. This function enhances the reading experience during text streaming responses by presenting complete chunks of text rather than character by character output.  It handles non-text chunks, such as step-finish events, by passing them through immediately."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/stream_object.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "stream_object",
-        "description": "The full README for the ai stream_object functionality"
+        "description": "Streams a typed, structured object for a given prompt and schema using a language model. It can be used to force the language model to return structured data, suitable for tasks like information extraction, synthetic data generation, or classification."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/stream_text.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "stream_text",
-        "description": "The full README for the ai stream_text functionality"
+        "description": "Streams text generations from a language model. This function is ideal for interactive applications like chatbots and real-time text generation, allowing you to process and display text as it's generated by the model. It also supports tool calling for enhanced functionality."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/tool.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "tool",
-        "description": "The full README for the ai tool functionality"
+        "description": "Creates a tool definition for use with language models. This function primarily serves to improve TypeScript type inference for the `execute` method of a tool, connecting the `parameters` schema to the arguments of the `execute` function.  It doesn't have runtime behavior beyond constructing the tool object."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/transcribe.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "transcribe",
-        "description": "The full README for the ai transcribe functionality"
+        "description": "Generates a transcript from an audio file. This function is considered experimental."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/wrap_language_model.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "wrap_language_model",
-        "description": "The full README for the ai wrap_language_model functionality"
+        "description": "The `wrapLanguageModel` function enhances the behavior of language models by wrapping them with middleware. This allows you to add functionality like logging, input/output transformation, error handling, and more without modifying the core language model implementation.  See Language Model Middleware for more information on middleware (this documentation assumes you have access to the linked \"Language Model Middleware\" documentation)."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_ai/docs/zod_schema.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "zod_schema",
-        "description": "The full README for the ai zod_schema functionality"
+        "description": "Converts a Zod schema into a JSON schema object compatible with the AI SDK. This function allows you to use Zod schemas for generating structured data and defining tool schemas.  While the AI SDK can automatically convert Zod schemas internally, this function provides explicit control over the conversion process, particularly for handling recursive schemas and enabling references."
       }
     ]
   },

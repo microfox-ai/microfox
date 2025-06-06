@@ -18,75 +18,61 @@
     "description": "The full README for the Microfox X SDK",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/README.md",
     "functionalities": [
-      "createXSDK",
       "create",
-      "get",
-      "getMultiple",
+      "createXSDK",
       "delete",
-      "getByUsername",
-      "getByUsernames",
+      "generateOAuthHeader",
+      "get",
       "getById",
       "getByIds",
+      "getByUsername",
+      "getByUsernames",
       "getMe",
-      "upload",
-      "generateOAuthHeader"
+      "getMultiple",
+      "upload"
     ],
     "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/create.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "create",
+        "description": "Creates a new tweet on X."
+      },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/createXSDK.md",
         "type": "constructor",
         "extension": "md",
         "functionality": "createXSDK",
-        "description": "Creates a new instance of the Microfox X SDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/create.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "create",
-        "description": "Creates a new tweet."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/get.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "get",
-        "description": "Retrieves a single tweet by ID."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getMultiple.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getMultiple",
-        "description": "Retrieves multiple tweets by their IDs."
+        "description": "Creates a new instance of the Microfox X SDK for interacting with the X (formerly Twitter) API v2."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/delete.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "delete",
-        "description": "Deletes a tweet by ID."
+        "description": "Deletes a tweet by its ID."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getByUsername.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/generateOAuthHeader.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getByUsername",
-        "description": "Retrieves a user by their username."
+        "functionality": "generateOAuthHeader",
+        "description": "Generates an OAuth 1.0a header for authenticating requests to the X API."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getByUsernames.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/get.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getByUsernames",
-        "description": "Retrieves multiple users by their usernames."
+        "functionality": "get",
+        "description": "Retrieves a single tweet by its ID."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getById.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getById",
-        "description": "Retrieves a user by their ID."
+        "description": "Retrieves a single user by their ID."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getByIds.md",
@@ -96,6 +82,20 @@
         "description": "Retrieves multiple users by their IDs."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getByUsername.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getByUsername",
+        "description": "Retrieves a single user by their username."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getByUsernames.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getByUsernames",
+        "description": "Retrieves multiple users by their usernames."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getMe.md",
         "type": "functionality",
         "extension": "md",
@@ -103,18 +103,18 @@
         "description": "Retrieves the currently authenticated user."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/getMultiple.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMultiple",
+        "description": "Retrieves multiple tweets by their IDs."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/upload.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "upload",
-        "description": "Uploads media to X."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/twitter/docs/generateOAuthHeader.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "generateOAuthHeader",
-        "description": "Generates an OAuth 1.0a header."
+        "description": "Uploads media to X (formerly Twitter)."
       }
     ]
   },

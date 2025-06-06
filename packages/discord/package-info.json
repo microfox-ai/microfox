@@ -17,40 +17,54 @@
     "description": "The full README for the Microfox Discord SDK",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/README.md",
     "functionalities": [
-      "createDiscordSdk",
-      "sendMessage",
-      "editMessage",
-      "deleteMessage",
-      "fetchMessages",
-      "reactToMessage",
-      "createThread",
-      "fetchGuildInfo",
-      "fetchUserInfo",
-      "registerSlashCommand",
-      "registerGlobalSlashCommand",
-      "deleteSlashCommand",
-      "deleteGlobalSlashCommand",
-      "moderateUser",
-      "createChannel",
-      "updateChannel",
-      "deleteChannel",
-      "createRole",
-      "updateRole",
-      "deleteRole",
       "addRoleToUser",
-      "removeRoleFromUser",
+      "createChannel",
+      "createDiscordSdk",
+      "createRole",
+      "createThread",
+      "deferInteraction",
+      "deleteChannel",
+      "deleteGlobalSlashCommand",
+      "deleteMessage",
+      "deleteRole",
+      "deleteSlashCommand",
+      "editMessage",
       "fetchChannels",
+      "fetchGlobalSlashCommands",
+      "fetchGuildInfo",
+      "fetchMessages",
       "fetchRoles",
       "fetchSlashCommands",
-      "fetchGlobalSlashCommands",
+      "fetchUserInfo",
+      "followUpInteraction",
+      "handleInteraction",
+      "moderateUser",
+      "reactToMessage",
       "registerCommand",
       "registerGlobalCommand",
-      "handleInteraction",
+      "registerGlobalSlashCommand",
+      "registerSlashCommand",
+      "removeRoleFromUser",
       "respondToInteraction",
-      "deferInteraction",
-      "followUpInteraction"
+      "sendMessage",
+      "updateChannel",
+      "updateRole"
     ],
     "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/addRoleToUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "addRoleToUser",
+        "description": "Adds a role to a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createChannel.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createChannel",
+        "description": "Creates a new channel in the guild."
+      },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createDiscordSdk.md",
         "type": "constructor",
@@ -59,81 +73,32 @@
         "description": "Creates a new instance of the Discord SDK. This function initializes the SDK with the provided configuration, sets up the necessary headers for authentication, and returns an object containing all the available API methods."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/sendMessage.md",
-        "type": "functionality",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createRole.md",
+        "type": "constructor",
         "extension": "md",
-        "functionality": "sendMessage",
-        "description": "Sends a message to a specified channel or user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/editMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "editMessage",
-        "description": "Edits an existing message in a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteMessage",
-        "description": "Deletes a message in a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchMessages.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "fetchMessages",
-        "description": "Fetches recent messages from a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/reactToMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "reactToMessage",
-        "description": "Reacts to a message with an emoji."
+        "functionality": "createRole",
+        "description": "Creates a new role in the guild."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createThread.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "createThread",
         "description": "Creates a thread in a channel."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchGuildInfo.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deferInteraction.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "fetchGuildInfo",
-        "description": "Fetches information about a guild (server)."
+        "functionality": "deferInteraction",
+        "description": "Defers a slash command response."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchUserInfo.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteChannel.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "fetchUserInfo",
-        "description": "Fetches information about a user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/registerSlashCommand.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "registerSlashCommand",
-        "description": "Registers a slash command for the bot."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/registerGlobalSlashCommand.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "registerGlobalSlashCommand",
-        "description": "Registers global slash commands for the bot."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteSlashCommand.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteSlashCommand",
-        "description": "Deletes a slash command."
+        "functionality": "deleteChannel",
+        "description": "Removes a channel from the guild."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteGlobalSlashCommand.md",
@@ -143,67 +108,32 @@
         "description": "Deletes a global slash command."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/moderateUser.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteMessage.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "moderateUser",
-        "description": "Performs a moderation action on a user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createChannel",
-        "description": "Creates a new channel in the guild."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateChannel",
-        "description": "Updates a channel's settings."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteChannel",
-        "description": "Deletes a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createRole.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createRole",
-        "description": "Creates a new role in the guild."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateRole.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateRole",
-        "description": "Updates a role's settings."
+        "functionality": "deleteMessage",
+        "description": "Deletes a message in a channel."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteRole.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "deleteRole",
-        "description": "Deletes a role."
+        "description": "Removes a role from the guild."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/addRoleToUser.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteSlashCommand.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "addRoleToUser",
-        "description": "Adds a role to a user."
+        "functionality": "deleteSlashCommand",
+        "description": "Deletes a slash command."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/removeRoleFromUser.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/editMessage.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "removeRoleFromUser",
-        "description": "Removes a role from a user."
+        "functionality": "editMessage",
+        "description": "Edits an existing message in a channel. Now supports media (via embeds)."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchChannels.md",
@@ -211,6 +141,27 @@
         "extension": "md",
         "functionality": "fetchChannels",
         "description": "Fetches all channels in a guild."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchGlobalSlashCommands.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "fetchGlobalSlashCommands",
+        "description": "Fetches all global slash commands."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchGuildInfo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "fetchGuildInfo",
+        "description": "Fetches information about a guild (server)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchMessages.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "fetchMessages",
+        "description": "Fetches recent messages from a channel."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchRoles.md",
@@ -227,11 +178,39 @@
         "description": "Fetches all slash commands for a guild."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchGlobalSlashCommands.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/fetchUserInfo.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "fetchGlobalSlashCommands",
-        "description": "Fetches all global slash commands."
+        "functionality": "fetchUserInfo",
+        "description": "Fetches information about a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/followUpInteraction.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "followUpInteraction",
+        "description": "Follows up to a deferred interaction."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/handleInteraction.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "handleInteraction",
+        "description": "Handles a slash command interaction."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/moderateUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "moderateUser",
+        "description": "Performs a moderation action on a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/reactToMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reactToMessage",
+        "description": "Reacts to a message with an emoji."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/registerCommand.md",
@@ -248,11 +227,25 @@
         "description": "Registers a global command handler."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/handleInteraction.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/registerGlobalSlashCommand.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "handleInteraction",
-        "description": "Handles a slash command interaction."
+        "functionality": "registerGlobalSlashCommand",
+        "description": "Registers global slash commands for the bot."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/registerSlashCommand.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "registerSlashCommand",
+        "description": "Registers a slash command for the bot."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/removeRoleFromUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removeRoleFromUser",
+        "description": "Removes a role from a user."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/respondToInteraction.md",
@@ -262,18 +255,25 @@
         "description": "Responds to a slash command interaction."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deferInteraction.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/sendMessage.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "deferInteraction",
-        "description": "Defers a slash command response."
+        "functionality": "sendMessage",
+        "description": "Sends a message to a specified channel or user."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/followUpInteraction.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateChannel.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "followUpInteraction",
-        "description": "Follows up to a deferred interaction."
+        "functionality": "updateChannel",
+        "description": "Updates a channel's settings."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateRole.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateRole",
+        "description": "Updates a role's settings."
       }
     ]
   },
