@@ -249,11 +249,22 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
       const { functionality, action } = change;
       
       if (action === 'added') {
-        // Add functionality to functionalities array
+        // Add functionality to readme_map functionalities array
         if (!packageInfo.readme_map!.functionalities.includes(functionality)) {
           packageInfo.readme_map!.functionalities.push(functionality);
           hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to functionalities`);
+          console.log(`  ✅ Added ${functionality} to readme_map.functionalities`);
+        }
+        
+        // Add functionality to all constructors functionalities arrays
+        if (packageInfo.constructors) {
+          packageInfo.constructors.forEach((constructor, index) => {
+            if (!constructor.functionalities.includes(functionality)) {
+              constructor.functionalities.push(functionality);
+              hasChanges = true;
+              console.log(`  ✅ Added ${functionality} to constructors[${index}].functionalities`);
+            }
+          });
         }
         
         // Create and add readme info to all_readmes array
@@ -268,12 +279,24 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
         }
         
       } else if (action === 'removed') {
-        // Remove functionality from functionalities array
+        // Remove functionality from readme_map functionalities array
         const functIndex = packageInfo.readme_map!.functionalities.indexOf(functionality);
         if (functIndex > -1) {
           packageInfo.readme_map!.functionalities.splice(functIndex, 1);
           hasChanges = true;
-          console.log(`  🗑️ Removed ${functionality} from functionalities`);
+          console.log(`  🗑️ Removed ${functionality} from readme_map.functionalities`);
+        }
+        
+        // Remove functionality from all constructors functionalities arrays
+        if (packageInfo.constructors) {
+          packageInfo.constructors.forEach((constructor, index) => {
+            const constructorFunctIndex = constructor.functionalities.indexOf(functionality);
+            if (constructorFunctIndex > -1) {
+              constructor.functionalities.splice(constructorFunctIndex, 1);
+              hasChanges = true;
+              console.log(`  🗑️ Removed ${functionality} from constructors[${index}].functionalities`);
+            }
+          });
         }
         
         // Remove readme info from all_readmes array
@@ -294,11 +317,18 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
       packageInfo.readme_map!.all_readmes?.sort((a, b) => 
         (a.functionality || '').localeCompare(b.functionality || '')
       );
+      
+      // Sort constructors functionalities arrays
+      if (packageInfo.constructors) {
+        packageInfo.constructors.forEach(constructor => {
+          constructor.functionalities.sort();
+        });
+      }
 
-    // Write updated package-info.json
-    fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
+      // Write updated package-info.json
+      fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
       console.log(`✅ Updated package-info.json for ${packageName}`);
-    return true;
+      return true;
     } else {
       console.log(`ℹ️ No changes needed for ${packageName}`);
       return false;
