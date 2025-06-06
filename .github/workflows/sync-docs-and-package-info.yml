@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - vwjt_readme_map_fixes
     paths:
       - 'packages/*/docs/**/*.md'
       - '**/package-info.json'
@@ -49,7 +48,7 @@ jobs:
 
       # 5) Update package-info.json files for docs changes
       - name: Update package-info.json for docs changes
-        if: steps.changed-files.outputs.docs_any_changed == 'true'
+        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != ''
         env:
           ADDED_DOCS: ${{ steps.changed-files.outputs.docs_added_files }}
           REMOVED_DOCS: ${{ steps.changed-files.outputs.docs_deleted_files }}
@@ -64,7 +63,7 @@ jobs:
 
       # 6) Commit updated package-info.json files if there are changes
       - name: Commit updated package-info.json files
-        if: steps.changed-files.outputs.docs_any_changed == 'true'
+        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != ''
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'chore: update package-info.json readme_map for docs changes'
@@ -76,7 +75,7 @@ jobs:
 
       # 7) Index package info in database (runs for both docs and package-info changes)
       - name: Index updated package info
-        if: steps.changed-files.outputs.docs_any_changed == 'true' || steps.changed-files.outputs.package_info_any_changed == 'true'
+        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != '' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -87,7 +86,7 @@ jobs:
 
       # 8) Index docs in database (runs for both docs and package-info changes)
       - name: Index docs
-        if: steps.changed-files.outputs.docs_any_changed == 'true' || steps.changed-files.outputs.package_info_any_changed == 'true'
+        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != '' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -101,10 +100,10 @@ jobs:
       - name: Summary
         run: |
           echo "✅ Workflow completed!"
-          if [[ "${{ steps.changed-files.outputs.docs_any_changed }}" == "true" ]]; then
+          if [[ "${{ steps.changed-files.outputs.docs_added_files }}" != "" || "${{ steps.changed-files.outputs.docs_deleted_files }}" != "" || "${{ steps.changed-files.outputs.docs_modified_files }}" != "" ]]; then
             echo "📚 Updated package-info.json files for docs changes"
           fi
-          if [[ "${{ steps.changed-files.outputs.docs_any_changed }}" == "true" || "${{ steps.changed-files.outputs.package_info_any_changed }}" == "true" ]]; then
+          if [[ "${{ steps.changed-files.outputs.docs_added_files }}" != "" || "${{ steps.changed-files.outputs.docs_deleted_files }}" != "" || "${{ steps.changed-files.outputs.docs_modified_files }}" != "" || "${{ steps.changed-files.outputs.package_info_any_changed }}" == "true" ]]; then
             echo "🔍 Indexed package info in database"
             echo "📖 Indexed docs in database"
           else
