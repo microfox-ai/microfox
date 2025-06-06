@@ -35,6 +35,8 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v40
         with:
+          base: ${{ github.event.before }}
+          head: ${{ github.event.after }}
           files_yaml: |
             docs:
               - 'packages/*/docs/**/*.md'
