@@ -50,12 +50,14 @@ jobs:
           npm run update:readme-map
           
           # Check if any package-info.json files were modified
-          if git diff --quiet --exit-code '**/package-info.json'; then
+          if [ -z "$(git status --porcelain packages/*/package-info.json)" ]; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
             echo "ℹ️ No package-info.json changes needed"
           else
             echo "no_changes=false" >> $GITHUB_OUTPUT
             echo "✅ package-info.json files were updated"
+            echo "Changed files:"
+            git status --porcelain packages/*/package-info.json
           fi
 
       # 5) Commit updated package-info.json files if there are changes
