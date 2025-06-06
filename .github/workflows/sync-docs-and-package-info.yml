@@ -30,27 +30,47 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref || github.ref }}
 
-      # 2) Install Node.js
+      # 2) Detect changed files
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files_yaml: |
+            docs:
+              - 'packages/*/docs/**/*.md'
+            package_info:
+              - '**/package-info.json'
+
+      # 3) Install Node.js
       - name: Use Node.js 23.x
         uses: actions/setup-node@v4
         with:
           node-version: '23'
 
-      # 3) Install dependencies
+      # 4) Install dependencies
       - name: Install dependencies
         run: |
           cd scripts
           npm i
 
-      # 4) Check if we have docs changes and update package-info.json files
+      # 5) Update package-info.json files for docs changes
       - name: Update package-info.json for docs changes
+        if: steps.changed-files.outputs.docs_any_changed == 'true'
+        env:
+          ADDED_DOCS: ${{ steps.changed-files.outputs.docs_added_files }}
+          REMOVED_DOCS: ${{ steps.changed-files.outputs.docs_deleted_files }}
+          MODIFIED_DOCS: ${{ steps.changed-files.outputs.docs_modified_files }}
         run: |
-          echo "Updating package-info.json files for docs changes..."
+          echo "📝 Docs files changed, updating package-info.json files..."
+          echo "Added: $ADDED_DOCS"
+          echo "Removed: $REMOVED_DOCS"
+          echo "Modified: $MODIFIED_DOCS"
           cd scripts
           npm run update:readme-map
 
-      # 5) Commit updated package-info.json files if there are changes
+      # 6) Commit updated package-info.json files if there are changes
       - name: Commit updated package-info.json files
+        if: steps.changed-files.outputs.docs_any_changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'chore: update package-info.json readme_map for docs changes'
@@ -60,31 +80,39 @@ jobs:
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           skip_dirty_check: false
 
-      # 6) Index package info in database
+      # 7) Index package info in database (runs for both docs and package-info changes)
       - name: Index updated package info
+        if: steps.changed-files.outputs.docs_any_changed == 'true' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          echo "Indexing updated package info..."
+          echo "🔍 Indexing package info in database..."
           cd scripts
           npm run save:package-info
 
-      # 7) Index docs in database
+      # 8) Index docs in database (runs for both docs and package-info changes)
       - name: Index docs
+        if: steps.changed-files.outputs.docs_any_changed == 'true' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          echo "Indexing docs..."
+          echo "📖 Indexing docs in database..."
           cd scripts
           npm run embed:docs
 
-      # 8) Summary
+      # 9) Summary
       - name: Summary
         run: |
-          echo "✅ Successfully synced docs and package info!"
-          echo "📚 Updated package-info.json files for docs changes"
-          echo "🔍 Indexed package info in database"
-          echo "📖 Indexed docs in database" 
+          echo "✅ Workflow completed!"
+          if [[ "${{ steps.changed-files.outputs.docs_any_changed }}" == "true" ]]; then
+            echo "📚 Updated package-info.json files for docs changes"
+          fi
+          if [[ "${{ steps.changed-files.outputs.docs_any_changed }}" == "true" || "${{ steps.changed-files.outputs.package_info_any_changed }}" == "true" ]]; then
+            echo "🔍 Indexed package info in database"
+            echo "📖 Indexed docs in database"
+          else
+            echo "ℹ️ No relevant changes detected"
+          fi 
