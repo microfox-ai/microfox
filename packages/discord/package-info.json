@@ -64,6 +64,13 @@
         "description": "Creates a new instance of the Discord SDK. This function initializes the SDK with the provided configuration, sets up the necessary headers for authentication, and returns an object containing all the available API methods."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createChannel",
+        "description": "Creates a new channel in the guild."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createRole.md",
         "type": "functionality",
         "extension": "md",
