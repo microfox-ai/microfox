@@ -48,6 +48,7 @@
       "respondToInteraction",
       "sendMessage",
       "test",
+      "test2",
       "updateChannel",
       "updateRole"
     ],
@@ -270,6 +271,13 @@
         "description": "Documentation for test"
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/test2.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "test2",
+        "description": "Documentation for test2"
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/updateChannel.md",
         "type": "functionality",
         "extension": "md",
@@ -330,6 +338,7 @@
         "respondToInteraction",
         "sendMessage",
         "test",
+        "test2",
         "updateChannel",
         "updateRole"
       ],
