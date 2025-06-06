@@ -148,6 +148,21 @@ function parseDocChanges(): FileChange[] {
     }
     return null;
   };
+
+  // Helper to check if file exists and has content
+  const isFileEmpty = (filePath: string): boolean => {
+    try {
+      const fullPath = path.join(PACKAGES_DIR, '..', filePath);
+      if (!fs.existsSync(fullPath)) {
+        return true; // File doesn't exist, treat as empty
+      }
+      const content = fs.readFileSync(fullPath, 'utf-8').trim();
+      return content.length === 0;
+    } catch (error) {
+      console.warn(`Could not check file content for ${filePath}:`, error);
+      return false; // If we can't read it, assume it has content
+    }
+  };
   
   // Process added files
   added.forEach(filePath => {
@@ -165,11 +180,19 @@ function parseDocChanges(): FileChange[] {
     }
   });
   
-  // Process modified files
+  // Process modified files - check if they're actually added or removed based on content
   modified.forEach(filePath => {
     const parsed = parseDocPath(filePath);
     if (parsed) {
-      changes.push({ ...parsed, action: 'modified' });
+      if (isFileEmpty(filePath)) {
+        // File is empty, treat as removed
+        changes.push({ ...parsed, action: 'removed' });
+        console.log(`📝 Modified file ${filePath} is empty, treating as removed`);
+      } else {
+        // File has content, treat as added (could be new content in previously empty file)
+        changes.push({ ...parsed, action: 'added' });
+        console.log(`📝 Modified file ${filePath} has content, treating as added`);
+      }
     }
   });
   
@@ -373,24 +396,14 @@ async function main() {
     return;
   }
 
-  // Filter to only added and removed changes (ignore modifications)
-  const relevantChanges = docChanges.filter(change => 
-    change.action === 'added' || change.action === 'removed'
-  );
-
-  if (relevantChanges.length === 0) {
-    console.log('✅ No docs additions or removals found (only modifications).');
-    return;
-  }
-
-  console.log(`📝 Found ${relevantChanges.length} relevant doc changes:`);
-  relevantChanges.forEach(change => {
+  console.log(`📝 Found ${docChanges.length} doc changes:`);
+  docChanges.forEach(change => {
     console.log(`  ${change.action === 'added' ? '✅' : '🗑️'} ${change.packageName}/${change.fileName} (${change.action})`);
   });
 
   // Group changes by package
   const changesByPackage = new Map<string, FileChange[]>();
-  relevantChanges.forEach(change => {
+  docChanges.forEach(change => {
     if (!changesByPackage.has(change.packageName)) {
       changesByPackage.set(change.packageName, []);
     }
