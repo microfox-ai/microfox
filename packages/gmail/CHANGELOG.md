@@ -1,5 +1,11 @@
 # @microfox/gmail
 
+## 1.1.3
+
+### Patch Changes
+
+- 79b34cf: Changes from PR #424: update-oauth-scopes
+
 ## 1.1.2
 
 ### Patch Changes
