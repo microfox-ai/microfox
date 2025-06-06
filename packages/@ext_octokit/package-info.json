@@ -23,8 +23,43 @@
   "readme_map": {
     "path": "/README.md",
     "title": "octokit",
-    "functionalities": [],
-    "description": "The full README for the package"
+    "functionalities": [
+      "app",
+      "mediaTypes",
+      "oauth",
+      "server"
+    ],
+    "description": "The full README for the package",
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_octokit/docs/app.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "app",
+        "description": "The `App` client combines features for GitHub Apps, Webhooks, and OAuth"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_octokit/docs/mediaTypes.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "mediaTypes",
+        "description": "Media type formats can be set using `mediaType: { format }` on every request."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_octokit/docs/oauth.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "oauth",
+        "description": "**Standalone module:** [`@octokit/oauth-app`](https://github.com/octokit/oauth-app.js/#readme)"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_octokit/docs/server.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "server",
+        "description": "After registering your GitHub app, you need to create and deploy a server which can retrieve the webhook event requests from GitHub as well as accept redirects from the OAuth user web flow."
+      }
+    ]
   },
   "constructors": [
     {
@@ -40,7 +75,10 @@
         }
       ],
       "internalKeys": [],
-      "functionalities": ["rest", "request"]
+      "functionalities": [
+        "rest",
+        "request"
+      ]
     }
   ],
   "extraInfo": []

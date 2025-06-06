@@ -4,7 +4,10 @@
   "description": "A TypeScript SDK for interacting with Google Calendar, enabling management of events, calendars, settings, and access control.",
   "platformType": "tool",
   "path": "packages/google-calendar",
-  "dependencies": ["@microfox/google-oauth", "zod"],
+  "dependencies": [
+    "@microfox/google-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
@@ -22,8 +25,8 @@
     "description": "The full README for the Google Calendar",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/README.md",
     "functionalities": [
-      "createGoogleCalendarSDK",
       "clearCalendar",
+      "createGoogleCalendarSDK",
       "deleteAclRule",
       "deleteCalendar",
       "deleteCalendarFromList",
@@ -36,6 +39,7 @@
       "getSetting",
       "importEvent",
       "insertAclRule",
+      "insertCalendar",
       "insertCalendarToList",
       "insertEvent",
       "listAclRules",
@@ -58,18 +62,18 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createGoogleCalendarSDK",
-        "description": "Factory function to create an instance of the `GoogleCalendarSdk`. This function simplifies the instantiation of the SDK by accepting a configuration object."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/clearCalendar.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "clearCalendar",
         "description": "Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account. It cannot be used on secondary calendars."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/createGoogleCalendarSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createGoogleCalendarSDK",
+        "description": "Factory function to create an instance of the `GoogleCalendarSdk`. This function simplifies the instantiation of the SDK by accepting a configuration object."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/deleteAclRule.md",
@@ -154,6 +158,13 @@
         "extension": "md",
         "functionality": "insertAclRule",
         "description": "Inserts an access control list (ACL) rule into a calendar."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertCalendar.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "insertCalendar",
+        "description": "Creates a new secondary calendar. This function cannot be used to create a primary calendar, as primary calendars are automatically created for each Google account."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-calendar/docs/insertCalendarToList.md",
@@ -377,5 +388,10 @@
     "setupInfo": "To use this SDK, you need to set up OAuth 2.0 credentials for the Google Calendar API:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Calendar API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleCalendarSDK } from '@microfox/google-calendar';\n\nconst sdk = createGoogleCalendarSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN', // Optional, if you already have a valid access token\n  refreshToken: 'YOUR_REFRESH_TOKEN', // Optional, for refreshing the access token\n});\n```\n\nYou can also use environment variables to configure the SDK:\n\n- GOOGLE_CLIENT_ID: Your OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: A valid access token (optional)\n- GOOGLE_REFRESH_TOKEN: A refresh token for obtaining new access tokens (optional)\n\nMake sure to keep your credentials and tokens secure and never expose them in client-side code."
   },
   "extraInfo": [],
-  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }

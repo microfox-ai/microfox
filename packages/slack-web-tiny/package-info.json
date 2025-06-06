@@ -3,7 +3,9 @@
   "title": "Microfox Slack Web Tiny",
   "description": "A lightweight, type-safe SDK for interacting with the Slack Web API",
   "path": "packages/slack-web-tiny",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
   "authType": "apikey",
   "authEndpoint": "/connect/slack",
@@ -85,7 +87,11 @@
           }
         }
       ],
-      "functionalities": ["sendMessage", "updateMessage", "uploadFile"]
+      "functionalities": [
+        "sendMessage",
+        "updateMessage",
+        "uploadFile"
+      ]
     },
     {
       "name": "OAuthWebClient",
@@ -164,7 +170,9 @@
           }
         }
       ],
-      "functionalities": ["allFunctionalities"]
+      "functionalities": [
+        "allFunctionalities"
+      ]
     }
   ],
   "extraInfo": [

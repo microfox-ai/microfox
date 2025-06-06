@@ -3,11 +3,16 @@
   "title": "LinkedIn Member Data Portability SDK",
   "description": "A TypeScript SDK for LinkedIn Member Data Portability.",
   "path": "packages/linkedin-member-data-portability",
-  "dependencies": ["@microfox/linkedin-oauth", "zod"],
+  "dependencies": [
+    "@microfox/linkedin-oauth",
+    "zod"
+  ],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/linkedin-oauth",
-  "oauth2Scopes": ["r_dma_portability_3rd_party"],
+  "oauth2Scopes": [
+    "r_dma_portability_3rd_party"
+  ],
   "documentation": "https://www.npmjs.com/package/@microfox/linkedin-member-data-portability",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/linkedin-icon.svg",
   "readme_map": {
@@ -16,12 +21,12 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/README.md",
     "functionalities": [
       "LinkedInDataPortabilitySDK",
-      "validateAccessToken",
-      "refreshAccessToken",
+      "getMemberAuthorizations",
       "getMemberChangeLogs",
       "getMemberSnapshotData",
-      "getMemberAuthorizations",
-      "triggerMemberDataProcessing"
+      "refreshAccessToken",
+      "triggerMemberDataProcessing",
+      "validateAccessToken"
     ],
     "all_readmes": [
       {
@@ -32,18 +37,11 @@
         "description": "Initializes a new instance of the LinkedInDataPortabilitySDK."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/validateAccessToken.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/getMemberAuthorizations.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the current access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken",
-        "description": "Refreshes the access token using the refresh token."
+        "functionality": "getMemberAuthorizations",
+        "description": "Retrieves member authorizations."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/getMemberChangeLogs.md",
@@ -60,11 +58,11 @@
         "description": "Retrieves member snapshot data."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/getMemberAuthorizations.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/refreshAccessToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getMemberAuthorizations",
-        "description": "Retrieves member authorizations."
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes the access token using the refresh token."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/triggerMemberDataProcessing.md",
@@ -72,6 +70,13 @@
         "extension": "md",
         "functionality": "triggerMemberDataProcessing",
         "description": "Triggers member data processing."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the current access token."
       }
     ]
   },

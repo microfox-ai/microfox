@@ -3,7 +3,9 @@
   "title": "LinkedIn Share",
   "description": "LinkedIn Share - Simple Text Post, Share an Article, Share an Image, Create a draft post. etc..",
   "path": "packages/linkedin-share",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
   "authType": "oauth2",
   "authEndpoint": "/connect/linkedin",
@@ -23,7 +25,10 @@
           "description": "The LinkedIn access token required for authentication."
         }
       ],
-      "functionalities": ["post", "getUserId"]
+      "functionalities": [
+        "post",
+        "getUserId"
+      ]
     }
   ],
   "extraInfo": [
@@ -33,28 +38,32 @@
     "title": "LinkedIn Share",
     "description": "The full README for the LinkedIn Share",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md",
-    "functionalities": ["LinkedinShareSdk", "post", "getUserId"],
+    "functionalities": [
+      "LinkedinShareSdk",
+      "getUserId",
+      "post"
+    ],
     "all_readmes": [
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/LinkedinShareSdk.md",
         "type": "constructor",
         "extension": "md",
         "functionality": "LinkedinShareSdk",
-        "description": "Initializes a new instance of the LinkedinShareSdk."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/post.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "post",
-        "description": "Post content to LinkedIn."
+        "description": "Initializes a new instance of the LinkedIn Share SDK."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/getUserId.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getUserId",
-        "description": "Get the current user's LinkedIn ID."
+        "description": "Retrieves the current user's LinkedIn ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/post.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "post",
+        "description": "Posts content to LinkedIn with flexible options."
       }
     ]
   },

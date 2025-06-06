@@ -3,7 +3,10 @@
   "title": "Google Search Console",
   "description": "A TypeScript SDK for interacting with the Google Search Console API.",
   "path": "packages/google-seo",
-  "dependencies": ["@microfox/google-oauth", "zod"],
+  "dependencies": [
+    "@microfox/google-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
@@ -19,18 +22,18 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/README.md",
     "functionalities": [
       "GoogleSearchConsoleSDK",
-      "validateAccessToken",
-      "refreshAccessToken",
-      "listSites",
-      "getSite",
       "addSite",
       "deleteSite",
-      "listSitemaps",
-      "getSitemap",
-      "submitSitemap",
       "deleteSitemap",
+      "getSite",
+      "getSitemap",
+      "inspectUrl",
+      "listSitemaps",
+      "listSites",
       "querySearchAnalytics",
-      "inspectUrl"
+      "refreshAccessToken",
+      "submitSitemap",
+      "validateAccessToken"
     ],
     "all_readmes": [
       {
@@ -39,34 +42,6 @@
         "extension": "md",
         "functionality": "GoogleSearchConsoleSDK",
         "description": "Initializes a new instance of the Google Search Console SDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the current access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken",
-        "description": "Refreshes the access token using a refresh token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/listSites.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listSites",
-        "description": "Lists all sites verified by the authenticated user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/getSite.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getSite",
-        "description": "Retrieves information about a specific site."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/addSite.md",
@@ -83,11 +58,18 @@
         "description": "Deletes a site from the list of verified sites."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/listSitemaps.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/deleteSitemap.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "listSitemaps",
-        "description": "Lists all sitemaps submitted for a site."
+        "functionality": "deleteSitemap",
+        "description": "Deletes a sitemap for a site."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/getSite.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSite",
+        "description": "Retrieves information about a specific site."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/getSitemap.md",
@@ -97,18 +79,25 @@
         "description": "Retrieves a specific sitemap."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/submitSitemap.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/inspectUrl.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "submitSitemap",
-        "description": "Submits a sitemap for a site."
+        "functionality": "inspectUrl",
+        "description": "Requests an inspection of a URL and retrieves the inspection results."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/deleteSitemap.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/listSitemaps.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "deleteSitemap",
-        "description": "Deletes a sitemap for a site."
+        "functionality": "listSitemaps",
+        "description": "Lists all sitemaps submitted for a site."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/listSites.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listSites",
+        "description": "Lists all sites verified by the authenticated user."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/querySearchAnalytics.md",
@@ -118,11 +107,25 @@
         "description": "Queries search analytics data for a site."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/inspectUrl.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/refreshAccessToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "inspectUrl",
-        "description": "Inspects a URL."
+        "functionality": "refreshAccessToken",
+        "description": "Refreshes the access token using a refresh token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/submitSitemap.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "submitSitemap",
+        "description": "Submits a sitemap for a site."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-seo/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the current access token."
       }
     ]
   },

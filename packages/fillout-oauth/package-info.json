@@ -4,7 +4,9 @@
   "description": "TypeScript OAuth package simplifying authorization and access token management for Fillout.",
   "platformType": "internal",
   "path": "packages/fillout-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authEndpoint": "/connect/fillout",
   "oauth2Scopes": [],
@@ -16,8 +18,8 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/README.md",
     "functionalities": [
       "FilloutOAuthSdk",
-      "getAuthorizationUrl",
       "getAccessToken",
+      "getAuthorizationUrl",
       "validateAccessToken"
     ],
     "all_readmes": [
@@ -26,14 +28,7 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "FilloutOAuthSdk",
-        "description": "Initializes a new instance of the FilloutOAuthSdk."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl",
-        "description": "Generates the authorization URL for the OAuth flow."
+        "description": "Initializes a new instance of the FilloutOAuthSdk for interacting with the Fillout OAuth API."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAccessToken.md",
@@ -43,11 +38,18 @@
         "description": "Exchanges an authorization code for an access token."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAuthorizationUrl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAuthorizationUrl",
+        "description": "Generates the authorization URL to initiate the OAuth flow with Fillout."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/validateAccessToken.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "validateAccessToken",
-        "description": "Validates the access token by making a request to the Fillout API."
+        "description": "Validates the access token."
       }
     ]
   },
@@ -123,5 +125,10 @@
   "keyInstructions": {
     "link": "https://www.fillout.com/help/oauth-applications"
   },
-  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }

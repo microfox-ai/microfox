@@ -3,7 +3,9 @@
   "title": "Amazon Rekognition Face Detection SDK",
   "description": "The Amazon Rekognition Face Detection SDK for TypeScript simplifies face detection integration into applications, providing developers with an easy-to-use interface for identifying faces in images and videos.",
   "path": "packages/amazon-rekognition-face-detection",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -14,14 +16,17 @@
     "title": "Amazon Rekognition Face Detection SDK",
     "description": "The full README for the Amazon Rekognition Face Detection SDK",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/README.md",
-    "functionalities": ["AmazonRekognitionFaceDetectionSdk", "detectFaces"],
+    "functionalities": [
+      "AmazonRekognitionFaceDetectionSdk",
+      "detectFaces"
+    ],
     "all_readmes": [
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/AmazonRekognitionFaceDetectionSdk.md",
         "type": "constructor",
         "extension": "md",
         "functionality": "AmazonRekognitionFaceDetectionSdk",
-        "description": "Initializes the Amazon Rekognition Face Detection SDK."
+        "description": "Initializes a new instance of the AmazonRekognitionFaceDetectionSdk."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/detectFaces.md",
@@ -59,7 +64,9 @@
         }
       ],
       "internalKeys": [],
-      "functionalities": ["detectFaces"]
+      "functionalities": [
+        "detectFaces"
+      ]
     }
   ],
   "keyInstructions": {

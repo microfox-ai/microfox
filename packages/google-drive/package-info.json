@@ -4,7 +4,10 @@
   "description": "Manage Google Drive resources (drives, files, and access proposals) using the Google Drive API.",
   "platformType": "tool",
   "path": "packages/google-drive",
-  "dependencies": ["@microfox/google-oauth", "zod"],
+  "dependencies": [
+    "@microfox/google-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
@@ -21,6 +24,7 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/README.md",
     "functionalities": [
       "GoogleDriveSdk",
+      "createDrive",
       "createGoogleDriveSDK",
       "deleteDrive",
       "getAbout",
@@ -47,8 +51,15 @@
         "description": "The `GoogleDriveSdk` constructor initializes a new instance of the SDK, enabling interaction with the Google Drive API. It configures the OAuth 2.0 authentication mechanism required for all API requests. The constructor accepts client credentials and, optionally, pre-existing access and refresh tokens."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/createDrive.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createDrive",
+        "description": "Creates a new shared drive. Shared drives are shared spaces where teams can easily store, search, and access their files."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/google-drive/docs/createGoogleDriveSDK.md",
-        "type": "functionality",
+        "type": "constructor",
         "extension": "md",
         "functionality": "createGoogleDriveSDK",
         "description": "A factory function that creates and initializes an instance of the `GoogleDriveSdk`. This function simplifies the setup process by encapsulating the instantiation of the SDK client."
@@ -236,5 +247,10 @@
     "setupInfo": "To use the Google Drive SDK, you need to set up OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Drive API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleDriveSDK } from '@microfox/google-drive';\n\nconst sdk = createGoogleDriveSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n```\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token\n\nMake sure to keep your client secret and tokens secure and never expose them in client-side code."
   },
   "extraInfo": [],
-  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }

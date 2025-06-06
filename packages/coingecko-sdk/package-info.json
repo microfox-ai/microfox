@@ -3,7 +3,9 @@
   "title": "CoinGecko SDK",
   "description": "A comprehensive TypeScript SDK providing convenient access to CoinGecko Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/coingecko-sdk",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -16,19 +18,19 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/README.md",
     "functionalities": [
       "CoinGeckoSDK",
-      "ping",
       "getApiUsage",
-      "getSimplePrice",
-      "getTokenPrice",
-      "getSupportedVsCurrencies",
-      "getCoinsList",
-      "getCoinsMarkets",
       "getCoinData",
-      "getCoinTickers",
       "getCoinHistory",
       "getCoinMarketChart",
       "getCoinMarketChartRange",
-      "getCoinOHLCRange"
+      "getCoinOHLCRange",
+      "getCoinTickers",
+      "getCoinsList",
+      "getCoinsMarkets",
+      "getSimplePrice",
+      "getSupportedVsCurrencies",
+      "getTokenPrice",
+      "ping"
     ],
     "all_readmes": [
       {
@@ -39,13 +41,6 @@
         "description": "Initializes a new instance of the CoinGeckoSDK."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/ping.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "ping",
-        "description": "Tests the CoinGecko API connection."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getApiUsage.md",
         "type": "functionality",
         "extension": "md",
@@ -53,53 +48,11 @@
         "description": "Retrieves the API usage information."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getSimplePrice.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getSimplePrice",
-        "description": "Gets the simple price of one or more cryptocurrencies in a given currency."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getTokenPrice.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getTokenPrice",
-        "description": "Gets the token price of a cryptocurrency by its ID and contract address."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getSupportedVsCurrencies.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getSupportedVsCurrencies",
-        "description": "Gets a list of supported VS currencies."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsList.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getCoinsList",
-        "description": "Gets a list of all supported coins."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsMarkets.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getCoinsMarkets",
-        "description": "Gets market data for a list of coins."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinData.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getCoinData",
         "description": "Gets detailed data for a specific coin."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinTickers.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getCoinTickers",
-        "description": "Gets ticker data for a specific coin."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinHistory.md",
@@ -128,6 +81,55 @@
         "extension": "md",
         "functionality": "getCoinOHLCRange",
         "description": "Gets the OHLC (Open, High, Low, Close) data within a specific date range for a coin."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinTickers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCoinTickers",
+        "description": "Gets ticker data for a specific coin."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCoinsList",
+        "description": "Gets a list of all supported coins."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getCoinsMarkets.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCoinsMarkets",
+        "description": "Gets market data for a list of coins."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getSimplePrice.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSimplePrice",
+        "description": "Gets the simple price of one or more cryptocurrencies in a given currency."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getSupportedVsCurrencies.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSupportedVsCurrencies",
+        "description": "Gets a list of supported VS currencies."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/getTokenPrice.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getTokenPrice",
+        "description": "Gets the token price of a cryptocurrency by its ID and contract address."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/ping.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "ping",
+        "description": "Tests the CoinGecko API connection."
       }
     ]
   },

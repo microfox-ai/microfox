@@ -3,7 +3,12 @@
   "title": "@hyperbrowser/sdk",
   "description": "Node SDK for Hyperbrowser API",
   "path": "packages/@ext_@hyperbrowser#sdk",
-  "dependencies": ["form-data", "node-fetch", "zod", "zod-to-json-schema"],
+  "dependencies": [
+    "form-data",
+    "node-fetch",
+    "zod",
+    "zod-to-json-schema"
+  ],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@hyperbrowser/sdk",
@@ -21,39 +26,39 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/agents.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/agents.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "agents",
-        "description": "The full README for the @hyperbrowser/sdk agents functionality"
+        "description": "Starts a HyperAgent task and waits for its completion, returning the final result."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/browser_use.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/browser_use.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "browser_use",
-        "description": "The full README for the @hyperbrowser/sdk browser_use functionality"
+        "description": "Starts a Browser Use task and waits for its completion, returning the final result. This function simplifies the process of interacting with web pages through an AI agent by handling the asynchronous task management and returning the data once the task is finished."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/claude_computer_use.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/claude_computer_use.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "claude_computer_use",
-        "description": "The full README for the @hyperbrowser/sdk claude_computer_use functionality"
+        "description": "Starts a Claude Computer Use task and waits for it to complete, returning the final result."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/environment-variables.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/environment-variables.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "environment-variables",
-        "description": "The full README for the @hyperbrowser/sdk environment-variables functionality"
+        "description": "The following environment variables are required to use this SDK:"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/openai_cua.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/openai_cua.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "openai_cua",
-        "description": "The full README for the @hyperbrowser/sdk openai_cua functionality"
+        "description": "Starts a Computer-Using Agent (CUA) task and waits for its completion, returning the final result. This function simplifies the process of managing asynchronous CUA tasks by handling the monitoring and returning the data once the task is finished."
       }
     ]
   },
