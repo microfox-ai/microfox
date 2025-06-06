@@ -26,21 +26,21 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/README.md",
     "functionalities": [
       "InstagramSDK",
-      "validateAccessToken",
-      "createMediaContainer",
-      "publishMedia",
       "checkMediaStatus",
-      "getContentPublishingLimit",
-      "uploadVideo",
-      "getComments",
-      "replyToComment",
-      "hideComment",
-      "enableDisableComments",
+      "createMediaContainer",
       "deleteComment",
-      "sendPrivateReply",
-      "getMediaInsights",
+      "enableDisableComments",
       "getAccountInsights",
-      "getOEmbed"
+      "getComments",
+      "getContentPublishingLimit",
+      "getMediaInsights",
+      "getOEmbed",
+      "hideComment",
+      "publishMedia",
+      "replyToComment",
+      "sendPrivateReply",
+      "uploadVideo",
+      "validateAccessToken"
     ],
     "all_readmes": [
       {
@@ -51,67 +51,25 @@
         "description": "Initializes a new instance of the InstagramSDK."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/createMediaContainer.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createMediaContainer",
-        "description": "Creates a media container."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/publishMedia.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "publishMedia",
-        "description": "Publishes media."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/checkMediaStatus.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "checkMediaStatus",
-        "description": "Checks the status of media."
+        "description": "Checks the status of a media container."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getContentPublishingLimit.md",
-        "type": "functionality",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/createMediaContainer.md",
+        "type": "constructor",
         "extension": "md",
-        "functionality": "getContentPublishingLimit",
-        "description": "Gets the content publishing limit."
+        "functionality": "createMediaContainer",
+        "description": "Creates a media container for uploading media."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/uploadVideo.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/deleteComment.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "uploadVideo",
-        "description": "Uploads a video."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getComments.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getComments",
-        "description": "Gets comments on a media object."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/replyToComment.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "replyToComment",
-        "description": "Replies to a comment."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/hideComment.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "hideComment",
-        "description": "Hides or unhides a comment."
+        "functionality": "deleteComment",
+        "description": "- `igCommentId` (string, required): The ID of the comment to delete."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/enableDisableComments.md",
@@ -121,11 +79,60 @@
         "description": "Enables or disables comments on a media object."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/deleteComment.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getAccountInsights.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "deleteComment",
-        "description": "Deletes a comment."
+        "functionality": "getAccountInsights",
+        "description": "Gets insights for a given account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getComments.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getComments",
+        "description": "Retrieves comments for a given media object."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getContentPublishingLimit.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getContentPublishingLimit",
+        "description": "Gets the content publishing limit for an Instagram Business Account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getMediaInsights.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMediaInsights",
+        "description": "Gets insights for a given media object."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getOEmbed.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getOEmbed",
+        "description": "Gets oEmbed data for a given URL."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/hideComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hideComment",
+        "description": "Hides or unhides a comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/publishMedia.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "publishMedia",
+        "description": "Publishes a media container."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/replyToComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "replyToComment",
+        "description": "Replies to a given comment."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/sendPrivateReply.md",
@@ -135,25 +142,18 @@
         "description": "Sends a private reply to a comment."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getMediaInsights.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/uploadVideo.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getMediaInsights",
-        "description": "Gets insights for a media object."
+        "functionality": "uploadVideo",
+        "description": "Uploads a video to a media container."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getAccountInsights.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/validateAccessToken.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getAccountInsights",
-        "description": "Gets insights for an account."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/getOEmbed.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getOEmbed",
-        "description": "Gets oEmbed data for a URL."
+        "functionality": "validateAccessToken",
+        "description": "Validates the access token by attempting to retrieve the Instagram Business Account."
       }
     ]
   },

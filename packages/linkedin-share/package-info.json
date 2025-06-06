@@ -51,8 +51,8 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md",
     "functionalities": [
       "LinkedinShareSdk",
-      "post",
-      "getUserId"
+      "getUserId",
+      "post"
     ],
     "all_readmes": [
       {
@@ -60,21 +60,21 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "LinkedinShareSdk",
-        "description": "Initializes a new instance of the LinkedinShareSdk."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/post.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "post",
-        "description": "Post content to LinkedIn."
+        "description": "Initializes a new instance of the LinkedIn Share SDK."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/getUserId.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getUserId",
-        "description": "Get the current user's LinkedIn ID."
+        "description": "Retrieves the current user's LinkedIn ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/post.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "post",
+        "description": "Posts content to LinkedIn with flexible options."
       }
     ]
   },

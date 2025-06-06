@@ -26,7 +26,7 @@
         "type": "constructor",
         "extension": "md",
         "functionality": "AmazonRekognitionFaceDetectionSdk",
-        "description": "Initializes the Amazon Rekognition Face Detection SDK."
+        "description": "Initializes a new instance of the AmazonRekognitionFaceDetectionSdk."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/detectFaces.md",

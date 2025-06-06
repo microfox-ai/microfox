@@ -19,8 +19,8 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/README.md",
     "functionalities": [
       "createSESSdk",
-      "sendEmail",
-      "sendBulkEmails"
+      "sendBulkEmails",
+      "sendEmail"
     ],
     "all_readmes": [
       {
@@ -31,18 +31,18 @@
         "description": "Creates an instance of the AWS SES SDK. This function configures and returns an object with methods for sending emails via the AWS SES service."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/docs/sendEmail.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "sendEmail",
-        "description": "Sends a single email using the provided parameters."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/docs/sendBulkEmails.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "sendBulkEmails",
         "description": "Sends multiple emails in parallel using the provided parameters."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/docs/sendEmail.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "sendEmail",
+        "description": "Sends a single email using the provided parameters."
       }
     ]
   },

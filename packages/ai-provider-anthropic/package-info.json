@@ -3,7 +3,9 @@
   "title": "Anthropic Provider",
   "description": "A comprehensive TypeScript SDK providing convenient access to Anthropic's Claude API for text generation and conversation.",
   "path": "packages/ai-provider-anthropic",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "stable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -14,10 +16,22 @@
     "title": "Anthropic Provider",
     "description": "The full README for the Anthropic Provider",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-anthropic/README.md",
-    "functionalities": [],
-    "all_readmes": []
+    "functionalities": [
+      "models"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-anthropic/docs/models.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "models",
+        "description": "| Model                      | Image Input | Object Generation | Tool Usage | Tool Streaming | Reasoning |"
+      }
+    ]
   },
-  "addedDependencies": ["ai"],
+  "addedDependencies": [
+    "ai"
+  ],
   "constructors": [
     {
       "name": "AnthropicAiProvider",
@@ -41,7 +55,9 @@
   "keysInfo": [
     {
       "key": "ANTHROPIC_API_KEY",
-      "constructors": ["AnthropicAiProvider"],
+      "constructors": [
+        "AnthropicAiProvider"
+      ],
       "description": "Anthropic API Key. Obtain from your Anthropic account dashboard.",
       "required": true
     }
