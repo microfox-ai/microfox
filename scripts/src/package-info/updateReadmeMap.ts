@@ -235,21 +235,6 @@ function createReadmeInfo(packageName: string, functionality: string): ReadmeInf
     
     // Try to extract description from the file content
     let description = `Documentation for ${functionality}`;
-    try {
-      const content = fs.readFileSync(filePath, 'utf-8');
-      const lines = content.split('\n');
-      
-      // Look for first paragraph or description
-      for (let i = 0; i < Math.min(10, lines.length); i++) {
-        const line = lines[i].trim();
-        if (line && !line.startsWith('#') && !line.startsWith('```') && line.length > 20) {
-          description = line;
-          break;
-        }
-      }
-    } catch (error) {
-      console.warn(`Could not read ${filePath} for description`);
-    }
 
     // Determine type based on common patterns
     let type: 'main' | 'constructor' | 'functionality' = 'functionality';
