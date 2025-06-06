@@ -33,9 +33,10 @@ function getChangedFiles(): { added: string[], removed: string[], modified: stri
   if (addedDocs || removedDocs || modifiedDocs) {
     console.log('🔧 Using GitHub Actions file change detection');
     
-    const added = addedDocs.split(' ').filter(Boolean);
-    const removed = removedDocs.split(' ').filter(Boolean);
-    const modified = modifiedDocs.split(' ').filter(Boolean);
+    // Split by both space and newline to handle different formats
+    const added = addedDocs.split(/[\s\n]+/).filter(Boolean);
+    const removed = removedDocs.split(/[\s\n]+/).filter(Boolean);
+    const modified = modifiedDocs.split(/[\s\n]+/).filter(Boolean);
     
     console.log(`🔍 Found changes from GitHub Actions:`);
     console.log(`  ✅ Added: ${added.length} files${added.length > 0 ? ':\n    ' + added.join('\n    ') : ''}`);
@@ -74,7 +75,10 @@ function getChangedFiles(): { added: string[], removed: string[], modified: stri
         const lines = output.split('\n').filter(Boolean);
         
         lines.forEach(line => {
-          const [status, filePath] = line.split('\t');
+          const parts = line.split('\t');
+          const status = parts[0];
+          const filePath = parts[1];
+          
           if (status === 'A') addedFiles.push(filePath);
           else if (status === 'D') removedFiles.push(filePath);
           else if (status === 'M') modifiedFiles.push(filePath);
@@ -92,7 +96,10 @@ function getChangedFiles(): { added: string[], removed: string[], modified: stri
         if (stagedOutput.trim()) {
           const lines = stagedOutput.split('\n').filter(Boolean);
           lines.forEach(line => {
-            const [status, filePath] = line.split('\t');
+            const parts = line.split('\t');
+            const status = parts[0];
+            const filePath = parts[1];
+            
             if (status === 'A') addedFiles.push(filePath);
             else if (status === 'D') removedFiles.push(filePath);
             else if (status === 'M') modifiedFiles.push(filePath);
