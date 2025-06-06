@@ -14,112 +14,215 @@ interface ReadmeInfo {
   description?: string;
 }
 
+interface FileChange {
+  packageName: string;
+  fileName: string;
+  functionality: string;
+  action: 'added' | 'removed' | 'modified';
+}
+
 /**
- * Get changed files from git since last commit or from staging area
+ * Get changed files with their change types from GitHub Actions or git
  */
-function getChangedFiles(): string[] {
+function getChangedFiles(): { added: string[], removed: string[], modified: string[] } {
+  // Check if we have GitHub Actions environment variables with file changes
+  const addedDocs = process.env.ADDED_DOCS || '';
+  const removedDocs = process.env.REMOVED_DOCS || '';
+  const modifiedDocs = process.env.MODIFIED_DOCS || '';
+  
+  if (addedDocs || removedDocs || modifiedDocs) {
+    console.log('🔧 Using GitHub Actions file change detection');
+    
+    const added = addedDocs.split(' ').filter(Boolean);
+    const removed = removedDocs.split(' ').filter(Boolean);
+    const modified = modifiedDocs.split(' ').filter(Boolean);
+    
+    console.log(`🔍 Found changes from GitHub Actions:`);
+    console.log(`  ✅ Added: ${added.length} files${added.length > 0 ? ':\n    ' + added.join('\n    ') : ''}`);
+    console.log(`  🗑️ Removed: ${removed.length} files${removed.length > 0 ? ':\n    ' + removed.join('\n    ') : ''}`);
+    console.log(`  ✏️ Modified: ${modified.length} files${modified.length > 0 ? ':\n    ' + modified.join('\n    ') : ''}`);
+    
+    return { added, removed, modified };
+  }
+  
+  // Fallback to git detection for local development
+  console.log('🔧 Using git-based file change detection');
+  
   try {
-    // Get both staged and unstaged changes
-    const output = execSync('git diff --name-only HEAD', { encoding: 'utf-8' });
-    return output.split('\n').filter(Boolean);
+    let addedFiles: string[] = [];
+    let removedFiles: string[] = [];
+    let modifiedFiles: string[] = [];
+    
+    // Check if we're in GitHub Actions
+    const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+    const eventName = process.env.GITHUB_EVENT_NAME;
+    
+    if (isGitHubActions) {
+      console.log(`🔧 Running in GitHub Actions (event: ${eventName})`);
+      
+      let diffCommand = '';
+      if (eventName === 'pull_request') {
+        diffCommand = 'git diff --name-status origin/main...HEAD';
+        console.log('📋 Using PR diff strategy');
+      } else {
+        diffCommand = 'git diff --name-status HEAD~1 HEAD';
+        console.log('📋 Using push diff strategy');
+      }
+      
+      try {
+        const output = execSync(diffCommand, { encoding: 'utf-8' });
+        const lines = output.split('\n').filter(Boolean);
+        
+        lines.forEach(line => {
+          const [status, filePath] = line.split('\t');
+          if (status === 'A') addedFiles.push(filePath);
+          else if (status === 'D') removedFiles.push(filePath);
+          else if (status === 'M') modifiedFiles.push(filePath);
+        });
+      } catch (error) {
+        console.warn('Failed to get detailed diff, falling back to basic diff');
+        const output = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf-8' });
+        modifiedFiles = output.split('\n').filter(Boolean);
+      }
+    } else {
+      // Local development
+      try {
+        // Check staged changes with status
+        const stagedOutput = execSync('git diff --name-status --cached', { encoding: 'utf-8' });
+        if (stagedOutput.trim()) {
+          const lines = stagedOutput.split('\n').filter(Boolean);
+          lines.forEach(line => {
+            const [status, filePath] = line.split('\t');
+            if (status === 'A') addedFiles.push(filePath);
+            else if (status === 'D') removedFiles.push(filePath);
+            else if (status === 'M') modifiedFiles.push(filePath);
+          });
+        } else {
+          // Check working directory changes
+          const workingOutput = execSync('git diff --name-only', { encoding: 'utf-8' });
+          modifiedFiles = workingOutput.split('\n').filter(Boolean);
+        }
+        console.log('📋 Using local diff strategy');
+      } catch {
+        const output = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf-8' });
+        modifiedFiles = output.split('\n').filter(Boolean);
+        console.log('📋 Fallback to HEAD~1 diff');
+      }
+    }
+    
+    console.log(`🔍 Found changes:`);
+    console.log(`  ✅ Added: ${addedFiles.length} files${addedFiles.length > 0 ? ':\n    ' + addedFiles.join('\n    ') : ''}`);
+    console.log(`  🗑️ Removed: ${removedFiles.length} files${removedFiles.length > 0 ? ':\n    ' + removedFiles.join('\n    ') : ''}`);
+    console.log(`  ✏️ Modified: ${modifiedFiles.length} files${modifiedFiles.length > 0 ? ':\n    ' + modifiedFiles.join('\n    ') : ''}`);
+    
+    return { added: addedFiles, removed: removedFiles, modified: modifiedFiles };
   } catch (error) {
     console.warn('Could not get git diff, scanning all packages');
-    return [];
+    return { added: [], removed: [], modified: [] };
   }
 }
 
 /**
- * Get list of packages that have docs changes
+ * Parse file changes to get doc-specific changes
  */
-function getPackagesWithDocsChanges(): string[] {
-  const changedFiles = getChangedFiles();
-  const packagesWithChanges = new Set<string>();
-
-  // If no git changes detected, scan all packages
-  if (changedFiles.length === 0) {
-    return fs.readdirSync(PACKAGES_DIR).filter(pkg => {
-      const pkgDir = path.join(PACKAGES_DIR, pkg);
-      const docsDir = path.join(pkgDir, 'docs');
-      return fs.existsSync(docsDir) && fs.statSync(pkgDir).isDirectory();
-    });
-  }
-
-  // Find packages with docs changes
-  changedFiles.forEach(file => {
-    const match = file.match(/^packages\/([^/]+)\/docs\/(.+\.md)$/);
+function parseDocChanges(): FileChange[] {
+  const { added, removed, modified } = getChangedFiles();
+  const changes: FileChange[] = [];
+  
+  // Helper to extract package and functionality from doc file path
+  const parseDocPath = (filePath: string) => {
+    const match = filePath.match(/^packages\/([^/]+)\/docs\/(.+)\.md$/);
     if (match) {
-      packagesWithChanges.add(match[1]);
+      return {
+        packageName: match[1],
+        fileName: match[2] + '.md',
+        functionality: match[2]
+      };
+    }
+    return null;
+  };
+  
+  // Process added files
+  added.forEach(filePath => {
+    const parsed = parseDocPath(filePath);
+    if (parsed) {
+      changes.push({ ...parsed, action: 'added' });
     }
   });
-
-  return Array.from(packagesWithChanges);
-}
-
-/**
- * Scan docs directory and generate readme info
- */
-function scanDocsDirectory(packageName: string, docsDir: string): ReadmeInfo[] {
-  const readmeInfos: ReadmeInfo[] = [];
   
-  if (!fs.existsSync(docsDir)) {
-    return readmeInfos;
-  }
-
-  const mdFiles = fs.readdirSync(docsDir)
-    .filter(file => file.endsWith('.md') && file !== 'README.md')
-    .sort();
-
-  for (const file of mdFiles) {
-    const filePath = path.join(docsDir, file);
-    const functionality = path.basename(file, '.md');
-    
-    // Try to extract description from the file content
-    let description = `Documentation for ${functionality}`;
-    try {
-      const content = fs.readFileSync(filePath, 'utf-8');
-      const lines = content.split('\n');
-      
-      // Look for first paragraph or description
-      for (let i = 0; i < Math.min(10, lines.length); i++) {
-        const line = lines[i].trim();
-        if (line && !line.startsWith('#') && !line.startsWith('```') && line.length > 20) {
-          description = line;
-          break;
-        }
-      }
-    } catch (error) {
-      console.warn(`Could not read ${filePath} for description`);
+  // Process removed files
+  removed.forEach(filePath => {
+    const parsed = parseDocPath(filePath);
+    if (parsed) {
+      changes.push({ ...parsed, action: 'removed' });
     }
-
-    // Determine type based on common patterns
-    let type: 'main' | 'constructor' | 'functionality' = 'functionality';
-    if (functionality.toLowerCase().includes('create') || 
-        functionality.toLowerCase().includes('init') ||
-        functionality.toLowerCase().includes('sdk')) {
-      type = 'constructor';
+  });
+  
+  // Process modified files
+  modified.forEach(filePath => {
+    const parsed = parseDocPath(filePath);
+    if (parsed) {
+      changes.push({ ...parsed, action: 'modified' });
     }
-
-    const githubPath = `${GITHUB_BASE_URL}${packageName}/docs/${file}`;
-
-    readmeInfos.push({
-      path: githubPath,
-      type,
-      extension: 'md',
-      functionality,
-      description
-    });
-  }
-
-  return readmeInfos;
+  });
+  
+  return changes;
 }
 
 /**
- * Update package-info.json for a specific package
+ * Create readme info for a specific doc file
  */
-function updateReadmeMap(packageName: string): boolean {
+function createReadmeInfo(packageName: string, functionality: string): ReadmeInfo | null {
+  const docsDir = path.join(PACKAGES_DIR, packageName, 'docs');
+  const filePath = path.join(docsDir, `${functionality}.md`);
+  
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+  
+  // Try to extract description from the file content
+  let description = `Documentation for ${functionality}`;
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const lines = content.split('\n');
+    
+    // Look for first paragraph or description
+    for (let i = 0; i < Math.min(10, lines.length); i++) {
+      const line = lines[i].trim();
+      if (line && !line.startsWith('#') && !line.startsWith('```') && line.length > 20) {
+        description = line;
+        break;
+      }
+    }
+  } catch (error) {
+    console.warn(`Could not read ${filePath} for description`);
+  }
+
+  // Determine type based on common patterns
+  let type: 'main' | 'constructor' | 'functionality' = 'functionality';
+  if (functionality.toLowerCase().includes('create') || 
+      functionality.toLowerCase().includes('init') ||
+      functionality.toLowerCase().includes('sdk')) {
+    type = 'constructor';
+  }
+
+  const githubPath = `${GITHUB_BASE_URL}${packageName}/docs/${functionality}.md`;
+
+  return {
+    path: githubPath,
+    type,
+    extension: 'md',
+    functionality,
+    description
+  };
+}
+
+/**
+ * Update package-info.json with targeted changes
+ */
+function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): boolean {
   const pkgDir = path.join(PACKAGES_DIR, packageName);
   const packageInfoPath = path.join(pkgDir, 'package-info.json');
-  const docsDir = path.join(pkgDir, 'docs');
 
   if (!fs.existsSync(packageInfoPath)) {
     console.warn(`⚠️ No package-info.json found for ${packageName}`);
@@ -128,9 +231,6 @@ function updateReadmeMap(packageName: string): boolean {
 
   try {
     const packageInfo: PackageInfo = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
-    
-    // Scan current docs directory
-    const currentReadmeInfos = scanDocsDirectory(packageName, docsDir);
     
     // Initialize readme_map if it doesn't exist
     if (!packageInfo.readme_map) {
@@ -142,15 +242,75 @@ function updateReadmeMap(packageName: string): boolean {
       };
     }
 
-    // Update functionalities list and all_readmes
-    packageInfo.readme_map.functionalities = currentReadmeInfos.map(info => info.functionality!);
-    packageInfo.readme_map.all_readmes = currentReadmeInfos;
+    let hasChanges = false;
 
-    // Write updated package-info.json
-    fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
-    
-    console.log(`✅ Updated package-info.json for ${packageName} (${currentReadmeInfos.length} docs)`);
-    return true;
+    // Process each change - only handle adds and removes
+    changes.forEach(change => {
+      const { functionality, action } = change;
+      
+      if (action === 'added') {
+        // Add new functionality only if it doesn't already exist
+        if (!packageInfo.readme_map!.functionalities.includes(functionality)) {
+          packageInfo.readme_map!.functionalities.push(functionality);
+          hasChanges = true;
+          console.log(`  ✅ Added ${functionality} to functionalities array`);
+        }
+        
+        // Add new readme info only if it doesn't already exist
+        const existingReadme = packageInfo.readme_map!.all_readmes?.find(
+          r => r.functionality === functionality
+        );
+        if (!existingReadme) {
+          const readmeInfo = createReadmeInfo(packageName, functionality);
+          if (readmeInfo) {
+            if (!packageInfo.readme_map!.all_readmes) {
+              packageInfo.readme_map!.all_readmes = [];
+            }
+            packageInfo.readme_map!.all_readmes.push(readmeInfo);
+            hasChanges = true;
+            console.log(`  ✅ Added ${functionality} to all_readmes array`);
+          }
+        }
+        
+      } else if (action === 'removed') {
+        // Remove functionality if it exists
+        const functIndex = packageInfo.readme_map!.functionalities.indexOf(functionality);
+        if (functIndex > -1) {
+          packageInfo.readme_map!.functionalities.splice(functIndex, 1);
+          hasChanges = true;
+          console.log(`  🗑️ Removed ${functionality} from functionalities array`);
+        }
+        
+        // Remove readme info if it exists
+        if (packageInfo.readme_map!.all_readmes) {
+          const originalLength = packageInfo.readme_map!.all_readmes.length;
+          packageInfo.readme_map!.all_readmes = packageInfo.readme_map!.all_readmes.filter(
+            r => r.functionality !== functionality
+          );
+          if (packageInfo.readme_map!.all_readmes.length < originalLength) {
+            hasChanges = true;
+            console.log(`  🗑️ Removed ${functionality} from all_readmes array`);
+          }
+        }
+      }
+      // Note: 'modified' action is intentionally ignored - we don't change anything for file modifications
+    });
+
+    if (hasChanges) {
+      // Sort only the arrays we modified for consistency
+      packageInfo.readme_map!.functionalities.sort();
+      packageInfo.readme_map!.all_readmes?.sort((a, b) => 
+        (a.functionality || '').localeCompare(b.functionality || '')
+      );
+
+      // Write updated package-info.json
+      fs.writeFileSync(packageInfoPath, JSON.stringify(packageInfo, null, 2) + '\n');
+      console.log(`✅ Updated package-info.json for ${packageName}`);
+      return true;
+    } else {
+      console.log(`ℹ️ No changes needed for ${packageName}`);
+      return false;
+    }
   } catch (error) {
     console.error(`❌ Error updating package-info.json for ${packageName}:`, error);
     return false;
@@ -158,30 +318,66 @@ function updateReadmeMap(packageName: string): boolean {
 }
 
 /**
- * Main function to update readme maps for all packages with docs changes
+ * Get list of packages that have docs changes
+ */
+function getPackagesWithDocsChanges(): string[] {
+  const docChanges = parseDocChanges();
+  const packagesWithChanges = new Set<string>();
+  
+  docChanges.forEach(change => {
+    packagesWithChanges.add(change.packageName);
+  });
+  
+  return Array.from(packagesWithChanges);
+}
+
+/**
+ * Main function to update readme maps for packages with targeted changes
  */
 async function main() {
-  console.log('🔍 Scanning for packages with docs changes...');
+  console.log('🔍 Scanning for docs changes...');
   
-  const packagesWithChanges = getPackagesWithDocsChanges();
+  const docChanges = parseDocChanges();
   
-  if (packagesWithChanges.length === 0) {
-    console.log('✅ No packages with docs changes found.');
+  if (docChanges.length === 0) {
+    console.log('✅ No docs changes found.');
     return;
   }
 
-  console.log(`📝 Found ${packagesWithChanges.length} packages with docs changes:`);
-  packagesWithChanges.forEach(pkg => console.log(`  - ${pkg}`));
+  // Filter to only added and removed changes (ignore modifications)
+  const relevantChanges = docChanges.filter(change => 
+    change.action === 'added' || change.action === 'removed'
+  );
+
+  if (relevantChanges.length === 0) {
+    console.log('✅ No docs additions or removals found (only modifications).');
+    return;
+  }
+
+  console.log(`📝 Found ${relevantChanges.length} relevant doc changes:`);
+  relevantChanges.forEach(change => {
+    console.log(`  ${change.action === 'added' ? '✅' : '🗑️'} ${change.packageName}/${change.fileName} (${change.action})`);
+  });
+
+  // Group changes by package
+  const changesByPackage = new Map<string, FileChange[]>();
+  relevantChanges.forEach(change => {
+    if (!changesByPackage.has(change.packageName)) {
+      changesByPackage.set(change.packageName, []);
+    }
+    changesByPackage.get(change.packageName)!.push(change);
+  });
 
   let updatedCount = 0;
   
-  for (const packageName of packagesWithChanges) {
-    if (updateReadmeMap(packageName)) {
+  for (const [packageName, changes] of changesByPackage) {
+    console.log(`\n📦 Processing ${packageName}:`);
+    if (updateReadmeMapTargeted(packageName, changes)) {
       updatedCount++;
     }
   }
 
-  console.log(`🎉 Updated ${updatedCount}/${packagesWithChanges.length} package-info.json files`);
+  console.log(`\n🎉 Updated ${updatedCount}/${changesByPackage.size} package-info.json files`);
   
   if (updatedCount > 0) {
     console.log('📚 Next steps: The updated package-info.json files will be indexed automatically.');
@@ -196,4 +392,4 @@ if (require.main === module) {
   });
 }
 
-export { updateReadmeMap, getPackagesWithDocsChanges }; 
+export { updateReadmeMapTargeted as updateReadmeMap, getPackagesWithDocsChanges }; 
