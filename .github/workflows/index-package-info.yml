@@ -1,23 +1,15 @@
-name: Index Changed Package Info
+# This workflow has been replaced by sync-docs-and-package-info.yml
+# which handles both docs changes and package-info updates together
+
+name: Index Changed Package Info (DEPRECATED)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**/package-info.json'
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-    paths:
-      - '**/package-info.json'
+  # Disabled - use sync-docs-and-package-info.yml instead
+  workflow_dispatch: # Only allow manual trigger
 
 jobs:
   index-package-info:
-    name: 🔄 Index Package Info on PR
+    name: 🔄 Index Package Info on PR (DEPRECATED)
     runs-on: ubuntu-latest
     steps:
       # 1) Get the full git history for accurate git-based timestamps
@@ -38,6 +30,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
+          echo "⚠️ This workflow is deprecated. Use sync-docs-and-package-info.yml instead."
           echo "Running savePackageInfo.ts to sync changed package-info.json files…"
           cd scripts
           npm i

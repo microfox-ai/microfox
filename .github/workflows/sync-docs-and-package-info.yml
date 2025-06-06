@@ -1,0 +1,119 @@
+name: Sync Docs and Package Info
+
+on:
+  push:
+    branches:
+      - main
+      - vwjt_readme_map_fixes
+    paths:
+      - 'packages/*/docs/**/*.md'
+      - '**/package-info.json'
+
+jobs:
+  sync-docs-and-package-info:
+    name: 🔄 Sync Docs and Package Info
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Get the full git history for accurate git-based timestamps
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref || github.ref }}
+
+      # 2) Install Node.js
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # 3) Install dependencies
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm i
+
+      # 4) Update package-info.json files for docs changes
+      - name: Update package-info.json for docs changes
+        id: update-package-info
+        env:
+          GITHUB_BEFORE: ${{ github.event.before }}
+          GITHUB_AFTER: ${{ github.event.after }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          echo "📝 Checking for docs changes..."
+          echo "Comparing: $GITHUB_BEFORE → $GITHUB_AFTER"
+          
+          # Run the script - it will handle git comparison internally
+          cd scripts
+          npm run update:readme-map
+          
+          # Check if any package-info.json files were modified
+          echo "🐛 Current directory: $(pwd)"
+          echo "🐛 Root directory contents:"
+          ls -la ..
+          echo "🐛 Checking for package-info.json changes:"
+          echo "🐛 Git status from scripts dir:"
+          git status --porcelain ../packages/*/package-info.json || echo "No files found with ../packages/ pattern"
+          echo "🐛 Git status from root dir:"
+          cd ..
+          pwd
+          git status --porcelain packages/*/package-info.json || echo "No files found with packages/ pattern"
+          
+          if [ -z "$(git status --porcelain packages/*/package-info.json)" ]; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ No package-info.json changes needed"
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ package-info.json files were updated"
+            echo "Changed files:"
+            git status --porcelain packages/*/package-info.json
+          fi
+
+      # 5) Commit updated package-info.json files if there are changes
+      - name: Commit updated package-info.json files
+        if: steps.update-package-info.outputs.no_changes != 'true'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'chore: update package-info.json readme_map for docs changes'
+          file_pattern: '**/package-info.json'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          skip_dirty_check: false
+
+      # 6) Refresh git state after commit
+      - name: Refresh git state
+        if: steps.update-package-info.outputs.no_changes != 'true'
+        run: |
+          git fetch origin
+          git reset --hard origin/${{ github.ref_name }}
+
+      # 7) Index package info in database
+      - name: Index updated package info
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🔍 Indexing package info in database..."
+          cd scripts
+          npm run save:package-info
+
+      # 8) Index docs in database
+      - name: Index docs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "📖 Indexing docs in database..."
+          cd scripts
+          npm run embed:docs
+
+      # 9) Summary
+      - name: Summary
+        run: |
+          echo "✅ Workflow completed!"
+          echo "🔍 Indexed package info in database"
+          echo "📖 Indexed docs in database" 

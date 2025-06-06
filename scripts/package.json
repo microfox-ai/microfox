@@ -22,6 +22,8 @@
     "embed:docs": "ts-node src/embeddings/embedDocs.ts",
     "save:package-info": "ts-node src/package-info/savePackageInfo.ts",
     "query:package-info": "ts-node src/package-info/queryPackageInfo.ts",
+    "update:readme-map": "ts-node src/package-info/updateReadmeMap.ts",
+    "sync:docs-and-package-info": "npm run update:readme-map && npm run save:package-info && npm run embed:docs",
     "embed:query": "ts-node src/embeddings/queryDocs.ts",
     "workflow:packagefox": "ts-node src/handleWorkflow.ts",
     "deploy:sls": "ts-node src/agents/slsfox/deploy/ci.ts",
