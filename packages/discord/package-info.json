@@ -47,7 +47,7 @@
       "removeRoleFromUser",
       "respondToInteraction",
       "sendMessage",
-      "test3",
+      "test",
       "updateChannel",
       "updateRole"
     ],
@@ -266,7 +266,7 @@
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/test3.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "test3",
+        "functionality": "test",
         "description": "Documentation for test3"
       },
       {
@@ -329,7 +329,7 @@
         "removeRoleFromUser",
         "respondToInteraction",
         "sendMessage",
-        "test3",
+        "test",
         "updateChannel",
         "updateRole"
       ],
