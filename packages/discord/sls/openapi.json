@@ -2579,6 +2579,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "description": "The created channel object",
                   "properties": {
                     "id": {
                       "type": "string",
@@ -2594,7 +2595,7 @@
                     },
                     "topic": {
                       "type": "string",
-                      "description": "The topic of the created channel (if set)"
+                      "description": "The topic of the created channel"
                     },
                     "nsfw": {
                       "type": "boolean",
@@ -2602,7 +2603,7 @@
                     },
                     "parent_id": {
                       "type": "string",
-                      "description": "The ID of the parent category (if set)"
+                      "description": "The ID of the parent category for the created channel"
                     },
                     "permission_overwrites": {
                       "type": "array",
@@ -2631,7 +2632,7 @@
                     },
                     "rate_limit_per_user": {
                       "type": "number",
-                      "description": "Slowmode rate limit of the created channel"
+                      "description": "Slowmode rate limit for the created channel"
                     },
                     "position": {
                       "type": "number",
