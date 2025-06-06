@@ -3627,7 +3627,7 @@
     "/addRoleToUser": {
       "post": {
         "operationId": "addRoleToUser",
-        "summary": "Adds a role to a user in a specified guild.",
+        "summary": "Adds a role to a user in a Discord guild.",
         "description": "This function assigns a specific role to a user within a Discord guild. It takes the guild ID, user ID, and role ID as required parameters, with an optional reason for audit log purposes. The function returns a Promise that resolves when the role is successfully added to the user.",
         "requestBody": {
           "required": true,
