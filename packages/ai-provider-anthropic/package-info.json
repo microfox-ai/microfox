@@ -38,14 +38,6 @@
       "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-anthropic/docs/AnthropicAiProvider.md"
     }
   ],
-  "keysInfo": [
-    {
-      "key": "ANTHROPIC_API_KEY",
-      "constructors": ["AnthropicAiProvider"],
-      "description": "Anthropic API Key. Obtain from your Anthropic account dashboard.",
-      "required": true
-    }
-  ],
   "keyInstructions": {
     "link": "https://console.anthropic.com/settings/keys",
     "setupInfo": "To use the Anthropic SDK, you need to obtain an API key from the Anthropic account dashboard.\n\n1. Sign up for an Anthropic account at https://console.anthropic.com/settings/keys\n2. Once you have an account, navigate to your dashboard to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-anthropic`\n2. Import and initialize the SDK:\n\n```typescript\nimport { AnthropicAiProvider } from '@microfox/ai-provider-anthropic';\n\nconst provider = new AnthropicAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Anthropic API:\n\n```typescript\nconst response = await provider.languageModel('claude-3-opus-20240229').generate({\n  prompt: 'Hello, world!'\n});\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `ANTHROPIC_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."

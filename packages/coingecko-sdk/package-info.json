@@ -3,9 +3,7 @@
   "title": "CoinGecko SDK",
   "description": "A comprehensive TypeScript SDK providing convenient access to CoinGecko Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/coingecko-sdk",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -162,18 +160,7 @@
         "getCoinMarketChart",
         "getCoinMarketChartRange",
         "getCoinOHLCRange"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/coingecko-sdk/docs/CoinGeckoSDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "COINGECKO_API_KEY",
-      "constructors": [
-        "CoinGeckoSDK"
-      ],
-      "description": "CoinGecko API Key. Obtain from your CoinGecko account dashboard.",
-      "required": true
+      ]
     }
   ],
   "keyInstructions": {

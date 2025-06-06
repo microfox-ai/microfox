@@ -3,12 +3,7 @@
   "title": "@hyperbrowser/sdk",
   "description": "Node SDK for Hyperbrowser API",
   "path": "packages/@ext_@hyperbrowser#sdk",
-  "dependencies": [
-    "form-data",
-    "node-fetch",
-    "zod",
-    "zod-to-json-schema"
-  ],
+  "dependencies": ["form-data", "node-fetch", "zod", "zod-to-json-schema"],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@hyperbrowser/sdk",
@@ -16,7 +11,7 @@
   "readme_map": {
     "title": "@hyperbrowser/sdk",
     "description": "The full README for the @hyperbrowser/sdk",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/README.md",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/README.md",
     "functionalities": [
       "agents",
       "browser_use",
@@ -26,35 +21,35 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/agents.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/agents.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "agents",
         "description": "The full README for the @hyperbrowser/sdk agents functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/browser_use.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/browser_use.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "browser_use",
         "description": "The full README for the @hyperbrowser/sdk browser_use functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/claude_computer_use.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/claude_computer_use.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "claude_computer_use",
         "description": "The full README for the @hyperbrowser/sdk claude_computer_use functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/environment-variables.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/environment-variables.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "environment-variables",
         "description": "The full README for the @hyperbrowser/sdk environment-variables functionality"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/openai_cua.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser#sdk/docs/openai_cua.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "openai_cua",
@@ -83,18 +78,7 @@
         "claude_computer_use",
         "environment-variables",
         "openai_cua"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/README.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "HYPERBROWSER_API_KEY",
-      "constructors": [
-        "Hyperbrowser"
-      ],
-      "description": "The API key for Hyperbrowser.",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [],

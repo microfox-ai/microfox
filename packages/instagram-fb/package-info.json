@@ -3,10 +3,7 @@
   "title": "Instagram SDK",
   "description": "A TypeScript SDK for interacting with the Instagram API using OAuth 2.0.  This package simplifies authentication and data access.",
   "path": "packages/instagram-fb",
-  "dependencies": [
-    "@microfox/instagram-fb-business-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/instagram-fb-business-oauth", "zod"],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/instagram-fb-business-oauth",
@@ -201,42 +198,7 @@
         "getMediaInsights",
         "getAccountInsights",
         "getOEmbed"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-fb/docs/InstagramSDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "INSTAGRAM_CLIENT_ID",
-      "constructors": [
-        "InstagramSDK"
-      ],
-      "description": "Your Facebook App ID. Obtain this from your Facebook Developer account.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_CLIENT_SECRET",
-      "constructors": [
-        "InstagramSDK"
-      ],
-      "description": "Your Facebook App Secret. Obtain this from your Facebook Developer account.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_REDIRECT_URI",
-      "constructors": [
-        "InstagramSDK"
-      ],
-      "description": "Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization.",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_ACCESS_TOKEN",
-      "constructors": [
-        "InstagramSDK"
-      ],
-      "description": "A valid access token for the Instagram Graph API. Obtain this through the OAuth flow.",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [

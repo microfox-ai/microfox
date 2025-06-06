@@ -3,10 +3,7 @@
   "title": "YouTube Reporting API",
   "description": "A TypeScript SDK for interacting with YouTube Reporting API. Supports listing report types, creating reporting jobs, listing jobs, listing available reports, and downloading reports.",
   "path": "packages/youtube-reporting-api",
-  "dependencies": [
-    "zod",
-    "@microfox/google-oauth"
-  ],
+  "dependencies": ["zod", "@microfox/google-oauth"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "oauth2Scopes": [
@@ -122,61 +119,6 @@
         "listJobs",
         "listReports",
         "downloadReport"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/YouTubeReportingAPISDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The client ID for the Google OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The client secret for the Google OAuth 2.0 credentials.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REDIRECT_URI",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The redirect URI for the Google OAuth 2.0 flow.",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The access token for authenticated requests (optional).",
-      "required": false
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The refresh token to obtain new access tokens (optional).",
-      "required": false
-    },
-    {
-      "key": "SCOPES",
-      "constructors": [
-        "YouTubeReportingAPISDK"
-      ],
-      "description": "The scopes required for the YouTube Reporting API.",
-      "required": true,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/yt-analytics.readonly",
-        "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
       ]
     }
   ],

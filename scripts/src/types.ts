@@ -216,12 +216,6 @@ export const PackageInfo = z
       .startsWith('https://'),
     readme_map: PackageReadmeMap,
     constructors: z.array(Constructor),
-    keysInfo: z.array(
-      KeyInfo.partial({ displayName: true, description: true }).extend({
-        constructors: z.array(z.string()),
-        required: z.boolean().optional(),
-      }),
-    ),
     keyInstructions: z
       .object({
         link: z.string().url(),

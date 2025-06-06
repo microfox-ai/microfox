@@ -3,10 +3,8 @@
   "title": "OpenAI Provider",
   "description": "A comprehensive TypeScript SDK providing convenient access to OpenAI Rest API endpoints for retrieving cryptocurrency data, including price, market information, and historical charts.",
   "path": "packages/ai-provider-openai",
-  "dependencies": [
-    "zod"
-  ],
-  "status": "stable",
+  "dependencies": ["zod"],
+  "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "authType": "apikey",
@@ -19,9 +17,7 @@
     "functionalities": [],
     "all_readmes": []
   },
-  "addedDependencies": [
-    "ai"
-  ],
+  "addedDependencies": ["ai"],
   "constructors": [
     {
       "name": "OpenAiProvider",
@@ -37,19 +33,20 @@
         }
       ],
       "internalKeys": [],
-      "botConfig": [],
-      "functionalities": [],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-openai/docs/OpenAiProvider.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "OPENAI_API_KEY",
-      "constructors": [
-        "OpenAIPROVIDER"
+      "botConfig": [
+        {
+          "key": "OPENAI_SECRET_TEMPLATE_TYPE",
+          "displayName": "Template Type",
+          "description": "The type of template to use for the email.",
+          "required": false,
+          "ui": {
+            "type": "text",
+            "label": "Template Type",
+            "placeholder": "markup"
+          }
+        }
       ],
-      "description": "OpenAI API Key. Obtain from your OpenAI account dashboard.",
-      "required": true
+      "functionalities": []
     }
   ],
   "keyInstructions": {

@@ -238,9 +238,17 @@ function generatePackageStats(pkgInfo: PackageInfo | null): string {
   const stats: string[] = [];
 
   // Count constructors
-  if (pkgInfo.keysInfo && pkgInfo.keysInfo.length > 0) {
-    stats.push(`${pkgInfo.keysInfo.length} envs`);
+  let keysCount = 0;
+  if (pkgInfo.constructors && pkgInfo.constructors.length > 0) {
+    stats.push(`${pkgInfo.constructors.length} constructors`);
+    for (const constructor of pkgInfo.constructors) {
+      keysCount +=
+        (constructor.requiredKeys?.length ?? 0) +
+        (constructor.internalKeys?.length ?? 0) +
+        (constructor.botConfig?.length ?? 0);
+    }
   }
+  stats.push(`${keysCount} keys`);
 
   // Count functionalities from readme_map
   if (

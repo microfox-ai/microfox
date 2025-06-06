@@ -4,7 +4,7 @@
   "description": "The Brave SDK for TypeScript provides convenient access to various Brave APIs, including web, image, video, news, and local search functionalities, as well as summarization, spell check, and suggestions.",
   "path": "packages/brave",
   "dependencies": [],
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/brave",
@@ -122,7 +122,19 @@
         }
       ],
       "internalKeys": [],
-      "botConfig": [],
+      "botConfig": [
+        {
+          "key": "BRAVE_SECRET_TEMPLATE_TYPE",
+          "displayName": "Template Type",
+          "description": "The type of template to use for the email.",
+          "required": false,
+          "ui": {
+            "type": "text",
+            "label": "Template Type",
+            "placeholder": "markup"
+          }
+        }
+      ],
       "functionalities": [
         "request",
         "webSearch",
@@ -135,18 +147,7 @@
         "suggestSearch",
         "spellcheckSearch",
         "createBraveSDK"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/createBraveSDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "BRAVE_API_KEY",
-      "constructors": [
-        "BraveSDK"
-      ],
-      "description": "Your Brave Search API key.  Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/.",
-      "required": true
+      ]
     }
   ],
   "keyInstructions": {

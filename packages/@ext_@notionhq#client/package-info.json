@@ -3,10 +3,7 @@
   "title": "Notion Official",
   "description": "Official Notion API client for managing pages, databases, blocks, and users.",
   "path": "packages/@ext_@notionhq#client",
-  "dependencies": [
-    "@types/node-fetch",
-    "node-fetch"
-  ],
+  "dependencies": ["@types/node-fetch", "node-fetch"],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@notionhq/client",
@@ -52,18 +49,7 @@
       ],
       "internalKeys": [],
       "botConfigComponent": "NotionBotConfig",
-      "botConfig": [],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@notionhq%23client/README.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "NOTION_TOKEN",
-      "constructors": [
-        "Client"
-      ],
-      "description": "The token for the Notion API",
-      "required": true
+      "botConfig": []
     }
   ],
   "keyInstructions": {

@@ -4,9 +4,7 @@
   "description": "TypeScript OAuth package simplifying authorization and access token management for Fillout.",
   "platformType": "internal",
   "path": "packages/fillout-oauth",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "oauthConnector",
   "authEndpoint": "/connect/fillout",
   "oauth2Scopes": [],
@@ -85,34 +83,7 @@
         "getAuthorizationUrl",
         "getAccessToken",
         "validateAccessToken"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/FilloutOAuthSdk.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "FILLOUT_CLIENT_ID",
-      "constructors": [
-        "FilloutOAuthSdk"
-      ],
-      "description": "The client ID for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_CLIENT_SECRET",
-      "constructors": [
-        "FilloutOAuthSdk"
-      ],
-      "description": "The client secret for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_REDIRECT_URI",
-      "constructors": [
-        "FilloutOAuthSdk"
-      ],
-      "description": "The redirect URI for your Fillout application.",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [
@@ -152,10 +123,5 @@
   "keyInstructions": {
     "link": "https://www.fillout.com/help/oauth-applications"
   },
-  "devDependencies": [
-    "@microfox/tsconfig",
-    "@types/node",
-    "tsup",
-    "typescript"
-  ]
+  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
 }

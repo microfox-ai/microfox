@@ -207,7 +207,6 @@ async function createPackageInfo(packageJson: any, readme: string) {
       description: 'The full README for the package',
     },
     constructors: [],
-    keysInfo: [],
     extraInfo: [],
   } as PackageInfo;
 }

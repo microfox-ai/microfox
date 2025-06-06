@@ -3,10 +3,7 @@
   "title": "Gmail SDK",
   "description": "TypeScript SDK for interacting with the Gmail API.",
   "path": "packages/gmail",
-  "dependencies": [
-    "zod",
-    "@microfox/google-oauth"
-  ],
+  "dependencies": ["zod", "@microfox/google-oauth"],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
@@ -156,53 +153,6 @@
         "getThread"
       ],
       "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/gmail/docs/createGmailSDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "createGmailSDK"
-      ],
-      "description": "Your Google OAuth client ID",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "createGmailSDK"
-      ],
-      "description": "Your Google OAuth client secret",
-      "required": true
-    },
-    {
-      "key": "GMAIL_ACCESS_TOKEN",
-      "constructors": [
-        "createGmailSDK"
-      ],
-      "description": "The access token for the Google OAuth application",
-      "required": false
-    },
-    {
-      "key": "GMAIL_REFRESH_TOKEN",
-      "constructors": [
-        "createGmailSDK"
-      ],
-      "description": "The refresh token for the Google OAuth application",
-      "required": false
-    },
-    {
-      "key": "SCOPES",
-      "constructors": [
-        "createGmailSDK"
-      ],
-      "description": "The scopes for the Google OAuth application",
-      "required": false,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/gmail.modify",
-        "https://www.googleapis.com/auth/gmail.compose",
-        "https://www.googleapis.com/auth/gmail.send"
-      ]
     }
   ],
   "extraInfo": [

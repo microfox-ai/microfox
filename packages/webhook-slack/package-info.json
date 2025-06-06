@@ -4,9 +4,7 @@
   "description": "A TypeScript package for sending webhooks to Slack.",
   "platformType": "internal",
   "path": "packages/webhook-slack",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "webhookConnector",
   "webhookEndpoint": "/webhook/webhook-slack",
   "documentation": "https://www.npmjs.com/package/@microfox/webhook-slack",
@@ -17,7 +15,6 @@
     "functionalities": []
   },
   "constructors": [],
-  "keysInfo": [],
   "extraInfo": [],
   "keyInstructions": {
     "link": "https://api.slack.com/events-api"

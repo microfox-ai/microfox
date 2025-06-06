@@ -3,11 +3,7 @@
   "title": "YouTube Data",
   "description": "YouTube Data v3 API SDK - Upload videos, manage playlists, add comments, search videos, list channel vidoes, get Channel details..",
   "path": "packages/youtube",
-  "dependencies": [
-    "@microfox/google",
-    "@microfox/rest-sdk",
-    "zod"
-  ],
+  "dependencies": ["@microfox/google", "@microfox/rest-sdk", "zod"],
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
@@ -55,42 +51,7 @@
             "https://www.googleapis.com/auth/youtubepartner"
           ]
         }
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube/docs/createYouTubeSDKWithTokens.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": [
-        "createYouTubeSDKWithTokens"
-      ],
-      "description": "The access token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": [
-        "createYouTubeSDKWithTokens"
-      ],
-      "description": "The refresh token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": [
-        "createYouTubeSDKWithTokens"
-      ],
-      "description": "The client ID for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": [
-        "createYouTubeSDKWithTokens"
-      ],
-      "description": "The client secret for the YouTube client",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [

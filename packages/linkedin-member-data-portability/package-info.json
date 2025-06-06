@@ -3,16 +3,11 @@
   "title": "LinkedIn Member Data Portability SDK",
   "description": "A TypeScript SDK for LinkedIn Member Data Portability.",
   "path": "packages/linkedin-member-data-portability",
-  "dependencies": [
-    "@microfox/linkedin-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/linkedin-oauth", "zod"],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/linkedin-oauth",
-  "oauth2Scopes": [
-    "r_dma_portability_3rd_party"
-  ],
+  "oauth2Scopes": ["r_dma_portability_3rd_party"],
   "documentation": "https://www.npmjs.com/package/@microfox/linkedin-member-data-portability",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/linkedin-icon.svg",
   "readme_map": {
@@ -127,58 +122,7 @@
         "getMemberSnapshotData",
         "getMemberAuthorizations",
         "triggerMemberDataProcessing"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-member-data-portability/docs/LinkedInDataPortabilitySDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "LINKEDIN_CLIENT_ID",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "Your LinkedIn app's Client ID.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_CLIENT_SECRET",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "Your LinkedIn app's Client Secret.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_REDIRECT_URI",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "The redirect URI registered in your LinkedIn app.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "The OAuth 2.0 access token for authenticated requests.",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_REFRESH_TOKEN",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "The refresh token to obtain new access tokens.",
-      "required": false
-    },
-    {
-      "key": "SCOPES",
-      "constructors": [
-        "LinkedInDataPortabilitySDK"
-      ],
-      "description": "The scopes for OAuth requests",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [

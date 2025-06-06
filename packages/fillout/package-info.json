@@ -114,18 +114,7 @@
         "createWebhook",
         "removeWebhook",
         "createSubmissions"
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout/docs/FilloutSDK.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "FILLOUT_API_KEY",
-      "constructors": [
-        "FilloutSDK"
-      ],
-      "description": "Fillout API Key",
-      "required": true
+      ]
     }
   ],
   "keyInstructions": {

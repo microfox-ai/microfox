@@ -293,11 +293,26 @@ async function generatePhase1(
       * package name should only be used for scoped tokens likes access token, refresh token, scopes, etc..
       * for constructors, use provider names as prefix like for clientId, clientSecret, etc.
       *  For example, for google-oauth, the environment variable should be 
-      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_ACCESS_TOKEN, 
-      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_REFRESH_TOKEN, 
-      *   GOOGLE_CLIENT_ID, 
-      *   GOOGLE_CLIENT_SECRET, 
-      *   ${metadata.packageName?.replace('@microfox/', '')?.replace(/[-#\/]/g, '_')}_SCOPES etc.
+      *   ${metadata.packageName
+        ?.replace('@microfox/', '')
+        ?.replace(/[-#\/]/g, '_')
+        .toUpperCase()}_ACCESS_TOKEN, 
+      *   ${metadata.packageName
+        ?.replace('@microfox/', '')
+        ?.replace(/[-#\/]/g, '_')
+        .toUpperCase()}_REFRESH_TOKEN, 
+      *   ${metadata.packageName
+        ?.replace('@microfox/', '')
+        ?.replace(/[-#\/]/g, '_')
+        .toUpperCase()}_CLIENT_ID, 
+      *   ${metadata.packageName
+        ?.replace('@microfox/', '')
+        ?.replace(/[-#\/]/g, '_')
+        .toUpperCase()}_CLIENT_SECRET, 
+      *   ${metadata.packageName
+        ?.replace('@microfox/', '')
+        ?.replace(/[-#\/]/g, '_')
+        .toUpperCase()}_SCOPES etc.
     - For each environment variable:
       * Clear display name
       * Detailed description
@@ -449,6 +464,11 @@ async function generatePhase2Recursive(
   const existingFunctions =
     inMemoryStore.getItem<StoredFunctionDocs>(functionsStoreKey) || {};
   const existingFunctionNames = Object.keys(existingFunctions);
+
+  const storeKeyBase = `docs:${metadata.packageName}`;
+  const envKeysStoreKey = `${storeKeyBase}:envKeys`;
+  const envKeysData =
+    inMemoryStore.getItem<EnvKeysData['envKeys']>(envKeysStoreKey) || [];
 
   // Ensure docs directory exists
   const docsDir = path.join(packageDir, 'docs');
@@ -620,6 +640,10 @@ async function generatePhase2Recursive(
 
     ## Extra Information
     ${extraInfo.join('\n\n')}
+
+    ## Environment Keys
+    ${envKeysData.map(key => `- ${key.key}: ${key.description}`).join('\n')}
+    Make sure you use the above keys in the constructors as necessary.
 
     ## SDK Information
     - Title: ${metadata.title}
@@ -1144,18 +1168,6 @@ export async function generateDocs(
         },
       ];
 
-      // Add keysInfo
-      packageInfo.keysInfo = validatedData.envKeys.map(key => ({
-        key: key.key,
-        constructors: [constructorName],
-        description: key.description,
-        required: key.required,
-        ...(key.key.includes('SCOPES') &&
-          packageInfo.oauth2Scopes && {
-            defaultValue: packageInfo.oauth2Scopes,
-          }),
-      }));
-
       // Add extraInfo
       packageInfo.extraInfo = extraInfo;
 
@@ -1387,20 +1399,21 @@ if (require.main === module) {
       process.exit(1);
     }
 
+    const packageBuilderPath = path.join(packageDir, 'package-builder.json');
+    let packageBuilder: any;
+    try {
+      packageBuilder = JSON.parse(fs.readFileSync(packageBuilderPath, 'utf8'));
+    } catch (jsonError) {
+      console.error(
+        `Error reading or parsing ${packageBuilderPath}:`,
+        jsonError,
+      );
+    }
+
     const constructors = packageInfo.constructors || [];
     const firstConstructor = constructors[0] || {};
 
-    const metadata: SDKMetadata = {
-      apiName: packageInfo.name || packageName,
-      packageName: packageInfo.name || packageName,
-      title: packageInfo.title || 'Untitled Package',
-      description: packageInfo.description || 'No description available.',
-      authType: firstConstructor.auth || 'none',
-      ...(firstConstructor.auth === 'oauth2' &&
-        firstConstructor.authSdk && {
-          authSdk: firstConstructor.authSdk,
-        }),
-    };
+    const metadata: SDKMetadata = packageBuilder.sdkMetadata;
 
     const extraInfo = packageInfo.extraInfo || [];
 

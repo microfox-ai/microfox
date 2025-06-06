@@ -3,9 +3,7 @@
   "title": "Microfox Instagram Business OAuth",
   "description": "A lightweight, type-safe SDK for interacting with the Instagram Business API",
   "path": "packages/instagram-business-oauth",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "oauthConnector",
   "authType": "oauth2",
   "authEndpoint": "/connect/instagram",
@@ -55,58 +53,7 @@
           "displayName": "Instagram Refresh Token",
           "description": "The refresh token for Instagram Business OAuth"
         }
-      ],
-      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/instagram-business-oauth/docs/InstagramBusinessOAuthSdk.md"
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "INSTAGRAM_CLIENT_ID",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The client ID for Instagram Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_CLIENT_SECRET",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The client secret for Instagram Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_REDIRECT_URI",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The redirect URI for Instagram Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_SCOPES",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The scopes for Instagram Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_ACCESS_TOKEN",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The access token for Instagram Business OAuth",
-      "required": true
-    },
-    {
-      "key": "INSTAGRAM_REFRESH_TOKEN",
-      "constructors": [
-        "InstagramBusinessOAuthSdk"
-      ],
-      "description": "The refresh token for Instagram Business OAuth",
-      "required": true
+      ]
     }
   ],
   "extraInfo": [

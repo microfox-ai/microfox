@@ -41,11 +41,11 @@ async function getExistingPackages() {
     .from(PACKAGE_INFO_TABLE)
     .select('id,package_name,file_path,updated_at');
   if (error) throw error;
-  return data as Array<{ 
-    id: string; 
-    package_name: string; 
-    file_path: string; 
-    updated_at: string 
+  return data as Array<{
+    id: string;
+    package_name: string;
+    file_path: string;
+    updated_at: string;
   }>;
 }
 
@@ -75,8 +75,10 @@ function walkPackageInfoFiles() {
 
     if (fs.existsSync(packageInfoPath) && fs.statSync(pkgDir).isDirectory()) {
       try {
-        const rawContent = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
-        
+        const rawContent = JSON.parse(
+          fs.readFileSync(packageInfoPath, 'utf-8'),
+        );
+
         const mtime = getGitLastModified(packageInfoPath);
         const relativePath = path.relative(PACKAGES_DIR, packageInfoPath);
         const githubUrl = getGithubUrl(relativePath);
@@ -124,10 +126,10 @@ async function main() {
     const dbRow = existingMap.get(pkg.githubUrl);
     const isNew = !dbRow;
     const isStale = dbRow && new Date(dbRow.updated_at) < pkg.mtime;
-    
+
     if (isNew || isStale) {
       console.log(`${isNew ? '✨ New' : '♻️ Updated'} → ${pkg.content.name}`);
-      
+
       upserts.push({
         package_name: pkg.content.name,
         package_title: pkg.content.title,
@@ -145,7 +147,6 @@ async function main() {
         icon: pkg.content.icon,
         readme_map: pkg.content.readme_map,
         constructors: pkg.content.constructors,
-        keys_info: pkg.content.keysInfo,
         key_instructions: pkg.content.keyInstructions || null,
         extra_info: pkg.content.extraInfo,
         raw_content: pkg.rawContent,
@@ -172,4 +173,4 @@ async function main() {
 main().catch(err => {
   console.error('❌ Error:', err);
   process.exit(1);
-}); 
+});

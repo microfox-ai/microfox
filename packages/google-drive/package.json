@@ -1,7 +1,7 @@
 {
-  "name": "@microfox/drive",
-  "version": "1.0.5",
-  "description": "Google Drive SDK for Microfox",
+  "name": "@microfox/google-drive",
+  "version": "1.0.0",
+  "description": "A TypeScript SDK for interacting with the Google Drive API.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -24,18 +24,14 @@
     }
   },
   "dependencies": {
-    "@microfox/google": "*",
-    "@microfox/rest-sdk": "1.0.5",
-    "zod": "^3.24.2"
+    "@microfox/google-oauth": "1.0.5",
+    "zod": "3.24.4"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
     "typescript": "5.6.3"
-  },
-  "peerDependencies": {
-    "@microfox/rest-sdk": ">=1.0.5"
   },
   "publishConfig": {
     "access": "public"
@@ -52,9 +48,11 @@
     "url": "https://github.com/microfox-ai/microfox/issues"
   },
   "keywords": [
-    "microfox",
     "google",
     "drive",
+    "cloud",
+    "storage",
+    "microfox",
     "sdk",
     "typescript"
   ]

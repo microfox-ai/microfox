@@ -630,18 +630,6 @@ export async function generateExternalDocs(
       },
     ];
 
-    // Add keysInfo
-    packageInfo.keysInfo = envKeys.map(key => ({
-      key: key.key,
-      constructors: ['constructor'],
-      description: key.description,
-      required: key.required,
-      ...(key.key.includes('SCOPES') &&
-        packageInfo.oauth2Scopes && {
-          defaultValue: packageInfo.oauth2Scopes,
-        }),
-    }));
-
     // Add extraInfo
     packageInfo.extraInfo = extraInfo;
 

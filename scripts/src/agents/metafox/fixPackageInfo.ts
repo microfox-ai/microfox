@@ -20,7 +20,6 @@ const defaultValues = {
   dependencies: [],
   extraInfo: [],
   constructors: [],
-  keysInfo: [],
   readme_map: {
     path: '/README.md',
     functionalities: [],
