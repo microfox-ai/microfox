@@ -33,10 +33,7 @@ export class GmailSDK {
       clientSecret: validatedConfig.clientSecret,
       redirectUri: '',
       scopes: validatedConfig?.scopes ?? [
-        'https://www.googleapis.com/auth/gmail.readonly',
-        'https://www.googleapis.com/auth/gmail.insert',
-        'https://www.googleapis.com/auth/gmail.modify',
-        'https://www.googleapis.com/auth/gmail.compose',
+        'https://www.googleapis.com/auth/gmail.modify'
       ],
     });
     this.accessToken = validatedConfig.accessToken || '';
