@@ -21,49 +21,45 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref || github.ref }}
 
-      # 2) Detect changed files
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v40
-        with:
-          base_sha: ${{ github.event.before || 'HEAD~1' }}
-          sha: ${{ github.event.after || 'HEAD' }}
-          files_yaml: |
-            docs:
-              - 'packages/*/docs/**/*.md'
-            package_info:
-              - '**/package-info.json'
-
-      # 3) Install Node.js
+      # 2) Install Node.js
       - name: Use Node.js 23.x
         uses: actions/setup-node@v4
         with:
           node-version: '23'
 
-      # 4) Install dependencies
+      # 3) Install dependencies
       - name: Install dependencies
         run: |
           cd scripts
           npm i
 
-      # 5) Update package-info.json files for docs changes
+      # 4) Update package-info.json files for docs changes
       - name: Update package-info.json for docs changes
-        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != ''
+        id: update-package-info
         env:
-          ADDED_DOCS: ${{ steps.changed-files.outputs.docs_added_files }}
-          REMOVED_DOCS: ${{ steps.changed-files.outputs.docs_deleted_files }}
-          MODIFIED_DOCS: ${{ steps.changed-files.outputs.docs_modified_files }}
+          GITHUB_BEFORE: ${{ github.event.before }}
+          GITHUB_AFTER: ${{ github.event.after }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
         run: |
-          echo "📝 Docs files changed, updating package-info.json files..."
-          echo "Added: $ADDED_DOCS"
-          echo "Removed: $REMOVED_DOCS"
-          echo "Modified: $MODIFIED_DOCS"
+          echo "📝 Checking for docs changes..."
+          echo "Comparing: $GITHUB_BEFORE → $GITHUB_AFTER"
+          
+          # Run the script - it will handle git comparison internally
           cd scripts
           npm run update:readme-map
+          
+          # Check if any package-info.json files were modified
+          if git diff --quiet --exit-code '**/package-info.json'; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ No package-info.json changes needed"
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ package-info.json files were updated"
+          fi
 
-      # 6) Commit updated package-info.json files if there are changes
+      # 5) Commit updated package-info.json files if there are changes
       - name: Commit updated package-info.json files
-        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != ''
+        if: steps.update-package-info.outputs.no_changes != 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: 'chore: update package-info.json readme_map for docs changes'
@@ -73,9 +69,15 @@ jobs:
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           skip_dirty_check: false
 
-      # 7) Index package info in database (runs for both docs and package-info changes)
+      # 6) Refresh git state after commit
+      - name: Refresh git state
+        if: steps.update-package-info.outputs.no_changes != 'true'
+        run: |
+          git fetch origin
+          git reset --hard origin/${{ github.ref_name }}
+
+      # 7) Index package info in database
       - name: Index updated package info
-        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != '' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -84,9 +86,8 @@ jobs:
           cd scripts
           npm run save:package-info
 
-      # 8) Index docs in database (runs for both docs and package-info changes)
+      # 8) Index docs in database
       - name: Index docs
-        if: steps.changed-files.outputs.docs_added_files != '' || steps.changed-files.outputs.docs_deleted_files != '' || steps.changed-files.outputs.docs_modified_files != '' || steps.changed-files.outputs.package_info_any_changed == 'true'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -100,12 +101,5 @@ jobs:
       - name: Summary
         run: |
           echo "✅ Workflow completed!"
-          if [[ "${{ steps.changed-files.outputs.docs_added_files }}" != "" || "${{ steps.changed-files.outputs.docs_deleted_files }}" != "" || "${{ steps.changed-files.outputs.docs_modified_files }}" != "" ]]; then
-            echo "📚 Updated package-info.json files for docs changes"
-          fi
-          if [[ "${{ steps.changed-files.outputs.docs_added_files }}" != "" || "${{ steps.changed-files.outputs.docs_deleted_files }}" != "" || "${{ steps.changed-files.outputs.docs_modified_files }}" != "" || "${{ steps.changed-files.outputs.package_info_any_changed }}" == "true" ]]; then
-            echo "🔍 Indexed package info in database"
-            echo "📖 Indexed docs in database"
-          else
-            echo "ℹ️ No relevant changes detected"
-          fi 
+          echo "🔍 Indexed package info in database"
+          echo "📖 Indexed docs in database" 
