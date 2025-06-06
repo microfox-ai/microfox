@@ -8,6 +8,11 @@ const ROOT_DIR = getProjectRoot();
 const PACKAGES_DIR = path.join(ROOT_DIR, 'packages');
 const GITHUB_BASE_URL = 'https://github.com/microfox-ai/microfox/blob/main/packages/';
 
+console.log(`🏠 Root directory: ${ROOT_DIR}`);
+console.log(`📦 Packages directory: ${PACKAGES_DIR}`);
+console.log(`📂 Current working directory: ${process.cwd()}`);
+console.log(`📁 Packages directory exists: ${fs.existsSync(PACKAGES_DIR)}`);
+
 interface ReadmeInfo {
   path: string;
   type: 'main' | 'constructor' | 'functionality';

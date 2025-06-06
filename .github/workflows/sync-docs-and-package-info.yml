@@ -50,6 +50,17 @@ jobs:
           npm run update:readme-map
           
           # Check if any package-info.json files were modified
+          echo "🐛 Current directory: $(pwd)"
+          echo "🐛 Root directory contents:"
+          ls -la ..
+          echo "🐛 Checking for package-info.json changes:"
+          echo "🐛 Git status from scripts dir:"
+          git status --porcelain ../packages/*/package-info.json || echo "No files found with ../packages/ pattern"
+          echo "🐛 Git status from root dir:"
+          cd ..
+          pwd
+          git status --porcelain packages/*/package-info.json || echo "No files found with packages/ pattern"
+          
           if [ -z "$(git status --porcelain packages/*/package-info.json)" ]; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
             echo "ℹ️ No package-info.json changes needed"
