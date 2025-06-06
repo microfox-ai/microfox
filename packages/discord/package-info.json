@@ -289,7 +289,6 @@
         "deleteSlashCommand",
         "deleteGlobalSlashCommand",
         "moderateUser",
-        "createChannel",
         "updateChannel",
         "deleteChannel",
         "createRole",
