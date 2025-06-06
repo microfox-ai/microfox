@@ -2,8 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { PackageInfo } from '../types';
+import { getProjectRoot } from '../utils/getProjectRoot';
 
-const PACKAGES_DIR = path.resolve(process.cwd(), '..', 'packages');
+const ROOT_DIR = getProjectRoot();
+const PACKAGES_DIR = path.join(ROOT_DIR, 'packages');
 const GITHUB_BASE_URL = 'https://github.com/microfox-ai/microfox/blob/main/packages/';
 
 interface ReadmeInfo {
