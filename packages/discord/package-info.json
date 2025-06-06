@@ -18,6 +18,7 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/README.md",
     "functionalities": [
       "addRoleToUser",
+      "createChannel",
       "createDiscordSdk",
       "createRole",
       "createThread",
@@ -25,6 +26,7 @@
       "deleteChannel",
       "deleteGlobalSlashCommand",
       "deleteMessage",
+      "deleteRole",
       "deleteSlashCommand",
       "editMessage",
       "fetchChannels",
@@ -55,6 +57,13 @@
         "extension": "md",
         "functionality": "addRoleToUser",
         "description": "Adds a role to a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createChannel",
+        "description": "Creates a new channel in the guild."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/createDiscordSdk.md",
@@ -104,6 +113,13 @@
         "extension": "md",
         "functionality": "deleteMessage",
         "description": "Deletes a message in a channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteRole.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteRole",
+        "description": "Deletes a role."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/discord/docs/deleteSlashCommand.md",
@@ -277,12 +293,14 @@
       ],
       "functionalities": [
         "addRoleToUser",
+        "createChannel",
         "createRole",
         "createThread",
         "deferInteraction",
         "deleteChannel",
         "deleteGlobalSlashCommand",
         "deleteMessage",
+        "deleteRole",
         "deleteSlashCommand",
         "editMessage",
         "fetchChannels",
