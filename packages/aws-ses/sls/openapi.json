@@ -4,7 +4,17 @@
     "title": "Microfox AWS SES API",
     "version": "1.0.0",
     "description": "Single entry-point API for all Microfox AWS SES functions via a wrapper Lambda",
-    "toolsPromptUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/sls/ToolsPrompt.md",
+    "packagePromptUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/sls/packagePrompt.md",
+    "toolsPrompts": [
+      {
+        "name": "microfox_aws_ses_api-sendEmail",
+        "url": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/sls/toolDocs/sendEmail.md"
+      },
+      {
+        "name": "microfox_aws_ses_api-sendBulkEmails",
+        "url": "https://github.com/microfox-ai/microfox/blob/main/packages/aws-ses/sls/toolDocs/sendBulkEmails.md"
+      }
+    ],
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
@@ -67,11 +77,7 @@
                                 "description": "Optional. HTML version of the email body"
                               }
                             },
-                            "required": [
-                              "sender",
-                              "recipient",
-                              "subject"
-                            ]
+                            "required": ["sender", "recipient", "subject"]
                           }
                         ]
                       },
@@ -82,9 +88,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -138,9 +142,7 @@
                         "description": "@microfox/aws-ses"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -266,11 +268,7 @@
                                 "description": "Optional HTML version of the email body"
                               }
                             },
-                            "required": [
-                              "sender",
-                              "recipients",
-                              "subject"
-                            ]
+                            "required": ["sender", "recipients", "subject"]
                           }
                         ]
                       },
@@ -281,9 +279,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -337,9 +333,7 @@
                         "description": "@microfox/aws-ses"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
