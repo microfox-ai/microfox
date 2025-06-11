@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS package_infos (
     key_instructions JSON,
     extra_info JSON,
     raw_content JSON,
+    raw_manifest JSON,
     file_path TEXT,
     github_url TEXT,
     updated_at TIMESTAMPTZ DEFAULT now(),
