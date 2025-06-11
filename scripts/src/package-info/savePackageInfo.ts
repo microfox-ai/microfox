@@ -80,7 +80,7 @@ function walkPackageInfoFiles() {
         const rawContent = JSON.parse(
           fs.readFileSync(packageInfoPath, 'utf-8'),
         );
-        const rawManifest = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+        const rawManifest = fs.existsSync(packagePath) ? JSON.parse(fs.readFileSync(packagePath, 'utf-8')) : null
 
         const mtime = getGitLastModified(packageInfoPath);
         const relativePath = path.relative(PACKAGES_DIR, packageInfoPath);
