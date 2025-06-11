@@ -62,6 +62,7 @@ function walkPackageInfoFiles() {
     mtime: Date;
     content: PackageInfo;
     rawContent: any;
+    rawManifest: any;
   }> = [];
 
   if (!fs.existsSync(PACKAGES_DIR)) {
@@ -72,12 +73,14 @@ function walkPackageInfoFiles() {
   for (const pkg of fs.readdirSync(PACKAGES_DIR)) {
     const pkgDir = path.join(PACKAGES_DIR, pkg);
     const packageInfoPath = path.join(pkgDir, 'package-info.json');
+    const packagePath = path.join(pkgDir, 'package.json');
 
     if (fs.existsSync(packageInfoPath) && fs.statSync(pkgDir).isDirectory()) {
       try {
         const rawContent = JSON.parse(
           fs.readFileSync(packageInfoPath, 'utf-8'),
         );
+        const rawManifest = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
 
         const mtime = getGitLastModified(packageInfoPath);
         const relativePath = path.relative(PACKAGES_DIR, packageInfoPath);
@@ -91,6 +94,7 @@ function walkPackageInfoFiles() {
           mtime,
           content: rawContent,
           rawContent,
+          rawManifest,
         });
       } catch (error) {
         console.error(`❌ Error processing ${packageInfoPath}:`, error);
@@ -150,6 +154,7 @@ async function main() {
         key_instructions: pkg.content.keyInstructions || null,
         extra_info: pkg.content.extraInfo,
         raw_content: pkg.rawContent,
+        raw_manifest: pkg.rawManifest,
         file_path: pkg.githubUrl,
         github_url: pkg.githubUrl,
         updated_at: new Date().toISOString(),
