@@ -16,7 +16,6 @@
   "stablePackages": [
     "packages/ai-provider-anthropic",
     "packages/ai-provider-google",
-    "packages/ai-provider-openai",
     "packages/aws-ses",
     "packages/brave",
     "packages/google-sheets",
@@ -25,14 +24,15 @@
     "packages/whatsapp-business"
   ],
   "semiStablePackages": [
+    "packages/ai-provider-openai",
     "packages/amazon-rekognition-face-detection",
     "packages/coingecko-sdk",
     "packages/discord",
-    "packages/drive",
     "packages/fillout",
     "packages/gmail",
     "packages/google-analytics",
     "packages/google-calendar",
+    "packages/google-drive",
     "packages/google-seo",
     "packages/instagram",
     "packages/instagram-fb",
@@ -65,5 +65,5 @@
     "packages/slack-oauth"
   ],
   "total": 51,
-  "generatedAt": "2025-06-05T08:58:49.177Z"
+  "generatedAt": "2025-06-12T08:03:02.786Z"
 }
