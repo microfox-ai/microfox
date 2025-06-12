@@ -1,5 +1,16 @@
 # @microfox/usage-pricing
 
+## 0.1.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
+### Patch Changes
+
+- Updated dependencies [16d112d]
+  - @microfox/usage-tracker@0.1.0
+
 ## 0.0.11
 
 ### Patch Changes

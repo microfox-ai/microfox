@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.3.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
 ## 1.2.5
 
 ### Patch Changes

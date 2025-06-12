@@ -1,6 +1,6 @@
 {
   "name": "@microfox/instagram",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "@microfox/instagram-business-oauth": "^1.0.2",
+    "@microfox/instagram-business-oauth": "^1.1.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {

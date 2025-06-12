@@ -1,5 +1,15 @@
 # @microfox/slack-oauth
 
+## 1.1.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
+### Patch Changes
+
+- 5df7bd4: Changes from PR #429: oauth-sdks
+
 ## 1.0.5
 
 ### Patch Changes

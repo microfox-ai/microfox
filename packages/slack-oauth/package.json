@@ -1,6 +1,6 @@
 {
   "name": "@microfox/slack-oauth",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "A TypeScript OAuth package for Slack.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
