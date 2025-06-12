@@ -284,7 +284,8 @@
         {
           "key": "SCOPES",
           "displayName": "Reddit Scopes",
-          "description": "A comma-separated list of scopes defining the permissions requested."
+          "description": "A comma-separated list of scopes defining the permissions requested.",
+          "defaultValue": ["identity", "edit", "flair", "history", "modconfig", "modflair", "modlog", "modposts", "modwiki", "mysubreddits", "privatemessages", "read", "report", "save", "submit", "subscribe", "vote", "wikiedit", "wikiread"]
         }
       ],
       "functionalities": [
