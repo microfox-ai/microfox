@@ -1,6 +1,6 @@
 {
   "name": "@microfox/google-oauth",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "OAuth SDK for google: A robust TypeScript SDK for Google OAuth 2.0 authentication and API integration",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
