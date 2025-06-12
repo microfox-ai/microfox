@@ -103,6 +103,11 @@
           "key": "REDDIT_REDIRECT_URI",
           "displayName": "Reddit Redirect URI",
           "description": "The redirect URI you specified when creating your Reddit app."
+        },
+        {
+          "key": "SCOPES",
+          "displayName": "Reddit Scopes",
+          "description": "The scopes for the Reddit client."
         }
       ],
       "functionalities": [
