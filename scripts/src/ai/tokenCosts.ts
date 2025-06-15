@@ -24,4 +24,8 @@ export const tokenCosts: Record<string, TokenCostConfig> = {
     inputTokenCost: 2.5 / 1_000_000, // $10.00 per million tokens
     outputTokenCost: 15.0 / 1_000_000, // $50.00 per million tokens
   },
+  'gemini-2.5-pro-preview-06-05': {
+    inputTokenCost: 2.5 / 1_000_000, // $10.00 per million tokens
+    outputTokenCost: 15.0 / 1_000_000, // $50.00 per million tokens
+  },
 };

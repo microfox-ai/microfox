@@ -652,6 +652,8 @@ export async function generateOAuthPackage(
       - The package should export functions to validate and refresh the access token with the correct parameters like accessToken, refreshToken, expires_in (if supported), etc.
       - The package should check if the provided access token is valid and if not, throw an error
       - The package should have a constructor function that initializes the OAuth client
+      - the package should use the function name "getAuthUrl" to get the authorization url for the OAuth flow
+      - the package should use the function name "exchangeCodeForToken" to exchange the authorization code for the access token
       - The environment variable names should be related to the provider, not the package (e.g., "GOOGLE_CLIENT_ID" not "GOOGLE_SHEETS_CLIENT_ID")
     `;
 

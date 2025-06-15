@@ -405,7 +405,7 @@ async function generatePhase1(
       system: phase1SystemPrompt,
       prompt: phase1Prompt,
       tools: phase1Tools,
-      toolChoice: 'required',
+      toolChoice: 'auto',
       maxRetries: 3,
       maxSteps: 3, // Only need 3 steps: saveEnvKeys, saveDependencies, finalizeDocs
     });

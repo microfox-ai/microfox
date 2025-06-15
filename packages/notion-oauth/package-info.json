@@ -1,0 +1,121 @@
+{
+  "name": "@microfox/notion-oauth",
+  "title": "Microfox Notion OAuth",
+  "description": "TypeScript package simplifying Notion OAuth 2.0, providing methods for generating authorization URLs, exchanging authorization codes for access tokens, and validating access tokens.",
+  "platformType": "internal",
+  "path": "packages/notion-oauth",
+  "dependencies": ["zod"],
+  "status": "oauthConnector",
+  "authEndpoint": "/connect/notion",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/notion-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion.svg",
+  "readme_map": {
+    "title": "Microfox Notion OAuth",
+    "description": "The full README for the Microfox Notion OAuth",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/README.md",
+    "functionalities": [
+      "NotionOAuthSdk",
+      "exchangeCodeForToken",
+      "getAuthUrl",
+      "validateAccessToken"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/NotionOAuthSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "NotionOAuthSdk",
+        "description": "Initializes a new instance of the `NotionOAuthSdk` client. This client is used to handle the Notion OAuth 2.0 flow, including generating authorization URLs and exchanging authorization codes for access tokens. It requires your Notion integration's Client ID, Client Secret, and configured Redirect URI."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/exchangeCodeForTokens.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "exchangeCodeForTokens",
+        "description": "Exchanges an authorization code, received from Notion after a user successfully authorizes the application, for an access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/getAuthUrl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAuthUrl",
+        "description": "Generates the authorization URL required to initiate the Notion OAuth 2.0 flow. This URL is where you will redirect users to grant your application access to their Notion account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates an access token by making a simple, authenticated request to the Notion API (`/v1/users/me`)."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "NotionOAuthSdk",
+      "description": "Create a new Microfox Notion OAuth client through which you can interact with the API",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "NOTION_OAUTH_CLIENT_ID",
+          "displayName": "Notion OAuth Client ID",
+          "description": "The Client ID for your public Notion integration. Find this under the 'OAuth Domain & URIs' tab in your integration settings at https://www.notion.so/my-integrations.",
+          "required": true
+        },
+        {
+          "key": "NOTION_OAUTH_CLIENT_SECRET",
+          "displayName": "Notion OAuth Client Secret",
+          "description": "The Client Secret for your public Notion integration. Find this under the 'Secrets' tab in your integration settings at https://www.notion.so/my-integrations.",
+          "required": true
+        }
+      ],
+      "functionalities": [
+        "exchangeCodeForToken",
+        "getAuthUrl",
+        "validateAccessToken"
+      ]
+    }
+  ],
+  "extraInfo": [
+    "To use this Notion OAuth package, you need to create a Notion integration and obtain the necessary credentials:",
+    "1. Go to https://www.notion.so/my-integrations and create a new integration.",
+    "2. Set the integration type to 'Public integration'.",
+    "3. Configure the OAuth settings, including the redirect URI.",
+    "4. After creating the integration, you'll receive a Client ID and Client Secret.",
+    "5. Store these credentials securely and never expose them in client-side code.",
+    "",
+    "Environment Variables:",
+    "- NOTION_CLIENT_ID: Your Notion integration's client ID",
+    "- NOTION_CLIENT_SECRET: Your Notion integration's client secret",
+    "",
+    "Usage example:",
+    "```typescript",
+    "import { NotionOAuthSdk } from '@microfox/notion-oauth';",
+    "",
+    "const notionOAuth = new NotionOAuthSdk({",
+    "  clientId: process.env.NOTION_CLIENT_ID!,",
+    "  clientSecret: process.env.NOTION_CLIENT_SECRET!,",
+    "  redirectUri: 'https://your-app.com/oauth/callback'",
+    "});",
+    "",
+    "// Generate the authorization URL",
+    "const authUrl = notionOAuth.generateAuthorizationUrl();",
+    "",
+    "// After receiving the code from the callback:",
+    "const tokenResponse = await notionOAuth.exchangeCodeForToken(code);",
+    "```",
+    "",
+    "Important Notes:",
+    "- Notion doesn't use traditional OAuth scopes. Access is granted based on the pages the user selects during authorization.",
+    "- There is no token refresh mechanism mentioned in the Notion documentation. You may need to re-authorize when tokens expire.",
+    "- Be mindful of Notion's API rate limits. Consult the Notion API documentation for specific limits.",
+    "- Always use HTTPS for secure communication when handling OAuth flows and making API requests.",
+    "- Store access tokens securely, preferably in a database or secure key-value store.",
+    "- The `bot_id` in the token response can be used as a unique identifier for storing and managing tokens."
+  ],
+  "keyInstructions": {
+    "link": "https://developers.notion.com/docs/getting-started"
+  },
+  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+}
