@@ -4,7 +4,9 @@
   "description": "TypeScript package simplifying Notion OAuth 2.0, providing methods for generating authorization URLs, exchanging authorization codes for access tokens, and validating access tokens.",
   "platformType": "internal",
   "path": "packages/notion-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authEndpoint": "/connect/notion",
   "oauth2Scopes": [],
@@ -17,17 +19,11 @@
     "functionalities": [
       "NotionOAuthSdk",
       "exchangeCodeForToken",
+      "exchangeCodeForTokens",
       "getAuthUrl",
       "validateAccessToken"
     ],
     "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/NotionOAuthSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "NotionOAuthSdk",
-        "description": "Initializes a new instance of the `NotionOAuthSdk` client. This client is used to handle the Notion OAuth 2.0 flow, including generating authorization URLs and exchanging authorization codes for access tokens. It requires your Notion integration's Client ID, Client Secret, and configured Redirect URI."
-      },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/exchangeCodeForTokens.md",
         "type": "functionality",
@@ -41,6 +37,13 @@
         "extension": "md",
         "functionality": "getAuthUrl",
         "description": "Generates the authorization URL required to initiate the Notion OAuth 2.0 flow. This URL is where you will redirect users to grant your application access to their Notion account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/NotionOAuthSdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "NotionOAuthSdk",
+        "description": "Initializes a new instance of the `NotionOAuthSdk` client. This client is used to handle the Notion OAuth 2.0 flow, including generating authorization URLs and exchanging authorization codes for access tokens. It requires your Notion integration's Client ID, Client Secret, and configured Redirect URI."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/validateAccessToken.md",
@@ -71,7 +74,9 @@
         }
       ],
       "functionalities": [
+        "NotionOAuthSdk",
         "exchangeCodeForToken",
+        "exchangeCodeForTokens",
         "getAuthUrl",
         "validateAccessToken"
       ]
@@ -117,5 +122,10 @@
   "keyInstructions": {
     "link": "https://developers.notion.com/docs/getting-started"
   },
-  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
 }
