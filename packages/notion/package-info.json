@@ -3,7 +3,11 @@
   "title": "Notion Provider",
   "description": "A simple and easy to use client for the Notion API, providing functionality to read & update Notion pages, write comments, and upload & retrieve files.",
   "path": "packages/notion",
-  "dependencies": ["@notionhq/client", "@tryfabric/martian", "zod"],
+  "dependencies": [
+    "@notionhq/client",
+    "@tryfabric/martian",
+    "zod"
+  ],
   "status": "semiStable",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -15,11 +19,13 @@
     "description": "The full README for the Notion Provider",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/README.md",
     "functionalities": [
-      "readPages",
-      "updatePages",
       "listUsers",
-      "uploadFiles",
-      "retrieveFiles"
+      "markdownToNotion",
+      "pageCOnstructors",
+      "readPages",
+      "retrieveFiles",
+      "updatePages",
+      "uploadFiles"
     ],
     "all_readmes": [
       {
@@ -28,6 +34,20 @@
         "extension": "md",
         "functionality": "markdownToBlocks",
         "description": "Sends a message to a Slack channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/markdownToNotion.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markdownToNotion",
+        "description": "Documentation for markdownToNotion"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/pageCOnstructors.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "pageCOnstructors",
+        "description": "Documentation for pageCOnstructors"
       }
     ]
   },
@@ -48,7 +68,10 @@
       ],
       "internalKeys": [],
       "botConfig": [],
-      "functionalities": []
+      "functionalities": [
+        "markdownToNotion",
+        "pageCOnstructors"
+      ]
     },
     {
       "name": "NotionOauthClient",
@@ -75,7 +98,10 @@
       ],
       "requiredKeys": [],
       "botConfig": [],
-      "functionalities": []
+      "functionalities": [
+        "markdownToNotion",
+        "pageCOnstructors"
+      ]
     }
   ],
   "keyInstructions": {
