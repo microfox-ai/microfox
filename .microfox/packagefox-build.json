@@ -1,8 +1,1 @@
-{
-  "requests": [
-    {
-      "type": "pkg-build",
-      "packageName": "@microfox/notion-oauth"
-    }
-  ]
-}
+{"requests": []}

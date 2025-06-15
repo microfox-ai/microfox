@@ -37,6 +37,7 @@
     "packages/instagram",
     "packages/instagram-fb",
     "packages/linkedin-member-data-portability",
+    "packages/notion",
     "packages/reddit",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -61,9 +62,10 @@
     "packages/instagram-business-oauth",
     "packages/instagram-fb-business-oauth",
     "packages/linkedin-oauth",
+    "packages/notion-oauth",
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 51,
-  "generatedAt": "2025-06-12T08:03:02.786Z"
+  "total": 53,
+  "generatedAt": "2025-06-15T04:23:13.077Z"
 }
