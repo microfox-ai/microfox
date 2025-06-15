@@ -3,7 +3,7 @@
 ### Commands
 
 - `npm run build` - Build all packages
-- `npm run build -- --filter=@microfox/whatsapp-business` - Build only 1 packages
+- `npm run build --filter=@microfox/whatsapp-business` - Build only 1 package
 - `npm run test` - Run tests across all packages
 - `npm run lint` - Run ESLint across all packages
 - `npm run clean` - Clean all build outputs
