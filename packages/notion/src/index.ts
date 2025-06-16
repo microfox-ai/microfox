@@ -40,3 +40,4 @@ export {
   type GetPagePropertyResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 export * from '@tryfabric/martian';
+export * from '@notionhq/client/build/src/helpers';
