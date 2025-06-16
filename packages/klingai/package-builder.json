@@ -1,0 +1,37 @@
+{
+  "sdkMetadata": {
+    "apiName": "Klingai",
+    "packageName": "@microfox/klingai",
+    "title": "Klingai API Integration",
+    "description": "TypeScript SDK for integrating with the Klingai API.",
+    "keywords": [
+      "klingai",
+      "api",
+      "integration",
+      "typescript",
+      "microfox",
+      "sdk"
+    ],
+    "authType": "auto",
+    "authSdk": "",
+    "inputArgs": {
+      "query": "Klingai API Integration",
+      "url": "https://app.klingai.com/global/dev/document-api",
+      "isBaseUrl": true
+    }
+  },
+  "allLinks": [
+    "https://app.klingai.com/global/dev/document-api"
+  ],
+  "filteredLinks": [
+    "https://app.klingai.com/global/dev/document-api"
+  ],
+  "linkAnalysis": {
+    "documentationLinks": [
+      "https://app.klingai.com/global/dev/document-api"
+    ],
+    "reason": "This link appears to be the most relevant for creating a package for the Klingai API. It specifically mentions 'document-api' which suggests it contains information about the API documentation, potentially including authentication information, endpoint descriptions, and integration guides.",
+    "setupInstructionsLink": "https://app.klingai.com/global/dev/document-api"
+  },
+  "linksUpdatedAt": "2025-06-16T15:05:10.668Z"
+}

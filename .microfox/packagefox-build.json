@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Klingai API Integration",
-      "url": "https://app.klingai.com/global/dev/document-api",
-      "notes": "Create a package for klingai API integration.",
-      "issueNumber": 438,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }

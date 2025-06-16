@@ -1,0 +1,164 @@
+{
+  "name": "@microfox/klingai",
+  "title": "Klingai API Integration",
+  "description": "TypeScript SDK providing seamless integration with the Klingai API for diverse functionalities, including account and billing management, image and video generation, and virtual try-on capabilities.",
+  "platformType": "tool",
+  "path": "packages/klingai",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/klingai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/klingai.svg",
+  "readme_map": {
+    "title": "Klingai API Integration",
+    "description": "The full README for the Klingai API Integration",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/README.md",
+    "functionalities": [
+      "KlingaiSDK",
+      "createKlingaiSDK",
+      "getAccountInformation",
+      "getBillingInformation",
+      "imageGeneration",
+      "imageToVideo",
+      "lipSync",
+      "multiImageToVideo",
+      "textToVideo",
+      "videoEffects",
+      "videoExtension",
+      "virtualTryOn"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/KlingaiSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "KlingaiSDK",
+        "description": "The `KlingaiSDK` class is the main entry point for all interactions with the Klingai API. It handles authentication and provides methods for accessing various AI-powered video and image generation features."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/createKlingaiSDK.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createKlingaiSDK",
+        "description": "A factory function to create and initialize an instance of the KlingaiSDK. This is the recommended way to get started with the SDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/getAccountInformation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAccountInformation",
+        "description": "This function retrieves detailed information about the user's Klingai account, including usage and credit status."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/getBillingInformation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getBillingInformation",
+        "description": "This function retrieves billing and subscription information for the user's Klingai account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/imageGeneration.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "imageGeneration",
+        "description": "This function generates an image based on a descriptive text prompt. It allows for customization of the image's style."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/imageToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "imageToVideo",
+        "description": "This function generates a video based on a provided image URL. It allows for customization of the video's style and duration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/lipSync.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "lipSync",
+        "description": "This function synchronizes the lip movements in a video with a provided audio track."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/multiImageToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "multiImageToVideo",
+        "description": "This function generates a video from a sequence of multiple image URLs. It allows for customization of the video's style and duration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/textToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "textToVideo",
+        "description": "This function generates a video based on a descriptive text prompt. It allows for customization of the video's style and duration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/videoEffects.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "videoEffects",
+        "description": "This function applies a specified visual effect to a video."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/videoExtension.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "videoExtension",
+        "description": "This function extends the duration of an existing video by generating additional frames."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/virtualTryOn.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "virtualTryOn",
+        "description": "This function performs a virtual try-on by overlaying a specified item onto a person in an image or video."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "KlingaiSDK",
+      "description": "Create a new Klingai API Integration client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "KLINGAI_API_KEY",
+          "displayName": "Klingai API Key",
+          "description": "Your API key for authenticating with the Klingai API. Obtain it from your Klingai account dashboard.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "createKlingaiSDK",
+        "getAccountInformation",
+        "getBillingInformation",
+        "imageGeneration",
+        "imageToVideo",
+        "lipSync",
+        "multiImageToVideo",
+        "textToVideo",
+        "videoEffects",
+        "videoExtension",
+        "virtualTryOn"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Klingai SDK, you need to obtain an API key from Klingai. Follow these steps:\n\n1. Sign up for a Klingai account at https://www.klingai.com (placeholder URL)\n2. Navigate to the API section in your account dashboard\n3. Generate a new API key\n\nOnce you have your API key, you can use it to initialize the SDK:\n\n```typescript\nimport { createKlingaiSDK } from '@microfox/klingai';\n\nconst klingai = createKlingaiSDK({\n  apiKey: 'your-api-key-here'\n});\n```\n\nAlternatively, you can set the API key as an environment variable:\n\n```\nKLINGAI_API_KEY=your-api-key-here\n```\n\nThe SDK will automatically use the environment variable if no API key is provided during initialization.\n\nNote: The API base URL is https://api-singapore.klingai.com. This is automatically set in the SDK and doesn't need to be configured separately.\n\nImportant: Keep your API key secure and never share it publicly."
+  },
+  "extraInfo": [
+    "To use the Klingai SDK, you need to obtain an API key from Klingai. Follow these steps:\n\n1. Sign up for a Klingai account at https://www.klingai.com (placeholder URL)\n2. Navigate to the API section in your account dashboard\n3. Generate a new API key\n\nOnce you have your API key, you can use it to initialize the SDK:\n\n```typescript\nimport { createKlingaiSDK } from '@microfox/klingai';\n\nconst klingai = createKlingaiSDK({\n  apiKey: 'your-api-key-here'\n});\n```\n\nAlternatively, you can set the API key as an environment variable:\n\n```\nKLINGAI_API_KEY=your-api-key-here\n```\n\nThe SDK will automatically use the environment variable if no API key is provided during initialization.\n\nNote: The API base URL is https://api-singapore.klingai.com. This is automatically set in the SDK and doesn't need to be configured separately.\n\nImportant: Keep your API key secure and never share it publicly."
+  ],
+  "authType": "apikey",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}
