@@ -1,6 +1,6 @@
 {
   "name": "@microfox/notion",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Notion - Read & Update Notion Pages, Write comments, Upload & retrieve files",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
