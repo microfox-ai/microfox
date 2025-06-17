@@ -1,5 +1,11 @@
 # @microfox/notion
 
+## 1.0.3
+
+### Patch Changes
+
+- ad97d41: release: notion package
+
 ## 1.0.2
 
 ### Patch Changes
