@@ -2,7 +2,6 @@
   "externalPackages": [
     "packages/@ext_@gitbook#api",
     "packages/@ext_@hyperbrowser#sdk",
-    "packages/@ext_@notionhq#client",
     "packages/@ext_@slack#web-api",
     "packages/@ext_ai",
     "packages/@ext_octokit",
@@ -66,6 +65,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 53,
-  "generatedAt": "2025-06-15T04:23:13.077Z"
+  "total": 52,
+  "generatedAt": "2025-06-18T01:37:54.387Z"
 }
