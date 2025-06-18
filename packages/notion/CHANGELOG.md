@@ -1,5 +1,11 @@
 # @microfox/notion
 
+## 1.0.4
+
+### Patch Changes
+
+- b7d8123: release: notion updates
+
 ## 1.0.3
 
 ### Patch Changes
