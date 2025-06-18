@@ -36,75 +36,75 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `collections.createCollection`
 - [x] `collections.deleteCollection`
 - [x] `collections.removePostFromCollection`
-- [ ] `collections.reorderCollection`
-- [ ] `collections.getSubredditCollections`
-- [ ] `collections.updateCollectionDescription`
-- [ ] `collections.updateCollectionDisplayLayout`
-- [ ] `collections.updateCollectionTitle`
+- [x] `collections.reorderCollection`
+- [x] `collections.getSubredditCollections`
+- [x] `collections.updateCollectionDescription`
+- [x] `collections.updateCollectionDisplayLayout`
+- [x] `collections.updateCollectionTitle`
 
 ### Emoji
-- [ ] `emoji.addOrUpdateEmoji`
-- [ ] `emoji.deleteEmoji`
-- [ ] `emoji.getEmojiUploadLease`
-- [ ] `emoji.setCustomEmojiSize`
-- [ ] `emoji.getAllEmojis`
+- [x] `emoji.addOrUpdateEmoji`
+- [x] `emoji.deleteEmoji`
+- [x] `emoji.getEmojiUploadLease`
+- [x] `emoji.setCustomEmojiSize`
+- [x] `emoji.getAllEmojis`
 
 ### Flair
-- [ ] `flair.clearFlairTemplates`
-- [ ] `flair.deleteFlair`
-- [ ] `flair.deleteFlairTemplate`
-- [ ] `flair.setFlair`
-- [ ] `flair.updateFlairTemplateOrder`
-- [ ] `flair.configureFlair`
-- [ ] `flair.setFlairCsv`
-- [ ] `flair.getFlairList`
-- [ ] `flair.getFlairSelector`
-- [ ] `flair.setFlairTemplate`
-- [ ] `flair.setFlairTemplateV2`
-- [ ] `flair.getLinkFlair`
-- [ ] `flair.getLinkFlairV2`
-- [ ] `flair.selectFlair`
-- [ ] `flair.setFlairEnabled`
-- [ ] `flair.getUserFlair`
-- [ ] `flair.getUserFlairV2`
+- [x] `flair.clearFlairTemplates`
+- [x] `flair.deleteFlair`
+- [x] `flair.deleteFlairTemplate`
+- [x] `flair.setFlair`
+- [x] `flair.updateFlairTemplateOrder`
+- [x] `flair.configureFlair`
+- [x] `flair.setFlairCsv`
+- [x] `flair.getFlairList`
+- [x] `flair.getFlairSelector`
+- [x] `flair.setFlairTemplate`
+- [x] `flair.setFlairTemplateV2`
+- [x] `flair.getLinkFlair`
+- [x] `flair.getLinkFlairV2`
+- [x] `flair.selectFlair`
+- [x] `flair.setFlairEnabled`
+- [x] `flair.getUserFlair`
+- [x] `flair.getUserFlairV2`
 
 ### Links And Comments
-- [ ] `linksAndComments.submitComment`
-- [ ] `linksAndComments.deleteThing`
-- [ ] `linksAndComments.editUserText`
-- [ ] `linksAndComments.followPost`
-- [ ] `linksAndComments.hide`
-- [ ] `linksAndComments.getInfo`
-- [ ] `linksAndComments.lock`
-- [ ] `linksAndComments.markNsfw`
-- [ ] `linksAndComments.getMoreChildren`
-- [ ] `linksAndComments.report`
-- [ ] `linksAndComments.save`
-- [ ] `linksAndComments.getSavedCategories`
-- [ ] `linksAndComments.sendReplies`
-- [ ] `linksAndComments.setContestMode`
-- [ ] `linksAndComments.setSubredditSticky`
-- [ ] `linksAndComments.setSuggestedSort`
-- [ ] `linksAndComments.spoiler`
-- [ ] `linksAndComments.storeVisits`
-- [ ] `linksAndComments.submit`
-- [ ] `linksAndComments.unhide`
-- [ ] `linksAndComments.unlock`
-- [ ] `linksAndComments.unmarkNsfw`
-- [ ] `linksAndComments.unsave`
-- [ ] `linksAndComments.unspoiler`
-- [ ] `linksAndComments.vote`
+- [x] `linksAndComments.submitComment`
+- [x] `linksAndComments.deleteThing`
+- [x] `linksAndComments.editUserText`
+- [x] `linksAndComments.followPost`
+- [x] `linksAndComments.hide`
+- [x] `linksAndComments.getInfo`
+- [x] `linksAndComments.lock`
+- [x] `linksAndComments.markNsfw`
+- [x] `linksAndComments.getMoreChildren`
+- [x] `linksAndComments.report`
+- [x] `linksAndComments.save`
+- [x] `linksAndComments.getSavedCategories`
+- [x] `linksAndComments.sendReplies`
+- [x] `linksAndComments.setContestMode`
+- [x] `linksAndComments.setSubredditSticky`
+- [x] `linksAndComments.setSuggestedSort`
+- [x] `linksAndComments.spoiler`
+- [x] `linksAndComments.storeVisits`
+- [x] `linksAndComments.submit`
+- [x] `linksAndComments.unhide`
+- [x] `linksAndComments.unlock`
+- [x] `linksAndComments.unmarkNsfw`
+- [x] `linksAndComments.unsave`
+- [x] `linksAndComments.unspoiler`
+- [x] `linksAndComments.vote`
 
 ### Listings
-- [ ] `listings.getBest`
-- [ ] `listings.getById`
-- [ ] `listings.getComments`
-- [ ] `listings.getDuplicates`
-- [ ] `listings.getHot`
-- [ ] `listings.getNew`
-- [ ] `listings.getRising`
-- [ ] `listings.getSorted`
-- [ ] `listings.search`
+- [x] `listings.getBest`
+- [x] `listings.getById`
+- [x] `listings.getComments`
+- [x] `listings.getDuplicates`
+- [x] `listings.getHot`
+- [x] `listings.getNew`
+- [x] `listings.getRising`
+- [x] `listings.getSorted`
+- [x] `listings.search`
 
 ### Live Threads
 - [ ] `liveThreads.getLiveByIds`
@@ -121,7 +121,8 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [ ] `liveThreads.removeLiveContributor`
 - [ ] `liveThreads.removeLiveContributorInvite`
 - [ ] `liveThreads.setLiveContributorPermissions`
-- [ ] `liveThreads.strikeLiveUpdate`- [ ] `liveThreads.unhideDiscussion`
+- [ ] `liveThreads.strikeLiveUpdate`
+- [ ] `liveThreads.unhideDiscussion`
 - [ ] `liveThreads.postLiveUpdate`
 - [ ] `liveThreads.getLiveUpdates`
 - [ ] `liveThreads.getLiveAbout`
