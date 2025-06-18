@@ -3,7 +3,11 @@
   "title": "Puppeteer SLS Provider",
   "description": "A simple and easy to use client for running Puppeteer on serverless functions and validating serverless.yml configurations.",
   "path": "packages/puppeteer-sls",
-  "dependencies": ["@sparticuz/chromium", "puppeteer-core", "yaml"],
+  "dependencies": [
+    "@sparticuz/chromium",
+    "puppeteer-core",
+    "yaml"
+  ],
   "status": "internl",
   "authEndpoint": "",
   "oauth2Scopes": [],
@@ -14,8 +18,20 @@
     "title": "Puppeteer SLS Provider",
     "description": "The full README for the Puppeteer SLS Provider",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
-    "functionalities": ["puppeteerLaunchProps", "validateServerlessYML"],
-    "all_readmes": []
+    "functionalities": [
+      "config.serverless.json",
+      "puppeteerLaunchProps",
+      "validateServerlessYML"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/docs/config.serverless.json.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "config.serverless.json",
+        "description": "Documentation for config.serverless.json"
+      }
+    ]
   },
   "addedDependencies": [],
   "functions": [
