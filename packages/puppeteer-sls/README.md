@@ -10,7 +10,7 @@ npm install @microfox/puppeteer-sls
 
 ## Usage
 
-Import and initialize a client.
+Import and initialize pupeteer.
 
 ```js
 import { puppeteerLaunchProps } from '@microfox/puppeteer-sls';

@@ -1,1 +1,1 @@
-# @microfox/puppeteer-sls
+# @microfox/serverless-yml
