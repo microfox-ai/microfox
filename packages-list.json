@@ -3,9 +3,15 @@
     "packages/@ext_@gitbook#api",
     "packages/@ext_@hyperbrowser#sdk",
     "packages/@ext_@slack#web-api",
-    "packages/@ext_ai",
     "packages/@ext_octokit",
     "packages/@ext_puppeteer"
+  ],
+  "internalPackages": [
+    "packages/@ext_ai",
+    "packages/crypto-sdk",
+    "packages/rest-sdk",
+    "packages/usage-pricing",
+    "packages/usage-tracker"
   ],
   "webhookConnectorPackages": [
     "packages/agent-kit",
@@ -19,6 +25,7 @@
     "packages/brave",
     "packages/google-sheets",
     "packages/linkedin-share",
+    "packages/puppeteer-sls",
     "packages/slack-web-tiny",
     "packages/whatsapp-business"
   ],
@@ -35,6 +42,7 @@
     "packages/google-seo",
     "packages/instagram",
     "packages/instagram-fb",
+    "packages/klingai",
     "packages/linkedin-member-data-portability",
     "packages/notion",
     "packages/reddit",
@@ -48,12 +56,6 @@
     "packages/stdlib",
     "packages/twitter"
   ],
-  "internalPackages": [
-    "packages/crypto-sdk",
-    "packages/rest-sdk",
-    "packages/usage-pricing",
-    "packages/usage-tracker"
-  ],
   "oauthConnectorPackages": [
     "packages/fillout-oauth",
     "packages/google",
@@ -65,6 +67,9 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 52,
-  "generatedAt": "2025-06-18T01:37:54.387Z"
+  "internlPackages": [
+    "packages/serverless-yml"
+  ],
+  "total": 55,
+  "generatedAt": "2025-06-18T19:49:24.502Z"
 }
