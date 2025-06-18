@@ -1,5 +1,5 @@
 {
-  "name": "@microfox/reddit-old",
+  "name": "@microfox/reddit",
   "version": "1.2.0",
   "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "main": "./dist/index.js",
@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@devvit/shared-types": "^0.11.17",
     "@microfox/reddit-oauth": "^1.2.0",
     "zod": "^3.24.3"
   },
