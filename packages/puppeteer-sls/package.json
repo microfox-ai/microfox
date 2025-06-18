@@ -1,6 +1,6 @@
 {
   "name": "@microfox/puppeteer-sls",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Puppeteer SLS - Run puppeteer on a serverless function (AWS Lambda, etc.)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
