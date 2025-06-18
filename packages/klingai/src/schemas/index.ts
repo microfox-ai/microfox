@@ -1,47 +1,52 @@
 import { z } from 'zod';
 
-export const textToVideoParamsSchema = z.object({
-  prompt: z.string().min(1).max(1000).describe('The text prompt to generate the video from'),
-  style: z.string().optional().describe('The style of the generated video'),
-  duration: z.number().positive().optional().describe('The desired duration of the video in seconds'),
-});
+export const textToVideoRequestBodySchema = z.object({
+  model_name: z.enum(['kling-v1', 'kling-v1-6', 'kling-v2-master']).optional(),
+  prompt: z.string(),
+  negative_prompt: z.string().optional(),
+  cfg_scale: z.number().min(0).max(1).optional(),
+  mode: z.enum(['std', 'pro']).optional(),
+  camera_control: z.object({
+    type: z.enum(['simple', 'down_back', 'forward_up', 'right_turn_forward', 'left_turn_forward']).optional(),
+    config: z.object({
+      horizontal: z.number().min(-10).max(10).optional(),
+      vertical: z.number().min(-10).max(10).optional(),
+      pan: z.number().min(-10).max(10).optional(),
+      tilt: z.number().min(-10).max(10).optional(),
+      roll: z.number().min(-10).max(10).optional(),
+      zoom: z.number().min(-10).max(10).optional(),
+    }).optional(),
+  }).optional(),
+  aspect_ratio: z.enum(['16:9', '9:16', '1:1']).optional(),
+  duration: z.enum(['5', '10']).optional(),
+  callback_url: z.string().url().optional(),
+  external_task_id: z.string().optional(),
+}).describe('Text to Video Request Body');
 
-export const imageToVideoParamsSchema = z.object({
-  imageUrl: z.string().url().describe('The URL of the image to generate the video from'),
-  style: z.string().optional().describe('The style of the generated video'),
-  duration: z.number().positive().optional().describe('The desired duration of the video in seconds'),
-});
+export const imageToVideoRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Image to Video Request Body');
 
-export const multiImageToVideoParamsSchema = z.object({
-  imageUrls: z.array(z.string().url()).min(2).max(10).describe('An array of image URLs to generate the video from'),
-  style: z.string().optional().describe('The style of the generated video'),
-  duration: z.number().positive().optional().describe('The desired duration of the video in seconds'),
-});
+export const multiImageToVideoRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Multi-Image to Video Request Body');
 
-export const videoExtensionParamsSchema = z.object({
-  videoUrl: z.string().url().describe('The URL of the video to extend'),
-  duration: z.number().positive().describe('The desired duration of the extended video in seconds'),
-});
+export const videoExtendRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Video Extend Request Body');
 
-export const lipSyncParamsSchema = z.object({
-  videoUrl: z.string().url().describe('The URL of the video to apply lip sync to'),
-  audioUrl: z.string().url().describe('The URL of the audio to sync with the video'),
-});
+export const lipSyncRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Lip Sync Request Body');
 
-export const videoEffectsParamsSchema = z.object({
-  videoUrl: z.string().url().describe('The URL of the video to apply effects to'),
-  effectName: z.string().min(1).describe('The name of the effect to apply'),
-});
+export const videoEffectsRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Video Effects Request Body');
 
-export const imageGenerationParamsSchema = z.object({
-  prompt: z.string().min(1).max(1000).describe('The text prompt to generate the image from'),
-  style: z.string().optional().describe('The style of the generated image'),
-});
+export const imageGenerationRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Image Generation Request Body');
 
-export const virtualTryOnParamsSchema = z.object({
-  imageUrl: z.string().url().optional().describe('The URL of the image for virtual try-on'),
-  videoUrl: z.string().url().optional().describe('The URL of the video for virtual try-on'),
-  itemId: z.string().min(1).describe('The ID of the item to try on'),
-}).refine(data => data.imageUrl || data.videoUrl, {
-  message: "Either imageUrl or videoUrl must be provided",
-});
+export const virtualTryOnRequestBodySchema = z.object({
+  // Define the schema based on the API documentation
+}).describe('Virtual Try-On Request Body');

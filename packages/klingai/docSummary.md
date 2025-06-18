@@ -1,47 +1,213 @@
-## Kling AI API - TypeScript SDK Summary
+```markdown
+# Kling AI API TypeScript SDK Documentation
 
-This summary outlines the Kling AI API based on the provided documentation, focusing on the technical details required for TypeScript SDK implementation.  The documentation primarily focuses on announcing a new system launch and doesn't provide specific API endpoint details.  Therefore, this summary serves as a placeholder and needs to be updated once the actual API documentation for the new system becomes available.
+This document details the Kling AI API endpoints and data structures for integrating with the Kling AI platform.  This documentation is targeted towards the new system launched on May 22, 2025 (UTC+8), with a base URL of `https://api-singapore.klingai.com`.
 
-**Key Information:**
+## General Information
 
-* **New System Launch:** A new API system launched on May 22, 2025 (UTC+8).  The new API base URL is `https://api-singapore.klingai.com`.
-* **Existing Users:** Users with API purchases before May 22, 2025, will be migrated to the new system in June 2025.
-* **New Users:** Users without prior API purchases must use the new system and its documentation.
-* **Missing API Documentation:** The provided documentation lacks specific details on API endpoints, request/response formats, authentication, etc. This summary will need to be updated when that information is released.
+**API Base URL:** `https://api-singapore.klingai.com`
+
+**Authentication:** JWT (JSON Web Token, RFC 7519)
+
+**Authorization Header:** `Authorization: Bearer <API_TOKEN>`
+
+**API Token Generation (TypeScript Example):**
+
+```typescript
+import * as jwt from 'jsonwebtoken';
+
+function generateApiToken(accessKey: string, secretKey: string): string {
+  const headers = {
+    alg: 'HS256',
+    typ: 'JWT',
+  };
+  const payload = {
+    iss: accessKey,
+    exp: Math.floor(Date.now() / 1000) + 1800, // Expires in 30 minutes
+    nbf: Math.floor(Date.now() / 1000) - 5,      // Valid 5 seconds ago
+  };
+  return jwt.sign(payload, secretKey, { header: headers });
+}
+
+const accessKey = "YOUR_ACCESS_KEY"; // Replace with your actual access key
+const secretKey = "YOUR_SECRET_KEY"; // Replace with your actual secret key
+const apiToken = generateApiToken(accessKey, secretKey);
+
+console.log(apiToken);
+```
+
+**Error Codes:**
+
+| HTTP Status Code | Service Code | Definition of Service Code | Explanation of Service Code | Suggested Solutions |
+|---|---|---|---|---|
+| 200 | 0 | Request | - | - |
+| 401 | 1000 | Authentication failed | Authentication failed | Check if the Authorization is correct |
+| 401 | 1001 | Authentication failed | Authorization is empty | Fill in the correct Authorization in the Request Header |
+| 401 | 1002 | Authentication failed | Authorization is invalid | Fill in the correct Authorization in the Request Header |
+| 401 | 1003 | Authentication failed | Authorization is not yet valid | Check the start effective time of the token, wait for it to take effect or reissue |
+| 401 | 1004 | Authentication failed | Authorization has expired | Check the validity period of the token and reissue it |
+| ... | ... | ... | ... | ... |
 
 
-**Placeholder API Endpoints (To be updated with actual API documentation):**
-
-The following are placeholder endpoints based on the mentioned Kling AI capabilities.  These need to be confirmed and detailed when the official API documentation is released.
-
-| Endpoint | Method | Description | Authentication | Request Parameters | Request Body | Response | Edge Cases |
-|---|---|---|---|---|---|---|---|
-| `/text-to-video` | `POST` | Generates a video from text prompt. |  `TBD` (Likely API Key or OAuth) | `prompt` (string, required), `style` (string, optional),  `duration` (number, optional) |  `TBD` | `TBD` (Likely a video URL or ID) |  Prompt length limitations, rate limiting. |
-| `/image-to-video` | `POST` | Generates a video from an image. | `TBD` | `image_url` (string, required), `style` (string, optional), `duration` (number, optional) | `TBD` | `TBD` | Image size/format restrictions, rate limiting. |
-| `/multi-image-to-video` | `POST` | Generates a video from multiple images. | `TBD` | `image_urls` (array of strings, required), `style` (string, optional), `duration` (number, optional) | `TBD` | `TBD` | Maximum number of images, image size/format restrictions, rate limiting. |
-| `/video-extension` | `POST` | Extends the duration of a video. | `TBD` | `video_url` (string, required), `duration` (number, required) | `TBD` | `TBD` |  Video format restrictions, maximum extension duration, rate limiting. |
-| `/lip-sync` | `POST` | Synchronizes lip movements in a video with provided audio. | `TBD` | `video_url` (string, required), `audio_url` (string, required) | `TBD` | `TBD` | Video and audio format restrictions, duration limitations, rate limiting. |
-| `/video-effects` | `POST` | Applies special effects to a video. | `TBD` | `video_url` (string, required), `effect_name` (string, required) | `TBD` | `TBD` | Supported effect names, video format restrictions, rate limiting. |
-| `/image-generation` | `POST` | Generates an image from a text prompt. | `TBD` | `prompt` (string, required), `style` (string, optional) | `TBD` | `TBD` (Likely an image URL or ID) | Prompt length limitations, rate limiting. |
-| `/virtual-try-on` | `POST` |  Applies virtual try-on of clothing or accessories to an image or video.  | `TBD` | `image_url` or `video_url` (string, required), `item_id` (string, required) | `TBD` | `TBD` | Supported item IDs, image/video format restrictions, rate limiting. |
-| `/account-information` | `GET` | Retrieves account information, likely including billing details and usage. | `TBD` |  `TBD` | `TBD` | `TBD` (JSON with account details) | Rate limiting. |
-| `/billing` | `GET` | Retrieves billing information. | `TBD` | `TBD` | `TBD` | `TBD` (JSON with billing details) | Rate limiting. |
+## API Endpoints
 
 
-**Authentication (TBD):**
+### 1. Text to Video
 
-The authentication method is not specified.  It is likely to be API Key based or OAuth 2.0.  This needs to be confirmed when the official API documentation is available.
+**Description:** Generates a video from a text prompt.
 
-**Response Formats (TBD):**
+* **Create Task:**
+    * **Endpoint:** `/v1/videos/text2video`
+    * **Method:** `POST`
+    * **Request Body:**
+        ```typescript
+        interface TextToVideoRequestBody {
+          model_name?: 'kling-v1' | 'kling-v1-6' | 'kling-v2-master';
+          prompt: string;
+          negative_prompt?: string;
+          cfg_scale?: number; // 0-1
+          mode?: 'std' | 'pro';
+          camera_control?: {
+            type?: 'simple' | 'down_back' | 'forward_up' | 'right_turn_forward' | 'left_turn_forward';
+            config?: {
+              horizontal?: number; // -10-10
+              vertical?: number; // -10-10
+              pan?: number; // -10-10
+              tilt?: number; // -10-10
+              roll?: number; // -10-10
+              zoom?: number; // -10-10
+            };
+          };
+          aspect_ratio?: '16:9' | '9:16' | '1:1';
+          duration?: 5 | 10;
+          callback_url?: string;
+          external_task_id?: string;
+        }
+        ```
+    * **Response Body:**
+        ```typescript
+        interface TextToVideoResponse {
+          code: number;
+          message: string;
+          request_id: string;
+          data: {
+            task_id: string;
+            task_status: 'submitted' | 'processing' | 'succeed' | 'failed';
+            task_info: {
+              external_task_id?: string;
+            };
+            created_at: number;
+            updated_at: number;
+          };
+        }
+        ```
 
-The response formats are not specified.  They are likely to be JSON for most endpoints, potentially returning URLs or IDs for generated media.  This needs to be confirmed.
+* **Query Task (Single):**
+    * **Endpoint:** `/v1/videos/text2video/{task_id | external_task_id}`
+    * **Method:** `GET`
+    * **Path Parameters:** `task_id` or `external_task_id`
+    * **Response Body:** (Includes `task_result` field when successful)
+        ```typescript
+        interface TextToVideoQueryResponse extends TextToVideoResponse {
+          data: TextToVideoResponse['data'] & {
+            task_status_msg?: string;
+            task_result?: {
+              videos: {
+                id: string;
+                url: string;
+                duration: string;
+              }[];
+            };
+          };
+        }
+        ```
 
-**TypeScript SDK Considerations:**
+* **Query Task (List):**
+    * **Endpoint:** `/v1/videos/text2video`
+    * **Method:** `GET`
+    * **Query Parameters:** `pageNum` (default: 1), `pageSize` (default: 30)
+    * **Response Body:** (Array of `TextToVideoQueryResponse` data objects)
+        ```typescript
+        interface TextToVideoQueryListResponse {
+          code: number;
+          message: string;
+          request_id: string;
+          data: TextToVideoQueryResponse['data'][];
+        }
+        ```
 
-* **Error Handling:** The SDK should include robust error handling for API requests, including network errors, rate limiting, and API-specific errors.
-* **Types:**  Precise TypeScript types should be defined for all request parameters, request bodies, and response data.
-* **Asynchronous Operations:** API calls should be handled asynchronously using Promises or Async/Await.
-* **Modularity:** The SDK should be designed in a modular way to allow easy integration and maintenance.
+### 2. Image to Video
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/videos/image2video` (POST)
+* **Query Task (Single):** `/v1/videos/image2video/{task_id | external_task_id}` (GET)
+* **Query Task (List):** `/v1/videos/image2video` (GET)
 
 
-This summary provides a starting point for building a TypeScript SDK for the Kling AI API.  It is crucial to update this information with the official documentation when it becomes available.  The placeholder endpoints and assumptions made here need to be verified and replaced with accurate details.
+### 3. Multi-Image to Video
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/videos/multi-image2video` (POST)
+* **Query Task (Single):** `/v1/videos/multi-image2video/{task_id | external_task_id}` (GET)
+* **Query Task (List):** `/v1/videos/multi-image2video` (GET)
+
+
+### 4. Video Extension
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/videos/video-extend` (POST)
+* **Query Task (Single):** `/v1/videos/video-extend/{task_id}` (GET)
+* **Query Task (List):** `/v1/videos/video-extend` (GET)
+
+
+### 5. Lip-Sync
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/videos/lip-sync` (POST)
+* **Query Task (Single):** `/v1/videos/lip-sync/{task_id}` (GET)
+* **Query Task (List):** `/v1/videos/lip-sync` (GET)
+
+
+### 6. Video Effects
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/videos/effects` (POST)
+* **Query Task (Single):** `/v1/videos/effects/{task_id | external_task_id}` (GET)
+* **Query Task (List):** `/v1/videos/effects` (GET)
+
+
+### 7. Image Generation
+
+**(Similar structure to Text to Video.  See documentation for specific request/response details.)**
+
+* **Create Task:** `/v1/images/generations` (POST)
+* **Query Task (Single):** `/v1/images/generations/{task_id}` (GET)
+* **Query Task (List):** `/v1/images/generations` (GET)
+
+
+### 8. Virtual Try-On (Functionality Try)
+
+**(Documentation not provided.  Endpoint assumed based on available information.)**
+
+* **Create Task:** `/v1/tryon` (POST)  *(Assumed)*
+* **Query Task (Single):** `/v1/tryon/{task_id}` (GET) *(Assumed)*
+* **Query Task (List):** `/v1/tryon` (GET) *(Assumed)*
+
+
+##  Edge Cases and Considerations
+
+* **Base64 Encoding:**  Ensure correct Base64 encoding of images and audio without the `data:` prefix.
+* **Image/Video Expiration:** Generated assets are cleared after 30 days.
+* **Parameter Mutual Exclusivity:**  Pay close attention to parameters that cannot be used together (e.g., `image` and `image_tail` vs. `dynamic_masks`/`static_mask` vs. `camera_control` in Image to Video).
+* **Model Compatibility:** Different model versions support different parameters and modes. Refer to the "Capability Map" (not provided in the original documentation) for details.
+* **Rate Limiting:**  Be mindful of potential rate limits and implement retry mechanisms.
+* **Typescript SDK Development:**  This summary provides a strong foundation for generating a Typescript SDK.  Further refinement may be needed based on actual API responses and edge case handling.
+
+
+This comprehensive summary should provide the necessary information to create a robust and type-safe TypeScript SDK for the Kling AI API.  Remember to replace placeholder values with your actual credentials and adjust the code as needed based on your specific integration requirements.
+```

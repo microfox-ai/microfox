@@ -1,35 +1,45 @@
 ## Function: `imageToVideo`
 
-Generates a video from a single source image. The function takes the URL of an image and animates it to create a video clip.
+Submits a task to generate a video from a source image. This function initiates an image-to-video generation job on the Klingai API.
+
+**Note:** The specific parameters for the request body (`ImageToVideoRequestBody`) are not defined in the current version of the SDK's type definitions. Please refer to the official Klingai API documentation for the detailed structure of the request body.
 
 **Purpose:**
-To bring static images to life by converting them into dynamic video content.
+To start a video generation process based on an input image.
 
 **Parameters:**
 
-- **`params`** (object, required): An object containing the parameters for the image-to-video generation.
-  - **`imageUrl`** (string, required): The publicly accessible URL of the source image. The URL must be valid and properly formatted.
-  - **`style`** (string, optional): The artistic or animation style to be applied to the generated video.
-  - **`duration`** (number, optional): The desired duration of the video in seconds. Must be a positive number.
+- `params` (object, required): An object containing the parameters for the image-to-video generation task. This corresponds to the `ImageToVideoRequestBody` type.
+  - **(undefined)**: The properties for this object are not yet specified in the SDK. You should structure this object according to the official Klingai API documentation.
 
 **Return Value:**
 
-- **`Promise<string>`**: A promise that resolves to a unique identifier for the video generation task.
+- `Promise<TaskResponse>`: A promise that resolves to a generic task response object.
+  - `code` (number): The status code of the response.
+  - `message` (string): A message describing the result of the request.
+  - `request_id` (string): The unique ID for this API request.
+  - `data` (object): An object containing task-specific information.
+    - `task_id` (string): The unique identifier for the newly created task.
+    - `task_status` (string): The initial status of the task (e.g., `'submitted'`).
+    - `task_info` (object): Additional information about the task.
+    - `created_at` (number): A Unix timestamp of when the task was created.
+    - `updated_at` (number): A Unix timestamp of when the task was last updated.
 
 **Examples:**
 
 ```typescript
-// Example 1: Minimal usage with only the required image URL
-const taskId1 = await klingai.imageToVideo({
-  imageUrl: 'https://example.com/path/to/your/image.jpg'
-});
-console.log('Video generation task started with ID:', taskId1);
+// Example 1: Submitting an image-to-video task
+// Note: The structure of the 'params' object depends on the official API documentation.
+// The example below uses an empty object as a placeholder.
 
-// Example 2: Full usage with style and duration
-const taskId2 = await klingai.imageToVideo({
-  imageUrl: 'https://example.com/path/to/your/character.png',
-  style: 'fantasy',
-  duration: 8
-});
-console.log('Video generation task started with ID:', taskId2);
+try {
+  const response = await klingai.imageToVideo({
+    // Add required parameters like 'image_url' or 'prompt' as per the API docs.
+    // e.g., imageUrl: 'https://example.com/source.jpg', prompt: 'make the person wave'
+  });
+  console.log('Image-to-video task submitted:', response);
+  // You can use response.data.task_id to query the task status later.
+} catch (error) {
+  console.error('Error submitting image-to-video task:', error);
+}
 ```

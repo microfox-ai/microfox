@@ -1,35 +1,42 @@
 ## Function: `virtualTryOn`
 
-Performs a virtual try-on by applying a specified item to a person in a source image or video. The function requires either an image or a video of the person and the ID of the item to be "tried on."
+Submits a task to perform a virtual try-on. This typically involves providing an image of a model and an image of a clothing item, and the API generates an image of the model wearing the clothing.
+
+**Note:** The specific parameters for the request body (`VirtualTryOnRequestBody`) are not defined in the current version of the SDK's type definitions. Please refer to the official Klingai API documentation for the detailed structure of the request body.
 
 **Purpose:**
-To allow users to visualize how clothing or accessories would look on them, commonly used in e-commerce and fashion applications.
+To start a virtual try-on job, generating an image that shows a person wearing a specified garment.
 
 **Parameters:**
 
-- **`params`** (object, required): An object containing the parameters for the virtual try-on. At least one of `imageUrl` or `videoUrl` must be provided.
-  - **`imageUrl`** (string, optional): The publicly accessible URL of the image of the person.
-  - **`videoUrl`** (string, optional): The publicly accessible URL of the video of the person.
-  - **`itemId`** (string, required): The unique identifier of the item (e.g., a piece of clothing, accessory) to be tried on.
+- `params` (object, required): An object containing the parameters for the virtual try-on task. This corresponds to the `VirtualTryOnRequestBody` type.
+  - **(undefined)**: The properties for this object are not yet specified in the SDK. You should structure this object according to the official Klingai API documentation, likely including URLs for a model image and a garment image.
 
 **Return Value:**
 
-- **`Promise<string>`**: A promise that resolves to a unique identifier for the virtual try-on task.
+- `Promise<TaskResponse>`: A promise that resolves to a generic task response object.
+  - `code` (number): The status code of the response.
+  - `message` (string): A message describing the result of the request.
+  - `request_id` (string): The unique ID for this API request.
+  - `data` (object): An object containing task-specific information.
+    - `task_id` (string): The unique identifier for the newly created task.
+    - `task_status` (string): The initial status of the task (e.g., `'submitted'`).
 
 **Examples:**
 
 ```typescript
-// Example 1: Virtual try-on with a source image
-const taskId1 = await klingai.virtualTryOn({
-  imageUrl: 'https://example.com/path/to/person-image.jpg',
-  itemId: 'dress-blue-001'
-});
-console.log('Virtual try-on task started with ID:', taskId1);
+// Example 1: Submitting a virtual try-on task
+// Note: The structure of the 'params' object depends on the official API documentation.
+// The example below uses an empty object as a placeholder.
 
-// Example 2: Virtual try-on with a source video
-const taskId2 = await klingai.virtualTryOn({
-  videoUrl: 'https://example.com/path/to/person-video.mp4',
-  itemId: 'sunglasses-aviator-005'
-});
-console.log('Virtual try-on task started with ID:', taskId2);
+try {
+  const response = await klingai.virtualTryOn({
+    // Add required parameters like 'model_image_url' and 'garment_image_url' as per the API docs.
+    // e.g., modelImageUrl: '...', garmentImageUrl: '...'
+  });
+  console.log('Virtual try-on task submitted:', response);
+  // You can use response.data.task_id to query the task status later.
+} catch (error) {
+  console.error('Error submitting virtual try-on task:', error);
+}
 ```

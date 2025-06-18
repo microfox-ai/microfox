@@ -1,34 +1,56 @@
-## Function: `createKlingaiSDK`
+## Constructor: `createKlingaiSDK`
 
-A factory function that creates and initializes a new instance of the `KlingaiSDK` class. It serves as a convenient entry point for using the SDK, abstracting the direct instantiation of the class.
+The `createKlingaiSDK` function is the entry point for initializing the Klingai SDK. It creates and configures an instance of the `KlingaiSDK` class with the required API credentials. The SDK instance handles JWT token generation and management automatically, ensuring seamless and secure communication with the Klingai API.
 
 **Purpose:**
-To provide a simple and clear method for creating a configured instance of the Klingai SDK, ready to interact with the API.
+To set up the Klingai SDK with the necessary `accessKey` and `secretKey` for API authentication, returning a ready-to-use SDK client instance.
 
 **Parameters:**
 
-- **`options`** (object, required): An object containing the configuration for the SDK instance.
-  - **`apiKey`** (string, optional): Your Klingai API key. If this is not provided, the SDK will automatically attempt to use the `KLINGAI_API_KEY` environment variable. If no key is found in either place, the constructor will throw an error.
+- `options` (object, required): An object containing the configuration for the SDK.
+  - `accessKey` (string, required): Your unique access key for the Klingai API. This key is used to identify your application. It can be obtained from your Klingai platform dashboard. It is recommended to store this key securely, for example, in an environment variable like `KLINGAI_ACCESS_KEY`.
+  - `secretKey` (string, required): Your secret key for generating JWT tokens. This key is used to sign the authentication tokens sent with each request. It is critical to keep this key confidential. It is recommended to store this key securely, for example, in an environment variable like `KLINGAI_SECRET_KEY`.
 
 **Return Value:**
 
-- **`KlingaiSDK`**: A fully initialized instance of the `KlingaiSDK` class, which can be used to make calls to the various API methods.
+- (object): An instance of the `KlingaiSDK` class, equipped with all the methods to interact with the Klingai API.
 
 **Examples:**
 
 ```typescript
-// Example 1: Creating an SDK instance by providing the API key directly
+// Example 1: Basic initialization using environment variables
+import { createKlingaiSDK } from '@microfox/klingai';
+
+// Ensure you have KLINGAI_ACCESS_KEY and KLINGAI_SECRET_KEY set in your environment
+const klingai = createKlingaiSDK({
+  accessKey: process.env.KLINGAI_ACCESS_KEY,
+  secretKey: process.env.KLINGAI_SECRET_KEY
+});
+
+// The 'klingai' instance is now ready to be used.
+async function generateVideo() {
+  try {
+    const response = await klingai.textToVideo({
+      prompt: "A futuristic city with flying cars"
+    });
+    console.log('Task submitted successfully:', response);
+  } catch (error) {
+    console.error('Error generating video:', error);
+  }
+}
+
+generateVideo();
+```
+
+```typescript
+// Example 2: Initialization with hardcoded credentials (not recommended for production)
 import { createKlingaiSDK } from '@microfox/klingai';
 
 const klingai = createKlingaiSDK({
-  apiKey: 'your-klingai-api-key'
+  accessKey: '<your_access_key>',
+  secretKey: '<your_secret_key>'
 });
 
-// Example 2: Creating an SDK instance using an environment variable
-// Ensure the KLINGAI_API_KEY environment variable is set
-// export KLINGAI_API_KEY=your-klingai-api-key
-
-import { createKlingaiSDK } from '@microfox/klingai';
-
-const klingaiWithEnv = createKlingaiSDK({});
+// You can now use the 'klingai' instance to make API calls.
+console.log('Klingai SDK initialized.');
 ```
