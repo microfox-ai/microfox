@@ -38,10 +38,10 @@ export {
   type GetSelfResponse,
   type GetPagePropertyParameters,
   type GetPagePropertyResponse,
-} from '@notionhq/client/build/src/api-endpoints';
+} from '@notionhq/client/build/src/api-endpoints.js';
 export * from '@tryfabric/martian';
-export * from '@notionhq/client/build/src/helpers';
-export * from '@tryfabric/martian/build/src/notion/blocks';
-export * from '@tryfabric/martian/build/src/notion/common';
-export * from '@tryfabric/martian/build/src/notion/index';
+export * from '@notionhq/client/build/src/helpers.js';
+export * from '@tryfabric/martian/build/src/notion/blocks.js';
+export * from '@tryfabric/martian/build/src/notion/common.js';
+export * from '@tryfabric/martian/build/src/notion/index.js';
 // testing re-release
