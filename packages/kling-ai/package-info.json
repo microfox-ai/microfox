@@ -1,0 +1,290 @@
+{
+  "name": "@microfox/kling-ai",
+  "title": "Klingai SDK",
+  "description": "The Klingai SDK provides a comprehensive set of tools for generating and manipulating images and videos, including features like lip syncing, virtual try-on, and various video effects, all through the Klingai API.",
+  "platformType": "tool",
+  "path": "packages/kling-ai",
+  "dependencies": [
+    "jsonwebtoken",
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/kling-ai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/klingai.svg",
+  "readme_map": {
+    "title": "Klingai SDK",
+    "description": "The full README for the Klingai SDK",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/README.md",
+    "functionalities": [
+      "createKlingaiSDK",
+      "imageGeneration",
+      "imageToVideo",
+      "lipSync",
+      "listImageGenerationTasks",
+      "listImageToVideoTasks",
+      "listLipSyncTasks",
+      "listMultiImageToVideoTasks",
+      "listTextToVideoTasks",
+      "listVideoEffectsTasks",
+      "listVideoExtendTasks",
+      "listVirtualTryOnTasks",
+      "multiImageToVideo",
+      "queryImageGenerationTask",
+      "queryImageToVideoTask",
+      "queryLipSyncTask",
+      "queryMultiImageToVideoTask",
+      "queryTextToVideoTask",
+      "queryVideoEffectsTask",
+      "queryVideoExtendTask",
+      "queryVirtualTryOnTask",
+      "textToVideo",
+      "videoEffects",
+      "videoExtend",
+      "virtualTryOn"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/createKlingaiSDK.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "createKlingaiSDK",
+        "description": "Initializes a new instance of the Klingai SDK, which provides methods to interact with the Klingai API. This constructor configures the SDK with the necessary authentication credentials."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/imageGeneration.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "imageGeneration",
+        "description": "Submits a task to generate an image based on a textual description. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/imageToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "imageToVideo",
+        "description": "Submits a task to generate a video from a source image. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/lipSync.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "lipSync",
+        "description": "Submits a task to synchronize lip movements in a video with a provided audio track. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listImageGenerationTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listImageGenerationTasks",
+        "description": "Retrieves a paginated list of previously submitted image generation tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listImageToVideoTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listImageToVideoTasks",
+        "description": "Retrieves a paginated list of previously submitted image-to-video tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listLipSyncTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listLipSyncTasks",
+        "description": "Retrieves a paginated list of previously submitted lip-sync tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/klingai/docs/listMultiImageToVideoTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listMultiImageToVideoTasks",
+        "description": "Retrieves a paginated list of previously submitted multi-image-to-video tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listTextToVideoTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listTextToVideoTasks",
+        "description": "Retrieves a paginated list of previously submitted text-to-video tasks, allowing you to review your task history."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listVideoEffectsTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listVideoEffectsTasks",
+        "description": "Retrieves a paginated list of previously submitted video effects tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listVideoExtendTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listVideoExtendTasks",
+        "description": "Retrieves a paginated list of previously submitted video extension tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/listVirtualTryOnTasks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listVirtualTryOnTasks",
+        "description": "Retrieves a paginated list of previously submitted virtual try-on tasks."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/multiImageToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "multiImageToVideo",
+        "description": "Submits a task to generate a video from multiple source images. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryImageGenerationTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryImageGenerationTask",
+        "description": "Queries the status and result of a specific image generation task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryImageToVideoTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryImageToVideoTask",
+        "description": "Queries the status and result of a specific image-to-video task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryLipSyncTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryLipSyncTask",
+        "description": "Queries the status and result of a specific lip-sync task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryMultiImageToVideoTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryMultiImageToVideoTask",
+        "description": "Queries the status and result of a specific multi-image-to-video task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryTextToVideoTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryTextToVideoTask",
+        "description": "Retrieves the current status and results of a specific text-to-video generation task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryVideoEffectsTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryVideoEffectsTask",
+        "description": "Queries the status and result of a specific video effects task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryVideoExtendTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryVideoExtendTask",
+        "description": "Queries the status and result of a specific video extension task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/queryVirtualTryOnTask.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "queryVirtualTryOnTask",
+        "description": "Queries the status and result of a specific virtual try-on task using its unique task ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/textToVideo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "textToVideo",
+        "description": "Submits a task to generate a video based on a textual description (prompt). This asynchronous function allows for detailed customization of the output video, including model selection, aspect ratio, duration, and camera movements."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/videoEffects.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "videoEffects",
+        "description": "Submits a task to apply visual effects to a video. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/videoExtend.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "videoExtend",
+        "description": "Submits a task to extend the duration of an existing video. The specific parameters for this function are not yet defined in the SDK's types."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/kling-ai/docs/virtualTryOn.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "virtualTryOn",
+        "description": "Submits a task to perform a virtual try-on, superimposing clothing onto a model image. The specific parameters for this function are not yet defined in the SDK's types."
+      }
+    ]
+  },
+  "constructors": [
+    {
+      "name": "createKlingaiSDK",
+      "description": "Create a new Klingai SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "KLINGAI_ACCESS_KEY",
+          "displayName": "Klingai Access Key",
+          "description": "Your Klingai access key for API authentication. Obtain it from the Klingai platform.",
+          "required": true
+        },
+        {
+          "key": "KLINGAI_SECRET_KEY",
+          "displayName": "Klingai Secret Key",
+          "description": "Your Klingai secret key for generating JWT tokens. Obtain it from the Klingai platform.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "createKlingaiSDK",
+        "imageGeneration",
+        "imageToVideo",
+        "lipSync",
+        "listImageGenerationTasks",
+        "listImageToVideoTasks",
+        "listLipSyncTasks",
+        "listMultiImageToVideoTasks",
+        "listTextToVideoTasks",
+        "listVideoEffectsTasks",
+        "listVideoExtendTasks",
+        "listVirtualTryOnTasks",
+        "multiImageToVideo",
+        "queryImageGenerationTask",
+        "queryImageToVideoTask",
+        "queryLipSyncTask",
+        "queryMultiImageToVideoTask",
+        "queryTextToVideoTask",
+        "queryVideoEffectsTask",
+        "queryVideoExtendTask",
+        "queryVirtualTryOnTask",
+        "textToVideo",
+        "videoEffects",
+        "videoExtend",
+        "virtualTryOn"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Klingai SDK, you need to obtain an access key and a secret key from the Klingai platform. These keys are used to generate a JWT token for API authentication.\n\nEnvironment variables:\n- KLINGAI_ACCESS_KEY: Your Klingai access key\n- KLINGAI_SECRET_KEY: Your Klingai secret key\n\nTo set up the SDK:\n\n1. Install the package:\n   npm install @microfox/klingai\n\n2. Import and create an instance of the SDK:\n   import { createKlingaiSDK } from '@microfox/klingai';\n\n   const klingai = createKlingaiSDK({\n     accessKey: process.env.KLINGAI_ACCESS_KEY,\n     secretKey: process.env.KLINGAI_SECRET_KEY\n   });\n\n3. Use the SDK methods to interact with the Klingai API:\n   const response = await klingai.textToVideo({\n     prompt: \"A beautiful sunset over the ocean\"\n   });\n\nNote: The SDK automatically handles JWT token generation and renewal. You don't need to manage tokens manually."
+  },
+  "extraInfo": [
+    "To use the Klingai SDK, you need to obtain an access key and a secret key from the Klingai platform. These keys are used to generate a JWT token for API authentication.\n\nEnvironment variables:\n- KLINGAI_ACCESS_KEY: Your Klingai access key\n- KLINGAI_SECRET_KEY: Your Klingai secret key\n\nTo set up the SDK:\n\n1. Install the package:\n   npm install @microfox/klingai\n\n2. Import and create an instance of the SDK:\n   import { createKlingaiSDK } from '@microfox/klingai';\n\n   const klingai = createKlingaiSDK({\n     accessKey: process.env.KLINGAI_ACCESS_KEY,\n     secretKey: process.env.KLINGAI_SECRET_KEY\n   });\n\n3. Use the SDK methods to interact with the Klingai API:\n   const response = await klingai.textToVideo({\n     prompt: \"A beautiful sunset over the ocean\"\n   });\n\nNote: The SDK automatically handles JWT token generation and renewal. You don't need to manage tokens manually."
+  ],
+  "authType": "apikey",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/jsonwebtoken",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

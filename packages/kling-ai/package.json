@@ -1,0 +1,59 @@
+{
+  "name": "@microfox/kling-ai",
+  "version": "1.0.0",
+  "description": "A TypeScript SDK for integrating with the Klingai API.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "jsonwebtoken": "9.0.2",
+    "zod": "3.25.67"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/node": "^18",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "klingai",
+    "api",
+    "integration",
+    "typescript",
+    "microfox",
+    "sdk"
+  ]
+}
