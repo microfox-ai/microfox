@@ -23,4 +23,4 @@ export const thingListingSchema = z.object({
     geo_filter: z.string().nullable(),
     children: z.array(thingSchema),
   }),
-}); 
+});

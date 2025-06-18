@@ -5,6 +5,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 ## Endpoints
 
 ### Account
+
 - [x] `account.getMe`
 - [x] `account.getMyBlocked`
 - [x] `account.getMyFriends`
@@ -21,6 +22,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `account.getPrefsWhere`
 
 ### Announcements
+
 - [x] `announcements.getAnnouncements`
 - [x] `announcements.hideAnnouncement`
 - [x] `announcements.readAnnouncement`
@@ -28,9 +30,11 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `announcements.unreadAnnouncement`
 
 ### Captcha
+
 - [x] `captcha.needsCaptcha`
 
 ### Collections
+
 - [x] `collections.addPostToCollection`
 - [x] `collections.getCollection`
 - [x] `collections.createCollection`
@@ -43,6 +47,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `collections.updateCollectionTitle`
 
 ### Emoji
+
 - [x] `emoji.addOrUpdateEmoji`
 - [x] `emoji.deleteEmoji`
 - [x] `emoji.getEmojiUploadLease`
@@ -50,6 +55,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `emoji.getAllEmojis`
 
 ### Flair
+
 - [x] `flair.clearFlairTemplates`
 - [x] `flair.deleteFlair`
 - [x] `flair.deleteFlairTemplate`
@@ -69,6 +75,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `flair.getUserFlairV2`
 
 ### Links And Comments
+
 - [x] `linksAndComments.submitComment`
 - [x] `linksAndComments.deleteThing`
 - [x] `linksAndComments.editUserText`
@@ -96,6 +103,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `linksAndComments.vote`
 
 ### Listings
+
 - [x] `listings.getBest`
 - [x] `listings.getById`
 - [x] `listings.getComments`
@@ -106,120 +114,69 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [x] `listings.getSorted`
 - [x] `listings.search`
 
-### Live Threads
-- [ ] `liveThreads.getLiveByIds`
-- [ ] `liveThreads.createLiveThread`
-- [ ] `liveThreads.getHappeningNow`
-- [ ] `liveThreads.acceptLiveContributorInvite`
-- [ ] `liveThreads.closeLiveThread`
-- [ ] `liveThreads.deleteLiveUpdate`
-- [ ] `liveThreads.editLiveThread`
-- [ ] `liveThreads.hideDiscussion`
-- [ ] `liveThreads.inviteContributor`
-- [ ] `liveThreads.leaveLiveContributor`
-- [ ] `liveThreads.reportLiveThread`
-- [ ] `liveThreads.removeLiveContributor`
-- [ ] `liveThreads.removeLiveContributorInvite`
-- [ ] `liveThreads.setLiveContributorPermissions`
-- [ ] `liveThreads.strikeLiveUpdate`
-- [ ] `liveThreads.unhideDiscussion`
-- [ ] `liveThreads.postLiveUpdate`
-- [ ] `liveThreads.getLiveUpdates`
-- [ ] `liveThreads.getLiveAbout`
-- [ ] `liveThreads.getLiveContributors`
-- [ ] `liveThreads.getLiveDiscussions`
-- [ ] `liveThreads.getLiveUpdate`
-
 ### Private Messages
-- [ ] `privateMessages.block`
-- [ ] `privateMessages.collapseMessage`
-- [ ] `privateMessages.composeMessage`
-- [ ] `privateMessages.deleteMessage`
-- [ ] `privateMessages.readAllMessages`
-- [ ] `privateMessages.readMessage`
-- [ ] `privateMessages.unblockSubreddit`
-- [ ] `privateMessages.uncollapseMessage`
-- [ ] `privateMessages.unreadMessage`
-- [ ] `privateMessages.getMessages`
+
+- [x] `privateMessages.block`
+- [x] `privateMessages.collapseMessage`
+- [x] `privateMessages.composeMessage`
+- [x] `privateMessages.deleteMessage`
+- [x] `privateMessages.readAllMessages`
+- [x] `privateMessages.readMessage`
+- [x] `privateMessages.unblockSubreddit`
+- [x] `privateMessages.uncollapseMessage`
+- [x] `privateMessages.unreadMessage`
+- [x] `privateMessages.getMessages`
 
 ### Misc
-- [ ] `misc.getScopes`
 
-### Moderation
-- [ ] `moderation.getModLog`
-- [ ] `moderation.getModListing`
-- [ ] `moderation.acceptModeratorInvite`
-- [ ] `moderation.approve`
-- [ ] `moderation.distinguish`
-- [ ] `moderation.ignoreReports`
-- [ ] `moderation.leaveContributor`
-- [ ] `moderation.leaveModerator`
-- [ ] `moderation.remove`
-- [ ] `moderation.showComment`
-- [ ] `moderation.snoozeReports`
-- [ ] `moderation.unignoreReports`
-- [ ] `moderation.unsnoozeReports`
-- [ ] `moderation.updateCrowdControlLevel`
-- [ ] `moderation.getStylesheet`
-
-### New Modmail
-- [ ] `newModmail.modmailBulkRead`
-- [ ] `newModmail.getModmailConversations`
-- [ ] `newModmail.createModmailConversation`
-- [ ] `newModmail.getModmailConversation`
-- [ ] `newModmail.archiveModmailConversation`
-- [ ] `newModmail.highlightModmailConversation`
-- [ ] `newModmail.muteModmailConversation`
-- [ ] `newModmail.unarchiveModmailConversation`
-- [ ] `newModmail.unmuteModmailConversation`
-- [ ] `newModmail.createModmailMessage`
-- [ ] `newModmail.getModmailConversationMessages`
-- [ ] `newModmail.getModmailSubreddits`
-- [ ] `newModmail.getModmailUnreadCount`
+- [x] `misc.getScopes`
 
 ### Subreddits
-- [ ] `subreddits.getSubredditAboutWhere`
-- [ ] `subreddits.deleteSrBanner`
-- [ ] `subreddits.deleteSrHeader`
-- [ ] `subreddits.deleteSrIcon`
-- [ ] `subreddits.deleteSrImg`
-- [ ] `subreddits.recommendSrBySrnames`
-- [ ] `subreddits.searchRedditNamesGet`
-- [ ] `subreddits.searchRedditNamesPost`
-- [ ] `subreddits.searchSubreddits`
-- [ ] `subreddits.siteAdmin`
-- [ ] `subreddits.getSubmitText`
-- [ ] `subreddits.subredditAutocomplete`
-- [ ] `subreddits.subredditAutocompleteV2`
-- [ ] `subreddits.subredditStylesheet`
-- [ ] `subreddits.subscribe`
-- [ ] `subreddits.uploadSrImg`
-- [ ] `subreddits.getPostRequirements`
-- [ ] `subreddits.getSubredditAbout`
-- [ ] `subreddits.getSubredditAboutEdit`
-- [ ] `subreddits.getSubredditAboutRules`
-- [ ] `subreddits.getSubredditAboutTraffic`
-- [ ] `subreddits.getSidebar`
-- [ ] `subreddits.getSticky`
-- [ ] `subreddits.getMineWhere`
-- [ ] `subreddits.searchSubredditsListing`
-- [ ] `subreddits.getSubredditsWhere`
+
+- [x] `subreddits.getSubredditAboutWhere`
+- [x] `subreddits.deleteSrBanner`
+- [x] `subreddits.deleteSrHeader`
+- [x] `subreddits.deleteSrIcon`
+- [x] `subreddits.deleteSrImg`
+- [x] `subreddits.recommendSrBySrnames`
+- [x] `subreddits.searchRedditNamesGet`
+- [x] `subreddits.searchRedditNamesPost`
+- [x] `subreddits.searchSubreddits`
+- [x] `subreddits.siteAdmin`
+- [x] `subreddits.getSubmitText`
+- [x] `subreddits.subredditAutocomplete`
+- [x] `subreddits.subredditAutocompleteV2`
+- [x] `subreddits.subredditStylesheet`
+- [x] `subreddits.subscribe`
+- [x] `subreddits.uploadSrImg`
+- [x] `subreddits.getPostRequirements`
+- [x] `subreddits.getSubredditAbout`
+- [x] `subreddits.getSubredditAboutEdit`
+- [x] `subreddits.getSubredditAboutRules`
+- [x] `subreddits.getSubredditAboutTraffic`
+- [x] `subreddits.getSidebar`
+- [x] `subreddits.getSticky`
+- [x] `subreddits.getMineWhere`
+- [x] `subreddits.searchSubredditsListing`
+- [x] `subreddits.getSubredditsWhere`
 
 ### Users
-- [ ] `users.searchUsers`
-- [ ] `users.getUsersWhere`
-- [ ] `users.blockUser`
-- [ ] `users.friend`
-- [ ] `users.reportUser`
-- [ ] `users.setPermissions`
-- [ ] `users.unfriend`
-- [ ] `users.getUserDataByAccountIds`
-- [ ] `users.usernameAvailable`
-- [ ] `users.getUserTrophies`
-- [ ] `users.getUserAbout`
-- [ ] `users.getUserProfileWhere`
+
+- [x] `users.searchUsers`
+- [x] `users.getUsersWhere`
+- [x] `users.blockUser`
+- [x] `users.friend`
+- [x] `users.reportUser`
+- [x] `users.setPermissions`
+- [x] `users.unfriend`
+- [x] `users.getUserDataByAccountIds`
+- [x] `users.usernameAvailable`
+- [x] `users.getUserTrophies`
+- [x] `users.getUserAbout`
+- [x] `users.getUserProfileWhere`
 
 ### Widgets
+
 - [ ] `widgets.createWidget`
 - [ ] `widgets.deleteWidget`
 - [ ] `widgets.updateWidget`
@@ -228,6 +185,7 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [ ] `widgets.getWidgets`
 
 ### Wiki
+
 - [ ] `wiki.allowEditor`
 - [ ] `wiki.editWikiPage`
 - [ ] `wiki.hideWikiPage`
@@ -239,3 +197,58 @@ This file tracks the generation of documentation for the Reddit API endpoints.
 - [ ] `wiki.getWikiPageSettings`
 - [ ] `wiki.updateWikiPageSettings`
 - [ ] `wiki.getWikiPage`
+
+### Live Threads
+
+- [ ] `liveThreads.acceptModeratorInvite`
+- [ ] `liveThreads.close`
+- [ ] `liveThreads.create`
+- [ ] `liveThreads.get`
+- [ ] `liveThreads.getContributors`
+- [ ] `liveThreads.getDiscussions`
+- [ ] `liveThreads.getUpdate`
+- [ ] `liveThreads.getUpdates`
+- [ ] `liveThreads.inviteContributor`
+- [ ] `liveThreads.leaveContributor`
+- [ ] `liveThreads.removeContributor`
+- [ ] `liveThreads.removeUpdate`
+- [ ] `liveThreads.report`
+- [ ] `liveThreads.setContributorPermissions`
+- [ ] `liveThreads.strikeUpdate`
+- [ ] `liveThreads.update`
+
+### Moderation
+
+- [x] `moderation.getModLog`
+- [x] `moderation.getModListing`
+- [x] `moderation.acceptModeratorInvite`
+- [x] `moderation.approve`
+- [x] `moderation.distinguish`
+- [x] `moderation.ignoreReports`
+- [x] `moderation.leaveContributor`
+- [x] `moderation.leaveModerator`
+- [x] `moderation.remove`
+- [x] `moderation.showComment`
+- [x] `moderation.snoozeReports`
+- [x] `moderation.unignoreReports`
+- [x] `moderation.unsnoozeReports`
+- [x] `moderation.updateCrowdControlLevel`
+- [x] `moderation.getStylesheet`
+
+### New Modmail
+
+- [x] `newModmail.modmailBulkRead`
+- [x] `newModmail.getModmailConversations`
+- [x] `newModmail.createModmailConversation`
+- [x] `newModmail.getModmailConversation`
+- [x] `newModmail.archiveModmailConversation`
+- [x] `newModmail.highlightModmailConversation`
+- [x] `newModmail.muteModmailConversation`
+- [x] `newModmail.unarchiveModmailConversation`
+- [x] `newModmail.unmuteModmailConversation`
+- [x] `newModmail.createModmailMessage`
+- [x] `newModmail.getModmailConversationMessages`
+- [x] `newModmail.getModmailSubreddits`
+- [x] `newModmail.getModmailUnreadCount`
+- [x] `newModmail.markModmailAsRead`
+- [x] `newModmail.markModmailAsUnread`
