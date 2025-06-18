@@ -1,7 +1,7 @@
 {
   "sdkMetadata": {
-    "apiName": "Klingai",
-    "packageName": "@microfox/klingai",
+    "apiName": "Kling-ai",
+    "packageName": "@microfox/kling-ai",
     "title": "Klingai SDK",
     "description": "A TypeScript SDK for integrating with the Klingai API.",
     "keywords": [

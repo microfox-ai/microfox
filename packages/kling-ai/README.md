@@ -5,7 +5,7 @@ A TypeScript SDK for integrating with the Klingai API.
 ## Installation
 
 ```bash
-npm install @microfox/klingai
+npm install @microfox/kling-ai
 ```
 
 ## Environment Variables
