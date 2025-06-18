@@ -1,27 +1,24 @@
 {
-  "name": "@microfox/puppeteer-sls",
-  "title": "Puppeteer SLS Provider",
-  "description": "A simple and easy to use client for running Puppeteer on serverless functions and validating serverless.yml configurations.",
-  "path": "packages/puppeteer-sls",
-  "dependencies": [
-    "@sparticuz/chromium",
-    "puppeteer-core",
-    "yaml"
-  ],
-  "status": "internl",
+  "name": "@microfox/serverless-yml",
+  "title": "Serverless YML",
+  "description": "A utility package for validating and mutating `serverless.yml` files, with a focus on automating configurations for services using `@microfox` packages.",
+  "path": "packages/serverless-yml",
+  "dependencies": ["yaml"],
+  "status": "internal",
   "authEndpoint": "",
   "oauth2Scopes": [],
   "authType": "none",
-  "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",
+  "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/serverless.svg",
   "readme_map": {
-    "title": "Puppeteer SLS Provider",
-    "description": "The full README for the Puppeteer SLS Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
+    "title": "Serverless YML",
+    "description": "The full README for the Serverless YML",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
     "functionalities": [
-      "config.serverless.json",
-      "puppeteerLaunchProps",
-      "validateServerlessYML"
+      "validateServerlessYML",
+      "mutateServerlessYML",
+      "batchMutateServerlessYML",
+      "config.serverless.json"
     ],
     "all_readmes": [
       {
@@ -29,45 +26,37 @@
         "type": "functionality",
         "extension": "md",
         "functionality": "config.serverless.json",
-        "description": "Documentation for config.serverless.json"
+        "description": "Documentation for config.serverless.json, which allows packages to define how they affect the serverless.yml configuration."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#validation",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateServerlessYML",
+        "description": "Validates the structure and content of a serverless.yml file."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#mutation",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "mutateServerlessYML",
+        "description": "Automatically mutates the serverless.yml file to include necessary configurations based on the @microfox packages your service uses."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#mutation",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "batchMutateServerlessYML",
+        "description": "Applies a batch of mutator functions to the serverless.yml content."
       }
     ]
   },
   "addedDependencies": [],
-  "functions": [
-    {
-      "name": "puppeteerLaunchProps",
-      "description": "Get launch properties for running Puppeteer in a serverless environment. It automatically detects if it's running locally or on AWS Lambda.",
-      "apiType": "sdk",
-      "auth": "none",
-      "botConfig": [],
-      "requiredKeys": [],
-      "internalKeys": []
-    },
-    {
-      "name": "validateServerlessYML",
-      "description": "Validates the structure and content of a serverless.yml file.",
-      "apiType": "sdk",
-      "auth": "none",
-      "botConfig": [],
-      "requiredKeys": [],
-      "internalKeys": []
-    }
-  ],
+  "constructors": [],
   "keyInstructions": {
     "link": "",
     "setupInfo": ""
   },
   "extraInfo": [],
-  "devDependencies": [
-    "@microfox/tsconfig",
-    "@sparticuz/chromium",
-    "@types/jest",
-    "@types/node",
-    "jest",
-    "ts-jest",
-    "tsup",
-    "typescript"
-  ],
   "platformType": "tool"
 }
