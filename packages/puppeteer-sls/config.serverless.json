@@ -1,0 +1,11 @@
+{
+  "package": {
+    "exclude": ["node_modules/@sparticuz/chromium/**"]
+  },
+  "functions": {
+    "layers": [
+      "arn:aws:lambda:us-east-1:211125656699:layer:chromium-x86-135:1"
+    ],
+    "timeout": 600
+  }
+}
