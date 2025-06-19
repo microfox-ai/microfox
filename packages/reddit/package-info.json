@@ -3,7 +3,10 @@
   "title": "Reddit TypeScript SDK",
   "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "path": "packages/reddit",
-  "dependencies": ["@microfox/reddit-oauth", "zod"],
+  "dependencies": [
+    "@microfox/reddit-oauth",
+    "zod"
+  ],
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit-oauth",
@@ -36,31 +39,219 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/README.md",
     "functionalities": [
       "RedditSDK",
-      "validateAccessToken",
-      "refreshAccessToken",
+      "acceptModeratorInvite",
+      "addFriend",
+      "addOrUpdateEmoji",
+      "addPostToCollection",
+      "allowEditor",
+      "approve",
+      "archiveModmailConversation",
+      "block",
+      "blockUser",
+      "clearFlairTemplates",
+      "close",
+      "collapseMessage",
+      "composeMessage",
+      "configureFlair",
+      "create",
+      "createCollection",
+      "createModmailConversation",
+      "createModmailMessage",
+      "createWidget",
+      "deleteCollection",
+      "deleteEmoji",
+      "deleteFlair",
+      "deleteFlairTemplate",
+      "deleteMessage",
+      "deletePost",
+      "deleteSrBanner",
+      "deleteSrHeader",
+      "deleteSrIcon",
+      "deleteSrImg",
+      "deleteThing",
+      "deleteWidget",
+      "distinguish",
+      "editUserText",
+      "editWikiPage",
+      "followPost",
+      "friend",
+      "get",
+      "getAllEmojis",
+      "getAnnouncements",
+      "getBest",
+      "getById",
+      "getCollection",
+      "getComments",
+      "getContributors",
+      "getDiscussions",
+      "getDuplicates",
+      "getEmojiUploadLease",
+      "getFlairList",
+      "getFlairSelector",
+      "getHot",
+      "getInfo",
+      "getLinkFlair",
+      "getLinkFlairV2",
       "getMe",
-      "getUserPreferences",
-      "updateUserPreferences",
-      "getUserKarma",
-      "getUserTrophies",
-      "getUser",
-      "getUserContent",
+      "getMessages",
+      "getMineWhere",
+      "getModListing",
+      "getModLog",
+      "getModmailConversation",
+      "getModmailConversationMessages",
+      "getModmailConversations",
+      "getModmailSubreddits",
+      "getModmailUnreadCount",
+      "getMoreChildren",
+      "getMoreComments",
+      "getMyBlocked",
+      "getMyFriends",
+      "getMyKarma",
+      "getMyPrefs",
+      "getMyTrophies",
+      "getNew",
+      "getPost",
+      "getPostRequirements",
+      "getPrefsBlocked",
+      "getPrefsFriends",
+      "getPrefsMessaging",
+      "getPrefsTrusted",
+      "getPrefsWhere",
+      "getRising",
+      "getSavedCategories",
+      "getScopes",
+      "getSidebar",
+      "getSorted",
+      "getSticky",
+      "getStylesheet",
+      "getSubmitText",
+      "getSubredditAbout",
+      "getSubredditAboutEdit",
+      "getSubredditAboutRules",
+      "getSubredditAboutTraffic",
+      "getSubredditAboutWhere",
+      "getSubredditCollections",
       "getSubredditInfo",
-      "searchSubreddit",
+      "getSubredditsWhere",
+      "getUpdate",
+      "getUpdates",
+      "getUser",
+      "getUserAbout",
+      "getUserContent",
+      "getUserDataByAccountIds",
+      "getUserFlair",
+      "getUserFlairV2",
+      "getUserKarma",
+      "getUserPreferences",
+      "getUserProfileWhere",
+      "getUserTrophies",
+      "getUsersWhere",
+      "getWidgetImageUploadLease",
+      "getWidgets",
+      "getWikiDiscussions",
+      "getWikiPage",
+      "getWikiPageSettings",
+      "getWikiPages",
+      "getWikiRevisions",
+      "hide",
+      "hideAnnouncement",
+      "hidePost",
+      "hideWikiPage",
+      "highlightModmailConversation",
+      "ignoreReports",
+      "inviteContributor",
+      "leaveContributor",
+      "leaveModerator",
+      "lock",
+      "markModmailAsRead",
+      "markModmailAsUnread",
+      "markNsfw",
+      "modmailBulkRead",
+      "muteModmailConversation",
+      "needsCaptcha",
+      "readAllAnnouncements",
+      "readAllMessages",
+      "readAnnouncement",
+      "readMessage",
+      "recommendSrBySrnames",
+      "refreshAccessToken",
+      "remove",
+      "removeContributor",
+      "removeFriend",
+      "removePostFromCollection",
+      "removeUpdate",
+      "reorderCollection",
+      "reorderWidgets",
+      "report",
+      "reportItem",
+      "reportUser",
+      "revertWikiPage",
+      "save",
+      "saveItem",
       "search",
+      "searchRedditNamesGet",
+      "searchRedditNamesPost",
+      "searchSubreddit",
+      "searchSubreddits",
+      "searchSubredditsListing",
+      "searchUsers",
+      "selectFlair",
+      "sendReplies",
+      "setContestMode",
+      "setContributorPermissions",
+      "setCustomEmojiSize",
+      "setFlair",
+      "setFlairCsv",
+      "setFlairEnabled",
+      "setFlairTemplate",
+      "setFlairTemplateV2",
+      "setPermissions",
+      "setSubredditSticky",
+      "setSuggestedSort",
+      "showComment",
+      "siteAdmin",
+      "snoozeReports",
+      "spoiler",
+      "storeVisits",
+      "strikeUpdate",
+      "submit",
       "submitComment",
       "submitPost",
-      "vote",
-      "deletePost",
-      "editUserText",
-      "hidePost",
+      "subredditAutocomplete",
+      "subredditAutocompleteV2",
+      "subredditStylesheet",
+      "subscribe",
+      "unarchiveModmailConversation",
+      "unblockSubreddit",
+      "uncollapseMessage",
+      "unfriend",
+      "unhide",
       "unhidePost",
-      "saveItem",
+      "unhighlightModmailConversation",
+      "unignoreReports",
+      "unlock",
+      "unmarkNsfw",
+      "unmuteModmailConversation",
+      "unreadAnnouncement",
+      "unreadMessage",
+      "unsave",
       "unsaveItem",
-      "reportItem",
-      "getInfo",
-      "getMoreComments",
-      "getPost"
+      "unsnoozeReports",
+      "unspoiler",
+      "update",
+      "updateCollectionDescription",
+      "updateCollectionDisplayLayout",
+      "updateCollectionTitle",
+      "updateCrowdControlLevel",
+      "updateFlairTemplateOrder",
+      "updateMyPrefs",
+      "updateUserPreferences",
+      "updateWidget",
+      "updateWikiPageSettings",
+      "uploadSrImg",
+      "usernameAvailable",
+      "validateAccessToken",
+      "vote"
     ],
     "all_readmes": [
       {
@@ -71,11 +262,1005 @@
         "description": "Initializes a new instance of the RedditSDK."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/validateAccessToken.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.addFriend.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the current access token."
+        "functionality": "addFriend",
+        "description": "Part of the `account` section. Adds a user to the authenticated user's friends list."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMe.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMe",
+        "description": "Part of the `account` section. Gets the account information for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMyBlocked.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMyBlocked",
+        "description": "Part of the `account` section. Gets the list of blocked users for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMyFriends.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMyFriends",
+        "description": "Part of the `account` section. Gets the list of friends for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMyKarma.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMyKarma",
+        "description": "Part of the `account` section. Gets the karma breakdown by subreddit for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMyPrefs.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMyPrefs",
+        "description": "Part of the `account` section. Gets the preferences for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getMyTrophies.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMyTrophies",
+        "description": "Part of the `account` section. Gets the trophy case for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getPrefsBlocked.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getPrefsBlocked",
+        "description": "Part of the `account` section. Gets the list of blocked users based on the user's preferences."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getPrefsFriends.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getPrefsFriends",
+        "description": "Part of the `account` section. Gets the list of friends based on the user's preferences."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getPrefsMessaging.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getPrefsMessaging",
+        "description": "Part of the `account` section. Gets the list of users from whom the authenticated user has chosen to receive private messages."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getPrefsTrusted.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getPrefsTrusted",
+        "description": "Part of the `account` section. Gets the list of trusted users based on the user's preferences. Trusted users' content is always visible."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.getPrefsWhere.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getPrefsWhere",
+        "description": "Part of the `account` section. Gets a list of users based on a specified preference category."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.removeFriend.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removeFriend",
+        "description": "Part of the `account` section. Removes a user from the authenticated user's friends list."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/account.updateMyPrefs.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateMyPrefs",
+        "description": "Part of the `account` section. Updates the preferences for the currently authenticated user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/announcements.getAnnouncements.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAnnouncements",
+        "description": "Part of the `announcements` section. Gets the current announcements."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/announcements.hideAnnouncement.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hideAnnouncement",
+        "description": "Part of the `announcements` section. Hides one or more announcements."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/announcements.readAllAnnouncements.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "readAllAnnouncements",
+        "description": "Part of the `announcements` section. Marks all announcements as read."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/announcements.readAnnouncement.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "readAnnouncement",
+        "description": "Part of the `announcements` section. Marks one or more announcements as read."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/announcements.unreadAnnouncement.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unreadAnnouncement",
+        "description": "Part of the `announcements` section. Marks one or more announcements as unread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/captcha.needsCaptcha.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "needsCaptcha",
+        "description": "Part of the `captcha` section. Checks if a CAPTCHA is required for an action."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.addPostToCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "addPostToCollection",
+        "description": "Part of the `collections` section. Adds a post to a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.createCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createCollection",
+        "description": "Part of the `collections` section. Creates a new collection in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.deleteCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteCollection",
+        "description": "Part of the `collections` section. Deletes a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.getCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getCollection",
+        "description": "Part of the `collections` section. Gets a collection by its ID."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.getSubredditCollections.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSubredditCollections",
+        "description": "Part of the `collections` section. Retrieves all collections for a given subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.removePostFromCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removePostFromCollection",
+        "description": "Part of the `collections` section. Removes a post from a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.reorderCollection.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reorderCollection",
+        "description": "Part of the `collections` section. Reorders the posts within a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.updateCollectionDescription.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCollectionDescription",
+        "description": "Part of the `collections` section. Updates the description of a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.updateCollectionDisplayLayout.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCollectionDisplayLayout",
+        "description": "Part of the `collections` section. Updates the display layout of a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/collections.updateCollectionTitle.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCollectionTitle",
+        "description": "Part of the `collections` section. Updates the title of a collection."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/emoji.addOrUpdateEmoji.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "addOrUpdateEmoji",
+        "description": "Part of the `emoji` section. Adds or updates a custom emoji in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/emoji.deleteEmoji.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteEmoji",
+        "description": "Part of the `emoji` section. Deletes a custom emoji from a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/emoji.getAllEmojis.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAllEmojis",
+        "description": "Part of the `emoji` section. Retrieves all custom emojis for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/emoji.getEmojiUploadLease.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getEmojiUploadLease",
+        "description": "Part of the `emoji` section. Gets an S3 upload lease for a custom emoji image."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/emoji.setCustomEmojiSize.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setCustomEmojiSize",
+        "description": "Part of the `emoji` section. Sets the size of a custom emoji."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.clearFlairTemplates.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "clearFlairTemplates",
+        "description": "Part of the `flair` section. Clears all flair templates of a specific type in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.configureFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "configureFlair",
+        "description": "Part of the `flair` section. Configures flair settings for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.deleteFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteFlair",
+        "description": "Part of the `flair` section. Deletes a user's flair in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.deleteFlairTemplate.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteFlairTemplate",
+        "description": "Part of the `flair` section. Deletes a flair template in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getFlairList.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getFlairList",
+        "description": "Part of the `flair` section. Retrieves a list of user flairs in the subreddit. Supports pagination."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getFlairSelector.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getFlairSelector",
+        "description": "Part of the `flair` section. Retrieves available flair choices for a user or a link submission."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getLinkFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getLinkFlair",
+        "description": "Part of the `flair` section. Retrieves the link flair templates for the subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getLinkFlairV2.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getLinkFlairV2",
+        "description": "Part of the `flair` section. Retrieves the link flair templates for the subreddit using the V2 endpoint."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getUserFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserFlair",
+        "description": "Part of the `flair` section. Retrieves the user flair templates for the subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.getUserFlairV2.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserFlairV2",
+        "description": "Part of the `flair` section. Retrieves the user flair templates for the subreddit using the V2 endpoint."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.selectFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "selectFlair",
+        "description": "Part of the `flair` section. Selects or clears a flair for the current user or a link."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.setFlair.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setFlair",
+        "description": "Part of the `flair` section. Sets flair for a user or a link in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.setFlairCsv.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setFlairCsv",
+        "description": "Part of the `flair` section. Bulk assigns user flair from a CSV string."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.setFlairEnabled.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setFlairEnabled",
+        "description": "Part of the `flair` section. Enables or disables flair in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.setFlairTemplate.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setFlairTemplate",
+        "description": "Part of the `flair` section. Creates or updates a flair template."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.setFlairTemplateV2.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setFlairTemplateV2",
+        "description": "Part of the `flair` section. Creates or updates a flair template using the V2 endpoint, which supports more customization."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/flair.updateFlairTemplateOrder.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateFlairTemplateOrder",
+        "description": "Part of the `flair` section. Updates the order of flair templates in a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.deleteThing.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteThing",
+        "description": "Part of the `linksAndComments` section. Deletes a thing (e.g., a comment or post) created by the user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.editUserText.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "editUserText",
+        "description": "Part of the `linksAndComments` section. Edits the text of a self-post or a comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.followPost.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "followPost",
+        "description": "Part of the `linksAndComments` section. Follows or unfollows a post, which enables notifications for new comments."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.getMoreChildren.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMoreChildren",
+        "description": "Part of the `linksAndComments` section. Used to fetch more comments from a comment tree, typically when a \"load more\" or \"continue this thread\" link is present."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.getSavedCategories.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSavedCategories",
+        "description": "Part of the `linksAndComments` section. Retrieves a list of categories under which the user has saved posts or comments."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.hide.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hide",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.lock.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "lock",
+        "description": "Part of the `linksAndComments` section. Locks a post or comment, preventing new comments from being submitted."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.markNsfw.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markNsfw",
+        "description": "Part of the `linksAndComments` section. Marks a post as Not-Safe-For-Work (NSFW)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.report.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "report",
+        "description": "Part of the `linksAndComments` section. Reports a thing (e.g., a post or comment) for breaking Reddit's rules."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.save.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "save",
+        "description": "Part of the `linksAndComments` section. Saves a post or comment to the user's account."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.sendReplies.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "sendReplies",
+        "description": "Part of the `linksAndComments` section. Enables or disables inbox replies for a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.setContestMode.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setContestMode",
+        "description": "Part of the `linksAndComments` section. Sets or unsets contest mode for a given post's comments. When enabled, comment scores are hidden and their order is randomized."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.setSubredditSticky.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setSubredditSticky",
+        "description": "Part of the `linksAndComments` section. Stickies or unstickies a post in a subreddit. Requires moderator privileges."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.setSuggestedSort.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setSuggestedSort",
+        "description": "Part of the `linksAndComments` section. Sets the suggested sort for the comments on a post."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.spoiler.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "spoiler",
+        "description": "Part of the `linksAndComments` section. Marks a post as a spoiler."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.storeVisits.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "storeVisits",
+        "description": "Part of the `linksAndComments` section. Records that the user has visited a set of links."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.submit.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "submit",
+        "description": "Part of the `linksAndComments` section. Submits a new post to a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.submitComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "submitComment",
+        "description": "Part of the `linksAndComments` section. Submits a new comment on a post or another comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.unhide.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unhide",
+        "description": "Part of the `linksAndComments` section. Unhides a previously hidden post."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.unlock.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unlock",
+        "description": "Part of the `linksAndComments` section. Unlocks a previously locked post, allowing new comments to be submitted."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.unmarkNsfw.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unmarkNsfw",
+        "description": "Part of the `linksAndComments` section. Unmarks a post as Not-Safe-For-Work (NSFW)."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.unsave.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unsave",
+        "description": "Part of the `linksAndComments` section. Unsaves a previously saved post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.unspoiler.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unspoiler",
+        "description": "Part of the `linksAndComments` section. Unmarks a post as a spoiler. This method does not return anything."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/linksAndComments.vote.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "vote",
+        "description": "Part of the `linksAndComments` section. Casts a vote on a post or comment. This method does not return anything."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getBest.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getBest",
+        "description": "Part of the `listings` section. Fetch the best posts."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getById.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getById",
+        "description": "Part of the `listings` section. Get posts by their fullnames."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getComments.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getComments",
+        "description": "Part of the `listings` section. Get the comments for a post."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getDuplicates.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getDuplicates",
+        "description": "Part of the `listings` section. Get the duplicates of a post."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getHot.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getHot",
+        "description": "Part of the `listings` section. Fetch the hot posts."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getNew.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getNew",
+        "description": "Part of the `listings` section. Fetch the new posts."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getRising.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getRising",
+        "description": "Part of the `listings` section. Fetch the rising posts."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.getSorted.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSorted",
+        "description": "Part of the `listings` section. Fetch posts sorted by a specific criteria."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/listings.search.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "search",
+        "description": "Part of the `listings` section. Search for posts."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.acceptModeratorInvite.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "acceptModeratorInvite",
+        "description": "Accepts an invitation to become a moderator of a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.close.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "close",
+        "description": "Closes a live thread, preventing any new updates."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.create.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "create",
+        "description": "Creates a new live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.get.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "get",
+        "description": "Retrieves one or more live threads by their fullnames or IDs."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.getContributors.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getContributors",
+        "description": "Retrieves a list of contributors for a specific live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.getDiscussions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getDiscussions",
+        "description": "Retrieves a listing of discussion threads about a specific live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.getUpdate.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUpdate",
+        "description": "Retrieves a specific update from a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.getUpdates.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUpdates",
+        "description": "Retrieves a listing of updates from a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.inviteContributor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "inviteContributor",
+        "description": "Invites a user to be a contributor on a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.leaveContributor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "leaveContributor",
+        "description": "Abandons contributor status on a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.removeContributor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removeContributor",
+        "description": "Removes a contributor from a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.removeUpdate.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removeUpdate",
+        "description": "Removes an update from a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.report.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "report",
+        "description": "Reports a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.setContributorPermissions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setContributorPermissions",
+        "description": "Sets the permissions for a contributor on a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.strikeUpdate.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "strikeUpdate",
+        "description": "Strikes an update from a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/liveThreads.update.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "update",
+        "description": "Posts an update to a live thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/misc.getScopes.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getScopes",
+        "description": "Part of the `misc` section. Get information about OAuth2 scopes."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.acceptModeratorInvite.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "acceptModeratorInvite",
+        "description": "Accepts an invitation to become a moderator of a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.approve.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "approve",
+        "description": "Approves a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.distinguish.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "distinguish",
+        "description": "Distinguishes a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.getModListing.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModListing",
+        "description": "Retrieves a moderation listing for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.getModLog.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModLog",
+        "description": "Retrieves the moderation log for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.getStylesheet.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getStylesheet",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.ignoreReports.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "ignoreReports",
+        "description": "Ignores reports on a post or comment."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.leaveContributor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "leaveContributor",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.leaveModerator.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "leaveModerator",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.remove.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "remove",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.showComment.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "showComment",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.snoozeReports.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "snoozeReports",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.unignoreReports.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unignoreReports",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.unsnoozeReports.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unsnoozeReports",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/moderation.updateCrowdControlLevel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateCrowdControlLevel",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.archiveModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "archiveModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.createModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.createModmailMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createModmailMessage",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.getModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.getModmailConversationMessages.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModmailConversationMessages",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.getModmailConversations.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModmailConversations",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.getModmailSubreddits.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModmailSubreddits",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.getModmailUnreadCount.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getModmailUnreadCount",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.highlightModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "highlightModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.markModmailAsRead.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markModmailAsRead",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.markModmailAsUnread.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markModmailAsUnread",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.modmailBulkRead.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "modmailBulkRead",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.muteModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "muteModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.unarchiveModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unarchiveModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.unhighlightModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unhighlightModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/newModmail.unmuteModmailConversation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unmuteModmailConversation",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.block.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "block",
+        "description": "Part of the `privateMessages` section. Block a user via a private message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.collapseMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "collapseMessage",
+        "description": "Part of the `privateMessages` section. Collapse a message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.composeMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "composeMessage",
+        "description": "Part of the `privateMessages` section. Compose a private message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.deleteMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteMessage",
+        "description": "Part of the `privateMessages` section. Delete a private message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.getMessages.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getMessages",
+        "description": "Part of the `privateMessages` section. Get private messages from the user's inbox, unread messages, or sent messages."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.readAllMessages.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "readAllMessages",
+        "description": "Part of the `privateMessages` section. Mark all private messages as read."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.readMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "readMessage",
+        "description": "Part of the `privateMessages` section. Mark a private message as read."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.unblockSubreddit.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unblockSubreddit",
+        "description": "Part of the `privateMessages` section. Unblock a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.uncollapseMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "uncollapseMessage",
+        "description": "Part of the `privateMessages` section. Uncollapse a private message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/privateMessages.unreadMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unreadMessage",
+        "description": "Part of the `privateMessages` section. Mark a private message as unread."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/refreshAccessToken.md",
@@ -85,165 +1270,389 @@
         "description": "Refreshes the access token using a refresh token."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getMe.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.deleteSrBanner.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getMe",
-        "description": "Retrieves information about the currently authenticated user."
+        "functionality": "deleteSrBanner",
+        "description": "Part of the `subreddits` section. Delete the banner image for a subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserPreferences.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.deleteSrHeader.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getUserPreferences",
-        "description": "Retrieves the preferences of the currently authenticated user."
+        "functionality": "deleteSrHeader",
+        "description": "Part of the `subreddits` section. Delete the header image for a subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/updateUserPreferences.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.deleteSrIcon.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "updateUserPreferences",
-        "description": "Updates the preferences of the currently authenticated user."
+        "functionality": "deleteSrIcon",
+        "description": "Part of the `subreddits` section. Delete the icon image for a subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserKarma.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.deleteSrImg.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getUserKarma",
-        "description": "Retrieves the karma breakdown for the currently authenticated user."
+        "functionality": "deleteSrImg",
+        "description": "Part of the `subreddits` section. Delete an image from a subreddit's stylesheet."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserTrophies.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getMineWhere.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getUserTrophies",
-        "description": "Retrieves the trophies for the currently authenticated user."
+        "functionality": "getMineWhere",
+        "description": "Retrieves a list of subreddits related to the authenticated user, based on the specified category."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUser.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getPostRequirements.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getUser",
-        "description": "Retrieves information about a specific user."
+        "functionality": "getPostRequirements",
+        "description": "Retrieves the post requirements for a specific subreddit. This includes details like the body restriction policy."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getUserContent.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSidebar.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getUserContent",
-        "description": "Retrieves content (posts and comments) submitted by a specific user."
+        "functionality": "getSidebar",
+        "description": "Retrieves the content of a subreddit's sidebar."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getSubredditInfo.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSticky.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getSubredditInfo",
+        "functionality": "getSticky",
+        "description": "Retrieves a stickied post from a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubmitText.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSubmitText",
+        "description": "Part of the `subreddits` section. Get the submission text for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditAbout.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getSubredditAbout",
         "description": "Retrieves information about a specific subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/searchSubreddit.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditAboutEdit.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "searchSubreddit",
-        "description": "Searches within a specific subreddit."
+        "functionality": "getSubredditAboutEdit",
+        "description": "Retrieves editable details about a specific subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/search.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditAboutRules.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "search",
-        "description": "Searches across all of Reddit."
+        "functionality": "getSubredditAboutRules",
+        "description": "Retrieves the rules for a specific subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitComment.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditAboutTraffic.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "submitComment",
-        "description": "Submits a comment to a post or comment."
+        "functionality": "getSubredditAboutTraffic",
+        "description": "Retrieves traffic statistics for a specific subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/submitPost.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditAboutWhere.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "submitPost",
-        "description": "Submits a new post to a subreddit."
+        "functionality": "getSubredditAboutWhere",
+        "description": "Part of the `subreddits` section. Get various user listings for a subreddit."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/vote.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.getSubredditsWhere.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "vote",
-        "description": "Votes on a post or comment."
+        "functionality": "getSubredditsWhere",
+        "description": "Retrieves a list of subreddits based on the specified category."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/deletePost.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.recommendSrBySrnames.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "deletePost",
-        "description": "Deletes a post or comment."
+        "functionality": "recommendSrBySrnames",
+        "description": "Part of the `subreddits` section. Recommends subreddits based on a list of subreddit names."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/editUserText.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.searchRedditNamesGet.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "editUserText",
-        "description": "Edits the text of a self post or comment."
+        "functionality": "searchRedditNamesGet",
+        "description": "Part of the `subreddits` section. Search for subreddit names using a GET request."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/hidePost.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.searchRedditNamesPost.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "hidePost",
-        "description": "Hides a post or comment."
+        "functionality": "searchRedditNamesPost",
+        "description": "Part of the `subreddits` section. Search for subreddit names using a POST request."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unhidePost.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.searchSubreddits.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "unhidePost",
-        "description": "Unhides a post or comment."
+        "functionality": "searchSubreddits",
+        "description": "Part of the `subreddits` section. Search for subreddits by name."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/saveItem.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.searchSubredditsListing.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "saveItem",
-        "description": "Saves a post or comment."
+        "functionality": "searchSubredditsListing",
+        "description": "Searches for subreddits."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/unsaveItem.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.siteAdmin.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "unsaveItem",
-        "description": "Unsaves a post or comment."
+        "functionality": "siteAdmin",
+        "description": "Part of the `subreddits` section. Used to update a wide variety of subreddit settings. This is a powerful endpoint available to subreddit moderators."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/reportItem.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.subredditAutocomplete.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "reportItem",
-        "description": "Reports a post or comment."
+        "functionality": "subredditAutocomplete",
+        "description": "Part of the `subreddits` section. Get a list of subreddits that match a query."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getInfo.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.subredditAutocompleteV2.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getInfo",
-        "description": "Retrieves information about multiple items (posts, comments, or subreddits) by their IDs."
+        "functionality": "subredditAutocompleteV2",
+        "description": "Part of the `subreddits` section. Get a list of subreddits that match a query (V2)."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getMoreComments.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.subredditStylesheet.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getMoreComments",
-        "description": "Retrieves additional comments for a post."
+        "functionality": "subredditStylesheet",
+        "description": "Part of the `subreddits` section. Update a subreddit's stylesheet."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/getPost.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.subscribe.md",
         "type": "functionality",
         "extension": "md",
-        "functionality": "getPost",
-        "description": "Retrieves a specific post by its ID."
+        "functionality": "subscribe",
+        "description": "Part of the `subreddits` section. Subscribe to or unsubscribe from a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/subreddits.uploadSrImg.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "uploadSrImg",
+        "description": "Part of the `subreddits` section. Upload an image to a subreddit's stylesheet, or as a header, icon, or banner."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.blockUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "blockUser",
+        "description": "Blocks a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.friend.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "friend",
+        "description": "Adds a user as a friend in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.getUserAbout.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserAbout",
+        "description": "Retrieves information about a specific user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.getUserDataByAccountIds.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserDataByAccountIds",
+        "description": "Retrieves user data for a list of account IDs."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.getUserProfileWhere.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserProfileWhere",
+        "description": "Retrieves content from a user's profile, such as their posts, comments, or saved items."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.getUsersWhere.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUsersWhere",
+        "description": "Retrieves a list of users based on the specified category."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.getUserTrophies.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserTrophies",
+        "description": "Retrieves the trophy case for a specific user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.reportUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reportUser",
+        "description": "Reports a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.searchUsers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "searchUsers",
+        "description": "Searches for users."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.setPermissions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setPermissions",
+        "description": "Sets permissions for a user in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.unfriend.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "unfriend",
+        "description": "Removes a user as a friend in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/users.usernameAvailable.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "usernameAvailable",
+        "description": "Checks if a username is available."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken",
+        "description": "Validates the current access token."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.createWidget.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createWidget",
+        "description": "Creates a new widget in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.deleteWidget.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "deleteWidget",
+        "description": "Deletes a widget from a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.getWidgetImageUploadLease.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWidgetImageUploadLease",
+        "description": "Gets an S3 upload lease for a widget image."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.getWidgets.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWidgets",
+        "description": "Retrieves a list of widgets for a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.reorderWidgets.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reorderWidgets",
+        "description": "Reorders the widgets in a specific section of a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/widgets.updateWidget.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateWidget",
+        "description": "Updates an existing widget in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.allowEditor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "allowEditor",
+        "description": "Adds or removes a user as an editor for a specific wiki page."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.editWikiPage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "editWikiPage",
+        "description": "Edits a wiki page in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.getWikiDiscussions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWikiDiscussions",
+        "description": "Retrieves a listing of discussion threads about a specific wiki page."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.getWikiPage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWikiPage",
+        "description": "Retrieves the content of a specific wiki page."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.getWikiPages.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWikiPages",
+        "description": "Retrieves a list of wiki pages in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.getWikiPageSettings.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWikiPageSettings",
+        "description": "Retrieves the settings for a specific wiki page."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.getWikiRevisions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getWikiRevisions",
+        "description": "Retrieves a listing of wiki page revisions for a subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.hideWikiPage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "hideWikiPage",
+        "description": "Hides a wiki page in a specific subreddit."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.revertWikiPage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "revertWikiPage",
+        "description": "API function documentation"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit/docs/wiki.updateWikiPageSettings.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "updateWikiPageSettings",
+        "description": "Updates the settings for a specific wiki page."
       }
     ]
   },
@@ -285,35 +1694,244 @@
           "key": "SCOPES",
           "displayName": "Reddit Scopes",
           "description": "A comma-separated list of scopes defining the permissions requested.",
-          "defaultValue": ["identity", "edit", "flair", "history", "modconfig", "modflair", "modlog", "modposts", "modwiki", "mysubreddits", "privatemessages", "read", "report", "save", "submit", "subscribe", "vote", "wikiedit", "wikiread"]
+          "defaultValue": [
+            "identity",
+            "edit",
+            "flair",
+            "history",
+            "modconfig",
+            "modflair",
+            "modlog",
+            "modposts",
+            "modwiki",
+            "mysubreddits",
+            "privatemessages",
+            "read",
+            "report",
+            "save",
+            "submit",
+            "subscribe",
+            "vote",
+            "wikiedit",
+            "wikiread"
+          ]
         }
       ],
       "functionalities": [
-        "validateAccessToken",
-        "refreshAccessToken",
+        "RedditSDK",
+        "acceptModeratorInvite",
+        "addFriend",
+        "addOrUpdateEmoji",
+        "addPostToCollection",
+        "allowEditor",
+        "approve",
+        "archiveModmailConversation",
+        "block",
+        "blockUser",
+        "clearFlairTemplates",
+        "close",
+        "collapseMessage",
+        "composeMessage",
+        "configureFlair",
+        "create",
+        "createCollection",
+        "createModmailConversation",
+        "createModmailMessage",
+        "createWidget",
+        "deleteCollection",
+        "deleteEmoji",
+        "deleteFlair",
+        "deleteFlairTemplate",
+        "deleteMessage",
+        "deletePost",
+        "deleteSrBanner",
+        "deleteSrHeader",
+        "deleteSrIcon",
+        "deleteSrImg",
+        "deleteThing",
+        "deleteWidget",
+        "distinguish",
+        "editUserText",
+        "editWikiPage",
+        "followPost",
+        "friend",
+        "get",
+        "getAllEmojis",
+        "getAnnouncements",
+        "getBest",
+        "getById",
+        "getCollection",
+        "getComments",
+        "getContributors",
+        "getDiscussions",
+        "getDuplicates",
+        "getEmojiUploadLease",
+        "getFlairList",
+        "getFlairSelector",
+        "getHot",
+        "getInfo",
+        "getLinkFlair",
+        "getLinkFlairV2",
         "getMe",
-        "getUserPreferences",
-        "updateUserPreferences",
-        "getUserKarma",
-        "getUserTrophies",
-        "getUser",
-        "getUserContent",
+        "getMessages",
+        "getMineWhere",
+        "getModListing",
+        "getModLog",
+        "getModmailConversation",
+        "getModmailConversationMessages",
+        "getModmailConversations",
+        "getModmailSubreddits",
+        "getModmailUnreadCount",
+        "getMoreChildren",
+        "getMoreComments",
+        "getMyBlocked",
+        "getMyFriends",
+        "getMyKarma",
+        "getMyPrefs",
+        "getMyTrophies",
+        "getNew",
+        "getPost",
+        "getPostRequirements",
+        "getPrefsBlocked",
+        "getPrefsFriends",
+        "getPrefsMessaging",
+        "getPrefsTrusted",
+        "getPrefsWhere",
+        "getRising",
+        "getSavedCategories",
+        "getScopes",
+        "getSidebar",
+        "getSorted",
+        "getSticky",
+        "getStylesheet",
+        "getSubmitText",
+        "getSubredditAbout",
+        "getSubredditAboutEdit",
+        "getSubredditAboutRules",
+        "getSubredditAboutTraffic",
+        "getSubredditAboutWhere",
+        "getSubredditCollections",
         "getSubredditInfo",
-        "searchSubreddit",
+        "getSubredditsWhere",
+        "getUpdate",
+        "getUpdates",
+        "getUser",
+        "getUserAbout",
+        "getUserContent",
+        "getUserDataByAccountIds",
+        "getUserFlair",
+        "getUserFlairV2",
+        "getUserKarma",
+        "getUserPreferences",
+        "getUserProfileWhere",
+        "getUserTrophies",
+        "getUsersWhere",
+        "getWidgetImageUploadLease",
+        "getWidgets",
+        "getWikiDiscussions",
+        "getWikiPage",
+        "getWikiPageSettings",
+        "getWikiPages",
+        "getWikiRevisions",
+        "hide",
+        "hideAnnouncement",
+        "hidePost",
+        "hideWikiPage",
+        "highlightModmailConversation",
+        "ignoreReports",
+        "inviteContributor",
+        "leaveContributor",
+        "leaveModerator",
+        "lock",
+        "markModmailAsRead",
+        "markModmailAsUnread",
+        "markNsfw",
+        "modmailBulkRead",
+        "muteModmailConversation",
+        "needsCaptcha",
+        "readAllAnnouncements",
+        "readAllMessages",
+        "readAnnouncement",
+        "readMessage",
+        "recommendSrBySrnames",
+        "refreshAccessToken",
+        "remove",
+        "removeContributor",
+        "removeFriend",
+        "removePostFromCollection",
+        "removeUpdate",
+        "reorderCollection",
+        "reorderWidgets",
+        "report",
+        "reportItem",
+        "reportUser",
+        "revertWikiPage",
+        "save",
+        "saveItem",
         "search",
+        "searchRedditNamesGet",
+        "searchRedditNamesPost",
+        "searchSubreddit",
+        "searchSubreddits",
+        "searchSubredditsListing",
+        "searchUsers",
+        "selectFlair",
+        "sendReplies",
+        "setContestMode",
+        "setContributorPermissions",
+        "setCustomEmojiSize",
+        "setFlair",
+        "setFlairCsv",
+        "setFlairEnabled",
+        "setFlairTemplate",
+        "setFlairTemplateV2",
+        "setPermissions",
+        "setSubredditSticky",
+        "setSuggestedSort",
+        "showComment",
+        "siteAdmin",
+        "snoozeReports",
+        "spoiler",
+        "storeVisits",
+        "strikeUpdate",
+        "submit",
         "submitComment",
         "submitPost",
-        "vote",
-        "deletePost",
-        "editUserText",
-        "hidePost",
+        "subredditAutocomplete",
+        "subredditAutocompleteV2",
+        "subredditStylesheet",
+        "subscribe",
+        "unarchiveModmailConversation",
+        "unblockSubreddit",
+        "uncollapseMessage",
+        "unfriend",
+        "unhide",
         "unhidePost",
-        "saveItem",
+        "unhighlightModmailConversation",
+        "unignoreReports",
+        "unlock",
+        "unmarkNsfw",
+        "unmuteModmailConversation",
+        "unreadAnnouncement",
+        "unreadMessage",
+        "unsave",
         "unsaveItem",
-        "reportItem",
-        "getInfo",
-        "getMoreComments",
-        "getPost"
+        "unsnoozeReports",
+        "unspoiler",
+        "update",
+        "updateCollectionDescription",
+        "updateCollectionDisplayLayout",
+        "updateCollectionTitle",
+        "updateCrowdControlLevel",
+        "updateFlairTemplateOrder",
+        "updateMyPrefs",
+        "updateUserPreferences",
+        "updateWidget",
+        "updateWikiPageSettings",
+        "uploadSrImg",
+        "usernameAvailable",
+        "validateAccessToken",
+        "vote"
       ]
     }
   ],

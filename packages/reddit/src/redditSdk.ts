@@ -20,6 +20,39 @@ import {
   voteDirectionSchema,
   listingParamsSchema,
 } from './schemas';
+import * as accountSchemas from './schemas/account';
+import * as accountTypes from './types/account';
+import * as announcementSchemas from './schemas/announcements';
+import * as announcementTypes from './types/announcements';
+import * as collectionSchemas from './schemas/collections';
+import * as collectionTypes from './types/collections';
+import * as emojiSchemas from './schemas/emoji';
+import * as emojiTypes from './types/emoji';
+import * as flairSchemas from './schemas/flair';
+import * as flairTypes from './types/flair';
+import * as linksAndCommentsSchemas from './schemas/linksAndComments';
+import * as linksAndCommentsTypes from './types/linksAndComments';
+import * as listingsSchemas from './schemas/listings';
+import * as listingsTypes from './types/listings';
+import * as liveThreadsSchemas from './schemas/liveThreads';
+import * as liveThreadsTypes from './types/liveThreads';
+import * as privateMessagesSchemas from './schemas/privateMessages';
+import * as privateMessagesTypes from './types/privateMessages';
+import * as miscSchemas from './schemas/misc';
+import * as miscTypes from './types/misc';
+import * as moderationSchemas from './schemas/moderation';
+import * as moderationTypes from './types/moderation';
+import * as newModmailSchemas from './schemas/newModmail';
+import * as newModmailTypes from './types/newModmail';
+import { Endpoints } from './routes';
+
+type EndpointMethods = {
+  [key in keyof typeof Endpoints]: {
+    [key2 in keyof typeof Endpoints[key]]: (
+      params?: any,
+    ) => Promise<any>;
+  };
+};
 
 export class RedditSDK {
   private oauth: ReturnType<typeof createRedditOAuth>;
@@ -39,7 +72,7 @@ export class RedditSDK {
 
   private async request<T>(
     endpoint: string,
-    method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET',
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
     body?: unknown,
   ): Promise<T> {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -57,228 +90,88 @@ export class RedditSDK {
       );
     }
 
-    return response.json();
+    if (response.headers.get('content-type')?.includes('application/json')) {
+        const json = await response.json();
+        return json as T;
+    }
+
+    return response.text() as unknown as T;
   }
 
-  async validateAccessToken(): Promise<boolean> {
-    return this.oauth.validateAccessToken(this.accessToken);
-  }
+  public api: EndpointMethods = new Proxy({} as EndpointMethods, {
+    get: (target: any, prop: string) => {
+      if (!target[prop]) {
+        target[prop] = new Proxy({}, {
+          get: (subTarget: any, subProp: string) => {
+            if (!subTarget[subProp]) {
+              const endpointInfo = (Endpoints as any)[prop]?.[subProp];
+              if (!endpointInfo) {
+                throw new Error(`Endpoint ${prop}.${subProp} does not exist.`);
+              }
 
-  async refreshAccessToken(refreshToken: string): Promise<void> {
-    const result = await this.oauth.refreshAccessToken(refreshToken);
-    this.accessToken = result.access_token;
-  }
+              subTarget[subProp] = async (params: any = {}) => {
+                let url = endpointInfo.url;
+                const queryParams: Record<string, string> = {};
+                const bodyParams: Record<string, any> = {};
 
-  async getMe(): Promise<User> {
-    const data = await this.request<User>('/api/v1/me');
-    return data;
-  }
+                // Replace path parameters
+                for (const key in params) {
+                  if (url.includes(`{${key}}`)) {
+                    url = url.replace(`{${key}}`, String(params[key]));
+                    delete params[key];
+                  }
+                }
+                
+                // Remove any remaining optional path segments
+                url = url.replace(/{\/?[^}]+}/g, '');
 
-  async getUserPreferences(): Promise<Record<string, unknown>> {
-    return this.request('/api/v1/me/prefs');
-  }
+                let method = endpointInfo.method;
+                if (Array.isArray(method)) {
+                  const providedMethod = (params.method || method[0]).toUpperCase();
+                  if (!method.includes(providedMethod)) {
+                    throw new Error(`Invalid method ${providedMethod} for endpoint ${prop}.${subProp}. Available methods are ${method.join(', ')}`);
+                  }
+                  method = providedMethod;
+                  delete params.method;
+                }
+                
+                // Separate query and body params
+                if (method === 'GET' || method === 'DELETE') {
+                    Object.assign(queryParams, params);
+                } else {
+                    Object.assign(bodyParams, params);
+                }
 
-  async updateUserPreferences(
-    prefs: Record<string, unknown>,
-  ): Promise<Record<string, unknown>> {
-    return this.request('/api/v1/me/prefs', 'PATCH', prefs);
-  }
+                if (endpointInfo.params) {
+                  Object.assign(method === 'GET' || method === 'DELETE' ? queryParams : bodyParams, endpointInfo.params);
+                }
 
-  async getUserKarma(): Promise<
-    Record<string, { link_karma: number; comment_karma: number }>
-  > {
-    return this.request('/api/v1/me/karma');
-  }
+                let finalUrl = url;
+                if (Object.keys(queryParams).length > 0) {
+                    const search = new URLSearchParams(queryParams).toString();
+                    if(search) {
+                        finalUrl += `?${search}`;
+                    }
+                }
+                
+                const body = Object.keys(bodyParams).length > 0 ? bodyParams : undefined;
 
-  async getUserTrophies(): Promise<unknown> {
-    return this.request('/api/v1/me/trophies');
-  }
+                const result = await this.request(finalUrl, method, body);
 
-  async getUser(username: string): Promise<User> {
-    const data = await this.request<User>(`/user/${username}/about`);
-    return data;
-  }
+                if (endpointInfo.responseSchema) {
+                    return endpointInfo.responseSchema.parse(result);
+                }
 
-  async getUserContent(
-    username: string,
-    section:
-      | 'overview'
-      | 'submitted'
-      | 'comments'
-      | 'upvoted'
-      | 'downvoted'
-      | 'hidden'
-      | 'saved'
-      | 'gilded',
-    params: ListingParams = {},
-  ): Promise<(Post | Comment)[]> {
-    const validatedParams = listingParamsSchema.parse(params);
-    const queryParams = new URLSearchParams(
-      validatedParams as Record<string, string>,
-    );
-    const data = await this.request<{
-      data: { children: { data: Post | Comment }[] };
-    }>(`/user/${username}/${section}?${queryParams}`);
-    return data.data.children.map(child => child.data);
-  }
-
-  async getSubredditInfo(subreddit: string): Promise<Subreddit> {
-    const data = await this.request<Subreddit>(`/r/${subreddit}/about`);
-    return data;
-  }
-
-  async searchSubreddit(
-    subreddit: string,
-    query: string,
-    params: ListingParams & {
-      sort?: 'relevance' | 'hot' | 'top' | 'new' | 'comments';
-      t?: 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
-    } = {},
-  ): Promise<SearchResult[]> {
-    const validatedParams = listingParamsSchema
-      .extend({
-        sort: z.enum(['relevance', 'hot', 'top', 'new', 'comments']).optional(),
-        t: z.enum(['hour', 'day', 'week', 'month', 'year', 'all']).optional(),
-      })
-      .parse(params);
-    const queryParams = new URLSearchParams(
-      Object.fromEntries(
-        Object.entries({ ...validatedParams, q: query }).map(([key, value]) => [
-          key,
-          String(value),
-        ]),
-      ),
-    );
-    const data = await this.request<{
-      data: { children: { data: SearchResult }[] };
-    }>(`/r/${subreddit}/search?${queryParams}`);
-    return data.data.children.map(child => child.data);
-  }
-
-  async search(
-    query: string,
-    params: ListingParams & {
-      sort?: 'relevance' | 'hot' | 'top' | 'new' | 'comments';
-      t?: 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
-    } = {},
-  ): Promise<SearchResult[]> {
-    const validatedParams = listingParamsSchema
-      .extend({
-        sort: z.enum(['relevance', 'hot', 'top', 'new', 'comments']).optional(),
-        t: z.enum(['hour', 'day', 'week', 'month', 'year', 'all']).optional(),
-      })
-      .parse(params);
-    const queryParams = new URLSearchParams(
-      Object.fromEntries(
-        Object.entries({ ...validatedParams, q: query }).map(([key, value]) => [
-          key,
-          String(value),
-        ]),
-      ),
-    );
-    const data = await this.request<{
-      data: { children: { data: SearchResult }[] };
-    }>(`/search?${queryParams}`);
-    return data.data.children.map(child => child.data);
-  }
-
-  async submitComment(parentId: string, text: string): Promise<Comment> {
-    const data = await this.request<{
-      json: { data: { things: [{ data: Comment }] } };
-    }>('/api/comment', 'POST', { parent: parentId, text });
-    return data.json.data.things[0].data;
-  }
-
-  async submitPost(
-    subreddit: string,
-    title: string,
-    content: { text?: string; url?: string },
-  ): Promise<Post> {
-    const kind = content.text ? 'self' : 'link';
-    const data = await this.request<{ json: { data: { name: string } } }>(
-      '/api/submit',
-      'POST',
-      {
-        sr: subreddit,
-        kind,
-        title,
-        ...(kind === 'self' ? { text: content.text } : { url: content.url }),
-      },
-    );
-    return this.getPost(data.json.data.name);
-  }
-
-  async vote(id: string, direction: VoteDirection): Promise<void> {
-    const dir = voteDirectionSchema.parse(direction);
-    await this.request('/api/vote', 'POST', { id, dir });
-  }
-
-  async deletePost(id: string): Promise<void> {
-    await this.request('/api/del', 'POST', { id });
-  }
-
-  async editUserText(id: string, text: string): Promise<Post | Comment> {
-    const data = await this.request<{
-      json: { data: { things: [{ data: Post | Comment }] } };
-    }>('/api/editusertext', 'POST', { thing_id: id, text });
-    const editedContent = data.json.data.things[0].data;
-    return editedContent;
-  }
-
-  async hidePost(id: string): Promise<void> {
-    await this.request('/api/hide', 'POST', { id });
-  }
-
-  async unhidePost(id: string): Promise<void> {
-    await this.request('/api/unhide', 'POST', { id });
-  }
-
-  async saveItem(id: string, category?: string): Promise<void> {
-    await this.request('/api/save', 'POST', { id, category });
-  }
-
-  async unsaveItem(id: string): Promise<void> {
-    await this.request('/api/unsave', 'POST', { id });
-  }
-
-  async reportItem(id: string, reason: string): Promise<void> {
-    await this.request('/api/report', 'POST', { thing_id: id, reason });
-  }
-
-  async getInfo(ids: string[]): Promise<(Post | Comment | Subreddit)[]> {
-    const data = await this.request<{
-      data: { children: { kind: string; data: Post | Comment | Subreddit }[] };
-    }>(`/api/info?id=${ids.join(',')}`);
-    return data.data.children.map(child => {
-      if (child.kind === 't1' || child.kind === 't3' || child.kind === 't5') {
-        return child.data;
-      } else {
-        throw new Error(`Unknown item type: ${child.kind}`);
+                return result;
+              };
+            }
+            return subTarget[subProp];
+          },
+        });
       }
-    });
-  }
-
-  async getMoreComments(
-    linkId: string,
-    children: string[],
-  ): Promise<Comment[]> {
-    const data = await this.request<{
-      json: { data: { things: { data: Comment }[] } };
-    }>('/api/morechildren', 'GET', {
-      link_id: linkId,
-      children: children.join(','),
-    });
-    return data.json.data.things.map(thing => thing.data);
-  }
-
-  async getPost(id: string): Promise<Post> {
-    const data = await this.request<{ data: { children: [{ data: Post }] } }>(
-      `/api/info?id=${id}`,
-    );
-    return data.data.children[0].data;
-  }
-
-  // Add more methods for other endpoints as needed...
+      return target[prop];
+    },
+  });
 }
 
 export function createRedditSDK(config: RedditSDKConfig): RedditSDK {
