@@ -1,5 +1,12 @@
 # @microfox/reddit
 
+## 1.2.3
+
+### Patch Changes
+
+- 6984d05: Changes from PR #461: vwjt_reddit_oauth_fix
+- 8723af8: Triggered by issue #462: release @microfox/reddit patch
+
 ## 1.2.2
 
 ### Patch Changes
