@@ -1,34 +1,4 @@
 /**
- * Configuration options for the Google OAuth SDK
- */
-export interface GoogleAuthConfig {
-  /**
-   * The client ID obtained from the Google Developer Console
-   */
-  clientId: string;
-
-  /**
-   * The client secret obtained from the Google Developer Console
-   */
-  clientSecret: string;
-
-  /**
-   * The redirect URI registered in the Google Developer Console
-   */
-  redirectUri: string;
-
-  /**
-   * The scopes to request during authorization
-   */
-  scopes?: Array<GoogleScope | string>;
-
-  /**
-   * Optional state parameter for CSRF protection
-   */
-  state?: string;
-}
-
-/**
  * Available scopes for Google OAuth
  */
 export enum GoogleScope {
@@ -122,24 +92,4 @@ export enum GoogleScope {
   // Google Search Console API
   WEBMASTERS = 'https://www.googleapis.com/auth/webmasters',
   WEBMASTERS_READONLY = 'https://www.googleapis.com/auth/webmasters.readonly',
-}
-
-/**
- * Token response from Google OAuth
- */
-export interface TokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  refresh_token?: string;
-  scope: string;
-  id_token?: string;
-}
-
-/**
- * Error response from Google OAuth
- */
-export interface ErrorResponse {
-  error: string;
-  error_description?: string;
 }

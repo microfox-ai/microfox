@@ -1,0 +1,21 @@
+{
+  "name": "@microfox/oauth-kit",
+  "title": "OAuth Kit",
+  "description": "OAuth Kit for all major OAuth providers supported by Microfox",
+  "path": "packages/oauth-kit",
+  "dependencies": ["zod", "@microfox/google-oauth", "@microfox/slack-oauth"],
+  "status": "internal",
+  "authType": "oauth2",
+  "authEndpoint": "/connect/oauth-kit",
+  "documentation": "https://www.npmjs.com/package/@microfox/oauth-kit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg",
+  "constructors": [],
+  "extraInfo": [],
+  "readme_map": {
+    "path": "/README.md",
+    "functionalities": [],
+    "description": "No description provided",
+    "all_readmes": []
+  },
+  "platformType": "tool"
+}

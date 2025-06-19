@@ -1,0 +1,59 @@
+{
+  "name": "@microfox/oauth-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A central OAuth kit for building OAuth integrations in Microfox",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@microfox/slack-oauth": "*",
+    "@microfox/google-oauth": "*",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "microfox",
+    "oauth",
+    "oauth-kit",
+    "sdk",
+    "typescript",
+    "internal"
+  ],
+  "author": "TheMoonDevs",
+  "license": "MIT"
+}

@@ -48,9 +48,11 @@ export class SlackOAuthSdk {
       ? 'https://slack-gov.com/oauth/v2/authorize'
       : 'https://slack.com/oauth/v2/authorize';
 
+    const scopes = [...this.scopes, 'team:read'].join(',');
+
     const params = new URLSearchParams({
       client_id: this.clientId,
-      scope: this.scopes.join(','),
+      scope: scopes,
       user_scope: this.userScopes?.join(',') ?? '',
       redirect_uri: this.redirectUri,
       granular_bot_scope: '1',
