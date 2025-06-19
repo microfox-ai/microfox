@@ -6,6 +6,7 @@ export interface NotionOAuthConfig {
   redirectUri?: string;
 }
 
+/** Notion token response schema */
 export interface NotionTokenResponse {
   access_token: string;
   bot_id?: string;
