@@ -8,9 +8,9 @@ export interface NotionOAuthConfig {
 
 export interface NotionTokenResponse {
   access_token: string;
-  bot_id: string;
-  duplicated_template_id: string | null;
-  owner:
+  bot_id?: string;
+  duplicated_template_id?: string | null;
+  owner?:
     | {
         workspace: boolean;
       }
@@ -20,9 +20,9 @@ export interface NotionTokenResponse {
           id: string;
         };
       };
-  workspace_icon: string;
-  workspace_id: string;
-  workspace_name: string;
+  workspace_icon?: string;
+  workspace_id?: string;
+  workspace_name?: string;
 }
 
 export class NotionAPIError extends Error {
