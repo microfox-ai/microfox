@@ -24,8 +24,7 @@
     }
   },
   "dependencies": {
-    "@devvit/shared-types": "^0.11.17",
-    "@microfox/reddit-oauth": "^1.2.0",
+    "@microfox/reddit-oauth": "*",
     "zod": "^3.24.3"
   },
   "devDependencies": {
