@@ -17,7 +17,7 @@
     "functionalities": ["puppeteerLaunchProps"],
     "all_readmes": []
   },
-  "addedDependencies": ["puppeteer-core"],
+  "addedDependencies": [""],
   "constructors": [
     {
       "name": "PuppeteerSLS",
