@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.2.2
+
+### Patch Changes
+
+- f182358: Triggered by issue #459: release @microfox/reddit patch
+
 ## 1.2.1
 
 ### Patch Changes
