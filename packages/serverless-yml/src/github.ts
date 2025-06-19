@@ -7,7 +7,7 @@ export async function fetchGithubJson(
   const encodedPath = encodeURIComponent(path);
   const url = `https://raw.githubusercontent.com/${owner}/${repo}${encodedPath}`;
 
-  console.log('fetching', url);
+  //console.log('fetching', url);
   try {
     const response = await fetch(url);
 
@@ -18,7 +18,7 @@ export async function fetchGithubJson(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching GitHub JSON:', error);
+    //console.error('Error fetching GitHub JSON:', error);
     throw error;
   }
 }
