@@ -1,0 +1,79 @@
+{
+  "sdkMetadata": {
+    "providerName": "Notion",
+    "packageName": "@microfox/notion-oauth",
+    "title": "Microfox Notion OAuth",
+    "description": "A TypeScript OAuth package for Notion.",
+    "keywords": [
+      "notion",
+      "oauth",
+      "typescript",
+      "auth",
+      "microfox"
+    ]
+  },
+  "allLinks": [
+    "https://developers.notion.com/",
+    "https://developers.notion.com/docs",
+    "https://developers.notion.com/reference",
+    "https://developers.notion.com/page/changelog",
+    "https://developers.notion.com/page/examples",
+    "https://www.notion.so/my-integrations",
+    "https://developers.notion.com/docs/getting-started",
+    "https://developers.notion.com/docs/authorization",
+    "https://developers.notion.com/docs/create-a-notion-integration",
+    "https://developers.notion.com/docs/working-with-page-content",
+    "https://developers.notion.com/docs/working-with-databases",
+    "https://developers.notion.com/docs/working-with-comments",
+    "https://developers.notion.com/docs/working-with-files-and-media",
+    "https://developers.notion.com/docs/uploading-small-files",
+    "https://developers.notion.com/docs/retrieving-files",
+    "https://developers.notion.com/docs/sending-larger-files",
+    "https://developers.notion.com/docs/importing-external-files",
+    "https://developers.notion.com/docs/link-previews",
+    "https://developers.notion.com/docs/build-a-link-preview-integration",
+    "https://notionapi.readme.io/page/examples",
+    "https://www.postman.com/notionhq/workspace/notion-s-api-workspace",
+    "https://developers.notion.com/docs/publishing-integrations-to-notions-integration-gallery",
+    "https://developers.notion.com/docs/mcp",
+    "https://developers.notion.com/docs/instructions-for-mcp-clients",
+    "https://developers.notion.com/edit/authorization",
+    "https://oauth.net/2/",
+    "https://developers.notion.com/reference/create-a-token",
+    "https://developers.notion.com/reference/get-users",
+    "https://www.notion.so/profile/integrations",
+    "https://github.com/makenotion/notion-sdk-js",
+    "https://developers.notion.com/reference/versioning",
+    "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type",
+    "https://developers.notion.com/reference/status-codes",
+    "https://www.oauth.com/oauth2-servers/redirect-uris/",
+    "https://developers.notion.com/reference/intro",
+    "https://developers.notion.com/reference/capabilities",
+    "https://www.notion.so/help/sharing-and-permissions",
+    "https://api.notion.com/v1/oauth/token",
+    "https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication",
+    "https://developers.notion.com/reference/user",
+    "https://x.com/notionapi",
+    "https://www.notion.so/28ffdd083dc3473e9c2da6ec011b58ac",
+    "https://www.notion.so/Developer-Terms-ba4131408d0844e08330da2cbb225c20",
+    "https://notion.so/product",
+    "https://notion.so/teams",
+    "https://notion.so/enterprise",
+    "https://notion.so/blog",
+    "https://notion.so/careers",
+    "https://join.slack.com/t/notiondevs/shared_invite/zt-20b5996xv-DzJdLiympy6jP0GGzu3AMg",
+    "https://stackoverflow.com/questions/tagged/notion-api",
+    "http://twitter.com/notionapi"
+  ],
+  "filteredLinks": [
+    "https://developers.notion.com/docs/authorization"
+  ],
+  "linkAnalysis": {
+    "documentationLinks": [
+      "https://developers.notion.com/docs/authorization"
+    ],
+    "reason": "The link contains information about Authentication, which is useful for creating a package. It also contains conceptual information about Notion's authorization flow and API endpoints which are helpful for building an integration with Notion.",
+    "setupInstructionsLink": "https://developers.notion.com/docs/getting-started"
+  },
+  "linksUpdatedAt": "2025-06-15T02:22:01.639Z"
+}

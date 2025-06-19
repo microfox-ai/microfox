@@ -1,18 +1,7 @@
-<div align="center">
-	<h1>Notion SDK for JavaScript</h1>
-	<p>
-		<b>A simple and easy to use client for the <a href="https://developers.notion.com">Notion API</a></b>
-	</p>
-	<br>
-</div>
-
-![Build status](https://github.com/makenotion/notion-sdk-js/actions/workflows/ci.yml/badge.svg)
-[![npm version](https://badge.fury.io/js/%40notionhq%2Fclient.svg)](https://www.npmjs.com/package/@notionhq/client)
-
 ## Installation
 
 ```
-npm install @notionhq/client
+npm install @microfox/notion
 ```
 
 ## Usage
@@ -273,7 +262,7 @@ const blocks = await collectPaginatedAPI(notion.blocks.children.list, {
 
 This package supports the following minimum versions:
 
-- Runtime: `node >= 12`
+- Runtime: `node >= 18`
 - Type definitions (optional): `typescript >= 4.5`
 
 Earlier versions may still work, but we encourage people building new applications to upgrade to the current stable.

@@ -1,0 +1,121 @@
+{
+  "name": "@microfox/notion",
+  "title": "Notion Provider",
+  "description": "A simple and easy to use client for the Notion API, providing functionality to read & update Notion pages, write comments, and upload & retrieve files.",
+  "path": "packages/notion",
+  "dependencies": [
+    "@notionhq/client",
+    "@tryfabric/martian",
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://developers.notion.com",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion-icon.svg",
+  "readme_map": {
+    "title": "Notion Provider",
+    "description": "The full README for the Notion Provider",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/README.md",
+    "functionalities": [
+      "listUsers",
+      "markdownToNotion",
+      "pageCOnstructors",
+      "readPages",
+      "retrieveFiles",
+      "updatePages",
+      "uploadFiles"
+    ],
+    "all_readmes": [
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/markdownToBlocks.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markdownToBlocks",
+        "description": "Sends a message to a Slack channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/markdownToNotion.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "markdownToNotion",
+        "description": "Documentation for markdownToNotion"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/pageCOnstructors.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "pageCOnstructors",
+        "description": "Documentation for pageCOnstructors"
+      }
+    ]
+  },
+  "addedDependencies": [],
+  "constructors": [
+    {
+      "name": "NotionClient",
+      "description": "Create a new Notion provider through which you can interact with the Notion API",
+      "auth": "apikey",
+      "apiType": "bot_token",
+      "requiredKeys": [
+        {
+          "key": "NOTION_BOT_TOKEN",
+          "displayName": "Notion Integration Token",
+          "description": "Notion Integration Token. Obtain from your Notion integration settings.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "botConfig": [],
+      "functionalities": [
+        "markdownToNotion",
+        "pageCOnstructors"
+      ]
+    },
+    {
+      "name": "NotionOauthClient",
+      "description": "Create a new Notion provider through which you can interact with the Notion API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/notion-oauth",
+      "authEndpoint": "/connect/notion-oauth",
+      "internalKeys": [
+        {
+          "key": "NOTION_CLIENT_ID",
+          "displayName": "NOTION Client ID",
+          "description": "The client ID for Notion OAuth. You can obtain this from your Notion App settings."
+        },
+        {
+          "key": "NOTION_CLIENT_SECRET",
+          "displayName": "NOTION Client Secret",
+          "description": "The client secret for Notion OAuth. You can obtain this from your Notion App settings."
+        },
+        {
+          "key": "NOTION_ACCESS_TOKEN",
+          "displayName": "NOTION Access Token",
+          "description": "The access token for Notion OAuth. This token is used to authenticate requests to the Notion API."
+        }
+      ],
+      "requiredKeys": [],
+      "botConfig": [],
+      "functionalities": [
+        "markdownToNotion",
+        "pageCOnstructors"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "https://www.notion.so/my-integrations",
+    "setupInfo": "To use the Notion SDK, you need to obtain an integration token from Notion.\n\n1. Go to https://www.notion.so/my-integrations\n2. Click 'New integration'\n3. Give your integration a name and select the workspace\n4. Once created, you'll find your integration token under 'Secrets'\n5. Store your token securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/notion`\n2. Import and initialize the SDK:\n\n```typescript\nimport { Client } from '@microfox/notion';\n\nconst notion = new Client({\n  auth: 'YOUR_INTEGRATION_TOKEN_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Notion API:\n\n```typescript\nconst response = await notion.databases.query({\n  database_id: 'your-database-id'\n});\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your integration token. Set the `NOTION_TOKEN` environment variable, and the SDK will automatically use it if no token is provided during initialization."
+  },
+  "extraInfo": [
+    "The Notion SDK provides a simple and easy to use client for the Notion API. It supports all Notion API endpoints and provides TypeScript types for better development experience.\n\nKey features:\n- Read & Update Notion Pages\n- Write comments\n- Upload & retrieve files\n- Full TypeScript support\n- Error handling with type guards\n- Pagination utilities\n\nFor more information, visit the official Notion API documentation at https://developers.notion.com"
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "platformType": "tool"
+}
