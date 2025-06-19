@@ -1,0 +1,227 @@
+[
+    {
+      "functionName": "getMe",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "account",
+      "path": "/api/v1/me"
+    },
+    {
+      "functionName": "submit",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/submit"
+    },
+    {
+      "functionName": "postComment",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/comment"
+    },
+    {
+      "functionName": "vote",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/vote"
+    },
+    {
+      "functionName": "save",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/save"
+    },
+    {
+      "functionName": "unsave",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/unsave"
+    },
+    {
+      "functionName": "editUserText",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/editusertext"
+    },
+    {
+      "functionName": "delete",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/del"
+    },
+    {
+      "functionName": "getInfo",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "links & comments",
+      "path": "/api/info"
+    },
+    {
+      "functionName": "getMoreChildren",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "links & comments",
+      "path": "/api/morechildren"
+    },
+    {
+      "functionName": "hide",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/hide"
+    },
+    {
+      "functionName": "unhide",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "links & comments",
+      "path": "/api/unhide"
+    },
+    {
+      "functionName": "getHot",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/hot"
+    },
+    {
+      "functionName": "getNew",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/new"
+    },
+    {
+      "functionName": "getTop",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/top"
+    },
+    {
+      "functionName": "getBest",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/best"
+    },
+    {
+      "functionName": "getControversial",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/controversial"
+    },
+    {
+      "functionName": "getRising",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/rising"
+    },
+    {
+      "functionName": "getByIds",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/by_id/names"
+    },
+    {
+      "functionName": "getComments",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "listings",
+      "path": "/comments/article"
+    },
+    {
+      "functionName": "search",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "search",
+      "path": "/search"
+    },
+    {
+      "functionName": "getSubredditAbout",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "subreddits",
+      "path": "/r/subreddit/about"
+    },
+    {
+      "functionName": "subscribe",
+      "priority": 1,
+      "methods": [
+        "POST"
+      ],
+      "group": "subreddits",
+      "path": "/api/subscribe"
+    },
+    {
+      "functionName": "searchSubreddits",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "subreddits",
+      "path": "/api/search_subreddits"
+    },
+    {
+      "functionName": "getUserAbout",
+      "priority": 1,
+      "methods": [
+        "GET"
+      ],
+      "group": "users",
+      "path": "/user/username/about"
+    }
+  ]

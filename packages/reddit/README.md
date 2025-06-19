@@ -90,34 +90,3 @@ Important notes:
 
 
 For more detailed information, refer to the Reddit API documentation: https://www.reddit.com/dev/api/oauth
-
-## API Reference
-
-For detailed documentation on the constructor and all available functions, see:
-
-- [RedditSDK](./docs/RedditSDK.md)
-- [validateAccessToken](./docs/validateAccessToken.md)
-- [refreshAccessToken](./docs/refreshAccessToken.md)
-- [getMe](./docs/getMe.md)
-- [getUserPreferences](./docs/getUserPreferences.md)
-- [updateUserPreferences](./docs/updateUserPreferences.md)
-- [getUserKarma](./docs/getUserKarma.md)
-- [getUserTrophies](./docs/getUserTrophies.md)
-- [getUser](./docs/getUser.md)
-- [getUserContent](./docs/getUserContent.md)
-- [getSubredditInfo](./docs/getSubredditInfo.md)
-- [searchSubreddit](./docs/searchSubreddit.md)
-- [search](./docs/search.md)
-- [submitComment](./docs/submitComment.md)
-- [submitPost](./docs/submitPost.md)
-- [vote](./docs/vote.md)
-- [deletePost](./docs/deletePost.md)
-- [editUserText](./docs/editUserText.md)
-- [hidePost](./docs/hidePost.md)
-- [unhidePost](./docs/unhidePost.md)
-- [saveItem](./docs/saveItem.md)
-- [unsaveItem](./docs/unsaveItem.md)
-- [reportItem](./docs/reportItem.md)
-- [getInfo](./docs/getInfo.md)
-- [getMoreComments](./docs/getMoreComments.md)
-- [getPost](./docs/getPost.md)
