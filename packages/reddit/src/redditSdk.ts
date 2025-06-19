@@ -150,9 +150,10 @@ export class RedditSDK {
 
                 const result = await this.request(finalUrl, method, body);
 
-                if (endpointInfo.responseSchema) {
-                  return endpointInfo.responseSchema.parse(result);
-                }
+                // If the endpoint has a response schema, parse the result using the schema
+                // if (endpointInfo.responseSchema) {
+                //   return endpointInfo.responseSchema.parse(result);
+                // }
 
                 return result;
               };
