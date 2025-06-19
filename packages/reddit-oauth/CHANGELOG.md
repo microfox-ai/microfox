@@ -1,5 +1,12 @@
 # @microfox/reddit-oauth
 
+## 1.2.1
+
+### Patch Changes
+
+- 933a657: Changes from PR #456: vwjt_reddit_oauth_fix
+- 898304a: Triggered by issue #457: release @microfox/reddit-oauth patch
+
 ## 1.2.0
 
 ### Minor Changes
