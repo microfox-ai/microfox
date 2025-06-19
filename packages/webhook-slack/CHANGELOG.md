@@ -1,5 +1,11 @@
 # @microfox/webhook-slack
 
+## 1.1.1
+
+### Patch Changes
+
+- ae31aa3: release: enhance GoogleOAuthSdk with identity info extraction and user info fetching methods
+
 ## 1.1.0
 
 ### Minor Changes

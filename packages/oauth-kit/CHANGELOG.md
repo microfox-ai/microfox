@@ -1,5 +1,14 @@
 # @microfox/google-oauth
 
+## 1.0.1
+
+### Patch Changes
+
+- ae31aa3: release: enhance GoogleOAuthSdk with identity info extraction and user info fetching methods
+- Updated dependencies [ae31aa3]
+  - @microfox/google-oauth@1.1.1
+  - @microfox/slack-oauth@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes
