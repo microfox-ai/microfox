@@ -1,5 +1,13 @@
 # @microfox/google-oauth
 
+## 1.0.2
+
+### Patch Changes
+
+- 768f287: Triggered by issue #466: release @microfox/oauth-kit patch
+- Updated dependencies [3eb41b1]
+  - @microfox/google-oauth@1.1.2
+
 ## 1.0.1
 
 ### Patch Changes
