@@ -2218,6 +2218,10 @@ export const redditSDKConfigSchema = z
     accessToken: z
       .string()
       .describe('The access token for making authenticated requests.'),
+    refreshToken: z
+      .string()
+      .optional()
+      .describe('The refresh token for obtaining new access tokens.'),
   })
   .describe('Schema for the Reddit SDK configuration.');
 
