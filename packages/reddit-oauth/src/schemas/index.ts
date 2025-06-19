@@ -9,8 +9,8 @@ export const redditOAuthConfigSchema = z.object({
     .describe('The client secret obtained during app registration'),
   redirectUri: z
     .string()
-    .url()
-    .describe('The redirect URI registered for your application'),
+    .describe('The redirect URI registered for your application')
+    .optional(),
   scopes: z
     .array(z.string())
     .describe('An array of scopes required for your application'),
