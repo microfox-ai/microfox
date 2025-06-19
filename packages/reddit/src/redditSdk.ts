@@ -1,49 +1,11 @@
-import { z } from 'zod';
 import { createRedditOAuth } from '@microfox/reddit-oauth';
 import {
   RedditSDKConfig,
-  User,
-  Post,
-  Comment,
-  Subreddit,
-  SearchResult,
-  VoteDirection,
-  ListingParams,
 } from './types';
 import {
   redditSDKConfigSchema,
-  userSchema,
-  postSchema,
-  commentSchema,
-  subredditSchema,
-  searchResultSchema,
-  voteDirectionSchema,
-  listingParamsSchema,
 } from './schemas';
-import * as accountSchemas from './schemas/account';
-import * as accountTypes from './types/account';
-import * as announcementSchemas from './schemas/announcements';
-import * as announcementTypes from './types/announcements';
-import * as collectionSchemas from './schemas/collections';
-import * as collectionTypes from './types/collections';
-import * as emojiSchemas from './schemas/emoji';
-import * as emojiTypes from './types/emoji';
-import * as flairSchemas from './schemas/flair';
-import * as flairTypes from './types/flair';
-import * as linksAndCommentsSchemas from './schemas/linksAndComments';
-import * as linksAndCommentsTypes from './types/linksAndComments';
-import * as listingsSchemas from './schemas/listings';
-import * as listingsTypes from './types/listings';
-import * as liveThreadsSchemas from './schemas/liveThreads';
-import * as liveThreadsTypes from './types/liveThreads';
-import * as privateMessagesSchemas from './schemas/privateMessages';
-import * as privateMessagesTypes from './types/privateMessages';
-import * as miscSchemas from './schemas/misc';
-import * as miscTypes from './types/misc';
-import * as moderationSchemas from './schemas/moderation';
-import * as moderationTypes from './types/moderation';
-import * as newModmailSchemas from './schemas/newModmail';
-import * as newModmailTypes from './types/newModmail';
+
 import { Endpoints } from './routes';
 
 type EndpointMethods = {
@@ -57,7 +19,9 @@ type EndpointMethods = {
 export class RedditSDK {
   private oauth: ReturnType<typeof createRedditOAuth>;
   private accessToken: string;
+  private refreshToken?: string;
   private baseUrl = 'https://oauth.reddit.com';
+  private isRefreshing = false; // Flag to prevent infinite recursion
 
   constructor(config: RedditSDKConfig) {
     const validatedConfig = redditSDKConfigSchema.parse(config);
@@ -68,6 +32,24 @@ export class RedditSDK {
       scopes: validatedConfig.scopes,
     });
     this.accessToken = validatedConfig.accessToken;
+    this.refreshToken = validatedConfig.refreshToken ?? undefined;
+  }
+
+  public async refreshAccessToken(): Promise<void> {
+    if (!this.refreshToken) {
+      throw new Error('Refresh token not found');
+    }
+    if (this.isRefreshing) {
+      throw new Error('Token refresh already in progress');
+    }
+    
+    this.isRefreshing = true;
+    try {
+      const { access_token: accessToken } = await this.oauth.refreshAccessToken(this.refreshToken);
+      this.accessToken = accessToken;
+    } finally {
+      this.isRefreshing = false;
+    }
   }
 
   private async request<T>(
@@ -84,6 +66,16 @@ export class RedditSDK {
       body: body ? JSON.stringify(body) : undefined,
     });
 
+    if (response.status === 401 && !this.isRefreshing) {
+      try {
+        await this.refreshAccessToken();
+        // Retry the original request with the new token
+        return this.request(endpoint, method, body);
+      } catch (refreshError) {
+        throw new Error(`Failed to refresh access token: ${refreshError instanceof Error ? refreshError.message : 'Unknown error'}`);
+      }
+    }
+
     if (!response.ok) {
       throw new Error(
         `Reddit API error: ${response.status} ${response.statusText}`,
@@ -91,8 +83,8 @@ export class RedditSDK {
     }
 
     if (response.headers.get('content-type')?.includes('application/json')) {
-        const json = await response.json();
-        return json as T;
+      const json = await response.json();
+      return json as T;
     }
 
     return response.text() as unknown as T;
@@ -121,7 +113,7 @@ export class RedditSDK {
                     delete params[key];
                   }
                 }
-                
+
                 // Remove any remaining optional path segments
                 url = url.replace(/{\/?[^}]+}/g, '');
 
@@ -134,12 +126,12 @@ export class RedditSDK {
                   method = providedMethod;
                   delete params.method;
                 }
-                
+
                 // Separate query and body params
                 if (method === 'GET' || method === 'DELETE') {
-                    Object.assign(queryParams, params);
+                  Object.assign(queryParams, params);
                 } else {
-                    Object.assign(bodyParams, params);
+                  Object.assign(bodyParams, params);
                 }
 
                 if (endpointInfo.params) {
@@ -148,18 +140,18 @@ export class RedditSDK {
 
                 let finalUrl = url;
                 if (Object.keys(queryParams).length > 0) {
-                    const search = new URLSearchParams(queryParams).toString();
-                    if(search) {
-                        finalUrl += `?${search}`;
-                    }
+                  const search = new URLSearchParams(queryParams).toString();
+                  if (search) {
+                    finalUrl += `?${search}`;
+                  }
                 }
-                
+
                 const body = Object.keys(bodyParams).length > 0 ? bodyParams : undefined;
 
                 const result = await this.request(finalUrl, method, body);
 
                 if (endpointInfo.responseSchema) {
-                    return endpointInfo.responseSchema.parse(result);
+                  return endpointInfo.responseSchema.parse(result);
                 }
 
                 return result;
