@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.2.1
+
+### Patch Changes
+
+- 030765f: Changes from PR #448: vwjt_reddit_sdk_june_2025
+
 ## 1.2.0
 
 ### Minor Changes
