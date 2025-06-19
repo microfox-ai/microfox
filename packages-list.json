@@ -10,6 +10,7 @@
     "packages/@ext_ai",
     "packages/crypto-sdk",
     "packages/rest-sdk",
+    "packages/serverless-yml",
     "packages/usage-pricing",
     "packages/usage-tracker"
   ],
@@ -31,6 +32,7 @@
   ],
   "semiStablePackages": [
     "packages/ai-provider-openai",
+    "packages/ai-provider-perplexity",
     "packages/amazon-rekognition-face-detection",
     "packages/coingecko-sdk",
     "packages/discord",
@@ -42,7 +44,7 @@
     "packages/google-seo",
     "packages/instagram",
     "packages/instagram-fb",
-    "packages/klingai",
+    "packages/kling-ai",
     "packages/linkedin-member-data-portability",
     "packages/notion",
     "packages/reddit",
@@ -67,9 +69,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "internlPackages": [
-    "packages/serverless-yml"
-  ],
-  "total": 55,
-  "generatedAt": "2025-06-18T19:49:24.502Z"
+  "total": 56,
+  "generatedAt": "2025-06-19T14:04:47.537Z"
 }
