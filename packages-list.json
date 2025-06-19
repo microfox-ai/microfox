@@ -9,6 +9,7 @@
   "internalPackages": [
     "packages/@ext_ai",
     "packages/crypto-sdk",
+    "packages/oauth-kit",
     "packages/rest-sdk",
     "packages/serverless-yml",
     "packages/usage-pricing",
@@ -69,6 +70,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 56,
-  "generatedAt": "2025-06-19T14:04:47.537Z"
+  "total": 57,
+  "generatedAt": "2025-06-19T22:37:10.241Z"
 }
