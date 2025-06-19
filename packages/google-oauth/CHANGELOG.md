@@ -1,5 +1,11 @@
 # @microfox/google-oauth
 
+## 1.1.2
+
+### Patch Changes
+
+- 3eb41b1: Triggered by issue #468: release @microfox/google-oauth patch
+
 ## 1.1.1
 
 ### Patch Changes

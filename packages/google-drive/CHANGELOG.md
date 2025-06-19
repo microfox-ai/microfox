@@ -1,5 +1,12 @@
 # @microfox/google-drive
 
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [3eb41b1]
+  - @microfox/google-oauth@1.1.2
+
 ## 1.1.1
 
 ### Patch Changes
