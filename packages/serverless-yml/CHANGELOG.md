@@ -1,5 +1,11 @@
 # @microfox/serverless-yml
 
+## 1.0.3
+
+### Patch Changes
+
+- d41556a: release: serverless yml
+
 ## 1.0.2
 
 ### Patch Changes
