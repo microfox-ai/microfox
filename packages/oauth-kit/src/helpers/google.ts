@@ -27,6 +27,8 @@ export const convertGoogleIdentityToIdentity = (
     providerInfo: {
       provider: 'google',
       providerUserId: identity.sub,
+      providerIcon:
+        'https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google.svg',
     },
   };
 };

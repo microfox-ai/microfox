@@ -1,13 +1,13 @@
 {
-  "name": "@microfox/webhook-octokit",
-  "version": "1.1.0",
-  "description": "A TypeScript package for receiving webhooks from Octokit.",
+  "name": "@microfox/webhook-core",
+  "version": "0.1.0",
+  "description": "Core webhook classes for Microfox.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**/*",
-    "CHANGELOG.md"
+    "README.md"
   ],
   "scripts": {
     "build": "tsup",
@@ -23,16 +23,7 @@
       "require": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "@microfox/webhook-core": "*",
-    "@octokit/webhooks": "^13.8.2",
-    "@types/aws-lambda": "^8.10.149",
-    "aws-lambda": "^1.0.7",
-    "zod": "^3.24.2"
-  },
-  "peerDependencies": {
-    "next": ">=13.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
@@ -54,11 +45,12 @@
     "url": "https://github.com/microfox-ai/microfox/issues"
   },
   "keywords": [
-    "slack",
+    "microfox",
     "webhook",
+    "webhook-kit",
+    "sdk",
     "typescript",
-    "notification",
-    "microfox"
+    "internal"
   ],
   "author": "TheMoonDevs",
   "license": "MIT"

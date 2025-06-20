@@ -117,6 +117,8 @@ export function convertSlackIdentityToIdentity(identityInfo: {
     providerInfo: {
       provider: 'slack',
       providerUserId: user.id,
+      providerIcon:
+        'https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg',
     },
     userInfo: {
       id: user.id,

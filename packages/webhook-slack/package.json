@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@microfox/webhook-core": "*",
     "@slack/bolt": "^4.4.0",
     "@types/aws-lambda": "^8.10.149",
     "aws-lambda": "^1.0.7",
@@ -58,5 +59,7 @@
     "typescript",
     "notification",
     "microfox"
-  ]
+  ],
+  "author": "TheMoonDevs",
+  "license": "MIT"
 }

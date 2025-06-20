@@ -19,6 +19,10 @@ A powerful TypeScript package for handling Slack webhooks and events in AWS Lamb
 
 ```bash
 npm install @microfox/webhook-slack
+# or
+yarn add @microfox/webhook-slack
+# or
+pnpm add @microfox/webhook-slack
 ```
 
 ## Prerequisites
@@ -29,6 +33,11 @@ Before using this package, you'll need:
 2. Bot token (`xoxb-...`) from your Slack app
 3. Signing secret from your Slack app
 4. AWS Lambda environment (for webhook handling)
+
+## Requirements
+
+- Node.js >= 20.0.0
+- TypeScript >= 5.6.3
 
 ## Quick Start
 
@@ -291,7 +300,7 @@ Contributions are welcome! Please read our contributing guidelines and submit pu
 
 ## License
 
-This package is part of the Microfox AI project. See the main repository for license information.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
@@ -302,4 +311,4 @@ This package is part of the Microfox AI project. See the main repository for lic
 ## Related Packages
 
 - `@slack/bolt` - The underlying Slack Bolt framework
-- `@microfox/core` - Core Microfox utilities
+- `@microfox/webhook-core` - Core Microfox utilities

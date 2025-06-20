@@ -14,6 +14,8 @@ type ProviderConfig = {
   redirectUri: string;
 };
 
+export const SupportedProviders = ['google', 'slack'] as const;
+
 export class OauthKit {
   constructor() {}
 

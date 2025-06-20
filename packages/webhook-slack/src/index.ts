@@ -1,2 +1,2 @@
-export * from './SlackWebhookSdk';
+export * from './SlackWebhook';
 export * from './types';

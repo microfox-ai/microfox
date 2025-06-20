@@ -85,4 +85,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
-For support, please open an issue in the [GitHub repository](https://github.com/microfox-ai/microfox/issues).
+- 📖 [Documentation](https://github.com/microfox-ai/microfox)
+- 🐛 [Issue Tracker](https://github.com/microfox-ai/microfox/issues)
+- 💬 [Discussions](https://github.com/microfox-ai/microfox/discussions)
+
+## Related Packages
+
+- `@octokit/webhooks` - The underlying GitHub webhooks framework
+- `@microfox/webhook-core` - Core Microfox webhook utilities
