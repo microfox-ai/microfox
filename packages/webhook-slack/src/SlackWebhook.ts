@@ -101,6 +101,7 @@ export class SlackWebhook extends Webhook {
       return {
         statusCode: 200,
         body: JSON.stringify({ ok: true }),
+        payload: body,
       };
     }
 
@@ -109,6 +110,7 @@ export class SlackWebhook extends Webhook {
       return {
         statusCode: 200,
         body: JSON.stringify({ challenge: body.challenge }),
+        payload: body,
       };
     }
 
@@ -139,6 +141,12 @@ export class SlackWebhook extends Webhook {
       // Fallback for general messages
       this.callbacks.message.forEach(cb => cb(body));
     }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true }),
+      payload: body,
+    };
   }
 
   on(event: string, listener: (...args: any[]) => void): this;

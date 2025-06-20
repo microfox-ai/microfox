@@ -13,6 +13,7 @@ export interface WebhookRequest {
 export interface WebhookResponse {
   statusCode: number;
   body: string;
+  payload?: any;
 }
 
 export abstract class Webhook<

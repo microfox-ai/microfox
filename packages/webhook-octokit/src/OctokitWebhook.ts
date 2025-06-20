@@ -53,6 +53,12 @@ export class OctokitWebhook extends Webhook {
       payload: request.body.toString(),
       signature: signature,
     });
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true }),
+      payload: request.body,
+    };
   }
 
   on<E extends WebhookEvents>(
