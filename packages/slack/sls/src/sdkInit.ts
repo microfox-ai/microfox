@@ -22,5 +22,3 @@ export const sdkInit = (config: SDKConfig): WebClient | MicrofoxSlackClient => {
       throw new Error(`Constructor "${constructorName}" is not supported.`);
   }
 };
-
-export { WebClient, MicrofoxSlackClient };
