@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.3.1
+
+### Patch Changes
+
+- 0dca5ff: release: add "team:read" scope to Slack OAuth and Slack Web Tiny package permissions
+
 ## 1.3.0
 
 ### Minor Changes
