@@ -1,5 +1,11 @@
 # @microfox/webhook-slack
 
+## 1.1.3
+
+### Patch Changes
+
+- f62ce57: release: update package dependencies and TypeScript configuration; remove unused imports in SlackWebhookSdk
+
 ## 1.1.2
 
 ### Patch Changes
