@@ -87,10 +87,9 @@ function getProperExtension(baseName: string): string {
 async function generateOpenAPIPath(
   functionName: string,
   docContent: string,
-  packageInfo: PackageInfo,
+  constructor: any,
   packageName: string,
 ): Promise<any> {
-  const constructor = packageInfo.constructors[0];
   // Get all keys from constructor
   const allKeys = [
     ...(constructor.requiredKeys || []),
@@ -312,9 +311,10 @@ Focus on the parameter structure - look for indentation patterns to determine if
                           },
                         },
                       },
-                      packageName: {
+                      constructorName: {
                         type: 'string',
-                        description: `@microfox/${packageName}`,
+                        description: 'Name of the constructor to use.',
+                        default: constructor.name,
                       },
                     },
                     required: ['arguments'],
@@ -440,6 +440,7 @@ async function generateOpenAPI(
       title: `${packageInfo.title} API`,
       version: '1.0.0',
       description: `Single entry-point API for all ${packageInfo.title} functions via a wrapper Lambda`,
+      packageName: packageInfo.name,
       contact: {
         name: 'Microfox Dev Support',
         email: 'support@microfox.com',
@@ -455,33 +456,57 @@ async function generateOpenAPI(
   };
 
   // Generate paths for each function using AI sequentially
+  const totalFunctions = packageInfo.constructors.reduce(
+    (acc, c) => acc + (c.functionalities?.length || 0),
+    0,
+  );
   console.log(
-    `🤖 Generating OpenAPI paths using AI for ${functionDocs.length} functions sequentially...`,
+    `🤖 Generating OpenAPI paths using AI for ${totalFunctions} functions across ${packageInfo.constructors.length} constructors sequentially...`,
   );
 
   let successCount = 0;
   let failureCount = 0;
 
-  for (const funcDoc of functionDocs) {
-    const pathKey = `/${funcDoc.name}`;
-    console.log(
-      `🔧 Generating path for: ${funcDoc.name} (${successCount + failureCount + 1}/${functionDocs.length})`,
-    );
+  for (const constructor of packageInfo.constructors) {
+    const constructorFunctionalities = constructor.functionalities || [];
+    for (const funcName of constructorFunctionalities) {
+      const funcDoc = functionDocs.find(f => f.name === funcName);
+      if (!funcDoc) {
+        console.warn(`⚠️ funcDoc not found for function: ${funcName}, skipping.`);
+        failureCount++;
+        continue;
+      }
 
-    try {
-      const docContent = docContents.get(funcDoc.name) || '';
-      const pathSpec = await generateOpenAPIPath(
-        funcDoc.name,
-        docContent,
-        packageInfo,
-        packageName,
+      const docContent = docContents.get(funcName) || '';
+      if (!docContent) {
+        console.warn(
+          `⚠️ Documentation content not found for function: ${funcName}, skipping.`,
+        );
+        failureCount++;
+        continue;
+      }
+
+      const constructorNameForPath = constructor.name.replace(/\./g, '-');
+      const functionSlug = funcDoc.name.replace(/\./g, '-');
+      const pathKey = `/${constructorNameForPath}/${functionSlug}`;
+      console.log(
+        `🔧 Generating path for: ${pathKey} (${successCount + failureCount + 1}/${totalFunctions})`,
       );
-      openapi.paths[pathKey] = pathSpec;
-      successCount++;
-      console.log(`✅ Generated AI path for: ${funcDoc.name}`);
-    } catch (error) {
-      console.error(`❌ Failed to generate path for ${funcDoc.name}:`, error);
-      failureCount++;
+
+      try {
+        const pathSpec = await generateOpenAPIPath(
+          funcDoc.name,
+          docContent,
+          constructor,
+          packageName,
+        );
+        openapi.paths[pathKey] = pathSpec;
+        successCount++;
+        console.log(`✅ Generated AI path for: ${pathKey}`);
+      } catch (error) {
+        console.error(`❌ Failed to generate path for ${pathKey}:`, error);
+        failureCount++;
+      }
     }
   }
 
@@ -503,22 +528,9 @@ async function generateOpenAPI(
  */
 async function generateSDKInitContent(
   packageInfo: PackageInfo,
-  constructorDocContent: string,
+  constructorDocContents: Map<string, string>,
   templatePath: string,
 ): Promise<string> {
-  const constructor = packageInfo.constructors[0];
-  const functionalities =
-    packageInfo.readme_map?.functionalities?.filter(
-      f => f !== constructor.name,
-    ) || [];
-  // Get all keys from constructor
-  const allKeys = [
-    ...(constructor.requiredKeys || []),
-    ...(constructor.internalKeys || []),
-    ...(constructor.botConfig || []),
-  ];
-  const envVars = allKeys.map(key => key.key);
-
   // Read the template file
   const template = fs.readFileSync(templatePath, 'utf8');
 
@@ -528,67 +540,81 @@ async function generateSDKInitContent(
       .describe('Complete TypeScript code for the sdkInit.ts file'),
   });
 
-  const systemPrompt = `You are an expert TypeScript developer specializing in SDK initialization code generation.
+  const systemPrompt = `You are an expert TypeScript developer. Your task is to generate a complete \`sdkInit.ts\` file for a micro-service. This file will export a factory function called \`sdkInit\` that creates and returns an SDK client instance based on a provided constructor name.
 
-Your task is to generate a complete sdkInit.ts file based on a template and package information.
+You will be given information about the package, its constructors, and their documentation.
 
-## Requirements:
-1. Replace CONSTRUCTOR_NAME with the actual constructor name
-2. Replace PACKAGE_NAME with the actual package name
-3. Generate environment variable validation for all required keys
-4. Generate constructor parameters mapping environment variables to constructor parameters
-5. Generate function mappings for all package functionalities
-6. Ensure proper TypeScript syntax and formatting
+Here is an example of a good \`sdkInit.ts\` file:
+\`\`\`typescript
+import { WebClient, MicrofoxSlackClient } from '@microfox/slack';
 
-## Template Structure:
-The template uses placeholders that need to be replaced with actual implementation:
-- CONSTRUCTOR_NAME: Replace with actual constructor function name
-- PACKAGE_NAME: Replace with actual npm package name
-- VALIDATION_BLOCK: Generate validation for each required environment variable
-- CONSTRUCTOR_PARAMS: Generate parameter mapping from env vars to constructor
-- FUNCTION_MAPPINGS: Generate mappings for all package functions
+interface SDKConfig {
+  constructorName: string;
+  SLACK_BOT_TOKEN: string;
+  [key: string]: any;
+}
 
-## Environment Variable Mapping:
-- Map environment variable names to constructor parameter names
-- Use intelligent matching (e.g., SLACK_BOT_TOKEN → botToken)
-- Add validation for all required environment variables
-- Handle common patterns like authType, apiKey, etc.
+export const sdkInit = (config: SDKConfig): WebClient | MicrofoxSlackClient => {
+  const { constructorName, SLACK_BOT_TOKEN, ...options } = config;
 
-Generate clean, properly formatted TypeScript code.`;
+  if (!SLACK_BOT_TOKEN) {
+    throw new Error('SLACK_BOT_TOKEN is required');
+  }
 
-  const userPrompt = `Generate a complete sdkInit.ts file for this package:
+  switch (constructorName) {
+    case 'WebClient':
+      return new WebClient(SLACK_BOT_TOKEN, options);
+    case 'MicrofoxSlackClient':
+      return new MicrofoxSlackClient(SLACK_BOT_TOKEN, options);
+    default:
+      throw new Error(\`Constructor "\\\${constructorName}" is not supported.\`);
+  }
+};
+
+export { WebClient, MicrofoxSlackClient };
+\`\`\`
+
+## Your Task:
+Generate the \`sdkInit.ts\` file by following these rules:
+1.  **Imports**: Import all constructor classes from the package \`${packageInfo.name}\`.
+2.  **SDKConfig Interface**: Create an interface named \`SDKConfig\`. It must include \`constructorName: string\` and all possible credential keys from ALL constructors. Use \`[key: string]: any;\` for additional options.
+3.  **sdkInit Function**:
+    *   It must accept one argument, \`config: SDKConfig\`.
+    *   The return type must be a union of all possible constructor class types (e.g., \`WebClient | MicrofoxSlackClient\`).
+    *   Inside the function, destructure \`constructorName\` and all credential keys from the \`config\` object.
+    *   Implement a \`switch\` statement on \`constructorName\`.
+    *   Each \`case\` should correspond to a constructor name. Inside the case, validate the required credentials for that specific constructor, and then create and return a \`new\` instance of it, passing the appropriate credentials.
+    *   Include a \`default\` case that throws an error for an unsupported constructor.
+4.  **Exports**: After the \`sdkInit\` function, re-export all the imported constructor classes.`;
+
+  const userPrompt = `Now, generate the complete \`sdkInit.ts\` file for the following package:
 
 **Package Information:**
 - Name: ${packageInfo.name}
 - Title: ${packageInfo.title}
 - Description: ${packageInfo.description}
 
-**Constructor Information:**
-- Name: ${constructor.name}
-- Description: ${constructor.description}
-- Auth Type: ${constructor.auth}
-- Required Keys: ${allKeys.map(k => `${k.key}: ${k.description}`).join(', ')}
+**Constructors:**
+${packageInfo.constructors
+  .map(
+    c =>
+      `- Name: ${c.name}, Auth Type: ${c.auth}, Required Keys: ${[
+        ...(c.requiredKeys || []),
+        ...(c.internalKeys || []),
+        ...(c.botConfig || []),
+      ]
+        .map(k => k.key)
+        .join(', ')}
+  - Functions: ${(c.functionalities || []).join(', ')}`,
+  )
+  .join('\n')}
 
-**Constructor Documentation:**
-\`\`\`markdown
-${constructorDocContent}
-\`\`\`
+**Constructor Documentations:**
+${Array.from(constructorDocContents.entries())
+  .map(([name, content]) => `\n**${name}**:\n\`\`\`\n${content}\n\`\`\``)
+  .join('')}
 
-**Package Functions:**
-${functionalities.join(', ')}
-
-**Available Environment Variables:**
-${envVars.join(', ')}
-
-**Template to use as base:**
-\`\`\`typescript
-${template}
-\`\`\`
-
-Please generate the complete sdkInit.ts file by replacing all placeholders with proper implementation.
-Include validation for all required environment variables.
-Make sure to only use the environment variables that are available in the **Available Environment Variables** section.
-Map all package functions to the SDK instance.`;
+Please generate the complete \`sdkInit.ts\` file as instructed. Do not use the template, generate from scratch based on the rules and the example.`;
 
   try {
     const { object: result, usage } = await generateObject({
@@ -698,8 +724,7 @@ async function updateFunctionsInOpenAPI(
     const openapi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
 
     // Get constructor name for validation
-    const constructor = packageInfo.constructors[0];
-    const constructorName = constructor?.name;
+    const constructorNames = packageInfo.constructors.map(c => c.name);
 
     let successCount = 0;
     let failureCount = 0;
@@ -708,11 +733,22 @@ async function updateFunctionsInOpenAPI(
     // Update each specified function
     for (const functionName of functionNames) {
       // Skip constructor functions
-      if (constructorName && functionName === constructorName) {
+      if (constructorNames.includes(functionName)) {
         console.log(
           `⏭️ Skipping constructor function: ${functionName} (constructors don't need OpenAPI endpoints)`,
         );
         skippedCount++;
+        continue;
+      }
+
+      const constructorsForFunction = packageInfo.constructors.filter(c =>
+        c.functionalities?.includes(functionName),
+      );
+
+      if (constructorsForFunction.length === 0) {
+        console.warn(
+          `⚠️ Function ${functionName} not found in any constructor's functionalities. Skipping.`,
+        );
         continue;
       }
 
@@ -729,15 +765,21 @@ async function updateFunctionsInOpenAPI(
       console.log(`🔧 Updating OpenAPI path for function: ${functionName}`);
 
       try {
-        const pathKey = `/${functionName}`;
-        const pathSpec = await generateOpenAPIPath(
-          functionName,
-          docContent,
-          packageInfo,
-          packageName,
-        );
-        openapi.paths[pathKey] = pathSpec;
-        console.log(`✅ Generated AI path for: ${functionName}`);
+        for (const constructor of constructorsForFunction) {
+          const constructorNameForPath = constructor.name.replace(/\./g, '-');
+          const functionSlug = functionName.replace(/\./g, '-');
+          const pathKey = `/${constructorNameForPath}/${functionSlug}`;
+          const pathSpec = await generateOpenAPIPath(
+            functionName,
+            docContent,
+            constructor,
+            packageName,
+          );
+          openapi.paths[pathKey] = pathSpec;
+          console.log(
+            `✅ Generated AI path for: ${functionName} with constructor ${constructor.name}`,
+          );
+        }
         successCount++;
       } catch (error) {
         console.error(`❌ Error updating function ${functionName}:`, error);
@@ -797,32 +839,33 @@ export async function generateSLSStructure(
     const packageInfo: PackageInfo = JSON.parse(
       fs.readFileSync(packageInfoPath, 'utf8'),
     );
-    const constructor = packageInfo.constructors[0];
+    const constructors = packageInfo.constructors;
 
-    if (!constructor) {
+    if (!constructors || constructors.length === 0) {
       console.error(
         `❌ No constructors found in package info for ${packageName}`,
       );
       return false;
     }
 
-    console.log(`📋 Found constructor: ${constructor.name}`);
-
-    // Get functionalities from readme_map
-    const functionalities =
-      packageInfo.readme_map?.functionalities?.filter(
-        f => f !== constructor.name,
-      ) || [];
     console.log(
-      `📋 Found ${functionalities.length} functions: ${functionalities.join(', ')}`,
+      `📋 Found ${constructors.length} constructors: ${constructors.map(c => c.name).join(', ')}`,
+    );
+
+    // Get functionalities from constructors
+    const functionalities = [
+      ...new Set(constructors.flatMap(c => c.functionalities || [])),
+    ];
+    console.log(
+      `📋 Found ${functionalities.length} unique functions across all constructors: ${functionalities.join(', ')}`,
     );
 
     // If specific functions are requested, validate they exist
     if (specificFunctions && specificFunctions.length > 0) {
       // Filter out constructor functions from specific functions
-      const constructorName = constructor.name;
+      const constructorNames = constructors.map(c => c.name);
       const filteredFunctions = specificFunctions.filter(func => {
-        if (func === constructorName) {
+        if (constructorNames.includes(func)) {
           console.log(
             `⏭️ Skipping constructor function: ${func} (constructors don't need OpenAPI endpoints)`,
           );
@@ -868,20 +911,25 @@ export async function generateSLSStructure(
     if (specificFunctions && specificFunctions.length > 0 && slsExists) {
       // For specific function updates, regenerate SDK init and update OpenAPI
       console.log(`🔧 Regenerating SDK initialization file...`);
-      const constructorDocPath = path.join(docsDir, `${constructor.name}.md`);
-      if (!fs.existsSync(constructorDocPath)) {
-        console.error(
-          `❌ Constructor documentation not found: ${constructorDocPath}`,
+      const constructorDocContents = new Map<string, string>();
+      for (const constructor of constructors) {
+        const constructorDocPath = path.join(docsDir, `${constructor.name}.md`);
+        if (!fs.existsSync(constructorDocPath)) {
+          console.error(
+            `❌ Constructor documentation not found: ${constructorDocPath}`,
+          );
+          return false;
+        }
+        constructorDocContents.set(
+          constructor.name,
+          fs.readFileSync(constructorDocPath, 'utf8'),
         );
-        return false;
       }
-
-      const constructorDocContent = fs.readFileSync(constructorDocPath, 'utf8');
 
       const sdkInitTemplatePath = path.join(templateDir, 'src', 'sdkInit.txt');
       const sdkInitContent = await generateSDKInitContent(
         packageInfo,
-        constructorDocContent,
+        constructorDocContents,
         sdkInitTemplatePath,
       );
       const sdkInitPath = path.join(slsDir, 'src', 'sdkInit.ts');
@@ -921,15 +969,20 @@ export async function generateSLSStructure(
     updateTemplateFiles(slsDir, packageName, packageInfo.description);
 
     // Read constructor documentation (for SDK generation)
-    const constructorDocPath = path.join(docsDir, `${constructor.name}.md`);
-    if (!fs.existsSync(constructorDocPath)) {
-      console.error(
-        `❌ Constructor documentation not found: ${constructorDocPath}`,
+    const constructorDocContents = new Map<string, string>();
+    for (const constructor of constructors) {
+      const constructorDocPath = path.join(docsDir, `${constructor.name}.md`);
+      if (!fs.existsSync(constructorDocPath)) {
+        console.error(
+          `❌ Constructor documentation not found: ${constructorDocPath}`,
+        );
+        return false;
+      }
+      constructorDocContents.set(
+        constructor.name,
+        fs.readFileSync(constructorDocPath, 'utf8'),
       );
-      return false;
     }
-
-    const constructorDocContent = fs.readFileSync(constructorDocPath, 'utf8');
     // Create a simple constructor doc object for SDK generation
     // Read function documentation (for AI generation)
     const functionDocs: FunctionDoc[] = [];
@@ -943,7 +996,7 @@ export async function generateSLSStructure(
 
     for (const funcName of functionsToProcess) {
       // Skip constructor functions (double-check for full generation)
-      if (funcName === constructor.name) {
+      if (constructors.some(c => c.name === funcName)) {
         console.log(
           `⏭️ Skipping constructor function: ${funcName} (constructors don't need OpenAPI endpoints)`,
         );
@@ -985,7 +1038,7 @@ export async function generateSLSStructure(
     const sdkInitTemplatePath = path.join(templateDir, 'src', 'sdkInit.txt');
     const sdkInitContent = await generateSDKInitContent(
       packageInfo,
-      constructorDocContent,
+      constructorDocContents,
       sdkInitTemplatePath,
     );
     const sdkInitPath = path.join(slsDir, 'src', 'sdkInit.ts');

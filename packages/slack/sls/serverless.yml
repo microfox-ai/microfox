@@ -1,4 +1,4 @@
-service: public-sdk-api
+service: public-slack-api
 
 plugins:
   - serverless-plugin-typescript

@@ -21,7 +21,7 @@ const cryptoVault = new CryptoVault({
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
   try {
-    // Extract constructor and function from the path: /{constructorName}/{functionName}
+    // Extract the functionName from the path: /{constructorName}/{functionName}
     console.log("event", event);
     const segments = event.path.split("/").filter(Boolean);
     if (segments.length < 2) {
@@ -31,9 +31,27 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
         body: JSON.stringify({ error: "Invalid path format. Expected /{constructorName}/{functionName}" }),
       };
     }
-    const constructorSlug = segments[0];
     const functionSlug = segments[1];
-    console.log(`constructorSlug: ${constructorSlug}, functionSlug: ${functionSlug}`);
+    console.log("functionSlug", functionSlug);
+
+    if (!functionSlug) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: 'Missing functionSlug in request body' }),
+      };
+    }
+
+    const constructorName = segments[0];
+    console.log("constructorName", constructorName);
+
+    if (!constructorName) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: 'Missing constructorName in request body' }),
+      };
+    }
 
     // Parse the request body
     let requestBody: any;
@@ -80,23 +98,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
       };
     }
 
-    // Initialize SDK using the factory. The AI that generates sdkInit.ts will know
-    // about all constructors, so we can find the original name from the slug.
-    // This part of the code assumes that sdkInit can map slug back to name or that the AI will handle it.
-    // For now, we will find the constructor name on the sdkInit export itself.
-    
-    const constructorName = Object.keys(sdkInit.constructors).find(
-        (name) => name.replace(/\./g, '-') === constructorSlug
-    );
-    
-    if (!constructorName) {
-        return {
-            statusCode: 404,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ error: `Constructor matching slug '${constructorSlug}' not found` }),
-        };
-    }
-
+    // Initialize SDK using the factory
     const sdk = sdkInit({ constructorName, ...credentials });
 
     // Find the function on the SDK instance by matching the slug from the path
