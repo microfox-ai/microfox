@@ -1,5 +1,13 @@
 # @microfox/webhook-slack
 
+## 1.1.4
+
+### Patch Changes
+
+- af84c38: release: add response object to SlackWebhook for successful message handling
+- Updated dependencies [af84c38]
+  - @microfox/webhook-core@0.1.2
+
 ## 1.1.3
 
 ### Patch Changes
