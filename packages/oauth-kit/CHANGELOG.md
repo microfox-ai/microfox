@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.0.4
+
+### Patch Changes
+
+- 0a18261: release: update Google OAuth integration to fetch user info directly and specify dependency versions
+
 ## 1.0.3
 
 ### Patch Changes
