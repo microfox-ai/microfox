@@ -68,64 +68,79 @@ async function getSlackTeamInfo(
   return parsedResponse.team;
 }
 
-export async function getSlackIdentityInfo(
-  tokenResponse: z.infer<typeof slackOAuthResponseSchema>,
-): Promise<{ user: SlackUser; team: SlackTeam }> {
-  const authedUser = tokenResponse.authed_user;
-  if (!authedUser || !authedUser.access_token || !authedUser.id) {
-    throw new Error('Missing authed_user information in Slack token response');
-  }
-
-  const userResponse = await fetch(
-    `https://slack.com/api/users.info?user=${authedUser.id}`,
+async function getSlackUserInfo(
+  token: string,
+  userId: string,
+): Promise<SlackUser> {
+  const response = await fetch(
+    `https://slack.com/api/users.info?user=${userId}`,
     {
       headers: {
-        Authorization: `Bearer ${authedUser.access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );
 
-  if (!userResponse.ok) {
+  if (!response.ok) {
     throw new Error(
-      `Failed to fetch user info from Slack: ${userResponse.statusText}`,
+      `Failed to fetch user info from Slack: ${response.statusText}`,
     );
   }
 
-  const userData = await userResponse.json();
-  const parsedUserResponse = slackUsersInfoResponseSchema.parse(userData);
+  const data = await response.json();
+  const parsedResponse = slackUsersInfoResponseSchema.parse(data);
 
-  if (!parsedUserResponse.ok) {
+  if (!parsedResponse.ok) {
     throw new Error(
-      `Slack API error while fetching user info: ${parsedUserResponse.error}`,
+      `Slack API error while fetching user info: ${parsedResponse.error}`,
     );
   }
 
+  return parsedResponse.user;
+}
+
+export async function getSlackIdentityInfo(
+  tokenResponse: z.infer<typeof slackOAuthResponseSchema>,
+): Promise<{ user?: SlackUser; team: SlackTeam }> {
   const team = await getSlackTeamInfo(
-    authedUser.access_token,
+    tokenResponse.access_token,
     tokenResponse.team.id,
   );
 
-  return { user: parsedUserResponse.user, team };
+  let user: SlackUser | undefined;
+  if (tokenResponse.authed_user && tokenResponse.authed_user.id) {
+    user = await getSlackUserInfo(
+      tokenResponse.access_token,
+      tokenResponse.authed_user.id,
+    );
+    return { user, team };
+  }
+
+  return {
+    team,
+  };
 }
 
 export function convertSlackIdentityToIdentity(identityInfo: {
-  user: SlackUser;
+  user?: SlackUser;
   team: SlackTeam;
 }): Identity {
   const { user, team } = identityInfo;
   return {
     providerInfo: {
       provider: 'slack',
-      providerUserId: user.id,
+      providerUserId: user?.id || '',
       providerIcon:
         'https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg',
     },
-    userInfo: {
-      id: user.id,
-      email: user.profile.email,
-      name: user.real_name || user.name,
-      avatarUrl: user.profile.image_original,
-    },
+    userInfo: user
+      ? {
+          id: user.id,
+          email: user.profile.email,
+          name: user.real_name || user.name,
+          avatarUrl: user.profile.image_original,
+        }
+      : undefined,
     teamInfo: {
       id: team.id,
       name: team.name,
