@@ -25,9 +25,10 @@
       "require": "./dist/index.js"
     }
   },
-  "dependencies": {
-    "puppeteer-core": "^22.15.0",
-    "yaml": "^2.4.5"
+  "dependencies": {},
+  "peerDependencies": {
+    "@sparticuz/chromium": ">=123.0.1",
+    "puppeteer-core": ">=22.0.0"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
@@ -35,6 +36,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^18",
     "jest": "^29.7.0",
+    "puppeteer-core": "^22.15.0",
     "ts-jest": "^29.1.2",
     "tsup": "^8",
     "typescript": "5.6.3"

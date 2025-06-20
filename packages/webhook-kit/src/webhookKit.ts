@@ -1,8 +1,13 @@
-import { Webhook, WebhookRequest } from '@microfox/webhook-core';
+import {
+  Webhook,
+  WebhookRequest,
+  WebhookResponse,
+} from '@microfox/webhook-core';
 
 export {
   WebhookVerificationError,
   type WebhookRequest,
+  type WebhookResponse,
   Webhook,
 } from '@microfox/webhook-core';
 
@@ -21,11 +26,14 @@ export class WebhookKit {
     return this.webhooks[name];
   }
 
-  async receive(name: string, request: WebhookRequest): Promise<void> {
+  async receive(
+    name: string,
+    request: WebhookRequest,
+  ): Promise<WebhookResponse | void> {
     const webhook = this.getWebhook(name);
     if (!webhook) {
       throw new Error(`Webhook with name "${name}" not found.`);
     }
-    await webhook.receive(request);
+    return await webhook.receive(request);
   }
 }
