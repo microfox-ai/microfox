@@ -105,9 +105,7 @@
                                 "description": "Set your bot's user name."
                               }
                             },
-                            "required": [
-                              "channel"
-                            ]
+                            "required": ["channel"]
                           }
                         ]
                       },
@@ -118,9 +116,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -149,9 +145,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -183,12 +177,7 @@
                       "description": "An object containing the details of the sent message"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel",
-                    "ts",
-                    "message"
-                  ]
+                  "required": ["ok", "channel", "ts", "message"]
                 }
               }
             }
@@ -227,10 +216,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -248,16 +234,10 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -322,21 +302,14 @@
                               "parse": {
                                 "type": "string",
                                 "description": "Change how messages are treated. Defaults to client. Can be none or full.",
-                                "enum": [
-                                  "none",
-                                  "full",
-                                  "client"
-                                ]
+                                "enum": ["none", "full", "client"]
                               },
                               "metadata": {
                                 "type": "string",
                                 "description": "A JSON object with event_type and event_payload fields."
                               }
                             },
-                            "required": [
-                              "channel",
-                              "ts"
-                            ]
+                            "required": ["channel", "ts"]
                           }
                         ]
                       },
@@ -347,9 +320,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -378,9 +349,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -416,11 +385,7 @@
                       "description": "An object containing the details of the sent message."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel",
-                    "ts"
-                  ]
+                  "required": ["ok", "channel", "ts"]
                 }
               }
             }
@@ -465,10 +430,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -489,10 +451,7 @@
                       "const": "ratelimited"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -510,16 +469,10 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -540,10 +493,7 @@
                       "const": "service_unavailable"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -603,9 +553,7 @@
                                 "description": "Only messages after this Unix timestamp will be included in results."
                               }
                             },
-                            "required": [
-                              "channel"
-                            ]
+                            "required": ["channel"]
                           }
                         ]
                       },
@@ -616,9 +564,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -647,9 +593,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -781,9 +725,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "no_permission"
-                      ]
+                      "enum": ["no_permission"]
                     }
                   }
                 }
@@ -803,10 +745,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited",
-                        "accesslimited"
-                      ]
+                      "enum": ["ratelimited", "accesslimited"]
                     }
                   }
                 }
@@ -826,10 +765,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   }
                 }
@@ -849,10 +785,7 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable",
-                        "team_added_to_org"
-                      ]
+                      "enum": ["service_unavailable", "team_added_to_org"]
                     }
                   }
                 }
@@ -889,9 +822,7 @@
                                 "description": "The ID of the conversation to join."
                               }
                             },
-                            "required": [
-                              "channel"
-                            ],
+                            "required": ["channel"],
                             "description": "Configuration object containing the channel ID"
                           }
                         ]
@@ -903,9 +834,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -934,9 +863,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -1053,10 +980,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel"
-                  ]
+                  "required": ["ok", "channel"]
                 }
               }
             }
@@ -1070,9 +994,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates the request was unsuccessful"
                     },
                     "error": {
@@ -1092,10 +1014,7 @@
                       "description": "Error code explaining the reason for the failure"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1109,23 +1028,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates the request was unsuccessful"
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "accesslimited"
-                      ],
+                      "enum": ["accesslimited"],
                       "description": "Error code indicating rate limiting"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1139,24 +1051,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates the request was unsuccessful"
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ],
+                      "enum": ["fatal_error", "internal_error"],
                       "description": "Error code indicating a server-side issue"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1170,23 +1074,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates the request was unsuccessful"
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ],
+                      "enum": ["service_unavailable"],
                       "description": "Error code indicating the service is temporarily unavailable"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1250,9 +1147,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -1281,9 +1176,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -1414,10 +1307,7 @@
                       "description": "An object containing pagination information"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channels"
-                  ]
+                  "required": ["ok", "channels"]
                 }
               }
             }
@@ -1431,9 +1321,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -1447,10 +1335,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1464,9 +1349,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -1478,10 +1361,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1495,9 +1375,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -1509,10 +1387,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1526,22 +1401,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1555,21 +1422,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ]
+                      "enum": ["service_unavailable"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1613,11 +1473,7 @@
                                 "description": "Timestamp of the message to add reaction to"
                               }
                             },
-                            "required": [
-                              "channel",
-                              "name",
-                              "timestamp"
-                            ]
+                            "required": ["channel", "name", "timestamp"]
                           }
                         ]
                       },
@@ -1628,9 +1484,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -1659,9 +1513,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -1682,9 +1534,7 @@
                       "example": true
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -1726,10 +1576,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1756,10 +1603,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1777,16 +1621,10 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited",
-                        "accesslimited"
-                      ]
+                      "enum": ["ratelimited", "accesslimited"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1804,16 +1642,10 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1831,15 +1663,10 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ]
+                      "enum": ["service_unavailable"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -1878,9 +1705,7 @@
                                 "description": "Set to true to receive the locale for this user. Defaults to false."
                               }
                             },
-                            "required": [
-                              "user"
-                            ]
+                            "required": ["user"]
                           }
                         ]
                       },
@@ -1891,9 +1716,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -1922,9 +1745,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -2099,10 +1920,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "user"
-                  ]
+                  "required": ["ok", "user"]
                 }
               }
             }
@@ -2116,9 +1934,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -2134,10 +1950,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2151,9 +1964,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -2166,10 +1977,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2183,21 +1991,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited"
-                      ]
+                      "enum": ["ratelimited"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2211,22 +2012,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2240,21 +2033,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ]
+                      "enum": ["service_unavailable"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2311,9 +2097,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -2342,9 +2126,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -2531,10 +2313,7 @@
                       "description": "An object containing pagination information."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "members"
-                  ]
+                  "required": ["ok", "members"]
                 }
               }
             }
@@ -2548,9 +2327,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -2567,10 +2344,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2584,9 +2358,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -2598,10 +2370,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2615,21 +2384,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "no_permission"
-                      ]
+                      "enum": ["no_permission"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2643,22 +2405,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited",
-                        "accesslimited"
-                      ]
+                      "enum": ["ratelimited", "accesslimited"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2672,22 +2426,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2701,21 +2447,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ]
+                      "enum": ["service_unavailable"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -2750,9 +2489,7 @@
                                 "description": "An email address belonging to a user in the workspace."
                               }
                             },
-                            "required": [
-                              "email"
-                            ]
+                            "required": ["email"]
                           }
                         ]
                       },
@@ -2763,9 +2500,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -2794,9 +2529,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -2983,9 +2716,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -3014,9 +2745,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
@@ -3041,15 +2770,11 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "no_permission"
-                      ]
+                      "enum": ["no_permission"]
                     }
                   }
                 }
@@ -3065,16 +2790,11 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited",
-                        "accesslimited"
-                      ]
+                      "enum": ["ratelimited", "accesslimited"]
                     }
                   }
                 }
@@ -3090,16 +2810,11 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ]
+                      "enum": ["fatal_error", "internal_error"]
                     }
                   }
                 }
@@ -3115,15 +2830,11 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ]
+                      "enum": ["service_unavailable"]
                     }
                   }
                 }
@@ -3165,9 +2876,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "modal"
-                                    ],
+                                    "enum": ["modal"],
                                     "description": "The type of view. Must be 'modal' for modals."
                                   },
                                   "title": {
@@ -3176,9 +2885,7 @@
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": [
-                                          "plain_text"
-                                        ],
+                                        "enum": ["plain_text"],
                                         "description": "Must be 'plain_text' for the title."
                                       },
                                       "text": {
@@ -3187,10 +2894,7 @@
                                         "description": "The text content of the title."
                                       }
                                     },
-                                    "required": [
-                                      "type",
-                                      "text"
-                                    ]
+                                    "required": ["type", "text"]
                                   },
                                   "submit": {
                                     "type": "object",
@@ -3198,9 +2902,7 @@
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": [
-                                          "plain_text"
-                                        ],
+                                        "enum": ["plain_text"],
                                         "description": "Must be 'plain_text' for the submit button."
                                       },
                                       "text": {
@@ -3209,10 +2911,7 @@
                                         "description": "The text content of the submit button."
                                       }
                                     },
-                                    "required": [
-                                      "type",
-                                      "text"
-                                    ]
+                                    "required": ["type", "text"]
                                   },
                                   "blocks": {
                                     "type": "array",
@@ -3248,17 +2947,10 @@
                                     "default": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "title",
-                                  "blocks"
-                                ]
+                                "required": ["type", "title", "blocks"]
                               }
                             },
-                            "required": [
-                              "trigger_id",
-                              "view"
-                            ]
+                            "required": ["trigger_id", "view"]
                           }
                         ]
                       },
@@ -3269,9 +2961,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -3300,9 +2990,7 @@
                         "default": "WebClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -3392,10 +3080,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "view"
-                  ]
+                  "required": ["ok", "view"]
                 }
               }
             }
@@ -3409,9 +3094,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates that the request was unsuccessful."
                     },
                     "error": {
@@ -3447,10 +3130,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -3464,9 +3144,7 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates that the request was unsuccessful."
                     },
                     "error": {
@@ -3481,10 +3159,7 @@
                       "description": "A string describing the authentication error."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -3498,24 +3173,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates that the request was unsuccessful."
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "ratelimited",
-                        "accesslimited"
-                      ],
+                      "enum": ["ratelimited", "accesslimited"],
                       "description": "A string indicating that the request was rate limited."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -3529,24 +3196,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates that the request was unsuccessful."
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "fatal_error",
-                        "internal_error"
-                      ],
+                      "enum": ["fatal_error", "internal_error"],
                       "description": "A string describing the server error."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -3560,23 +3219,16 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ],
+                      "enum": [false],
                       "description": "Indicates that the request was unsuccessful."
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "service_unavailable"
-                      ],
+                      "enum": ["service_unavailable"],
                       "description": "A string indicating that the service is temporarily unavailable."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -3611,9 +3263,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -3642,9 +3292,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -3948,9 +3596,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -3979,9 +3625,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -4241,9 +3885,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -4272,9 +3914,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -4594,9 +4234,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -4625,9 +4263,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -4750,9 +4386,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -4781,9 +4415,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -5083,9 +4715,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -5114,9 +4744,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -5382,9 +5010,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -5413,9 +5039,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -5480,12 +5104,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel",
-                    "ts",
-                    "message"
-                  ]
+                  "required": ["ok", "channel", "ts", "message"]
                 }
               }
             }
@@ -5499,18 +5118,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5524,18 +5138,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5549,18 +5158,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5574,18 +5178,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5629,9 +5228,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -5660,9 +5257,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -5727,12 +5322,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel",
-                    "ts",
-                    "message"
-                  ]
+                  "required": ["ok", "channel", "ts", "message"]
                 }
               }
             }
@@ -5746,18 +5336,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5771,21 +5356,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "channel_not_found"
-                      ]
+                      "enum": ["channel_not_found"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5799,18 +5377,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5858,9 +5431,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -5889,9 +5460,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -5953,10 +5522,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "reminder"
-                  ]
+                  "required": ["ok", "reminder"]
                 }
               }
             }
@@ -5970,18 +5536,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -5995,18 +5556,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6020,18 +5576,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6045,18 +5596,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6101,9 +5647,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -6132,9 +5676,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -6255,9 +5797,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "channel"
-                  ]
+                  "required": ["channel"]
                 }
               }
             }
@@ -6350,9 +5890,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -6381,9 +5919,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -6403,9 +5939,7 @@
                       "description": "true if the request was successful."
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -6426,10 +5960,7 @@
                       "description": "Error message describing the issue with the request."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6447,17 +5978,11 @@
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "channel_not_found",
-                        "message_not_found"
-                      ],
+                      "enum": ["channel_not_found", "message_not_found"],
                       "description": "Specific error indicating what resource was not found."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6479,10 +6004,7 @@
                       "description": "Error indicating that the rate limit has been exceeded."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6503,10 +6025,7 @@
                       "description": "Error message describing the internal server error."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6551,9 +6070,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -6582,9 +6099,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -6845,9 +6360,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -6876,9 +6389,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -6943,12 +6454,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel",
-                    "ts",
-                    "message"
-                  ]
+                  "required": ["ok", "channel", "ts", "message"]
                 }
               }
             }
@@ -6962,18 +6468,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -6987,18 +6488,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7012,18 +6508,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7067,9 +6558,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -7098,9 +6587,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -7218,10 +6705,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "ok",
-                    "channel"
-                  ]
+                  "required": ["ok", "channel"]
                 }
               }
             }
@@ -7235,18 +6719,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7260,18 +6739,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7285,18 +6759,13 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7342,9 +6811,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -7373,9 +6840,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -7395,9 +6860,7 @@
                       "description": "Indicates if the request was successful."
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -7411,19 +6874,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "description": "Error message describing the issue."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7437,21 +6895,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "not_authorized"
-                      ]
+                      "enum": ["not_authorized"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7465,22 +6916,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
-                      "enum": [
-                        "channel_not_found",
-                        "user_not_found"
-                      ]
+                      "enum": ["channel_not_found", "user_not_found"]
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7494,19 +6937,14 @@
                   "properties": {
                     "ok": {
                       "type": "boolean",
-                      "enum": [
-                        false
-                      ]
+                      "enum": [false]
                     },
                     "error": {
                       "type": "string",
                       "description": "Internal server error message."
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -7560,9 +6998,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -7591,9 +7027,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -7650,12 +7084,7 @@
                         },
                         "mode": {
                           "type": "string",
-                          "enum": [
-                            "hosted",
-                            "external",
-                            "snippet",
-                            "post"
-                          ]
+                          "enum": ["hosted", "external", "snippet", "post"]
                         },
                         "is_external": {
                           "type": "boolean"
@@ -7715,9 +7144,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "file"
-                  ]
+                  "required": ["file"]
                 }
               }
             }
@@ -7733,9 +7160,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -7751,9 +7176,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -7769,9 +7192,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -7787,9 +7208,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -7805,9 +7224,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -7848,9 +7265,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -7879,9 +7294,7 @@
                         "default": "MicrofoxSlackClient"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -7946,12 +7359,7 @@
                         },
                         "mode": {
                           "type": "string",
-                          "enum": [
-                            "hosted",
-                            "external",
-                            "snippet",
-                            "post"
-                          ],
+                          "enum": ["hosted", "external", "snippet", "post"],
                           "description": "The mode of the file."
                         },
                         "is_external": {
@@ -8004,17 +7412,10 @@
                           "description": "The number of comments on the file."
                         }
                       },
-                      "required": [
-                        "id",
-                        "created",
-                        "user",
-                        "size"
-                      ]
+                      "required": ["id", "created", "user", "size"]
                     }
                   },
-                  "required": [
-                    "file"
-                  ]
+                  "required": ["file"]
                 }
               }
             }
