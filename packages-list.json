@@ -13,7 +13,8 @@
     "packages/rest-sdk",
     "packages/serverless-yml",
     "packages/usage-pricing",
-    "packages/usage-tracker"
+    "packages/usage-tracker",
+    "packages/webhook-kit"
   ],
   "webhookConnectorPackages": [
     "packages/agent-kit",
@@ -70,6 +71,9 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "total": 57,
-  "generatedAt": "2025-06-19T22:37:10.241Z"
+  "unknownPackages": [
+    "packages/webhook-core"
+  ],
+  "total": 59,
+  "generatedAt": "2025-06-20T00:23:57.859Z"
 }
