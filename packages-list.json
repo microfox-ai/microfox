@@ -50,6 +50,7 @@
     "packages/linkedin-member-data-portability",
     "packages/notion",
     "packages/reddit",
+    "packages/slack",
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
@@ -74,6 +75,6 @@
   "unknownPackages": [
     "packages/webhook-core"
   ],
-  "total": 59,
-  "generatedAt": "2025-06-20T00:23:57.859Z"
+  "total": 60,
+  "generatedAt": "2025-06-20T23:09:48.752Z"
 }
