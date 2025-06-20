@@ -24,8 +24,6 @@
     }
   },
   "dependencies": {
-    "@microfox/google-oauth": "*",
-    "@microfox/slack-oauth": "*",
     "@microfox/webhook-core": "*",
     "@microfox/webhook-octokit": "*",
     "@microfox/webhook-slack": "*",

@@ -1,4 +1,5 @@
 {
-  "extends": "@microfox/tsconfig/base.json",
-  "include": ["**/*.ts"]
-} 
+  "extends": "@microfox/tsconfig/ts-library.json",
+  "include": ["."],
+  "exclude": ["*/dist", "dist", "build", "node_modules"]
+}
