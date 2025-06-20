@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.0.3
+
+### Patch Changes
+
+- 83a1e47: release: update Slack API response schemas to support optional team and user data, enhance error handling for missing information
+
 ## 1.0.2
 
 ### Patch Changes
