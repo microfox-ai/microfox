@@ -1,5 +1,11 @@
 # @microfox/webhook-kit
 
+## 1.0.4
+
+### Patch Changes
+
+- aa161f7: release: remove unused dependencies from webhook-kit package.json
+
 ## 1.0.3
 
 ### Patch Changes

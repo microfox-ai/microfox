@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.3.0
+
+### Minor Changes
+
+- dc1f62c: Triggered by issue #480: release @microfox/reddit minor
+
 ## 1.2.3
 
 ### Patch Changes
