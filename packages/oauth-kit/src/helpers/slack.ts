@@ -27,13 +27,13 @@ type SlackTeam = z.infer<typeof slackTeamSchema>;
 
 const slackUsersInfoResponseSchema = z.object({
   ok: z.boolean(),
-  user: slackUserSchema,
+  user: slackUserSchema.optional(),
   error: z.string().optional(),
 });
 
 const slackTeamInfoResponseSchema = z.object({
   ok: z.boolean(),
-  team: slackTeamSchema,
+  team: slackTeamSchema.optional(),
   error: z.string().optional(),
 });
 
@@ -57,12 +57,17 @@ async function getSlackTeamInfo(
   }
 
   const data = await response.json();
+  console.log('data for team info', data);
   const parsedResponse = slackTeamInfoResponseSchema.parse(data);
 
   if (!parsedResponse.ok) {
     throw new Error(
       `Slack API error while fetching team info: ${parsedResponse.error}`,
     );
+  }
+
+  if (!parsedResponse.team) {
+    throw new Error('Slack API error: team info not found in response');
   }
 
   return parsedResponse.team;
@@ -88,12 +93,17 @@ async function getSlackUserInfo(
   }
 
   const data = await response.json();
+  console.log('data for user info', data);
   const parsedResponse = slackUsersInfoResponseSchema.parse(data);
 
   if (!parsedResponse.ok) {
     throw new Error(
       `Slack API error while fetching user info: ${parsedResponse.error}`,
     );
+  }
+
+  if (!parsedResponse.user) {
+    throw new Error('Slack API error: user info not found in response');
   }
 
   return parsedResponse.user;
