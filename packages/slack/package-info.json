@@ -3,7 +3,9 @@
   "title": "Microfox Slack",
   "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
   "path": "packages/slack",
-  "dependencies": ["@slack/web-api"],
+  "dependencies": [
+    "@slack/web-api"
+  ],
   "status": "semiStable",
   "authType": "apikey",
   "authEndpoint": "/connect/slack",
@@ -14,43 +16,43 @@
     "description": "The full README for the Microfox Slack package",
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/README.md",
     "functionalities": [
+      "MicrofoxSlackClient",
       "WebClient",
+      "addUserToChannel",
       "chat.postMessage",
       "chat.update",
       "conversations.history",
       "conversations.join",
       "conversations.list",
+      "createChannel",
+      "getChannelConversationInfo",
+      "getFileInfo",
+      "getUserInfo",
+      "listChannelUsers",
+      "listChannels",
+      "listUsers",
+      "messageChannel",
+      "messageUser",
+      "reactMessage",
       "reactions.add",
+      "removeUserFromChannel",
+      "replyMessage",
+      "searchChannel",
+      "searchUser",
+      "sendFile",
+      "setReminder",
       "users.info",
       "users.list",
       "users.lookupByEmail",
-      "views.open",
-      "MicrofoxSlackClient",
-      "listChannels",
-      "getChannelConversationInfo",
-      "listUsers",
-      "listChannelUsers",
-      "searchUser",
-      "searchChannel",
-      "messageUser",
-      "messageChannel",
-      "setReminder",
-      "createChannel",
-      "reactMessage",
-      "getUserInfo",
-      "replyMessage",
-      "addUserToChannel",
-      "removeUserFromChannel",
-      "sendFile",
-      "getFileInfo"
+      "views.open"
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/WebClient.md",
-        "type": "constructor",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/addUserToChannel.md",
+        "type": "functionality",
         "extension": "md",
-        "functionality": "WebClient",
-        "description": "Creates a new instance of the Slack WebClient."
+        "functionality": "addUserToChannel",
+        "description": "Adds a user to a channel."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/chat.postMessage.md",
@@ -88,11 +90,130 @@
         "description": "Retrieves a list of conversations."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/createChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createChannel",
+        "description": "Creates a new channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getChannelConversationInfo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getChannelConversationInfo",
+        "description": "Fetches information about a conversation."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getFileInfo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getFileInfo",
+        "description": "Gets information about a file."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getUserInfo.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getUserInfo",
+        "description": "Gets information about a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listChannels.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listChannels",
+        "description": "Lists all public and private channels in a workspace."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listChannelUsers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listChannelUsers",
+        "description": "Lists all users in a channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listUsers.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listUsers",
+        "description": "Lists all users in a workspace."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/messageChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "messageChannel",
+        "description": "Sends a message to a channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/messageUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "messageUser",
+        "description": "Sends a direct message to a user."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/MicrofoxSlackClient.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "MicrofoxSlackClient",
+        "description": "Creates a new instance of the MicrofoxSlackClient."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/reactions.add.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "reactions.add",
         "description": "Adds a reaction to an item."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/reactMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "reactMessage",
+        "description": "Adds a reaction to a message."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/removeUserFromChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "removeUserFromChannel",
+        "description": "Removes a user from a channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/replyMessage.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "replyMessage",
+        "description": "Replies to a message in a thread."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/searchChannel.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "searchChannel",
+        "description": "Finds a channel by its name."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/searchUser.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "searchUser",
+        "description": "Finds a user by their email address."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/sendFile.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "sendFile",
+        "description": "Uploads a file to a channel."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/setReminder.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "setReminder",
+        "description": "Sets a reminder for a user."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/users.info.md",
@@ -123,130 +244,11 @@
         "description": "Open a view for a user."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/MicrofoxSlackClient.md",
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/WebClient.md",
         "type": "constructor",
         "extension": "md",
-        "functionality": "MicrofoxSlackClient",
-        "description": "Creates a new instance of the MicrofoxSlackClient."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listChannels.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listChannels",
-        "description": "Lists all public and private channels in a workspace."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getChannelConversationInfo.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getChannelConversationInfo",
-        "description": "Fetches information about a conversation."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listUsers.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listUsers",
-        "description": "Lists all users in a workspace."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/listChannelUsers.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listChannelUsers",
-        "description": "Lists all users in a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/searchUser.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "searchUser",
-        "description": "Finds a user by their email address."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/searchChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "searchChannel",
-        "description": "Finds a channel by its name."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/messageUser.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "messageUser",
-        "description": "Sends a direct message to a user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/messageChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "messageChannel",
-        "description": "Sends a message to a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/setReminder.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "setReminder",
-        "description": "Sets a reminder for a user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/createChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createChannel",
-        "description": "Creates a new channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/reactMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "reactMessage",
-        "description": "Adds a reaction to a message."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getUserInfo.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserInfo",
-        "description": "Gets information about a user."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/replyMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "replyMessage",
-        "description": "Replies to a message in a thread."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/addUserToChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "addUserToChannel",
-        "description": "Adds a user to a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/removeUserFromChannel.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "removeUserFromChannel",
-        "description": "Removes a user from a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/sendFile.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "sendFile",
-        "description": "Uploads a file to a channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack/docs/getFileInfo.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getFileInfo",
-        "description": "Gets information about a file."
+        "functionality": "WebClient",
+        "description": "Creates a new instance of the Slack WebClient."
       }
     ]
   },
@@ -265,16 +267,35 @@
       ],
       "internalKeys": [],
       "functionalities": [
-          "chat.postMessage",
-          "chat.update",
-          "conversations.history",
-          "conversations.join",
-          "conversations.list",
-          "reactions.add",
-          "users.info",
-          "users.list",
-          "users.lookupByEmail",
-          "views.open"
+        "MicrofoxSlackClient",
+        "WebClient",
+        "addUserToChannel",
+        "chat.postMessage",
+        "chat.update",
+        "conversations.history",
+        "conversations.join",
+        "conversations.list",
+        "createChannel",
+        "getChannelConversationInfo",
+        "getFileInfo",
+        "getUserInfo",
+        "listChannelUsers",
+        "listChannels",
+        "listUsers",
+        "messageChannel",
+        "messageUser",
+        "reactMessage",
+        "reactions.add",
+        "removeUserFromChannel",
+        "replyMessage",
+        "searchChannel",
+        "searchUser",
+        "sendFile",
+        "setReminder",
+        "users.info",
+        "users.list",
+        "users.lookupByEmail",
+        "views.open"
       ]
     },
     {
@@ -291,23 +312,35 @@
       ],
       "internalKeys": [],
       "functionalities": [
-        "listChannels",
-        "getChannelConversationInfo",
-        "listUsers",
-        "listChannelUsers",
-        "searchUser",
-        "searchChannel",
-        "messageUser",
-        "messageChannel",
-        "setReminder",
-        "createChannel",
-        "reactMessage",
-        "getUserInfo",
-        "replyMessage",
+        "MicrofoxSlackClient",
+        "WebClient",
         "addUserToChannel",
+        "chat.postMessage",
+        "chat.update",
+        "conversations.history",
+        "conversations.join",
+        "conversations.list",
+        "createChannel",
+        "getChannelConversationInfo",
+        "getFileInfo",
+        "getUserInfo",
+        "listChannelUsers",
+        "listChannels",
+        "listUsers",
+        "messageChannel",
+        "messageUser",
+        "reactMessage",
+        "reactions.add",
         "removeUserFromChannel",
+        "replyMessage",
+        "searchChannel",
+        "searchUser",
         "sendFile",
-        "getFileInfo"
+        "setReminder",
+        "users.info",
+        "users.list",
+        "users.lookupByEmail",
+        "views.open"
       ]
     }
   ],
@@ -316,4 +349,4 @@
     "Use `new WebClient(token)` to create a new Slack client."
   ],
   "platformType": "communication"
-} 
+}
