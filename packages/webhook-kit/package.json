@@ -1,6 +1,6 @@
 {
   "name": "@microfox/webhook-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A central webhook kit for building webhook integrations in Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
