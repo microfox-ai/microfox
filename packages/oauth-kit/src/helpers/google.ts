@@ -1,17 +1,35 @@
 import {
-  GoogleOAuthSdk,
   IdentityInfo,
   TokenResponseOutput,
-} from '@microfox/google-oauth';
+} from '../../../google-oauth/src/schemas';
 import { Identity } from '../schemas';
 
+const USER_INFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
 export const getGoogleIdentityInfo = async (
   tokenResponse: TokenResponseOutput,
 ): Promise<IdentityInfo> => {
-  const identityInfo = await GoogleOAuthSdk.getUserInfo(
-    tokenResponse.accessToken,
-  );
-  return identityInfo;
+  try {
+    const response = await fetch(USER_INFO_URL, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenResponse.accessToken}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const errorMessage =
+        data?.error?.message ||
+        data?.error_description ||
+        'Failed to fetch user info';
+      throw new Error(errorMessage);
+    }
+
+    return data as IdentityInfo;
+  } catch (error) {
+    throw new Error(`Failed to fetch user info: ${error}`);
+  }
 };
 
 export const convertGoogleIdentityToIdentity = (
