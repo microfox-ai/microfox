@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { CryptoVault } from '@microfox/crypto-sdk';
 import { sdkInit } from './sdkInit.js';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
 dotenv.config(); // for any local vars
 
@@ -18,13 +19,21 @@ const cryptoVault = new CryptoVault({
   outputEncoding: 'base64url'
 });
 
-export const handler = async (event: any): Promise<any> => {
+export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
   try {
-    // Extract the functionName from the path: /{functionName}
+    // Extract constructor and function from the path: /{constructorName}/{functionName}
     console.log("event", event);
     const segments = event.path.split("/").filter(Boolean);
-    const functionName = segments[segments.length - 1]!.split("?")[0];
-    console.log("functionName", functionName);
+    if (segments.length < 2) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid path format. Expected /{constructorName}/{functionName}" }),
+      };
+    }
+    const constructorSlug = segments[0];
+    const functionSlug = segments[1];
+    console.log(`constructorSlug: ${constructorSlug}, functionSlug: ${functionSlug}`);
 
     // Parse the request body
     let requestBody: any;
@@ -50,7 +59,7 @@ export const handler = async (event: any): Promise<any> => {
     }
 
     // Decrypt environment variables
-    const envVars: Record<string, string> = {};
+    const credentials: Record<string, string> = {};
     try {
       for (const variable of authVariables) {
         if (!variable.key || !variable.value) {
@@ -60,28 +69,48 @@ export const handler = async (event: any): Promise<any> => {
 
         // Decrypt the value
         const decryptedValue = cryptoVault.decrypt(variable.value);
-        envVars[variable.key] = decryptedValue;
+        credentials[variable.key] = decryptedValue;
       }
     } catch (decryptionError) {
-      console.error("Error decrypting environment variables:", decryptionError);
+      console.error("Error decrypting credentials:", decryptionError);
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Failed to decrypt environment variables" }),
+        body: JSON.stringify({ error: "Failed to decrypt credentials" }),
       };
     }
 
-    // Map functions
-    const sdkMap = sdkInit(envVars);
+    // Initialize SDK using the factory. The AI that generates sdkInit.ts will know
+    // about all constructors, so we can find the original name from the slug.
+    // This part of the code assumes that sdkInit can map slug back to name or that the AI will handle it.
+    // For now, we will find the constructor name on the sdkInit export itself.
+    
+    const constructorName = Object.keys(sdkInit.constructors).find(
+        (name) => name.replace(/\./g, '-') === constructorSlug
+    );
+    
+    if (!constructorName) {
+        return {
+            statusCode: 404,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ error: `Constructor matching slug '${constructorSlug}' not found` }),
+        };
+    }
 
-    const fn = sdkMap[functionName];
-    if (!fn) {
+    const sdk = sdkInit({ constructorName, ...credentials });
+
+    // Find the function on the SDK instance by matching the slug from the path
+    const targetFunctionName = Object.keys(sdk).find(key => typeof sdk[key] === 'function' && key.replace(/\./g, '-') === functionSlug);
+
+    if (!targetFunctionName) {
       return {
         statusCode: 404,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: `Function '${functionName}' not found` }),
+        body: JSON.stringify({ error: `Function matching slug '${functionSlug}' not found on SDK instance for constructor '${constructorName}'` }),
       };
     }
+
+    const fn = sdk[targetFunctionName].bind(sdk);
 
     // Extract function arguments
     let args: any[] = [];

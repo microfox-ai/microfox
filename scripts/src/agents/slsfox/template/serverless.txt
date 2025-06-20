@@ -21,7 +21,7 @@ functions:
     handler: dist/index.handler
     events:
       - http:
-          path: /{functionName}
+          path: /{proxy+}
           method: any
           cors: true
 
