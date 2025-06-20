@@ -131,7 +131,8 @@
             "reactions:read",
             "reactions:write",
             "reminders:read",
-            "reminders:write"
+            "reminders:write",
+            "team:read"
           ]
         },
         {

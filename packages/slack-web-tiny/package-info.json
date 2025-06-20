@@ -139,7 +139,8 @@
             "users:read.email",
             "users:read",
             "users.profile:read",
-            "metadata.message:read"
+            "metadata.message:read",
+            "team:read"
           ]
         }
       ],
