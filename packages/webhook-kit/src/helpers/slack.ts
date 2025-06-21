@@ -1,6 +1,6 @@
 import { WebhhookEvent } from '@microfox/webhook-core';
 
-export const slackMainEventsToTrack: string[] = [
+const messageEvents = [
   'app_mention',
   'message',
   'message.im',
@@ -8,6 +8,12 @@ export const slackMainEventsToTrack: string[] = [
   'message.groups',
   'message.mpim',
   'message.app_home',
+];
+const openedEvents = ['app_home_opened'];
+
+export const slackMainEventsToTrack: string[] = [
+  ...messageEvents,
+  ...openedEvents,
 ];
 
 export const isBotMentioned = (payload: any) => {
@@ -38,6 +44,7 @@ export const convertSlackPayloadToWebhookEvent = (
 
   return {
     eventId: 'slack-' + payload.event_id,
+    baseType: messageEvents.includes(payload.event_type) ? 'message' : 'opened',
     eventType: payload.event_type,
     timestamp: payload.event_ts,
     cleanText: cleanText,

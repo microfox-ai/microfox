@@ -14,11 +14,12 @@ export interface WebhhookEvent {
   eventId: string;
   eventType: string;
   timestamp: number;
+  baseType: 'message' | 'opened';
   text?: string;
   cleanText?: string;
   blocks: any;
   provider: string;
-  sender: {
+  sender?: {
     id: string;
     name?: string;
     email?: string;

@@ -14,6 +14,12 @@ export {
   Webhook,
 } from '@microfox/webhook-core';
 
+/**
+ * WebhookKit is a class that allows you to create a webhook kit for a given connector.
+ * It will create a webhook for each connector and add it to the webhooks object.
+ * It will also add the webhook to the webhooks object.
+ * It will also add the webhook to the webhooks object.
+ */
 export class WebhookKit {
   private webhooks: Record<string, Webhook<any>>;
   private connectors: Record<string, string>;
