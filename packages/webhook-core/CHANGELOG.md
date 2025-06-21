@@ -1,5 +1,11 @@
 # @microfox/webhook-core
 
+## 0.1.3
+
+### Patch Changes
+
+- d5818ed: release: add baseType to WebhhookEvent and enhance Slack event tracking
+
 ## 0.1.2
 
 ### Patch Changes
