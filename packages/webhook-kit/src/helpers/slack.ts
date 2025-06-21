@@ -1,4 +1,4 @@
-import { WebhhookEvent } from '@microfox/webhook-core';
+import { type WebhookEvent } from '@microfox/webhook-core';
 
 const messageEvents = [
   'app_mention',
@@ -23,7 +23,7 @@ export const isBotMentioned = (payload: any) => {
 
 export const convertSlackPayloadToWebhookEvent = (
   payload: any,
-): WebhhookEvent => {
+): WebhookEvent => {
   const bot = payload.authorizations?.find((auth: any) => auth.is_bot);
   const cleanText = payload.event.text.replace(
     `<@${bot.user_id}>`,
@@ -43,24 +43,28 @@ export const convertSlackPayloadToWebhookEvent = (
               : 'direct_message';
 
   return {
-    eventId: 'slack-' + payload.event_id,
-    baseType: messageEvents.includes(payload.event_type) ? 'message' : 'opened',
-    eventType: payload.event_type,
+    event_id: 'slack-' + payload.event_id,
+    base_type: messageEvents.includes(payload.event_type)
+      ? 'message'
+      : 'opened',
+    event_type: payload.event_type,
     timestamp: payload.event_ts,
-    cleanText: cleanText,
+    clean_text: cleanText,
     text: payload.event.text,
     blocks: payload.event.blocks,
     provider: 'slack',
     bot: {
       id: bot.user_id,
-      appId: bot.api_app_id,
-      isBotMentioned: isBotMentioned(payload),
+      app_id: bot.api_app_id,
+      is_bot_mentioned: isBotMentioned(payload),
     },
-    team: {
-      id: payload.team_id,
-    },
-    org: {
-      id: payload.enterprise_id,
+    provider_info: {
+      team: {
+        id: payload.team_id,
+      },
+      org: {
+        id: payload.enterprise_id,
+      },
     },
     sender: {
       id: payload.event.user,
@@ -71,10 +75,13 @@ export const convertSlackPayloadToWebhookEvent = (
     },
     event: {
       id: payload.event_id,
-      msgId: payload.event.client_msg_id,
+      type: payload.event_type,
+      subtype: payload.event.subtype,
+      msg_id: payload.event.client_msg_id,
       text: payload.event.text,
-      timestamp: payload.event.ts,
+      ts: payload.event.ts,
+      parent_ts: payload.event.thread_ts,
     },
-    originalPayload: payload,
+    original_payload: payload,
   };
 };

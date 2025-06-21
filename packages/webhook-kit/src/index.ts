@@ -1,6 +1,6 @@
 export * from './webhookKit';
 export {
-  type WebhhookEvent,
+  type WebhookEvent,
   type WebhookResponse,
   type WebhookRequest,
   type WebhookVerificationError,

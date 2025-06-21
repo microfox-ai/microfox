@@ -1,4 +1,4 @@
-import { WebhhookEvent } from '@microfox/webhook-core';
+import { type WebhookEvent } from '@microfox/webhook-core';
 import {
   convertSlackPayloadToWebhookEvent,
   slackMainEventsToTrack,
@@ -16,7 +16,7 @@ export const isEventTracked = (name: string, event: any) => {
 export const convertPayloadToWebhookEvent = (
   name: string,
   payload: any,
-): WebhhookEvent => {
+): WebhookEvent => {
   switch (name) {
     case 'slack':
       return convertSlackPayloadToWebhookEvent(payload);

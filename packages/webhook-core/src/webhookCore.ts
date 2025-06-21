@@ -10,33 +10,35 @@ export interface WebhookRequest {
   body: string | Buffer; // Adjusted to Buffer as well, as some SDKs expect it
 }
 
-export interface WebhhookEvent {
-  eventId: string;
-  eventType: string;
+export interface WebhookEvent {
+  event_id: string;
+  event_type: string;
   timestamp: number;
-  baseType: 'message' | 'opened';
+  base_type: 'message' | 'opened';
   text?: string;
-  cleanText?: string;
+  clean_text?: string;
   blocks: any;
   provider: string;
   sender?: {
     id: string;
     name?: string;
     email?: string;
-    avatarUrl?: string;
+    avatar_url?: string;
     mobile?: string;
   };
   bot?: {
     id: string; // app_id, bot_id, etc.
-    appId?: string;
-    botName?: string; // bot_name
-    isBotMentioned?: boolean;
+    app_id?: string;
+    bot_name?: string; // bot_name
+    is_bot_mentioned?: boolean;
   };
-  team?: {
-    id: string;
-  };
-  org?: {
-    id: string;
+  provider_info?: {
+    team?: {
+      id: string;
+    };
+    org?: {
+      id: string;
+    };
   };
   channel: {
     id: string;
@@ -44,11 +46,17 @@ export interface WebhhookEvent {
   };
   event: {
     id: string;
-    msgId?: string;
+    type?: string; // message, opened, etc.
+    subtype?: string; // channel_join, channel_leave, etc.
+    msg_id?: string;
+    task_id?: string;
+    metadata?: Record<string, any>;
+    parent_msg_id?: string;
     text?: string;
-    timestamp?: string; // in fractions of a second
+    ts?: string; // in fractions of a second
+    parent_ts?: string; // in fractions of a second
   };
-  originalPayload?: any;
+  original_payload?: any;
 }
 
 export interface WebhookResponse {
@@ -56,7 +64,7 @@ export interface WebhookResponse {
   body: string;
   payload?: any;
   isTracked?: boolean;
-  webhookEvent?: WebhhookEvent;
+  webhookEvent?: WebhookEvent;
 }
 
 export abstract class Webhook<
