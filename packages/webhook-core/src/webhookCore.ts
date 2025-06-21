@@ -10,10 +10,52 @@ export interface WebhookRequest {
   body: string | Buffer; // Adjusted to Buffer as well, as some SDKs expect it
 }
 
+export interface WebhhookEvent {
+  eventId: string;
+  eventType: string;
+  timestamp: number;
+  text?: string;
+  cleanText?: string;
+  blocks: any;
+  provider: string;
+  sender: {
+    id: string;
+    name?: string;
+    email?: string;
+    avatarUrl?: string;
+    mobile?: string;
+  };
+  bot?: {
+    id: string; // app_id, bot_id, etc.
+    appId?: string;
+    botName?: string; // bot_name
+    isBotMentioned?: boolean;
+  };
+  team?: {
+    id: string;
+  };
+  org?: {
+    id: string;
+  };
+  channel: {
+    id: string;
+    type?: string; // direct_message, public_channel, private_channel, user_to_user
+  };
+  event: {
+    id: string;
+    msgId?: string;
+    text?: string;
+    timestamp?: string; // in fractions of a second
+  };
+  originalPayload?: any;
+}
+
 export interface WebhookResponse {
   statusCode: number;
   body: string;
   payload?: any;
+  isTracked?: boolean;
+  webhookEvent?: WebhhookEvent;
 }
 
 export abstract class Webhook<

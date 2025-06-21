@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "@microfox/webhook-core": "*",
+    "@microfox/webhook-octokit": "*",
+    "@microfox/webhook-slack": "*",
     "zod": "^3.24.2"
   },
   "devDependencies": {

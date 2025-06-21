@@ -3,6 +3,9 @@ import {
   WebhookRequest,
   WebhookResponse,
 } from '@microfox/webhook-core';
+import { SlackWebhook } from '@microfox/webhook-slack';
+import { OctokitWebhook } from '@microfox/webhook-octokit';
+import { convertPayloadToWebhookEvent, isEventTracked } from './helpers';
 
 export {
   WebhookVerificationError,
@@ -13,9 +16,32 @@ export {
 
 export class WebhookKit {
   private webhooks: Record<string, Webhook<any>>;
+  private connectors: Record<string, string>;
 
-  constructor() {
+  constructor(_connectors: Record<string, string> | undefined = {}) {
     this.webhooks = {};
+    if (_connectors) {
+      this.connectors = _connectors;
+    } else {
+      this.connectors = {};
+    }
+    for (const [connector, secret] of Object.entries(_connectors)) {
+      switch (connector) {
+        case 'slack':
+          this.webhooks[connector] = new SlackWebhook({
+            secret: secret || process.env.SLACK_SIGNING_SECRET || '',
+            botToken: process.env.SLACK_BOT_TOKEN || '',
+          });
+          break;
+        case 'octokit':
+          this.webhooks[connector] = new OctokitWebhook({
+            secret: secret || process.env.OCTOKIT_SIGNING_SECRET || '',
+          });
+          break;
+        default:
+          throw new Error(`Unsupported connector: ${connector}`);
+      }
+    }
   }
 
   addWebhook(name: string, webhook: Webhook<any>) {
@@ -34,6 +60,27 @@ export class WebhookKit {
     if (!webhook) {
       throw new Error(`Webhook with name "${name}" not found.`);
     }
-    return await webhook.receive(request);
+    const response = await webhook.receive(request);
+    if (response && isEventTracked(name, response.payload)) {
+      return {
+        ...response,
+        isTracked: true,
+        webhookEvent: convertPayloadToWebhookEvent(name, response.payload),
+      };
+    }
+    return response;
+  }
+
+  async receiveAll(request: WebhookRequest): Promise<WebhookResponse | void> {
+    const responses = await Promise.all(
+      Object.entries(this.connectors).map(async ([connector, secret]) => {
+        const webhook = this.getWebhook(connector);
+        if (!webhook) {
+          throw new Error(`Webhook with name "${connector}" not found.`);
+        }
+        return await webhook.receive(request);
+      }),
+    );
+    return responses.find(response => response !== undefined);
   }
 }
