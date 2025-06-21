@@ -1,5 +1,11 @@
 # @microfox/webhook-core
 
+## 0.1.4
+
+### Patch Changes
+
+- 56bd374: release: integrate @octokit/webhooks-types and enhance webhook event handling with connector configuration
+
 ## 0.1.3
 
 ### Patch Changes
