@@ -18,3 +18,6 @@ packages/*/research-report.md
 packages/*/build-report.md
 packages/*/doc-report.md
 packages/*/codegen-report.md
+
+# My Agent Additions
+scripts/src/agents/myCodingAgent/output/
