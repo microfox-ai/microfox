@@ -1,4 +1,5 @@
 import { type WebhookEvent } from '@microfox/webhook-core';
+import { ConnectorConfig } from '../schemas';
 
 const messageEvents = [
   'app_mention',
@@ -16,18 +17,26 @@ export const slackMainEventsToTrack: string[] = [
   ...openedEvents,
 ];
 
-export const isBotMentioned = (payload: any) => {
+// TODO: enforce with connector config
+export const isBotMentioned = (
+  payload: any,
+  connectorConfig: ConnectorConfig,
+) => {
   const bot = payload.authorizations?.find((auth: any) => auth.is_bot);
-  return payload.event.text.includes(`<@${bot.user_id}>`);
+  return (
+    payload.event.text.includes(`<@${bot.user_id}>`) ||
+    payload.event.text.includes(`<@${connectorConfig.appMentionId}>`)
+  );
 };
 
 export const convertSlackPayloadToWebhookEvent = (
   payload: any,
+  connectorConfig: ConnectorConfig,
 ): WebhookEvent => {
   const bot = payload.authorizations?.find((auth: any) => auth.is_bot);
   const cleanText = payload.event.text.replace(
-    `<@${bot.user_id}>`,
-    '@Microfox',
+    `<@${connectorConfig.appMentionId || bot.user_id}>`,
+    `@${connectorConfig.appName}`,
   );
   const channelType =
     payload.event.type === 'message.im'
@@ -56,7 +65,7 @@ export const convertSlackPayloadToWebhookEvent = (
     bot: {
       id: bot.user_id,
       app_id: bot.api_app_id,
-      is_bot_mentioned: isBotMentioned(payload),
+      is_bot_mentioned: isBotMentioned(payload, connectorConfig),
     },
     provider_info: {
       team: {

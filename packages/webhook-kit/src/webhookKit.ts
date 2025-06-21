@@ -6,6 +6,7 @@ import {
 import { SlackWebhook } from '@microfox/webhook-slack';
 import { OctokitWebhook } from '@microfox/webhook-octokit';
 import { convertPayloadToWebhookEvent, isEventTracked } from './helpers';
+import { ConnectorConfig } from './schemas';
 
 export {
   WebhookVerificationError,
@@ -22,9 +23,9 @@ export {
  */
 export class WebhookKit {
   private webhooks: Record<string, Webhook<any>>;
-  private connectors: Record<string, string>;
+  private connectors: Record<string, ConnectorConfig>;
 
-  constructor(_connectors: Record<string, string> | undefined = {}) {
+  constructor(_connectors: Record<string, ConnectorConfig> | undefined = {}) {
     this.webhooks = {};
     if (_connectors) {
       this.connectors = _connectors;
@@ -35,13 +36,13 @@ export class WebhookKit {
       switch (connector) {
         case 'slack':
           this.webhooks[connector] = new SlackWebhook({
-            secret: secret || process.env.SLACK_SIGNING_SECRET || '',
-            botToken: process.env.SLACK_BOT_TOKEN || '',
+            secret: secret.secret || process.env.SLACK_SIGNING_SECRET || '',
+            botToken: secret.botToken || process.env.SLACK_BOT_TOKEN || '',
           });
           break;
         case 'octokit':
           this.webhooks[connector] = new OctokitWebhook({
-            secret: secret || process.env.OCTOKIT_SIGNING_SECRET || '',
+            secret: secret.secret || process.env.OCTOKIT_SIGNING_SECRET || '',
           });
           break;
         default:
@@ -71,7 +72,11 @@ export class WebhookKit {
       return {
         ...response,
         isTracked: true,
-        webhookEvent: convertPayloadToWebhookEvent(name, response.payload),
+        webhookEvent: convertPayloadToWebhookEvent(
+          name,
+          response.payload,
+          this.connectors[name],
+        ),
       };
     }
     return response;
