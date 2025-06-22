@@ -1,5 +1,11 @@
 # @microfox/webhook-kit
 
+## 1.0.7
+
+### Patch Changes
+
+- 1ceda91: release: enhance webhook response validation by ensuring payload and connector existence before tracking events
+
 ## 1.0.6
 
 ### Patch Changes
