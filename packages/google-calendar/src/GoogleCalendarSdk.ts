@@ -47,6 +47,7 @@ export class GoogleCalendarSdk {
         'https://www.googleapis.com/auth/calendar.settings.readonly',
         'https://www.googleapis.com/auth/calendar.calendarlist.readonly',
         'https://www.googleapis.com/auth/calendar.app.created',
+        'https://www.googleapis.com/auth/calendar',
       ],
     });
   }

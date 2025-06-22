@@ -2008,6 +2008,7 @@
             "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs.",
             "defaultValue": [
               "https://www.googleapis.com/auth/spreadsheets",
+              "https://www.googleapis.com/auth/spreadsheets.readonly",
               "https://www.googleapis.com/auth/webmasters"
             ]
           }
