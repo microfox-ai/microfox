@@ -1,1 +1,13 @@
-{"requests": []}
+{
+  "requests": [
+    {
+      "type": "pkg-create",
+      "query": "Veo on Vertex AI API",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation",
+      "notes": "Create a new package for Veo on Vertex AI API.",
+      "issueNumber": 489,
+      "logs": "",
+      "error": ""
+    }
+  ]
+}
