@@ -1,3 +1,5 @@
+<!--used:rarely-->
+
 ## Function: `summarizerSearch`
 
 Performs a summarizer search using the Brave Search API.

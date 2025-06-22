@@ -32,7 +32,7 @@ This function allows you to perform web searches and retrieve results from the B
 **Return Value:**
 
 - `Promise<WebSearchApiResponse>`: A promise that resolves to the web search response containing:
-  - `type`: Always 'web'
+  - `type`: Always 'search'
   - `discussions`: Optional discussions results
   - `faq`: Optional FAQ results
   - `infobox`: Optional infobox results
@@ -41,7 +41,7 @@ This function allows you to perform web searches and retrieve results from the B
   - `news`: Optional news results
   - `query`: Query information
   - `rich_data`: Optional rich data
-  - `search`: Search results
+  - `web`: Optional web search results
   - `videos`: Optional video results
 
 **Examples:**
@@ -94,15 +94,15 @@ if (results.type === 'search') {
 }
 
 // Batch web search example
-const batchResults = await braveSDK.batchWebSearch([
-  { q: 'TypeScript' },
-  { q: 'JavaScript', count: 10 },
-  { q: 'Python', freshness: 'pw' },
+const batchResults = await braveSDK.batchProcess([
+  { type: 'web', params: { q: 'TypeScript' } },
+  { type: 'web', params: { q: 'JavaScript', count: 10 } },
+  { type: 'web', params: { q: 'Python', freshness: 'pw' } },
 ]);
 
 // Process batch results
 batchResults.forEach((result, index) => {
-  if (result.type === 'web' && result.web) {
+  if (result.type === 'search' && result.web) {
     console.log(`Batch ${index + 1} Results:`);
     result.web.results.forEach((searchResult, resultIndex) => {
       console.log(`  Result ${resultIndex + 1}:`, searchResult.title);
@@ -112,8 +112,12 @@ batchResults.forEach((result, index) => {
 });
 
 // Batch search with progress tracking
-const batchResultsWithProgress = await braveSDK.batchWebSearch(
-  [{ q: 'React' }, { q: 'Vue' }, { q: 'Angular' }],
+const batchResultsWithProgress = await braveSDK.batchProcess(
+  [
+    { type: 'web', params: { q: 'React' } },
+    { type: 'web', params: { q: 'Vue' } },
+    { type: 'web', params: { q: 'Angular' } },
+  ],
   {
     delay: 2000, // 2 second delay between requests
     onProgress: (completed, total) => {
