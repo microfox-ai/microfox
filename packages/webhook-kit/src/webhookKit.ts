@@ -68,7 +68,12 @@ export class WebhookKit {
       throw new Error(`Webhook with name "${name}" not found.`);
     }
     const response = await webhook.receive(request);
-    if (response && isEventTracked(name, response.payload)) {
+    if (
+      response &&
+      response.payload &&
+      this.connectors[name] &&
+      isEventTracked(name, response.payload)
+    ) {
       return {
         ...response,
         isTracked: true,
