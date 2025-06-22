@@ -68,6 +68,7 @@ export class WebhookKit {
       throw new Error(`Webhook with name "${name}" not found.`);
     }
     const response = await webhook.receive(request);
+    console.log('response', response);
     if (
       response &&
       response.payload &&

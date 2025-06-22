@@ -5,10 +5,10 @@ import {
 } from './slack';
 import { ConnectorConfig } from '../schemas';
 
-export const isEventTracked = (name: string, event: any) => {
+export const isEventTracked = (name: string, payload?: any) => {
   switch (name) {
     case 'slack':
-      return slackMainEventsToTrack.includes(event.event.type);
+      return slackMainEventsToTrack.includes(payload?.event?.type);
     default:
       throw new Error(`Unsupported connector: ${name}`);
   }
