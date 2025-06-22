@@ -1,29 +1,32 @@
-import { createBraveSDK } from '@microfox/brave';
+import { BraveSDK, createBraveSDK } from '@microfox/brave';
 
-export const sdkInit = (envVars: Record<string, string>): Record<string, Function> => {
-    // Environment variable validation
-    if (!envVars['BRAVE_API_KEY']) {
-        throw new Error('BRAVE_API_KEY is required but not provided in the environment variables.');
-    }
-
-    // Initialize SDK with api key
-    const sdk = createBraveSDK({
-        apiKey: envVars['BRAVE_API_KEY']
-    });
-
-    // Map functions
-    const sdkMap: Record<string, Function> = {
-        request: sdk.request.bind(sdk),
-        webSearch: sdk.webSearch.bind(sdk),
-        localPoiSearch: sdk.localPoiSearch.bind(sdk),
-        localDescriptionsSearch: sdk.localDescriptionsSearch.bind(sdk),
-        summarizerSearch: sdk.summarizerSearch.bind(sdk),
-        imageSearch: sdk.imageSearch.bind(sdk),
-        videoSearch: sdk.videoSearch.bind(sdk),
-        newsSearch: sdk.newsSearch.bind(sdk),
-        suggestSearch: sdk.suggestSearch.bind(sdk),
-        spellcheckSearch: sdk.spellcheckSearch.bind(sdk)
-    };
-
-    return sdkMap;
+interface SDKConfig {
+  constructorName: string;
+  BRAVE_API_KEY: string;
+  BRAVE_SECRET_TEMPLATE_TYPE: string;
+  [key: string]: any;
 }
+
+export const sdkInit = (config: SDKConfig): BraveSDK => {
+  const { constructorName, BRAVE_API_KEY, BRAVE_SECRET_TEMPLATE_TYPE, ...options } = config;
+
+  if (!BRAVE_API_KEY) {
+    throw new Error('BRAVE_API_KEY is required');
+  }
+
+  if (!BRAVE_SECRET_TEMPLATE_TYPE) {
+    throw new Error('BRAVE_SECRET_TEMPLATE_TYPE is required');
+  }
+
+  switch (constructorName) {
+    case 'createBraveSDK':
+      return createBraveSDK({
+        apiKey: BRAVE_API_KEY,
+        ...options
+      });
+    default:
+      throw new Error(`Constructor "${constructorName}" is not supported.`);
+  }
+};
+
+export { BraveSDK, createBraveSDK };
