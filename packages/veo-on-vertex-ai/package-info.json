@@ -25,13 +25,6 @@
     ],
     "all_readmes": [
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/VeoonVertexAIAPISdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "VeoonVertexAIAPISdk",
-        "description": "Initializes a new instance of the `VeoonVertexAIAPISdk` client. This constructor sets up the configuration required to communicate with the Veo on Vertex AI API, including the Google Cloud project ID and location. It's recommended to use the `createVeoonVertexAIAPISDK` factory function for creating instances of the SDK."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/createVeoonVertexAIAPISDK.md",
         "type": "functionality",
         "extension": "md",
@@ -58,6 +51,13 @@
         "extension": "md",
         "functionality": "pollOperation",
         "description": "Polls a long-running video generation operation until it is complete or a timeout is reached. It repeatedly calls `fetchOperationStatus` at a specified interval, simplifying the process of waiting for a result."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/VeoonVertexAIAPISdk.md",
+        "type": "constructor",
+        "extension": "md",
+        "functionality": "VeoonVertexAIAPISdk",
+        "description": "Initializes a new instance of the `VeoonVertexAIAPISdk` client. This constructor sets up the configuration required to communicate with the Veo on Vertex AI API, including the Google Cloud project ID and location. It's recommended to use the `createVeoonVertexAIAPISDK` factory function for creating instances of the SDK."
       }
     ]
   },
@@ -83,6 +83,7 @@
       ],
       "internalKeys": [],
       "functionalities": [
+        "VeoonVertexAIAPISdk",
         "createVeoonVertexAIAPISDK",
         "fetchOperationStatus",
         "generateVideo",
