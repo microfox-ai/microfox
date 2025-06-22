@@ -107,10 +107,7 @@
           "key": "SCOPES",
           "displayName": "Google Scopes",
           "description": "The scopes required for the YouTube Reporting API.",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/yt-analytics.readonly",
-            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-          ]
+          "defaultValue": []
         }
       ],
       "functionalities": [
@@ -158,10 +155,7 @@
       "constructors": ["YouTubeReportingAPISDK"],
       "description": "The scopes required for the YouTube Reporting API.",
       "required": true,
-      "defaultValue": [
-        "https://www.googleapis.com/auth/yt-analytics.readonly",
-        "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-      ]
+      "defaultValue": []
     }
   ],
   "extraInfo": [
