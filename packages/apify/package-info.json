@@ -19,8 +19,13 @@
     "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/README.md",
     "functionalities": [
       "ApifySdk",
+      "createActor",
       "createActorBuild",
+      "createActorVersion",
       "createApifySDK",
+      "createDataset",
+      "createKeyValueStore",
+      "createRequestQueue",
       "createWebhook",
       "deleteActor",
       "deleteActorVersion",
@@ -55,12 +60,7 @@
       "updateDataset",
       "updateKeyValueStore",
       "updateRequestQueue",
-      "updateWebhook",
-      "createActor",
-      "createActorVersion",
-      "createDataset",
-      "createKeyValueStore",
-      "createRequestQueue"
+      "updateWebhook"
     ],
     "all_readmes": [
       {
@@ -71,6 +71,13 @@
         "description": "Initializes a new instance of the Apify SDK. It requires an API token for authentication, which can be provided directly in the options object or through the `APIFY_API_TOKEN` environment variable."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createActor.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createActor",
+        "description": "Creates a new actor on the Apify platform."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createActorBuild.md",
         "type": "functionality",
         "extension": "md",
@@ -78,11 +85,39 @@
         "description": "Creates a new build for a specific actor."
       },
       {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createActorVersion.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createActorVersion",
+        "description": "Creates a new version for a specific actor."
+      },
+      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createApifySDK.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "createApifySDK",
         "description": "A factory function that creates and returns a new instance of the `ApifySdk` class. This is a convenient way to initialize the SDK."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createDataset.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createDataset",
+        "description": "Creates a new, empty dataset."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createKeyValueStore.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createKeyValueStore",
+        "description": "Creates a new, empty key-value store."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createRequestQueue.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "createRequestQueue",
+        "description": "Creates a new, empty request queue."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createWebhook.md",
@@ -225,18 +260,18 @@
         "description": "Retrieves a paginated list of runs for a specific actor."
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/listActorVersions.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listActorVersions",
-        "description": "Retrieves a list of all versions for a specific actor."
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/listActors.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "listActors",
         "description": "Retrieves a paginated list of actors. The list can be filtered and sorted using optional parameters."
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/listActorVersions.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "listActorVersions",
+        "description": "Retrieves a list of all versions for a specific actor."
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/listDatasets.md",
@@ -328,41 +363,6 @@
         "extension": "md",
         "functionality": "updateWebhook",
         "description": "Updates an existing webhook with new data."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createActor.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createActor",
-        "description": "Creates a new actor on the Apify platform."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createActorVersion.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createActorVersion",
-        "description": "Creates a new version for a specific actor."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createDataset.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createDataset",
-        "description": "Creates a new, empty dataset."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createKeyValueStore.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createKeyValueStore",
-        "description": "Creates a new, empty key-value store."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/apify/docs/createRequestQueue.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createRequestQueue",
-        "description": "Creates a new, empty request queue."
       }
     ]
   },
@@ -382,8 +382,14 @@
       ],
       "internalKeys": [],
       "functionalities": [
+        "ApifySdk",
+        "createActor",
         "createActorBuild",
+        "createActorVersion",
         "createApifySDK",
+        "createDataset",
+        "createKeyValueStore",
+        "createRequestQueue",
         "createWebhook",
         "deleteActor",
         "deleteActorVersion",
@@ -418,12 +424,7 @@
         "updateDataset",
         "updateKeyValueStore",
         "updateRequestQueue",
-        "updateWebhook",
-        "createActor",
-        "createActorVersion",
-        "createDataset",
-        "createKeyValueStore",
-        "createRequestQueue"
+        "updateWebhook"
       ]
     }
   ],
