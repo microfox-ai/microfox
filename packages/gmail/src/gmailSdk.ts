@@ -33,7 +33,9 @@ export class GmailSDK {
       clientSecret: validatedConfig.clientSecret,
       redirectUri: '',
       scopes: validatedConfig?.scopes ?? [
-        'https://www.googleapis.com/auth/gmail.modify'
+        'https://www.googleapis.com/auth/gmail.addons.current.action.compose',
+        'https://www.googleapis.com/auth/gmail.addons.current.message.action',
+        'https://www.googleapis.com/auth/gmail.labels'
       ],
     });
     this.accessToken = validatedConfig.accessToken || '';

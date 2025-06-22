@@ -12,7 +12,9 @@
     "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
     "https://www.googleapis.com/auth/calendar.events.freebusy",
     "https://www.googleapis.com/auth/calendar.freebusy",
-    "https://www.googleapis.com/auth/calendar.events.owned"
+    "https://www.googleapis.com/auth/calendar.events.owned",
+    "https://www.googleapis.com/auth/calendar.events.public.readonly",
+    "https://www.googleapis.com/auth/calendar.settings.readonly"
   ],
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/google-calendar",
@@ -331,7 +333,9 @@
             "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
             "https://www.googleapis.com/auth/calendar.events.freebusy",
             "https://www.googleapis.com/auth/calendar.freebusy",
-            "https://www.googleapis.com/auth/calendar.events.owned"
+            "https://www.googleapis.com/auth/calendar.events.owned",
+            "https://www.googleapis.com/auth/calendar.events.public.readonly",
+            "https://www.googleapis.com/auth/calendar.settings.readonly"
           ]
         }
       ],
@@ -406,7 +410,9 @@
         "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
         "https://www.googleapis.com/auth/calendar.events.freebusy",
         "https://www.googleapis.com/auth/calendar.freebusy",
-        "https://www.googleapis.com/auth/calendar.events.owned"
+        "https://www.googleapis.com/auth/calendar.events.owned",
+        "https://www.googleapis.com/auth/calendar.events.public.readonly",
+        "https://www.googleapis.com/auth/calendar.settings.readonly"
       ]
     }
   ],

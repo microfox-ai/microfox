@@ -122,7 +122,7 @@ export const createYouTubeSDKWithTokens = async (
 
   // Default Google OAuth scopes for YouTube if not provided
   const DEFAULT_YOUTUBE_SCOPES = [
-    GoogleScope.YOUTUBE_READONLY
+    'https://www.googleapis.com/auth/youtube.download'
   ];
 
   // Create Google OAuth SDK instance

@@ -133,10 +133,9 @@
           "displayName": "Scopes",
           "description": "The scopes for the Google OAuth application",
           "defaultValue": [
-            "https://www.googleapis.com/auth/gmail.readonly",
-            "https://www.googleapis.com/auth/gmail.compose",
-            "https://www.googleapis.com/auth/gmail.modify",
-            "https://www.googleapis.com/auth/gmail.insert"
+            "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
+            "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+            "https://www.googleapis.com/auth/gmail.labels"
           ]
         }
       ],
@@ -185,9 +184,9 @@
       "description": "The scopes for the Google OAuth application",
       "required": false,
       "defaultValue": [
-        "https://www.googleapis.com/auth/gmail.modify",
-        "https://www.googleapis.com/auth/gmail.compose",
-        "https://www.googleapis.com/auth/gmail.send"
+        "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
+        "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+        "https://www.googleapis.com/auth/gmail.labels"
       ]
     }
   ],
