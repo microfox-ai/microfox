@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Apify API",
-      "url": "https://docs.apify.com/api/v2",
-      "notes": "Create a new package for the Apify API.",
-      "issueNumber": 491,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }
