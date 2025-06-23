@@ -101,18 +101,34 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
     // Initialize SDK using the factory
     const sdk = sdkInit({ constructorName, ...credentials });
 
-    // Find the function on the SDK instance by matching the slug from the path
-    const targetFunctionName = Object.keys(sdk).find(key => typeof sdk[key] === 'function' && key.replace(/\./g, '-') === functionSlug);
+    // Resolve the function from the slug (e.g., 'chat-post_message' -> sdk.chat.postMessage)
+    const slugParts = functionSlug.split('-');
+    const methodSlug = slugParts.pop()!;
+    const objectPath = slugParts; // e.g., ['chat']
 
-    if (!targetFunctionName) {
+    const methodName = methodSlug.replace(/_(\w)/g, (k) => k[1].toUpperCase());
+
+    let context: any = sdk;
+    for (const prop of objectPath) {
+        if (context && typeof context[prop] === 'object' && context[prop] !== null) {
+            context = context[prop];
+        } else {
+            context = undefined; // Path does not exist
+            break;
+        }
+    }
+    
+    const fn = (context && typeof context[methodName] === 'function') 
+        ? context[methodName].bind(context)
+        : undefined;
+
+    if (!fn) {
       return {
         statusCode: 404,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ error: `Function matching slug '${functionSlug}' not found on SDK instance for constructor '${constructorName}'` }),
       };
     }
-
-    const fn = sdk[targetFunctionName].bind(sdk);
 
     // Extract function arguments
     let args: any[] = [];

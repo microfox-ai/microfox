@@ -2,7 +2,7 @@ service: public-slack-api
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-api-gateway-throttling
+  # - serverless-api-gateway-throttling
   - serverless-offline
 
 provider:
@@ -15,19 +15,12 @@ provider:
 # Configuration
 custom:
   # Get environment from env or default to dev
-  stage: ${env:ENVIRONMENT, 'dev'}
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   serverless-offline:
+    printOutput: true
     httpPort: 4000
     lambdaPort: 4002
-    useChildProcesses: true
-    useWorkerThreads: true
-    noCookieValidation: true
-    allowCache: true
-    hideStackTraces: false
-    disableCookieValidation: true
-    noTimeout: true
     environment: ${file(env.json)}
-
 
 functions:
   unifiedHandler:
