@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { WebhookEvent } from '@microfox/webhook-core';
 import {
   Task,
@@ -23,7 +23,7 @@ export class SupabaseService {
     if (!config.url || !config.key) {
         throw new Error('[TaskKitDB] Supabase config is missing url or key');
     }
-    this.supabase = new SupabaseClient(config.url, config.key);
+    this.supabase = createClient(config.url, config.key);
   }
 
   // === Task Methods ===
