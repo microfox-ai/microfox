@@ -12,9 +12,12 @@ provider:
   environment: ${file(env.json)}
 
 custom:
-  apiGatewayThrottling:
-    maxRequestsPerSecond: 50
-    maxConcurrentRequests: 20
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    printOutput: true
+    httpPort: 4000
+    lambdaPort: 4002
+    environment: ${file(env.json)}
 
 functions:
   unifiedHandler:
