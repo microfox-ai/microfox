@@ -1,6 +1,6 @@
 {
   "name": "@microfox/slack",
-  "version": "1.0.4",
+  "version": "1.0.2",
   "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
