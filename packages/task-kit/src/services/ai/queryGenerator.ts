@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { generateObject } from 'ai';
 import { GoogleAiProvider } from '@microfox/ai-provider-google';
+import { generateStructuredObject } from './ai-service';
 
 // --- SCHEMAS FOR AI QUERY GENERATOR ---
 const queryFilterSchema = z.object({
@@ -49,11 +49,10 @@ export async function generateTaskQuery(
       Please generate the query filter object based on these event details.
       `;
 
-  const { object } = await generateObject({
+  return generateStructuredObject({
     model,
     schema: queryGeneratorSchema,
     prompt: userPrompt,
     system: queryGeneratorSystemPrompt,
   });
-  return object;
 } 

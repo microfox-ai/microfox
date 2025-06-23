@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { generateObject } from 'ai';
 import { GoogleAiProvider } from '@microfox/ai-provider-google';
 import { Task } from '../../schemas';
+import { generateStructuredObject } from './ai-service';
 
 // --- SCHEMAS FOR AI TOOL SELECTOR ---
 const toolCallSchema = z.object({
   tool_name: z.string().describe('The exact name of the tool to be called.'),
-  arguments: z.record(z.unknown()).describe('An object containing the arguments for the tool.'),
+  arguments: z.any().describe('An object containing the arguments for the tool.'),
 });
 
 export const toolSelectionResultSchema = z.object({
@@ -59,12 +59,10 @@ export async function selectTools(
       Please generate the sequence of tool calls required to complete this task.
       `;
 
-  const { object } = await generateObject({
+  return generateStructuredObject({
     model,
     schema: toolSelectionResultSchema,
     prompt: userPrompt,
     system: systemPrompt,
   });
-
-  return object;
 } 

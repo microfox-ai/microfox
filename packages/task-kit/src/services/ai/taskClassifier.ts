@@ -1,15 +1,14 @@
 import { z } from 'zod';
-import { SupabaseClient } from '@supabase/supabase-js';
-import { generateObject } from 'ai';
 import { GoogleAiProvider } from '@microfox/ai-provider-google';
 import { CreateEventWatcherInputSchema, Task } from '../../schemas';
+import { generateStructuredObject } from './ai-service';
 
 // --- SCHEMAS FOR AI TASK CLASSIFIER ---
 const newTaskSchema = z.object({
   name: z.string().describe('A concise, descriptive name for the task. Max 10 words.'),
   description: z.string().describe('A detailed, step-by-step description of the task to be performed. Be very specific.'),
   priority: z.enum(['low', 'medium', 'high', 'critical']).describe('The priority of the task.'),
-  input: z.record(z.unknown()).optional().describe('A JSON object containing any inputs required to start the task.'),
+  input: z.any().optional().describe('A JSON object containing any inputs required to start the task.'),
   watcher: CreateEventWatcherInputSchema.omit({ task_id: true, microfox_id: true }).optional().describe('An optional event watcher to automatically trigger this task in the future.'),
 });
 
@@ -63,12 +62,10 @@ export async function classifyTask(
       Please classify this event based on the system instructions.
       `;
 
-  const { object } = await generateObject({
+  return generateStructuredObject({
     model,
     schema: classificationResultSchema,
     prompt: userPrompt,
     system: taskClassifierSystemPrompt,
   });
-
-  return object;
 } 
