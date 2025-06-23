@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.0.2
+
+### Patch Changes
+
+- 27882c0: release: update dependencies and enhance human interaction model
+
 ## 1.0.1
 
 ### Patch Changes
