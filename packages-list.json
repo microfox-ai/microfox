@@ -37,6 +37,7 @@
     "packages/ai-provider-openai",
     "packages/ai-provider-perplexity",
     "packages/amazon-rekognition-face-detection",
+    "packages/apify",
     "packages/coingecko-sdk",
     "packages/discord",
     "packages/fillout",
@@ -52,6 +53,7 @@
     "packages/notion",
     "packages/reddit",
     "packages/slack",
+    "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
@@ -76,6 +78,6 @@
   "unknownPackages": [
     "packages/webhook-core"
   ],
-  "total": 61,
-  "generatedAt": "2025-06-22T02:23:13.070Z"
+  "total": 63,
+  "generatedAt": "2025-06-23T00:59:01.712Z"
 }
