@@ -1,4 +1,3 @@
-import { SupabaseClient } from '@supabase/supabase-js';
 import { WebhookSqsPayload } from '@microfox/webhook-core';
 import { SupabaseConfig, SupabaseService } from './services';
 import { classifyTask, generateTaskQuery, ClassificationResult } from './services/ai';
