@@ -33,6 +33,7 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.10",
     "@ai-sdk/google": "^1.2.12",
+    "@microfox/crypto-sdk": "^1.1.0",
     "@microfox/serpapi": "1.0.2",
     "@microfox/tavily": "1.0.2",
     "@octokit/rest": "^21.1.1",
