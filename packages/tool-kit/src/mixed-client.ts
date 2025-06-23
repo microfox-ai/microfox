@@ -1,9 +1,6 @@
 import { ToolSet } from 'ai';
 import { OpenAPIDoc } from './types';
-import {
-  createOpenAPIToolsClient,
-  OpenAPIToolsClient,
-} from './client/OpenAPIToolsClient';
+import { createToolkit, Toolkit } from './client/Toolkit';
 
 /**
  * Configuration for a single server, including its schema and how to connect to it.
@@ -63,10 +60,10 @@ export async function createMixedToolsClient(
   configs: ServerConfig[],
 ): Promise<MixedToolsClient> {
   // Create an individual OpenAPI client for each server configuration.
-  const clients: Record<string, OpenAPIToolsClient> = {};
+  const clients: Record<string, Toolkit> = {};
   for (const config of configs) {
     // Use the async factory function to create and initialize each client.
-    clients[config.id] = await createOpenAPIToolsClient({
+    clients[config.id] = await createToolkit({
       // The factory expects the schema directly.
       schema: config.docData,
       baseUrl: config.baseUrl,

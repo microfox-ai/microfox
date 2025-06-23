@@ -1,7 +1,9 @@
-import { CoreMessage } from 'ai';
-import { z } from 'zod';
-import { humanInputSchema } from './human-interaction';
+import { Tool as AiTool } from 'ai';
 
+export type Tool = AiTool & {
+  name: string;
+};
+export type ToolSet = Record<string, Tool>;
 // Available HTTP methods
 export const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
 export type HttpMethod = (typeof HTTP_METHODS)[number];
@@ -118,14 +120,6 @@ export type ToolMethod = {
   returnSchema?: JsonSchema;
 };
 
-// Update Tool type to use Zod schema
-export type Tool = {
-  name: string;
-  description: string;
-  parameters: z.ZodType;
-  execute?: ToolExecuteFn;
-};
-
 // AI SDK compatible tools types
 export type ToolSchema = {
   description?: string;
@@ -138,16 +132,7 @@ export type ToolSchema = {
 
 export type ToolSchemas = Record<string, ToolSchema> | 'automatic';
 
-export type ToolExecuteOptions = {
-  abortSignal?: AbortSignal;
-};
-
-export type ToolExecuteFn = (
-  args: Record<string, any>,
-  options?: ToolExecuteOptions,
-) => Promise<any>;
-
-export type ToolSet = Record<string, Tool>;
+export type ToolExecuteFn = Tool['execute'];
 
 export type ToolMetadata = {
   name: string;
@@ -185,6 +170,10 @@ export type SchemaConfig = {
   url?: string;
 };
 
+export type AuthObject = {
+  [key: string]: any;
+};
+
 export interface OpenAPIToolsClientOptions {
   /**
    * Schema configuration
@@ -217,6 +206,53 @@ export interface OpenAPIToolsClientOptions {
    * Name of the client instance
    */
   name?: string;
+
+  /**
+   * Static authentication object.
+   */
+  auth?: AuthObject;
+
+  /**
+   * Function to dynamically fetch authentication credentials.
+   */
+  getAuth?: () => Promise<AuthObject>;
+
+  /**
+   * Callback to determine if human intervention is required for a tool call.
+   */
+  getHumanIntervention?: (
+    context: HumanInterventionContext,
+  ) => Promise<HumanInterventionDecision>;
+}
+
+export interface HumanInterventionContext {
+  toolName: string;
+  generatedArgs: Record<string, any>;
+  mcpConfig: any;
+  toolCallId: string;
+  args?: unknown;
+}
+
+export type HumanDecisionArgs = {
+  originalToolCallId: string;
+  originalToolName: string;
+  ui: any;
+};
+
+export type HumanInterventionDecision =
+  | {
+      shouldPause: false;
+    }
+  | {
+      shouldPause: true;
+      args: HumanDecisionArgs; // Arguments for the FAKE_HUMAN_INTERACTION tool
+    };
+
+export interface PendingToolContext {
+  originalToolCallId: string;
+  toolName: string;
+  originalArgs: object;
+  // any other context needed to resume...
 }
 
 export interface FetchOptions {
@@ -225,6 +261,11 @@ export interface FetchOptions {
   headers: Record<string, string>;
   body?: string;
   signal?: AbortSignal;
+  auth?: AuthObject;
+  getAuth?: () => Promise<AuthObject>;
+  getHumanIntervention?: (
+    context: HumanInterventionContext,
+  ) => Promise<HumanInterventionDecision>;
 }
 
 export interface APIResponse {
@@ -238,6 +279,11 @@ export type ToolOptions = {
   validateParameters?: boolean;
   disabledExecutions?: string[];
   disableAllExecutions?: boolean;
+  auth?: AuthObject;
+  getAuth?: () => Promise<AuthObject>;
+  getHumanIntervention?: (
+    context: HumanInterventionContext,
+  ) => Promise<HumanInterventionDecision>;
 };
 
 export type ToolResult = {
@@ -246,60 +292,20 @@ export type ToolResult = {
   metadata: ToolMetadataSet;
 };
 
-/**
- * Defines the standardized contract sent from the server to the client when
- * the AI workflow is paused and requires human feedback.
- */
-export interface PendingHumanInputAction {
-  /**
-   * A clear status flag indicating the workflow is paused.
-   */
-  status: 'requires_human_input';
+export const PAUSED_TOOL_CONTEXT = Symbol('paused_tool_context');
 
-  /**
-   * Contains the details of the required interaction.
-   */
-  interaction: {
-    /**
-     * The unique identifier of the tool call that was intercepted. This is
-     * needed to later provide the result back to the AI.
-     */
-    toolCallId: string;
-
-    /**
-     * The structured arguments (`type`, `message`) that the LLM provided
-     * when it called the `requestHumanInput` tool.
-     */
-    args: z.infer<typeof humanInputSchema>;
-  };
-
-  /**
-   * The complete message history at the point of interception. This is sent
-   * to the client so it can be returned later, making the continuation
-   * endpoint stateless.
-   */
-  messages: CoreMessage[];
+export function isPausedToolContext(
+  value: any,
+): value is HumanInterventionContext {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'context' in value &&
+    value.context === PAUSED_TOOL_CONTEXT
+  );
 }
 
-/**
- * Defines the payload that the client must send to the `/continue` endpoint
- * to resume a paused workflow.
- */
-export interface ContinuePayload {
-  /**
-   * The original message history that was provided in the
-   * `PendingHumanInputAction`.
-   */
-  messages: CoreMessage[];
-
-  /**
-   * The `toolCallId` from the `PendingHumanInputAction` that is being addressed.
-   */
-  toolCallId: string;
-
-  /**
-   * The input collected from the human user. This can be a confirmation
-   * string (e.g., "Yes") or any other text.
-   */
-  userInput: any;
-}
+export type ToolAuth = {
+  type: 'oauth2' | 'apiKey';
+  // ... existing code ...
+};
