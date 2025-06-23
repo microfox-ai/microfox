@@ -19,7 +19,7 @@
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
     "dotenv": "^16.4.5",
-    "@microfox/slack-web": "^1.0.3"
+    "@microfox/slack-web": "*"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
