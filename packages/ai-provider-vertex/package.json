@@ -42,7 +42,7 @@
     "typescript": "5.6.3"
   },
   "publishConfig": {
-    "access": "."
+    "access": "public"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -24,10 +24,12 @@
     }
   },
   "dependencies": {
+    "@microfox/ai-provider-google": "^1.1.0",
     "@microfox/usage-tracker": "*",
     "@microfox/webhook-core": "*",
-    "@supabase/supabase-js": "^2.43.4",
-    "zod": "^3.23.8"
+    "@supabase/supabase-js": "^2.50.0",
+    "ai": "^4.3.16",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
