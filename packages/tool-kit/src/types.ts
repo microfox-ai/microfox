@@ -234,8 +234,8 @@ export interface HumanInterventionContext {
 }
 
 export type HumanDecisionArgs = {
-  originalToolCallId: string;
-  originalToolName: string;
+  originalToolCallId?: string;
+  originalToolName?: string;
   ui: any;
 };
 
