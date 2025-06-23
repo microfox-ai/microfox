@@ -58,6 +58,11 @@
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
   ],
+  "unknownPackages": [
+    "packages/ai-provider-vertex",
+    "packages/task-kit",
+    "packages/webhook-core"
+  ],
   "partialPackages": [
     "packages/core",
     "packages/gravatar",
@@ -75,9 +80,6 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "unknownPackages": [
-    "packages/webhook-core"
-  ],
-  "total": 63,
-  "generatedAt": "2025-06-23T01:59:21.100Z"
+  "total": 65,
+  "generatedAt": "2025-06-23T18:54:29.014Z"
 }

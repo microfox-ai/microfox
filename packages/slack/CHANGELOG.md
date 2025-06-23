@@ -1,5 +1,11 @@
 # @microfox/slack
 
+## 1.0.5
+
+### Patch Changes
+
+- 1fdfff5: Changes from PR #507: vwjt_slack_package_fix_june_2025
+
 ## 1.0.4
 
 ### Patch Changes
