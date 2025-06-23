@@ -1,0 +1,210 @@
+{
+  "mcpVersion": "1.0.2",
+  "info": {
+    "title": "My Tool Kit API",
+    "version": "1.0.0",
+    "description": "A sample MCP specification for a tool kit with reusable auth providers.",
+    "packageName": "@microfox/my-tool-kit",
+    "contact": {
+      "name": "Dev Support",
+      "email": "support@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/invoke",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "components": {
+    "x-auth-providers": {
+      "defaultProvider": {
+        "path": "/auth/getToken",
+        "method": "POST",
+        "responseMapping": {
+          "strategy": "'apikey'",
+          "variables": [
+            {
+              "key": "'default_api_key'",
+              "value": "$.token"
+            }
+          ]
+        }
+      },
+      "specificProvider": {
+        "path": "/auth/getSpecificToken",
+        "method": "GET",
+        "responseMapping": {
+          "strategy": "'apikey'",
+          "variables": [
+            {
+              "key": "'specific_api_key'",
+              "value": "$.specific_key"
+            }
+          ]
+        }
+      }
+    },
+    "x-human-in-the-loop-providers": {
+      "defaultApproval": {
+        "type": "approval",
+        "description": "Requires a simple yes/no approval from the user."
+      },
+      "dataEntry": {
+        "type": "form",
+        "description": "Presents a form to the user to fill in missing details.",
+        "ui": {
+          "componentName": "CustomDataEntryForm",
+          "requiredParameters": ["notes", "confirmation_code"]
+        }
+      }
+    }
+  },
+  "auth": "defaultProvider",
+  "x-human-in-the-loop": "defaultApproval",
+  "paths": {
+    "/MyClient/myMethod": {
+      "post": {
+        "operationId": "myClient.myMethod",
+        "summary": "A sample method.",
+        "description": "This is a sample method that does something.",
+        "auth": "specificProvider",
+        "x-human-in-the-loop": "dataEntry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the SLS call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "Configuration object",
+                            "properties": {
+                              "param1": {
+                                "type": "string",
+                                "description": "Description of parameter 1."
+                              },
+                              "param2": {
+                                "type": "number",
+                                "description": "Description of parameter 2."
+                              }
+                            },
+                            "required": ["param1"]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": ["apikey"]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "API_KEY_NAME"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of API_KEY"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "constructorName": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "default": "MyClient"
+                      }
+                    },
+                    "required": ["arguments"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "result": {
+                      "type": "object",
+                      "description": "The result of the method call."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "const": false },
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/MyClient/anotherMethod": {
+      "post": {
+        "operationId": "myClient.anotherMethod",
+        "summary": "Another sample method that uses the default auth.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "properties": {
+                      "arg1": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Successful response" }
+        }
+      }
+    }
+  }
+}
