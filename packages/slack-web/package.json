@@ -1,0 +1,26 @@
+{
+  "name": "@microfox/slack-web",
+  "version": "1.0.3",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "dependencies": {
+    "@slack/web-api": "^7.9.3"
+  }
+}
