@@ -1,5 +1,11 @@
 # @microfox/webhook-core
 
+## 0.1.5
+
+### Patch Changes
+
+- 5218bb3: Changes from PR #508: vwjt_task-kit_june_2025
+
 ## 0.1.4
 
 ### Patch Changes
