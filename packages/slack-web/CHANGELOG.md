@@ -1,5 +1,12 @@
 # @microfox/slack-web
 
+## 1.0.4
+
+### Patch Changes
+
+- 182d5d6: Changes from PR #499: vwjt_slack_package_fix_june_2025
+- 5d57a21: Triggered by issue #500: release @microfox/slack-web patch
+
 ## 1.0.3
 
 ### Patch Changes
