@@ -52,7 +52,7 @@
     "packages/linkedin-member-data-portability",
     "packages/notion",
     "packages/reddit",
-    "packages/slack-web",
+    "packages/slack",
     "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -79,5 +79,5 @@
     "packages/webhook-core"
   ],
   "total": 63,
-  "generatedAt": "2025-06-23T01:43:01.390Z"
+  "generatedAt": "2025-06-23T01:59:21.100Z"
 }
