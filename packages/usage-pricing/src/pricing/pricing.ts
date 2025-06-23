@@ -6,6 +6,7 @@ import { UsageWithPricing } from '../types';
 import { AnthropicAIPricingConfig } from './ai-provider-anthropic';
 import { GoogleAIPricingConfig } from './ai-provider-google';
 import { DeepSeekAIPricingConfig } from './ai-provider-deepseek';
+import { VertexAIPricingConfig } from './ai-provider-vertex';
 
 /**
  * Configuration object containing pricing information for different services and providers.
@@ -18,6 +19,7 @@ export const PricingConfig = {
   ...AnthropicAIPricingConfig,
   ...DeepSeekAIPricingConfig,
   ...BravePricingConfig,
+  ...VertexAIPricingConfig,
 };
 
 // Create a type that combines the base usage fields with LLM usage fields
