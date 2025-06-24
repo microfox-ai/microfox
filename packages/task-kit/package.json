@@ -1,6 +1,6 @@
 {
   "name": "@microfox/task-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A toolkit for robust task management using Supabase.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
