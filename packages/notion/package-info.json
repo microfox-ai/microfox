@@ -25,7 +25,8 @@
       "readPages",
       "retrieveFiles",
       "updatePages",
-      "uploadFiles"
+      "uploadFiles",
+      "pageCreation"
     ],
     "all_readmes": [
       {
@@ -48,6 +49,13 @@
         "extension": "md",
         "functionality": "pageCOnstructors",
         "description": "Documentation for pageCOnstructors"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/pageCreation.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "pageCreation",
+        "description": "Documentation for creating pages in Notion with proper property types and error handling"
       }
     ]
   },
@@ -70,7 +78,8 @@
       "botConfig": [],
       "functionalities": [
         "markdownToNotion",
-        "pageCOnstructors"
+        "pageCOnstructors",
+        "pageCreation"
       ]
     },
     {
@@ -100,7 +109,8 @@
       "botConfig": [],
       "functionalities": [
         "markdownToNotion",
-        "pageCOnstructors"
+        "pageCOnstructors",
+        "pageCreation"
       ]
     }
   ],
