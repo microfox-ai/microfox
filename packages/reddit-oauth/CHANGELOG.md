@@ -1,5 +1,11 @@
 # @microfox/reddit-oauth
 
+## 1.2.2
+
+### Patch Changes
+
+- e7557a0: Changes from PR #516: reddit-fix
+
 ## 1.2.1
 
 ### Patch Changes

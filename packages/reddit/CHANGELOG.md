@@ -1,5 +1,13 @@
 # @microfox/reddit
 
+## 1.3.1
+
+### Patch Changes
+
+- e7557a0: Changes from PR #516: reddit-fix
+- Updated dependencies [e7557a0]
+  - @microfox/reddit-oauth@1.2.2
+
 ## 1.3.0
 
 ### Minor Changes
