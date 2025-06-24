@@ -9,7 +9,6 @@ Creates a new RedditSDK object for interacting with the Reddit API.
 - `config`: object<RedditSDKConfig> - Configuration options for the SDK.
   - `clientId`: string - Your Reddit application's client ID.
   - `clientSecret`: string - Your Reddit application's client secret.
-  - `redirectUri`: string - The redirect URI you specified when creating the app.
   - `accessToken`: string - The access token for authenticating requests.
   - `scopes`: array<string> - An array of scopes defining the permissions requested.
 
@@ -22,7 +21,6 @@ Creates a new RedditSDK object for interacting with the Reddit API.
 const sdk = new RedditSDK({
   clientId: process.env.REDDIT_CLIENT_ID,
   clientSecret: process.env.REDDIT_CLIENT_SECRET,
-  redirectUri: process.env.REDDIT_REDIRECT_URI,
   accessToken: process.env.REDDIT_ACCESS_TOKEN,
   scopes: process.env.SCOPES.split(',')
 });

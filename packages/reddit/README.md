@@ -14,7 +14,6 @@ The following environment variables are used by this SDK:
 
 - `REDDIT_CLIENT_ID`: Your Reddit application's client ID. (Required)
 - `REDDIT_CLIENT_SECRET`: Your Reddit application's client secret. (Required)
-- `REDDIT_REDIRECT_URI`: The redirect URI you specified when creating the app. (Required)
 - `REDDIT_ACCESS_TOKEN`: The access token for authenticating requests. (Required)
 - `REDDIT_REFRESH_TOKEN`: The refresh token obtained during initial authorization. (Required)
 - `SCOPES`: A comma-separated list of scopes defining the permissions requested. (Required)
@@ -37,23 +36,15 @@ To use this SDK, you need to obtain OAuth credentials from Reddit. Follow these 
 
    - About URL: Your app's website (if applicable)
 
-   - Redirect URI: The URI where Reddit will redirect after authorization
-
 4. Click 'create app'
 
 5. You'll receive a Client ID and Client Secret. Keep these secure.
-
-
 
 Environment variables:
 
 - REDDIT_CLIENT_ID: Your Reddit application's client ID
 
 - REDDIT_CLIENT_SECRET: Your Reddit application's client secret
-
-- REDDIT_REDIRECT_URI: The redirect URI you specified when creating the app
-
-
 
 To set up environment variables:
 
@@ -65,11 +56,7 @@ To set up environment variables:
 
    REDDIT_CLIENT_SECRET=your_client_secret_here
 
-   REDDIT_REDIRECT_URI=your_redirect_uri_here
-
 3. Use a package like dotenv to load these variables in your application
-
-
 
 Important notes:
 
@@ -86,7 +73,5 @@ Important notes:
   - OAuth2 clients may make up to 600 requests per 10 minutes
 
   - Monitor the X-Ratelimit headers in API responses for current limits and usage
-
-
 
 For more detailed information, refer to the Reddit API documentation: https://www.reddit.com/dev/api/oauth
