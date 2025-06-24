@@ -1,5 +1,11 @@
 # @microfox/task-kit
 
+## 1.0.3
+
+### Patch Changes
+
+- 7880572: Changes from PR #513: vwjt_task-kit_june_2025
+
 ## 1.0.2
 
 ### Patch Changes
