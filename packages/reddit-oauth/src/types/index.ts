@@ -1,7 +1,7 @@
 export interface RedditOAuthConfig {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
+  redirectUri?: string;
   scopes: string[];
 }
 

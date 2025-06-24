@@ -237,7 +237,6 @@ export default function UniversalTemplate() {
       const sdk = createRedditSDK({
         clientId: oauthConfig.clientId,
         clientSecret: oauthConfig.clientSecret,
-        redirectUri: oauthConfig.redirectUri,
         scopes: oauthConfig.scopes,
         accessToken,
         refreshToken,

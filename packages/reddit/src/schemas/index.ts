@@ -2209,9 +2209,6 @@ export const redditSDKConfigSchema = z
     clientSecret: z
       .string()
       .describe('The client secret for your Reddit application.'),
-    redirectUri: z
-      .string()
-      .describe('The redirect URI for your Reddit application.'),
     scopes: z
       .array(z.string())
       .describe('An array of scopes your application is requesting.'),
