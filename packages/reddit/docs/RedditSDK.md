@@ -6,24 +6,25 @@ Initializes a new instance of the `RedditSDK` class.
 Creates a new RedditSDK object for interacting with the Reddit API.
 
 **Parameters:**
+
 - `config`: object<RedditSDKConfig> - Configuration options for the SDK.
   - `clientId`: string - Your Reddit application's client ID.
   - `clientSecret`: string - Your Reddit application's client secret.
-  - `redirectUri`: string - The redirect URI you specified when creating the app.
   - `accessToken`: string - The access token for authenticating requests.
   - `scopes`: array<string> - An array of scopes defining the permissions requested.
 
 **Return Value:**
+
 - `RedditSDK` - A new instance of the RedditSDK class.
 
 **Examples:**
+
 ```typescript
 // Example using environment variables
 const sdk = new RedditSDK({
   clientId: process.env.REDDIT_CLIENT_ID,
   clientSecret: process.env.REDDIT_CLIENT_SECRET,
-  redirectUri: process.env.REDDIT_REDIRECT_URI,
   accessToken: process.env.REDDIT_ACCESS_TOKEN,
-  scopes: process.env.SCOPES.split(',')
+  scopes: process.env.SCOPES.split(','),
 });
 ```

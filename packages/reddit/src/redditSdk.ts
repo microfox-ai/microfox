@@ -1,18 +1,12 @@
 import { createRedditOAuth } from '@microfox/reddit-oauth';
-import {
-  RedditSDKConfig,
-} from './types';
-import {
-  redditSDKConfigSchema,
-} from './schemas';
+import { RedditSDKConfig } from './types';
+import { redditSDKConfigSchema } from './schemas';
 
 import { Endpoints } from './routes';
 
 type EndpointMethods = {
   [key in keyof typeof Endpoints]: {
-    [key2 in keyof typeof Endpoints[key]]: (
-      params?: any,
-    ) => Promise<any>;
+    [key2 in keyof (typeof Endpoints)[key]]: (params?: any) => Promise<any>;
   };
 };
 
@@ -28,7 +22,6 @@ export class RedditSDK {
     this.oauth = createRedditOAuth({
       clientId: validatedConfig.clientId,
       clientSecret: validatedConfig.clientSecret,
-      redirectUri: validatedConfig.redirectUri,
       scopes: validatedConfig.scopes,
     });
     this.accessToken = validatedConfig.accessToken;
@@ -42,10 +35,12 @@ export class RedditSDK {
     if (this.isRefreshing) {
       throw new Error('Token refresh already in progress');
     }
-    
+
     this.isRefreshing = true;
     try {
-      const { access_token: accessToken } = await this.oauth.refreshAccessToken(this.refreshToken);
+      const { access_token: accessToken } = await this.oauth.refreshAccessToken(
+        this.refreshToken,
+      );
       this.accessToken = accessToken;
     } finally {
       this.isRefreshing = false;
@@ -72,7 +67,9 @@ export class RedditSDK {
         // Retry the original request with the new token
         return this.request(endpoint, method, body);
       } catch (refreshError) {
-        throw new Error(`Failed to refresh access token: ${refreshError instanceof Error ? refreshError.message : 'Unknown error'}`);
+        throw new Error(
+          `Failed to refresh access token: ${refreshError instanceof Error ? refreshError.message : 'Unknown error'}`,
+        );
       }
     }
 
@@ -93,74 +90,89 @@ export class RedditSDK {
   public api: EndpointMethods = new Proxy({} as EndpointMethods, {
     get: (target: any, prop: string) => {
       if (!target[prop]) {
-        target[prop] = new Proxy({}, {
-          get: (subTarget: any, subProp: string) => {
-            if (!subTarget[subProp]) {
-              const endpointInfo = (Endpoints as any)[prop]?.[subProp];
-              if (!endpointInfo) {
-                throw new Error(`Endpoint ${prop}.${subProp} does not exist.`);
+        target[prop] = new Proxy(
+          {},
+          {
+            get: (subTarget: any, subProp: string) => {
+              if (!subTarget[subProp]) {
+                const endpointInfo = (Endpoints as any)[prop]?.[subProp];
+                if (!endpointInfo) {
+                  throw new Error(
+                    `Endpoint ${prop}.${subProp} does not exist.`,
+                  );
+                }
+
+                subTarget[subProp] = async (params: any = {}) => {
+                  let url = endpointInfo.url;
+                  const queryParams: Record<string, string> = {};
+                  const bodyParams: Record<string, any> = {};
+
+                  // Replace path parameters
+                  for (const key in params) {
+                    if (url.includes(`{${key}}`)) {
+                      url = url.replace(`{${key}}`, String(params[key]));
+                      delete params[key];
+                    }
+                  }
+
+                  // Remove any remaining optional path segments
+                  url = url.replace(/{\/?[^}]+}/g, '');
+
+                  let method = endpointInfo.method;
+                  if (Array.isArray(method)) {
+                    const providedMethod = (
+                      params.method || method[0]
+                    ).toUpperCase();
+                    if (!method.includes(providedMethod)) {
+                      throw new Error(
+                        `Invalid method ${providedMethod} for endpoint ${prop}.${subProp}. Available methods are ${method.join(', ')}`,
+                      );
+                    }
+                    method = providedMethod;
+                    delete params.method;
+                  }
+
+                  // Separate query and body params
+                  if (method === 'GET' || method === 'DELETE') {
+                    Object.assign(queryParams, params);
+                  } else {
+                    Object.assign(bodyParams, params);
+                  }
+
+                  if (endpointInfo.params) {
+                    Object.assign(
+                      method === 'GET' || method === 'DELETE'
+                        ? queryParams
+                        : bodyParams,
+                      endpointInfo.params,
+                    );
+                  }
+
+                  let finalUrl = url;
+                  if (Object.keys(queryParams).length > 0) {
+                    const search = new URLSearchParams(queryParams).toString();
+                    if (search) {
+                      finalUrl += `?${search}`;
+                    }
+                  }
+
+                  const body =
+                    Object.keys(bodyParams).length > 0 ? bodyParams : undefined;
+
+                  const result = await this.request(finalUrl, method, body);
+
+                  // If the endpoint has a response schema, parse the result using the schema
+                  // if (endpointInfo.responseSchema) {
+                  //   return endpointInfo.responseSchema.parse(result);
+                  // }
+
+                  return result;
+                };
               }
-
-              subTarget[subProp] = async (params: any = {}) => {
-                let url = endpointInfo.url;
-                const queryParams: Record<string, string> = {};
-                const bodyParams: Record<string, any> = {};
-
-                // Replace path parameters
-                for (const key in params) {
-                  if (url.includes(`{${key}}`)) {
-                    url = url.replace(`{${key}}`, String(params[key]));
-                    delete params[key];
-                  }
-                }
-
-                // Remove any remaining optional path segments
-                url = url.replace(/{\/?[^}]+}/g, '');
-
-                let method = endpointInfo.method;
-                if (Array.isArray(method)) {
-                  const providedMethod = (params.method || method[0]).toUpperCase();
-                  if (!method.includes(providedMethod)) {
-                    throw new Error(`Invalid method ${providedMethod} for endpoint ${prop}.${subProp}. Available methods are ${method.join(', ')}`);
-                  }
-                  method = providedMethod;
-                  delete params.method;
-                }
-
-                // Separate query and body params
-                if (method === 'GET' || method === 'DELETE') {
-                  Object.assign(queryParams, params);
-                } else {
-                  Object.assign(bodyParams, params);
-                }
-
-                if (endpointInfo.params) {
-                  Object.assign(method === 'GET' || method === 'DELETE' ? queryParams : bodyParams, endpointInfo.params);
-                }
-
-                let finalUrl = url;
-                if (Object.keys(queryParams).length > 0) {
-                  const search = new URLSearchParams(queryParams).toString();
-                  if (search) {
-                    finalUrl += `?${search}`;
-                  }
-                }
-
-                const body = Object.keys(bodyParams).length > 0 ? bodyParams : undefined;
-
-                const result = await this.request(finalUrl, method, body);
-
-                // If the endpoint has a response schema, parse the result using the schema
-                // if (endpointInfo.responseSchema) {
-                //   return endpointInfo.responseSchema.parse(result);
-                // }
-
-                return result;
-              };
-            }
-            return subTarget[subProp];
+              return subTarget[subProp];
+            },
           },
-        });
+        );
       }
       return target[prop];
     },
