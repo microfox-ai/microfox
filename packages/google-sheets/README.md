@@ -40,6 +40,64 @@ const config: GoogleSheetsSdkConfig = {
 const sheetsSdk = createGoogleSheetsSdk(config);
 ```
 
+## Token Management Best Practices
+
+The SDK provides built-in token validation and refresh capabilities. Here are the best practices for token management:
+
+### 1. Validate Before Operations
+
+Before performing any operations with Google Sheets, it's recommended to validate and refresh the access token:
+
+```typescript
+// Check token validity
+const isValid = await sheetsSdk.validateAccessToken();
+
+// Refresh if needed
+if (!isValid) {
+  await sheetsSdk.refreshAccessToken();
+}
+
+// Now proceed with your operations
+const values = await sheetsSdk.getValues(range);
+```
+
+### 2. Automatic Token Management
+
+While the SDK handles token refresh automatically in its internal `sendRequest` method, explicit token management can be useful when:
+- You need to ensure token validity before a sequence of operations
+- You want to handle token refresh errors separately from operation errors
+- You need to log or monitor token refresh events
+
+### 3. Error Handling
+
+Implement proper error handling for token-related operations:
+
+```typescript
+try {
+  // Validate token
+  const isValid = await sheetsSdk.validateAccessToken();
+  console.log('Token validation result:', isValid);
+  
+  if (!isValid) {
+    await sheetsSdk.refreshAccessToken();
+    console.log('Token refreshed successfully');
+  }
+
+  // Proceed with operations
+  const values = await sheetsSdk.getValues(range);
+} catch (error) {
+  console.error('Token management error:', error);
+  // Handle token-related errors appropriately
+}
+```
+
+### 4. Token Storage Considerations
+
+The refreshed token is stored in memory within the SDK instance. For long-running applications:
+- Consider implementing a mechanism to persist the refreshed token
+- Be aware that the token won't persist between SDK instance creations
+- Handle cases where the refresh token itself might expire
+
 ## Understanding Sheet References
 
 When working with Google Sheets, you need to understand three key concepts:
@@ -133,7 +191,7 @@ Refreshes the access token.
 
 ## Examples
 
-### Reading Values
+### Reading Values with Token Management
 
 ```typescript
 // Define your constants
@@ -146,6 +204,12 @@ const range = {
   sheetId: SHEET_ID,
   range: `${SHEET_NAME}!${RANGE}`,
 };
+
+// Validate token before operation
+const isValid = await sheetsSdk.validateAccessToken();
+if (!isValid) {
+  await sheetsSdk.refreshAccessToken();
+}
 
 // Get the values
 const values = await sheetsSdk.getValues(range);
