@@ -1,15 +1,33 @@
-# Martian: Markdown to Notion Parser
+# Markdown to Notion Parser
 
 Convert Markdown and GitHub Flavoured Markdown to Notion API Blocks and RichText.
 
-[![Node.js CI](https://github.com/tryfabric/martian/actions/workflows/ci.yml/badge.svg)](https://github.com/tryfabric/martian/actions/workflows/ci.yml)
-[![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
+This package wraps and extends the functionality from [Martian](https://github.com/tryfabric/martian) to provide seamless integration with the Microfox ecosystem.
 
-Martian is a Markdown parser to convert any Markdown content to Notion API block or RichText objects. It
-uses [unified](https://github.com/unifiedjs/unified) to create a Markdown AST, then converts the AST into Notion
-objects.
+### Installation
 
-Designed to make using the Notion SDK and API easier. Notion API version 1.0.
+```bash
+npm install @microfox/notion
+```
+
+### Basic Usage
+
+The package exports two main functions for converting markdown to Notion formats:
+
+```typescript
+// Import the functions from @microfox/notion
+import { markdownToBlocks, markdownToRichText, Client as NotionClient } from '@microfox/notion';
+
+// Example with rich text
+const richText = markdownToRichText(`**Hello _world_**`);
+
+// Example with blocks
+const blocks = markdownToBlocks(`
+# My Document
+## Section 1
+Some content here...
+`);
+```
 
 ### Working with AI-Generated Content
 
@@ -18,8 +36,7 @@ When working with AI-generated content that needs to be posted to Notion, you ca
 Here's an example of how to use it with AI-generated content:
 
 ```typescript
-import { markdownToBlocks } from '@tryfabric/martian';
-import { Client as NotionClient } from '@microfox/notion';
+import { markdownToBlocks, Client as NotionClient } from '@microfox/notion';
 
 // Initialize Notion client
 const notion = new NotionClient({
@@ -64,7 +81,69 @@ const page = await createNotionPageWithAIContent(
 );
 ```
 
-This approach ensures that your AI-generated content maintains proper formatting, headers, lists, and other markdown elements when displayed in Notion.
+### Working with Large Content
+
+Notion has a limit of 100 blocks per request. When working with large content, especially AI-generated content, you might need to handle this limitation. Here's how to do it:
+
+```typescript
+import { markdownToBlocks, Client as NotionClient } from '@microfox/notion';
+
+async function createLargeNotionPage(title: string, markdownContent: string) {
+  // Convert markdown to blocks with automatic truncation
+  const notionBlocks = markdownToBlocks(markdownContent, {
+    notionLimits: {
+      truncate: true, // Enable automatic truncation
+      onError: (err: Error) => {
+        console.warn('Content limit warning:', err.message);
+      }
+    }
+  });
+
+  // Create initial page with first 100 blocks
+  const response = await notion.pages.create({
+    parent: { database_id: process.env.NOTION_DATABASE_ID },
+    properties: {
+      Name: {
+        type: "title",
+        title: [{ type: "text", text: { content: title } }]
+      }
+    },
+    children: notionBlocks.slice(0, 100) // First 100 blocks
+  });
+
+  // If we have more blocks, append them in chunks
+  if (notionBlocks.length > 100) {
+    const remainingBlocks = notionBlocks.slice(100);
+    const chunkSize = 100;
+    
+    for (let i = 0; i < remainingBlocks.length; i += chunkSize) {
+      const chunk = remainingBlocks.slice(i, i + chunkSize);
+      await notion.blocks.children.append({
+        block_id: response.id,
+        children: chunk
+      });
+      // Optional: Add delay between requests to avoid rate limits
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  return response;
+}
+
+// Example usage with large AI-generated content
+const largeMarkdown = `
+# Comprehensive Guide
+${Array(150).fill('## Section\nSome content here...').join('\n\n')}
+`;
+
+const page = await createLargeNotionPage('Large Document', largeMarkdown);
+```
+
+This approach:
+1. Uses `notionLimits` options to handle content gracefully
+2. Creates the initial page with the first 100 blocks
+3. Appends remaining blocks in chunks of 100
+4. Includes optional rate limiting to avoid API restrictions
 
 ### Supported Markdown Elements
 
@@ -83,4 +162,59 @@ This approach ensures that your AI-generated content maintains proper formatting
   - Inline images are extracted from the paragraph and added afterwards (as these are not supported in notion)
   - Image urls are validated, if they are not valid as per the Notion external spec, they will be inserted as text for you to fix manually
 
-[Rest of the original documentation...]
+### Working with Blockquotes
+
+The package supports three types of blockquotes:
+
+1. Standard blockquotes:
+```markdown
+> This is a regular blockquote
+> It can span multiple lines
+```
+
+2. GFM alerts:
+```markdown
+> [!NOTE]
+> Important information that users should know
+
+> [!WARNING]
+> Critical information that needs attention
+```
+
+3. Emoji-style callouts (optional):
+```markdown
+> 📘 **Note:** This is a callout with a blue background
+> It supports all markdown formatting
+
+> ❗ **Warning:** This is a callout with a red background
+> Perfect for important warnings
+```
+
+### Configuration Options
+
+You can customize the behavior using options:
+
+```typescript
+const options = {
+  enableEmojiCallouts: true, // Enable emoji-style callouts
+  notionLimits: {
+    truncate: true, // Automatically handle Notion's content limits
+    onError: (err: Error) => {
+      console.error('Content limit error:', err);
+    }
+  },
+  strictImageUrls: true // Validate image URLs
+};
+
+const blocks = markdownToBlocks(markdownContent, options);
+```
+
+### Error Handling
+
+The package includes built-in handling for Notion's content limits and validation:
+
+1. Content Length: Automatically handles Notion's block and character limits
+2. Image URLs: Validates and sanitizes image URLs
+3. Block Structure: Ensures proper nesting and formatting
+
+For more details about Notion's API limits and specifications, refer to the [official Notion API documentation](https://developers.notion.com/reference).
