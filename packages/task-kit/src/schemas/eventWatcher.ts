@@ -20,13 +20,13 @@ export type EventWatcher = z.infer<typeof EventWatcherSchema>;
 /**
  * The required input for creating a new Event Watcher.
  */
-export const CreateEventWatcherInputSchema = EventWatcherSchema.pick({
-  task_id: true,
-  microfox_id: true,
-  provider_name: true,
-  event_type: true,
-  team_id: true,
-  organization_id: true,
-  match_query: true,
+export const CreateEventWatcherInputSchema = z.object({
+  task_id: EventWatcherSchema.shape.task_id,
+  microfox_id: EventWatcherSchema.shape.microfox_id,
+  provider_name: EventWatcherSchema.shape.provider_name,
+  event_type: EventWatcherSchema.shape.event_type,
+  team_id: EventWatcherSchema.shape.team_id,
+  organization_id: EventWatcherSchema.shape.organization_id,
+  match_query: EventWatcherSchema.shape.match_query,
 }).describe('The required input for creating a new Event Watcher.');
 export type CreateEventWatcherInput = z.infer<typeof CreateEventWatcherInputSchema>; 
