@@ -41,54 +41,6 @@ CREATE TYPE public.event_status AS ENUM (
 
 
 -- -----------------------------------------------------------------
---  Table: tasks
---  Stores individual tasks to be processed.
--- -----------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS public.tasks (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    microfox_id text NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT now(),
-    updated_at timestamptz NOT NULL DEFAULT now(),
-    scheduled_for timestamptz,
-    expires_at timestamptz,
-    name text,
-    task_type public.task_type NOT NULL,
-    status public.task_status NOT NULL,
-    priority public.task_priority,
-    authorized_users text[],
-    input jsonb,
-    output jsonb,
-    metadata jsonb,
-    provider_name text,
-    ai_description text,
-    CONSTRAINT tasks_microfox_id_check CHECK (char_length(microfox_id) > 0)
-);
-
-COMMENT ON TABLE public.tasks IS 'Stores individual tasks to be processed, including their status, priority, and data.';
-COMMENT ON COLUMN public.tasks.id IS 'The internal unique identifier for the task.';
-COMMENT ON COLUMN public.tasks.microfox_id IS 'The project/workspace ID this task belongs to.';
-COMMENT ON COLUMN public.tasks.scheduled_for IS 'For scheduling tasks to run at a specific time.';
-COMMENT ON COLUMN public.tasks.expires_at IS 'A timestamp after which the task should not be executed.';
-COMMENT ON COLUMN public.tasks.name IS 'A human-readable name for the task type, e.g., "ProcessStripeWebhook".';
-COMMENT ON COLUMN public.tasks.status IS 'The current lifecycle status of the task.';
-COMMENT ON COLUMN public.tasks.priority IS 'The priority level of the task.';
-COMMENT ON COLUMN public.tasks.authorized_users IS 'An array of user IDs authorized to interact with this task.';
-COMMENT ON COLUMN public.tasks.input IS 'The data the task needs to run.';
-COMMENT ON COLUMN public.tasks.output IS 'The result of a successful task execution.';
-COMMENT ON COLUMN public.tasks.metadata IS 'A flexible field for storing any other unstructured data.';
-COMMENT ON COLUMN public.tasks.provider_name IS 'The system or event source that initiated this task.';
-COMMENT ON COLUMN public.tasks.ai_description IS 'An AI-generated description of the task or its purpose.';
-
--- Add indexes for common query patterns
-CREATE INDEX IF NOT EXISTS idx_tasks_microfox_id ON public.tasks(microfox_id);
-CREATE INDEX IF NOT EXISTS idx_tasks_status ON public.tasks(status);
-CREATE INDEX IF NOT EXISTS idx_tasks_priority ON public.tasks(priority);
-CREATE INDEX IF NOT EXISTS idx_tasks_provider_name ON public.tasks(provider_name);
-CREATE INDEX IF NOT EXISTS idx_tasks_scheduled_for ON public.tasks(scheduled_for);
-
-
--- -----------------------------------------------------------------
 --  Table: events
 --  Logs raw incoming events before they are classified into tasks.
 -- -----------------------------------------------------------------
@@ -122,6 +74,57 @@ COMMENT ON COLUMN public.events.classification_notes IS 'Notes added during proc
 CREATE INDEX IF NOT EXISTS idx_events_microfox_ids ON public.events USING GIN(microfox_ids);
 CREATE INDEX IF NOT EXISTS idx_events_provider_event_id ON public.events(provider_event_id);
 CREATE INDEX IF NOT EXISTS idx_events_status ON public.events(status);
+
+
+-- -----------------------------------------------------------------
+--  Table: tasks
+--  Stores individual tasks to be processed.
+-- -----------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.tasks (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    microfox_id text NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    scheduled_for timestamptz,
+    expires_at timestamptz,
+    name text,
+    task_type public.task_type NOT NULL,
+    status public.task_status NOT NULL,
+    priority public.task_priority,
+    authorized_users text[],
+    input jsonb,
+    output jsonb,
+    metadata jsonb,
+    provider_name text,
+    ai_description text,
+    triggering_event_id uuid REFERENCES public.events(id) ON DELETE SET NULL,
+    CONSTRAINT tasks_microfox_id_check CHECK (char_length(microfox_id) > 0)
+);
+
+COMMENT ON TABLE public.tasks IS 'Stores individual tasks to be processed, including their status, priority, and data.';
+COMMENT ON COLUMN public.tasks.id IS 'The internal unique identifier for the task.';
+COMMENT ON COLUMN public.tasks.microfox_id IS 'The project/workspace ID this task belongs to.';
+COMMENT ON COLUMN public.tasks.scheduled_for IS 'For scheduling tasks to run at a specific time.';
+COMMENT ON COLUMN public.tasks.expires_at IS 'A timestamp after which the task should not be executed.';
+COMMENT ON COLUMN public.tasks.name IS 'A human-readable name for the task type, e.g., "ProcessStripeWebhook".';
+COMMENT ON COLUMN public.tasks.status IS 'The current lifecycle status of the task.';
+COMMENT ON COLUMN public.tasks.priority IS 'The priority level of the task.';
+COMMENT ON COLUMN public.tasks.authorized_users IS 'An array of user IDs authorized to interact with this task.';
+COMMENT ON COLUMN public.tasks.input IS 'The data the task needs to run.';
+COMMENT ON COLUMN public.tasks.output IS 'The result of a successful task execution.';
+COMMENT ON COLUMN public.tasks.metadata IS 'A flexible field for storing any other unstructured data.';
+COMMENT ON COLUMN public.tasks.provider_name IS 'The system or event source that initiated this task.';
+COMMENT ON COLUMN public.tasks.ai_description IS 'An AI-generated description of the task or its purpose.';
+COMMENT ON COLUMN public.tasks.triggering_event_id IS 'The ID of the event that triggered this task.';
+
+-- Add indexes for common query patterns
+CREATE INDEX IF NOT EXISTS idx_tasks_microfox_id ON public.tasks(microfox_id);
+CREATE INDEX IF NOT EXISTS idx_tasks_status ON public.tasks(status);
+CREATE INDEX IF NOT EXISTS idx_tasks_priority ON public.tasks(priority);
+CREATE INDEX IF NOT EXISTS idx_tasks_provider_name ON public.tasks(provider_name);
+CREATE INDEX IF NOT EXISTS idx_tasks_scheduled_for ON public.tasks(scheduled_for);
+CREATE INDEX IF NOT EXISTS idx_tasks_triggering_event_id ON public.tasks(triggering_event_id);
 
 
 -- -----------------------------------------------------------------
