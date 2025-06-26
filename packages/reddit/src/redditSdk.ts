@@ -22,7 +22,6 @@ export class RedditSDK {
     this.oauth = createRedditOAuth({
       clientId: validatedConfig.clientId,
       clientSecret: validatedConfig.clientSecret,
-      scopes: validatedConfig.scopes,
     });
     this.accessToken = validatedConfig.accessToken;
     this.refreshToken = validatedConfig.refreshToken ?? undefined;
