@@ -1,4 +1,4 @@
-import { generateObject, LanguageModelV1 } from 'ai';
+import { generateObject, LanguageModelV2 } from 'ai';
 import { z, ZodType } from 'zod';
 
 /**
@@ -10,7 +10,7 @@ import { z, ZodType } from 'zod';
  * type inference in the SDK, while still providing strong type safety for the
  * function's inputs and outputs.
  *
- * @param model An instance of a Vercel AI LanguageModelV1.
+ * @param model An instance of a Vercel AI LanguageModelV2.
  * @param schema The Zod schema to guide the object generation.
  * @param prompt The user-facing prompt for the AI.
  * @param system A system-level prompt to guide the AI's behavior.
@@ -22,7 +22,7 @@ export async function generateStructuredObject<T extends ZodType<any, any, any>>
   prompt,
   system,
 }: {
-  model: LanguageModelV1;
+  model: LanguageModelV2;
   schema: T;
   prompt: string;
   system: string;
