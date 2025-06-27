@@ -1,0 +1,67 @@
+{
+  "name": "@microfox/webhook-whatsapp",
+  "version": "1.0.0",
+  "description": "A TypeScript package for handling WhatsApp webhooks.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\""
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@microfox/webhook-core": "*",
+    "@types/aws-lambda": "^8.10.149",
+    "aws-lambda": "^1.0.7",
+    "express": "^4.19.2",
+    "serverless-http": "^3.2.0",
+    "zod": "^3.24.2"
+  },
+  "peerDependencies": {
+    "next": ">=13.0.0"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "@types/express": "^4.17.21",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "whatsapp",
+    "webhook",
+    "typescript",
+    "notification",
+    "microfox"
+  ],
+  "author": "TheMoonDevs",
+  "license": "MIT"
+} 
