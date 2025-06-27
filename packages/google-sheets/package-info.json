@@ -7,7 +7,6 @@
   "status": "stable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": ["https://www.googleapis.com/auth/spreadsheets"],
   "documentation": "https://www.npmjs.com/package/@microfox/google-sheets",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-sheets-icon.svg",
   "constructors": [
@@ -42,8 +41,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs.",
-          "defaultValue": ["https://www.googleapis.com/auth/spreadsheets"]
+          "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs."
         }
       ],
       "functionalities": [

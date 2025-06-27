@@ -7,11 +7,6 @@
   "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/drive.file",
-    "https://www.googleapis.com/auth/drive.appdata",
-    "https://www.googleapis.com/auth/drive.install"
-  ],
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/google-drive",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg",
@@ -46,12 +41,7 @@
           "key": "GOOGLE_DRIVE_SCOPES",
           "displayName": "Google Drive Scopes",
           "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
-          "required": true,
-          "defaultValue": [
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive.appdata",
-            "https://www.googleapis.com/auth/drive.install"
-          ]
+          "required": true
         },
         {
           "key": "GOOGLE_DRIVE_ACCESS_TOKEN",

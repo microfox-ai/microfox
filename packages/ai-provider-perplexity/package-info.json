@@ -6,7 +6,6 @@
   "dependencies": ["zod"],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-perplexity",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/perplexity-icon.svg",

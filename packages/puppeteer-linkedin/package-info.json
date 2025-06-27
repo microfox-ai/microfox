@@ -5,7 +5,6 @@
   "path": "packages/puppeteer-linkedin",
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-linkedin/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",

@@ -1,0 +1,18 @@
+[
+    {
+        "name": "instagram_basic",
+        "description": "Read your Instagram account information"
+    },
+    {
+        "name": "instagram_content_publish",
+        "description": "Publish content to your Instagram account"
+    },
+    {
+        "name": "instagram_manage_comments",
+        "description": "Manage comments on your Instagram account"
+    },
+    {
+        "name": "instagram_manage_insights",
+        "description": "Manage insights on your Instagram account"
+    }
+]

@@ -10,7 +10,6 @@
   ],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://developers.notion.com",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion-icon.svg",

@@ -10,7 +10,6 @@
   ],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/kling-ai",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/klingai.svg",
   "constructors": [

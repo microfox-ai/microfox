@@ -7,27 +7,6 @@
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit-oauth",
-  "oauth2Scopes": [
-    "identity",
-    "edit",
-    "flair",
-    "history",
-    "modconfig",
-    "modflair",
-    "modlog",
-    "modposts",
-    "modwiki",
-    "mysubreddits",
-    "privatemessages",
-    "read",
-    "report",
-    "save",
-    "submit",
-    "subscribe",
-    "vote",
-    "wikiedit",
-    "wikiread"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/reddit",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg",
   "constructors": [
@@ -67,28 +46,7 @@
         {
           "key": "SCOPES",
           "displayName": "Reddit Scopes",
-          "description": "A comma-separated list of scopes defining the permissions requested.",
-          "defaultValue": [
-            "identity",
-            "edit",
-            "flair",
-            "history",
-            "modconfig",
-            "modflair",
-            "modlog",
-            "modposts",
-            "modwiki",
-            "mysubreddits",
-            "privatemessages",
-            "read",
-            "report",
-            "save",
-            "submit",
-            "subscribe",
-            "vote",
-            "wikiedit",
-            "wikiread"
-          ]
+          "description": "A comma-separated list of scopes defining the permissions requested."
         }
       ],
       "functionalities": [

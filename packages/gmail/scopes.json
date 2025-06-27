@@ -1,0 +1,14 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/gmail.modify",
+    "description": "Modify your Gmail messages"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/gmail.compose",
+    "description": "Compose and send emails"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/gmail.send",
+    "description": "Send emails"
+  }
+]

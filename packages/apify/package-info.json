@@ -9,7 +9,6 @@
   ],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/apify",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/apify.svg",

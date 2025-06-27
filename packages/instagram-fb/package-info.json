@@ -7,14 +7,6 @@
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/instagram-fb-business-oauth",
-  "oauth2Scopes": [
-    "instagram_basic",
-    "instagram_content_publish",
-    "instagram_manage_comments",
-    "instagram_manage_insights",
-    "pages_show_list",
-    "pages_read_engagement"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/instagram-fb",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "constructors": [

@@ -6,12 +6,6 @@
   "dependencies": ["@microfox/google-oauth", "zod"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/yt-analytics.readonly",
-    "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
-    "https://www.googleapis.com/auth/youtube",
-    "https://www.googleapis.com/auth/youtubepartner"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/youtube-analytics",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg",
   "constructors": [
@@ -51,13 +45,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes required by the SDK",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/yt-analytics.readonly",
-            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
-            "https://www.googleapis.com/auth/youtube",
-            "https://www.googleapis.com/auth/youtubepartner"
-          ]
+          "description": "The scopes required by the SDK"
         }
       ],
       "functionalities": [

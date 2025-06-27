@@ -6,7 +6,6 @@
   "dependencies": ["yaml"],
   "status": "internal",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/serverless.svg",

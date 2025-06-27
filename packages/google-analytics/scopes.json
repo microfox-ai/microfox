@@ -1,0 +1,10 @@
+[
+    {
+        "name": "https://www.googleapis.com/auth/analytics.readonly",
+        "description": "Read-only access to your Google Analytics data"
+    },
+    {
+        "name": "https://www.googleapis.com/auth/analytics",
+        "description": "Full access to your Google Analytics data"
+    }
+]

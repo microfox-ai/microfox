@@ -6,7 +6,6 @@
   "dependencies": ["zod"],
   "status": "unstable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-vertex",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/vertex-icon.svg",

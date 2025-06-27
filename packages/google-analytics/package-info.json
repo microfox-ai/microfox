@@ -7,10 +7,6 @@
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/analytics.readonly",
-    "https://www.googleapis.com/auth/analytics"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/google-analytics",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-analytics.svg",
   "constructors": [

@@ -6,10 +6,6 @@
   "dependencies": ["zod", "@microfox/google-oauth"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/yt-analytics.readonly",
-    "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/youtube-reporting-api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube.svg",
   "constructors": [
@@ -49,11 +45,7 @@
         {
           "key": "SCOPES",
           "displayName": "Google Scopes",
-          "description": "The scopes required for the YouTube Reporting API.",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/yt-analytics.readonly",
-            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
-          ]
+          "description": "The scopes required for the YouTube Reporting API."
         }
       ],
       "functionalities": [

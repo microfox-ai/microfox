@@ -6,7 +6,6 @@
   "dependencies": [],
   "status": "stable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/brave",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg",
   "constructors": [

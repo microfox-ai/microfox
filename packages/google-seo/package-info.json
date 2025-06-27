@@ -7,10 +7,6 @@
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/webmasters",
-    "https://www.googleapis.com/auth/webmasters.readonly"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/google-seo",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-search-console.svg",
   "constructors": [

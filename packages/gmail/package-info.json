@@ -7,11 +7,6 @@
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/gmail.modify",
-    "https://www.googleapis.com/auth/gmail.compose",
-    "https://www.googleapis.com/auth/gmail.send"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/gmail",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-gmail.svg",
   "constructors": [
@@ -45,13 +40,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for the Google OAuth application",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/gmail.readonly",
-            "https://www.googleapis.com/auth/gmail.compose",
-            "https://www.googleapis.com/auth/gmail.modify",
-            "https://www.googleapis.com/auth/gmail.insert"
-          ]
+          "description": "The scopes for the Google OAuth application"
         }
       ],
       "functionalities": [

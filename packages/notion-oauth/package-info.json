@@ -9,7 +9,6 @@
   ],
   "status": "oauthConnector",
   "authEndpoint": "/connect/notion",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/notion-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion.svg",
   "constructors": [

@@ -42,14 +42,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for the YouTube client",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/youtube",
-            "https://www.googleapis.com/auth/youtube.readonly",
-            "https://www.googleapis.com/auth/youtube.upload",
-            "https://www.googleapis.com/auth/youtube.force-ssl",
-            "https://www.googleapis.com/auth/youtubepartner"
-          ]
+          "description": "The scopes for the YouTube client"
         }
       ]
     }

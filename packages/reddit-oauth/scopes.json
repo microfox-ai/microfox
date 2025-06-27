@@ -1,0 +1,79 @@
+[
+  {
+    "name": "identity",
+    "description": "Read your identity"
+  },
+  {
+    "name": "edit",
+    "description": "Edit your posts"
+  },
+
+  {
+    "name": "flair",
+    "description": "Read your flair"
+  },
+  {
+    "name": "history",
+    "description": "Read your history"
+  },
+  {
+    "name": "modconfig",
+    "description": "Read your modconfig"
+  },
+  {
+    "name": "modflair",
+    "description": "Read your modflair"
+  },
+  {
+    "name": "modlog",
+    "description": "Read your modlog"
+  },
+  {
+    "name": "modposts",
+    "description": "Read your modposts"
+  },
+  {
+    "name": "modwiki",
+    "description": "Read your modwiki"
+  },
+  {
+    "name": "mysubreddits",
+    "description": "Read your mysubreddits"
+  },
+  {
+    "name": "privatemessages",
+    "description": "Read your privatemessages"
+  },
+  {
+    "name": "read",
+    "description": "Read your read"
+  },
+  {
+    "name": "report",
+    "description": "Read your report"
+  },
+  {
+    "name": "save",
+    "description": "Read your save"
+  },
+  {
+    "name": "submit",
+    "description": "Read your submit"
+  },
+  {
+    "name": "subscribe",
+    "description": "Read your subscribe"
+  },
+  {
+    "name": "vote",
+    "description": "Read your vote"
+  },
+  {
+    "name": "wikiedit",
+    "description": "Read your wikiedit"
+  },
+  {
+    "name": "wikiread",
+    "description": "Read your wikiread"
+  }
+]
