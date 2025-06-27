@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.3.2
+
+### Patch Changes
+
+- b398833: Triggered by issue #529: release @microfox/reddit[minor]
+
 ## 1.3.1
 
 ### Patch Changes
