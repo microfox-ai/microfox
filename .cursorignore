@@ -1,0 +1,25 @@
+.DS_Store
+node_modules
+.turbo
+*.log
+.next
+dist
+dist-ssr
+*.local
+.env
+.cache
+server/dist
+public/dist
+.turbo
+test-results
+
+# Microfox report files
+packages/*/research-report.md
+packages/*/build-report.md
+packages/*/doc-report.md
+packages/*/codegen-report.md
+
+# SLS
+env.json
+.build
+.serverless

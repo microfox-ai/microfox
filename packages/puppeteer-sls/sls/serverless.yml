@@ -1,0 +1,108 @@
+service: puppeteer-sls-long-running
+
+package:
+  exclude:
+    - venv/**
+    - src/**
+    - node_modules/serverless-offline/**
+    - node_modules/@sparticuz/chromium/**
+  include: []
+
+custom:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
+    useChildProcesses: true
+    useWorkerThreads: true
+    noCookieValidation: true
+    allowCache: true
+    hideStackTraces: false
+    disableCookieValidation: true
+    noTimeout: true
+    environment: ${file(env.json)}
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  timeout: 60
+  environment:
+    UPSTASH_REDIS_REST_URL: ${file(env.json):${self:provider.stage}.UPSTASH_REDIS_REST_URL}
+    UPSTASH_REDIS_REST_TOKEN: ${file(env.json):${self:provider.stage}.UPSTASH_REDIS_REST_TOKEN}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'states:StartExecution'
+      Resource:
+        - Fn::Join:
+            - ':'
+            - - 'arn'
+              - Ref: 'AWS::Partition'
+              - 'states'
+              - Ref: 'AWS::Region'
+              - Ref: 'AWS::AccountId'
+              - 'stateMachine'
+              - 'ScrapingStateMachine-${self:provider.stage}'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-step-functions
+  - serverless-offline
+
+functions:
+  startScraping:
+    handler: dist/functions/startScrape.startScraping
+    layers:
+      - 'arn:aws:lambda:us-east-1:035837222000:layer:chromium-x86-135:1'
+    timeout: 600
+    environment:
+      STATEMACHINE_ARN:
+        Fn::Join:
+          - ':'
+          - - 'arn'
+            - Ref: 'AWS::Partition'
+            - 'states'
+            - Ref: 'AWS::Region'
+            - Ref: 'AWS::AccountId'
+            - 'stateMachine'
+            - 'ScrapingStateMachine-${self:provider.stage}'
+    events:
+      - http:
+          path: /scrape
+          method: post
+          cors: true
+
+  scrape:
+    handler: dist/functions/scrape.scrape
+    timeout: 600
+    layers:
+      - arn:aws:lambda:us-east-1:035837222000:layer:chromium-x86-135:1
+
+stepFunctions:
+  stateMachines:
+    ScrapingStateMachine:
+      name: ScrapingStateMachine-${self:provider.stage}
+      definition:
+        Comment: 'A state machine that triggers a scraper.'
+        StartAt: ScrapeTask
+        States:
+          ScrapeTask:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [scrape, Arn]
+            End: true
+
+resources:
+  Outputs:
+    ApiEndpoints:
+      Description: API Endpoints
+      Value:
+        Fn::Join:
+          - ''
+          - - 'API: https://'
+            - Ref: ApiGatewayRestApi
+            - .execute-api.
+            - Ref: AWS::Region
+            - .amazonaws.com/${env:ENVIRONMENT, 'dev'}
