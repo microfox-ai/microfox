@@ -8,12 +8,12 @@
     "@tryfabric/martian",
     "zod"
   ],
+  "addedDependencies": ["@microfox/notion-oauth"],
   "status": "semiStable",
   "authEndpoint": "",
   "authType": "apikey",
   "documentation": "https://developers.notion.com",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion-icon.svg",
-  "addedDependencies": [],
   "constructors": [
     {
       "name": "NotionClient",

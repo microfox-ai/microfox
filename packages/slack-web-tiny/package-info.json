@@ -9,6 +9,7 @@
   "authEndpoint": "/connect/slack",
   "documentation": "https://www.npmjs.com/package/@microfox/slack-web-tiny",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
+  "addedDependencies": ["@microfox/slack-oauth"],
   "constructors": [
     {
       "name": "createSlackSDK",

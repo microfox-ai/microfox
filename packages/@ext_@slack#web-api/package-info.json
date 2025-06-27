@@ -17,6 +17,7 @@
     "p-retry",
     "retry"
   ],
+  "addedDependencies": ["@microfox/slack-oauth"],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@slack/web-api",

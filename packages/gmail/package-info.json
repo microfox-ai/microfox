@@ -4,6 +4,7 @@
   "description": "TypeScript SDK for interacting with the Gmail API.",
   "path": "packages/gmail",
   "dependencies": ["zod", "@microfox/google-oauth"],
+  "addedDependencies": ["@microfox/google-oauth"],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",

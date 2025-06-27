@@ -5,6 +5,7 @@
   "platformType": "tool",
   "path": "packages/google-drive",
   "dependencies": ["@microfox/google-oauth", "zod"],
+  "addedDependencies": ["@microfox/google-oauth"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "authType": "oauth2",

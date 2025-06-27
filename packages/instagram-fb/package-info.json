@@ -4,6 +4,7 @@
   "description": "A TypeScript SDK for interacting with the Instagram API using OAuth 2.0.  This package simplifies authentication and data access.",
   "path": "packages/instagram-fb",
   "dependencies": ["@microfox/instagram-fb-business-oauth", "zod"],
+  "addedDependencies": ["@microfox/instagram-fb-business-oauth"],
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/instagram-fb-business-oauth",

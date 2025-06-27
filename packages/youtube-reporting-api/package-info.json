@@ -4,6 +4,7 @@
   "description": "A TypeScript SDK for interacting with YouTube Reporting API. Supports listing report types, creating reporting jobs, listing jobs, listing available reports, and downloading reports.",
   "path": "packages/youtube-reporting-api",
   "dependencies": ["zod", "@microfox/google-oauth"],
+  "addedDependencies": ["@microfox/google-oauth"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/youtube-reporting-api",

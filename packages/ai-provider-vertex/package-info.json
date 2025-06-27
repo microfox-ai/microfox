@@ -9,14 +9,7 @@
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-vertex",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/vertex-icon.svg",
-  "readme_map": {
-    "title": "Vertex Provider",
-    "description": "The full README for the Vertex Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-vertex/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
-  "addedDependencies": ["ai"],
+  "addedDependencies": ["@microfox/ai"],
   "constructors": [
     {
       "name": "VertexProvider",

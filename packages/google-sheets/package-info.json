@@ -4,6 +4,7 @@
   "description": "A TypeScript SDK for interacting with Google Sheets.",
   "path": "packages/google-sheets",
   "dependencies": ["@microfox/google-oauth", "zod"],
+  "addedDependencies": ["@microfox/google-oauth"],
   "status": "stable",
   "authType": "oauth2",
   "authEndpoint": "/connect/google-oauth",
