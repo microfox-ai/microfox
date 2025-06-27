@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS package_infos (
     description TEXT,
     dependencies JSON,
     added_dependencies JSON,
+    added_packages JSON,
     status TEXT,
     documentation TEXT,
     icon TEXT,
@@ -24,7 +25,8 @@ CREATE TABLE IF NOT EXISTS package_infos (
     file_path TEXT,
     github_url TEXT,
     updated_at TIMESTAMPTZ DEFAULT now(),
-    created_at TIMESTAMPTZ DEFAULT now()
+    created_at TIMESTAMPTZ DEFAULT now(),
+    embedding vector(768)
 );
 
 -- 2. Indexes for efficient searching
@@ -41,4 +43,38 @@ CREATE INDEX IF NOT EXISTS idx_package_infos_auth_type
   ON package_infos(auth_type);
 
 CREATE INDEX IF NOT EXISTS idx_package_infos_updated_at
-  ON package_infos(updated_at); 
+  ON package_infos(updated_at);
+
+CREATE INDEX IF NOT EXISTS idx_package_infos_embedding
+  ON package_infos USING ivfflat (embedding vector_cosine_ops)
+  WITH (lists = 100);
+
+-- 3. RPC function for searching packages
+CREATE OR REPLACE FUNCTION match_package_infos (
+  query_embedding vector(768),
+  match_threshold float,
+  match_count int
+)
+RETURNS TABLE (
+  id UUID,
+  package_name TEXT,
+  package_title TEXT,
+  description TEXT,
+  similarity float
+)
+LANGUAGE sql STABLE
+AS $$
+  SELECT
+    p.id,
+    p.package_name,
+    p.package_title,
+    p.description,
+    1 - (p.embedding <=> query_embedding) AS similarity
+  FROM
+    package_infos AS p
+  WHERE
+    1 - (p.embedding <=> query_embedding) > match_threshold
+  ORDER BY
+    similarity DESC
+  LIMIT match_count;
+$$; 
