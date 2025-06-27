@@ -3,10 +3,7 @@
   "title": "Reddit TypeScript SDK",
   "description": "A TypeScript SDK for interacting with the Reddit API, providing functionalities for user data retrieval, search operations (users, posts, communities), post and comment processing, moderation, and comprehensive data access.",
   "path": "packages/reddit",
-  "dependencies": [
-    "@microfox/reddit-oauth",
-    "zod"
-  ],
+  "dependencies": ["@microfox/reddit-oauth", "zod"],
   "status": "semiStable",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit-oauth",
@@ -3169,7 +3166,7 @@
   },
   "constructors": [
     {
-      "name": "RedditOAuthSDK",
+      "name": "RedditSDK",
       "description": "Create a new Reddit TypeScript SDK client through which you can interact with the API",
       "auth": "oauth2",
       "authSdk": "@microfox/reddit-oauth",

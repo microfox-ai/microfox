@@ -1,10 +1,6 @@
 import { createVertex } from '@ai-sdk/google-vertex';
-import { createVertexAnthropic } from '@ai-sdk/google-vertex/anthropic';
-import {
-  LanguageModelV1,
-  LanguageModelV1Middleware,
-  wrapLanguageModel,
-} from 'ai';
+import { LanguageModelV2, LanguageModelV2Middleware } from '@ai-sdk/provider';
+import { wrapLanguageModel } from 'ai';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
 import {
   VertexEmbeddingModelId,
@@ -14,21 +10,22 @@ import {
 
 // The AI SDK does not export the provider types, so we infer them
 type Vertex = ReturnType<typeof createVertex>;
-type VertexAnthropic = ReturnType<typeof createVertexAnthropic>;
 
 export class VertexProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private vertexProvider: Vertex;
-  private vertexAnthropicProvider: VertexAnthropic;
 
   constructor(props?: {
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
     project?: string;
     location?: string;
   }) {
     this.middleware =
       props?.middleware ||
       ({
+        async transformParams({ type, params }) {
+          return params;
+        },
         async wrapGenerate({ doGenerate, params }) {
           const result = await doGenerate();
           if (result.response?.modelId) {
@@ -38,8 +35,11 @@ export class VertexProvider {
                 '@microfox/ai-provider-vertex',
                 result.response.modelId,
                 {
-                  completionTokens: result.usage.completionTokens,
-                  promptTokens: result.usage.promptTokens,
+                  inputTokens: result.usage.inputTokens ?? 0,
+                  outputTokens: result.usage.outputTokens ?? 0,
+                  cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+                  reasoningTokens: result.usage.reasoningTokens ?? 0,
+                  totalTokens: result.usage.totalTokens ?? 0,
                 },
               );
             }
@@ -48,34 +48,30 @@ export class VertexProvider {
           }
           return result;
         },
-      } as LanguageModelV1Middleware);
+        async wrapStream({ doStream, params }) {
+          return doStream();
+        },
+      } as LanguageModelV2Middleware);
 
     this.vertexProvider = createVertex({
       project: props?.project,
       location: props?.location,
     });
-    this.vertexAnthropicProvider = createVertexAnthropic({
-      project: props?.project,
-      location: props?.location,
-    });
   }
 
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
-  languageModel(modelId: VertexLanguageModelId): LanguageModelV1 {
-    if (modelId.startsWith('claude')) {
-      return wrapLanguageModel({
-        model: this.vertexAnthropicProvider(modelId),
-        middleware: this.middleware,
-      });
-    }
-
-    return wrapLanguageModel({
-      model: this.vertexProvider(modelId),
-      middleware: this.middleware,
-    });
+  languageModel(modelId: VertexLanguageModelId) {
+    // return wrapLanguageModel({
+    //   model: {
+    //     ...this.vertexProvider.languageModel(modelId),
+    //     specificationVersion: 'v2',
+    //     supportedUrls: {},
+    //   },
+    //   middleware: this.middleware,
+    // });
   }
 
   embedding(modelId: VertexEmbeddingModelId) {
@@ -85,4 +81,4 @@ export class VertexProvider {
   image(modelId: VertexImageModelId) {
     return this.vertexProvider.image(modelId);
   }
-} 
+}

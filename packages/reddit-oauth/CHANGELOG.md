@@ -1,5 +1,11 @@
 # @microfox/reddit-oauth
 
+## 1.2.3
+
+### Patch Changes
+
+- d3a96f3: Triggered by issue #527: release @microfox/reddit-oauth[minor] @microfox/reddit[minor]
+
 ## 1.2.2
 
 ### Patch Changes

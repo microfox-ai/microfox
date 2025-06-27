@@ -20,7 +20,6 @@ import {
   HumanInterventionContext,
   PendingToolContext,
 } from '../types';
-import { ToolExecutionOptions } from 'ai';
 
 /**
  * Individual client for interacting with a single API described by an OpenAPI schema
@@ -47,7 +46,7 @@ export class OpenApiMCP {
       constructor: string;
       path: string;
     },
-    toolOptions?: ToolExecutionOptions,
+    toolOptions?: any,
   ) => Promise<AuthObject>;
   private getHumanIntervention?: (
     context: HumanInterventionContext,
@@ -68,7 +67,7 @@ export class OpenApiMCP {
         constructor: string;
         path: string;
       },
-      toolOptions?: ToolExecutionOptions,
+      toolOptions?: any,
     ) => Promise<AuthObject>;
     getHumanIntervention?: (
       context: HumanInterventionContext,
@@ -388,7 +387,7 @@ export class OpenApiMCP {
   async callOperation(
     id: string,
     args: Record<string, any> = {},
-    options?: ToolExecutionOptions,
+    options?: any,
   ) {
     if (!this.initialized) {
       throw new Error('Client not initialized. Call init() first.');
@@ -860,7 +859,7 @@ export class OpenApiMCP {
 
       const executeFn: ToolExecuteFn = async (
         args: Record<string, any>,
-        options?: ToolExecutionOptions,
+        options?: any,
       ) => {
         // Human in the Loop Check at the point of execution
         if (getHumanIntervention) {
@@ -931,7 +930,7 @@ export class OpenApiMCP {
         tools[toolName] = {
           name: toolName,
           description,
-          parameters: zodSchema,
+          inputSchema: zodSchema,
           execute: executeFn,
         };
         toolExecutions[toolName] = executeFn;

@@ -26,10 +26,11 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/google-vertex": "^2.2.24",
+    "@ai-sdk/google-vertex": "^2.0.0-alpha.15",
+    "@ai-sdk/provider": "^2.0.0-beta",
     "@microfox/usage-tracker": "*",
     "@upstash/redis": "^1.34.9",
-    "ai": "^4.3.16",
+    "ai": "^5.0.0-beta",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ Creates a new RedditSDK object for interacting with the Reddit API.
   - `clientId`: string - Your Reddit application's client ID.
   - `clientSecret`: string - Your Reddit application's client secret.
   - `accessToken`: string - The access token for authenticating requests.
-  - `scopes`: array<string> - An array of scopes defining the permissions requested.
+  - `refreshToken`: string - The refresh token for authenticating requests.
 
 **Return Value:**
 
@@ -25,6 +25,6 @@ const sdk = new RedditSDK({
   clientId: process.env.REDDIT_CLIENT_ID,
   clientSecret: process.env.REDDIT_CLIENT_SECRET,
   accessToken: process.env.REDDIT_ACCESS_TOKEN,
-  scopes: process.env.SCOPES.split(','),
+  refreshToken: process.env.REDDIT_REFRESH_TOKEN,
 });
 ```

@@ -1,5 +1,11 @@
 # @microfox/notion
 
+## 1.0.5
+
+### Patch Changes
+
+- 2ba1b7d: Changes from PR #523: notion-markdown-updates
+
 ## 1.0.4
 
 ### Patch Changes

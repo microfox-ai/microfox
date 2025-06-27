@@ -3,7 +3,9 @@
   "title": "Microfox Reddit OAuth",
   "description": "A TypeScript OAuth package for Reddit.",
   "path": "packages/reddit-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit",
@@ -42,16 +44,16 @@
         "functionality": "createRedditOAuth"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl"
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAccessToken.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "getAccessToken"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAuthorizationUrl.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "getAuthorizationUrl"
       },
       {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/refreshAccessToken.md",
@@ -60,25 +62,25 @@
         "functionality": "refreshAccessToken"
       },
       {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken"
-      },
-      {
         "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/revokeToken.md",
         "type": "functionality",
         "extension": "md",
         "functionality": "revokeToken"
+      },
+      {
+        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/validateAccessToken.md",
+        "type": "functionality",
+        "extension": "md",
+        "functionality": "validateAccessToken"
       }
     ],
     "functionalities": [
       "createRedditOAuth",
-      "getAuthorizationUrl",
       "getAccessToken",
+      "getAuthorizationUrl",
       "refreshAccessToken",
-      "validateAccessToken",
-      "revokeToken"
+      "revokeToken",
+      "validateAccessToken"
     ]
   },
   "constructors": [
@@ -111,11 +113,12 @@
         }
       ],
       "functionalities": [
-        "getAuthorizationUrl",
+        "createRedditOAuth",
         "getAccessToken",
+        "getAuthorizationUrl",
         "refreshAccessToken",
-        "validateAccessToken",
-        "revokeToken"
+        "revokeToken",
+        "validateAccessToken"
       ]
     }
   ],

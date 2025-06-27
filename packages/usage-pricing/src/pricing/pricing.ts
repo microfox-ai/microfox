@@ -149,12 +149,16 @@ export const attachPricingLLM = (usage: LLMUsageWithBase): UsageWithPricing => {
       originalPriceUSD: 0,
     } as UsageWithPricing;
   }
+  let inputTokenBase =
+    modelPricingConfig.promptToken ?? modelPricingConfig.inputToken;
+  let completionTokenBase =
+    modelPricingConfig.completionToken ?? modelPricingConfig.outputToken;
   usagePriceUSD +=
-    modelPricingConfig.promptToken.basePriceUSD *
-    ((usage.promptTokens ?? 0) / modelPricingConfig.promptToken.per);
+    inputTokenBase.basePriceUSD *
+    ((usage.inputTokens ?? 0) / inputTokenBase.per);
   usagePriceUSD +=
-    modelPricingConfig.completionToken.basePriceUSD *
-    ((usage.completionTokens ?? 0) / modelPricingConfig.completionToken.per);
+    completionTokenBase.basePriceUSD *
+    ((usage.outputTokens ?? 0) / completionTokenBase.per);
   return {
     ...usage,
     package: _package,
@@ -182,8 +186,8 @@ export const attachPricing = (usage: Usage): UsageWithPricing => {
 
 export const getPricingForLLM = (props: {
   model: string;
-  promptTokens: number;
-  completionTokens: number;
+  inputTokens: number;
+  outputTokens: number;
   markup?: number;
 }) => {
   const _package = fetchProviderPackage(props.model);
@@ -202,10 +206,16 @@ export const getPricingForLLM = (props: {
   }
   const modelPricingConfig = (pricingConfig as any)[props.model];
   const usagePriceUSD =
-    modelPricingConfig.promptToken.basePriceUSD *
-      (props.promptTokens / modelPricingConfig.promptToken.per) +
-    modelPricingConfig.completionToken.basePriceUSD *
-      (props.completionTokens / modelPricingConfig.completionToken.per);
+    (modelPricingConfig.promptToken?.basePriceUSD ??
+      modelPricingConfig.inputToken?.basePriceUSD) *
+      (props.inputTokens /
+        (modelPricingConfig.promptToken?.per ??
+          modelPricingConfig.inputToken?.per)) +
+    (modelPricingConfig.completionToken?.basePriceUSD ??
+      modelPricingConfig.outputToken?.basePriceUSD) *
+      (props.outputTokens /
+        (modelPricingConfig.completionToken?.per ??
+          modelPricingConfig.outputToken?.per));
   return {
     provider: _package?.replace('ai-provider-', ''),
     priceUSD: usagePriceUSD * (1 - (props.markup ?? 0) / 100),

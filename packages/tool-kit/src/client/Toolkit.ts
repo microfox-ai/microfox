@@ -1,16 +1,15 @@
 import {
-  DataStreamWriter,
-  parseDataStreamPart,
-  formatDataStreamPart,
   GenerateTextResult,
   LanguageModel,
-  Message,
+  UIMessage as Message,
   StepResult,
   StreamTextResult,
   ToolCall,
   ToolCallPart,
-  ToolExecutionOptions,
   ToolResultPart,
+  UIMessageStreamWriter,
+  PrepareStepFunction,
+  JsonToSseTransformStream,
 } from 'ai';
 import {
   HumanDecisionArgs,
@@ -22,6 +21,7 @@ import {
 } from '../types';
 import { parseSchema } from '../utils';
 import { OpenApiMCP } from './OpenAPiMcp';
+import { ReadableStream } from 'stream/web';
 
 const FAKE_HUMAN_INTERACTION_TOOL_NAME = 'FAKE_HUMAN_INTERACTION';
 
@@ -141,7 +141,7 @@ export class Toolkit {
   async callOperation(
     id: string,
     args: Record<string, any> = {},
-    options?: ToolExecutionOptions,
+    options?: any,
   ) {
     if (!this.initialized) {
       throw new Error('Clients not initialized. Call init() first.');
@@ -238,7 +238,7 @@ export class Toolkit {
    */
   async parse(
     messages: Message[],
-    dataStream?: DataStreamWriter,
+    dataStream?: UIMessageStreamWriter,
   ): Promise<Message[]> {
     const lastMessage = messages[messages.length - 1];
     if ((lastMessage as any)?.role !== 'tool') {
@@ -282,8 +282,8 @@ export class Toolkit {
         (p: any) => p.toolCallId === fakeResult.toolCallId,
       ) as unknown as ToolCallPart;
 
-      const { originalToolCallId } = fakeCall.args as any;
-      const humanInput = fakeResult.result;
+      const { originalToolCallId } = fakeCall.input as any;
+      const humanInput = fakeResult.output;
 
       /// TODO: remove dependency on this.consumePendingTool
       const pendingContext = this.consumePendingTool(originalToolCallId);
@@ -316,18 +316,18 @@ export class Toolkit {
         type: 'tool-result',
         toolCallId: pendingContext.originalToolCallId,
         toolName: pendingContext.toolName,
-        result: finalResult,
+        output: finalResult,
       });
 
       this.consumePendingTool(pendingContext.originalToolCallId);
 
       if (dataStream) {
-        dataStream.write(
-          formatDataStreamPart('tool_result', {
-            toolCallId: pendingContext.originalToolCallId,
-            result: finalResult,
-          }),
-        );
+        dataStream.write({
+          type: 'tool-output-available',
+          toolCallId: pendingContext.originalToolCallId,
+          output: finalResult,
+          providerMetadata: {},
+        });
       }
     }
 
@@ -356,7 +356,7 @@ export class Toolkit {
       type: 'tool-call',
       toolCallId: `${originalToolCall.toolCallId}-human-intervention`,
       toolName: FAKE_HUMAN_INTERACTION_TOOL_NAME,
-      args: {
+      input: {
         originalToolCallId: originalToolCall.toolCallId,
         originalToolName: originalToolCall.toolName,
         ...interventionArgs,
@@ -369,22 +369,14 @@ export class Toolkit {
    * This function inspects the results of the previous step and stops the execution
    * if a human-in-the-loop intervention has been triggered.
    */
-  createHitlPrepareStep() {
-    return async ({
-      stepNumber,
-      steps,
-    }: {
-      steps: Array<StepResult<any>>;
-      stepNumber: number;
-      maxSteps: number;
-      model: LanguageModel;
-    }) => {
+  createHitlPrepareStep(): PrepareStepFunction<any> {
+    return async ({ steps }) => {
       const lastStep = steps[steps.length - 1];
       if (
-        lastStep.toolResults.some(r => (r.result as any)?._humanIntervention)
+        lastStep.toolResults.some(r => (r.output as any)?._humanIntervention)
       ) {
         // If we find a HITL marker, we tell `generateText` to stop after the current step.
-        return { experimental_activeTools: [] };
+        return { activeTools: [] };
       }
       return undefined;
     };
@@ -408,13 +400,13 @@ export class Toolkit {
     );
 
     for (const result of response.toolResults) {
-      if ((result.result as any)?._humanIntervention === true) {
+      if ((result.output as any)?._humanIntervention === true) {
         // This is a HITL-paused tool. Create a fake tool call for the UI.
         const originalToolCall = originalToolCalls.get(result.toolCallId);
         if (originalToolCall) {
           const fakeToolCall = this.createFakeToolCall(
             originalToolCall,
-            (result.result as any).args as HumanDecisionArgs,
+            (result.output as any).args as HumanDecisionArgs,
           );
           finalToolCalls.push(fakeToolCall);
           assistantMessageParts.push(fakeToolCall);
@@ -456,73 +448,51 @@ export class Toolkit {
    * @returns A new stream with HITL logic applied.
    */
   stream(
-    resultStream: StreamTextResult<any, any>,
-    dataStream?: DataStreamWriter,
-  ): StreamTextResult<any, any> {
-    const originalStream = (resultStream as any)
-      .stream as ReadableStream<Uint8Array>;
+    resultStream: ReadableStream,
+    dataStream?: UIMessageStreamWriter,
+  ): ReadableStream {
     const client = this;
-    const textDecoder = new TextDecoder();
-    let buffer = '';
+    const [streamForProcessing, streamToReturn] = resultStream.tee();
 
-    const transformStream = new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        controller.enqueue(chunk);
+    (async () => {
+      const reader = streamForProcessing.getReader();
+      try {
+        while (true) {
+          const { done, value: part } = await reader.read();
+          if (done) {
+            break;
+          }
 
-        buffer += textDecoder.decode(chunk, { stream: true });
+          if (
+            part.type === 'tool-result' &&
+            (part.toolResult.result as any)?._humanIntervention === true
+          ) {
+            const { toolCallId, result } = part.toolResult;
+            const pendingTool = client.pendingTools.get(toolCallId);
 
-        const lines = buffer.split('\n');
+            if (pendingTool && dataStream) {
+              const interventionArgs = (result as any).args ?? {};
+              const fakeToolCallPart = {
+                type: 'tool-call',
+                toolCallId: `${toolCallId}-human-intervention`,
+                toolName: FAKE_HUMAN_INTERACTION_TOOL_NAME,
+                args: {
+                  originalToolCallId: toolCallId,
+                  originalToolName: pendingTool.toolName,
+                  ...interventionArgs,
+                },
+              };
 
-        buffer = lines.pop() ?? '';
-
-        for (const line of lines) {
-          if (!line.startsWith('2:')) continue;
-
-          try {
-            const part: any = parseDataStreamPart(line);
-
-            if (
-              part.type === 'tool-result' &&
-              (part.value as any)?._humanIntervention === true
-            ) {
-              const { toolCallId, result } = part.value;
-              const pendingTool = client.pendingTools.get(toolCallId);
-
-              if (pendingTool) {
-                const interventionArgs = (result as any).args ?? {};
-                const fakeToolCallContent = {
-                  toolCallId: `${toolCallId}-human-intervention`,
-                  toolName: FAKE_HUMAN_INTERACTION_TOOL_NAME,
-                  args: {
-                    originalToolCallId: toolCallId,
-                    originalToolName: pendingTool.toolName,
-                    ...interventionArgs,
-                  },
-                };
-
-                const newPart = formatDataStreamPart(
-                  'tool_call',
-                  fakeToolCallContent,
-                );
-
-                controller.enqueue(new TextEncoder().encode(newPart));
-
-                if (dataStream) {
-                  dataStream.write(newPart);
-                }
-              }
+              dataStream.write(fakeToolCallPart as any);
             }
-          } catch (e) {
-            // Ignore parsing errors, they can happen with partial data
           }
         }
-      },
-    });
+      } catch (error) {
+        console.error('Error processing stream for HITL:', error);
+      }
+    })();
 
-    return {
-      ...(resultStream as any),
-      stream: originalStream.pipeThrough(transformStream),
-    };
+    return streamToReturn;
   }
 
   isHumanLoop(part: ToolCallPart): boolean {
@@ -537,7 +507,7 @@ export class Toolkit {
       return null;
     }
     const { originalToolCallId, originalToolName, ...uiArgs } =
-      part.args as any;
+      part.input as any;
     return uiArgs;
   }
 }
