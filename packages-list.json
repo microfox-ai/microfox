@@ -3,11 +3,15 @@
     "packages/@ext_@gitbook#api",
     "packages/@ext_@hyperbrowser#sdk",
     "packages/@ext_@slack#web-api",
-    "packages/@ext_octokit",
-    "packages/@ext_puppeteer"
+    "packages/@ext_octokit"
+  ],
+  "webhookConnectorPackages": [
+    "packages/agent-kit",
+    "packages/webhook-octokit",
+    "packages/webhook-slack"
   ],
   "internalPackages": [
-    "packages/@ext_ai",
+    "packages/ai",
     "packages/crypto-sdk",
     "packages/oauth-kit",
     "packages/rest-sdk",
@@ -17,11 +21,6 @@
     "packages/usage-tracker",
     "packages/webhook-kit"
   ],
-  "webhookConnectorPackages": [
-    "packages/agent-kit",
-    "packages/webhook-octokit",
-    "packages/webhook-slack"
-  ],
   "stablePackages": [
     "packages/ai-provider-anthropic",
     "packages/ai-provider-google",
@@ -29,6 +28,7 @@
     "packages/brave",
     "packages/google-sheets",
     "packages/linkedin-share",
+    "packages/puppeteer-linkedin",
     "packages/puppeteer-sls",
     "packages/slack-web-tiny",
     "packages/whatsapp-business"
@@ -58,10 +58,8 @@
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
   ],
-  "unknownPackages": [
-    "packages/ai-provider-vertex",
-    "packages/task-kit",
-    "packages/webhook-core"
+  "unstablePackages": [
+    "packages/ai-provider-vertex"
   ],
   "partialPackages": [
     "packages/core",
@@ -80,6 +78,10 @@
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
+  "unknownPackages": [
+    "packages/task-kit",
+    "packages/webhook-core"
+  ],
   "total": 65,
-  "generatedAt": "2025-06-23T18:54:29.014Z"
+  "generatedAt": "2025-06-27T09:56:46.190Z"
 }
