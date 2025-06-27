@@ -4,6 +4,7 @@ Part of the `listings` section. Fetch posts sorted by a specific criteria.
 
 **Parameters:**
 
+- `sort` (string): The sort order for the listing. Can be one of: 'top', 'controversial'.
 - `t` (string, optional): The time frame for the listing. One of: 'hour', 'day', 'week', 'month', 'year', 'all'.
 - `limit` (number, optional): The maximum number of items to return in this slice of the listing.
 - `after` (string, optional): Return items after this fullname.

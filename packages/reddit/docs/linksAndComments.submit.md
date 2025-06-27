@@ -17,7 +17,25 @@ Part of the `linksAndComments` section. Submits a new post to a subreddit.
 
 **Return Value:**
 
-- `Promise<any>`: A promise that resolves to an object containing information about the newly created post.
+- A promise that resolves to an object containing information about the newly created post. The response has the following structure:
+
+```typescript
+{
+  "json": {
+    "errors": [],
+    "data": {
+      "things": [
+        {
+          "kind": "t3",
+          "data": // Post object
+        }
+      ]
+    }
+  }
+}
+```
+
+The `Post` object has the same structure as the one from the `getHot.md` function. Please refer to the `getHot.md` documentation for the detailed `Post` type definition.
 
 **Usage Example:**
 
@@ -37,4 +55,4 @@ await redditSdk.api.linksAndComments.submit({
   title: 'Check out this cool link!',
   url: 'https://www.reddit.com',
 });
-``` 
+```

@@ -16,7 +16,25 @@ Part of the `linksAndComments` section. Submits a new comment on a post or anoth
 
 **Return Value:**
 
-- `Promise<any>`: A promise that resolves to an object containing information about the newly created comment. The structure can vary.
+- A promise that resolves to an object containing information about the newly created comment. The response has the following structure:
+
+```typescript
+{
+  "json": {
+    "errors": [],
+    "data": {
+      "things": [
+        {
+          "kind": "t1",
+          "data": // Comment object
+        }
+      ]
+    }
+  }
+}
+```
+
+The `Comment` object has the same structure as the one from the `getComments.md` function. Please refer to the `getComments.md` documentation for the detailed `Comment` type definition.
 
 **Usage Example:**
 
@@ -31,5 +49,8 @@ const result = await redditSdk.api.linksAndComments.submitComment({
   text: commentText,
 });
 
-console.log('Comment submitted successfully:', result.json.data.things[0].data.id);
-``` 
+console.log(
+  'Comment submitted successfully:',
+  result.json.data.things[0].data.id,
+);
+```

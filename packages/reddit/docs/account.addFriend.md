@@ -30,4 +30,4 @@ const addedFriend = await redditSdk.api.account.addFriend({
 });
 
 console.log(`Added ${addedFriend.name} as a friend.`);
-``` 
+```
