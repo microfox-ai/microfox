@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-provider-vertex",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A Wrapped Google Vertex Provider for Vercels AI SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -43,7 +43,7 @@
     "typescript": "5.6.3"
   },
   "publishConfig": {
-    "access": "."
+    "access": "public"
   },
   "engines": {
     "node": ">=20.0.0"

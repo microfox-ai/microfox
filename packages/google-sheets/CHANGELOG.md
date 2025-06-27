@@ -1,5 +1,11 @@
 # @microfox/google-sheets
 
+## 1.2.1
+
+### Patch Changes
+
+- 9d77d8a: Changes from PR #517: google-sheets-token-refresh
+
 ## 1.2.0
 
 ### Minor Changes
