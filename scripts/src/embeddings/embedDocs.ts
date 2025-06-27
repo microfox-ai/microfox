@@ -6,6 +6,7 @@ import { execSync } from 'child_process';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { embed } from './geminiEmbed';
+import { PackageInfo } from '../types';
 
 dotenv.config();
 
@@ -46,14 +47,6 @@ async function getExistingDocs() {
   return data as Array<{ id: string; file_path: string; updated_at: string }>;
 }
 
-interface ReadmeInfo {
-  path: string;
-  type: string;
-  extension: string;
-  functionality: string;
-  description: string;
-}
-
 function getGithubUrl(relativePath: string): string {
   return `${GITHUB_BASE_URL}${relativePath.replace(/\\/g, '/')}`;
 }
@@ -81,7 +74,7 @@ function walkDocs() {
     const packageInfoPath = path.join(pkgDir, 'package-info.json');
 
     // Main README
-    const mainReadmePath = path.join(pkgDir, 'README.md');
+    const mainReadmePath = path.join(pkgDir, 'docs', 'main.md');
     if (fs.existsSync(mainReadmePath)) {
       const mtime = getGitLastModified(mainReadmePath);
       const relativePath = path.relative(PACKAGES_DIR, mainReadmePath);
@@ -97,35 +90,71 @@ function walkDocs() {
       });
     }
 
+    // Rules README
+    const rulesReadmePath = path.join(pkgDir, 'docs', 'rules.md');
+    if (fs.existsSync(rulesReadmePath)) {
+      const mtime = getGitLastModified(rulesReadmePath);
+      const relativePath = path.relative(PACKAGES_DIR, rulesReadmePath);
+      results.push({
+        packageName: pkg,
+        functionName: null,
+        docType: 'rules',
+        filePath: relativePath,
+        githubUrl: getGithubUrl(relativePath),
+        fullPath: rulesReadmePath,
+        mtime,
+        content: fs.readFileSync(rulesReadmePath, 'utf-8'),
+      });
+    }
+
     // package-info and sub-docs
     if (fs.existsSync(packageInfoPath)) {
       const packageInfo: PackageInfo = JSON.parse(
         fs.readFileSync(packageInfoPath, 'utf-8'),
       );
 
-      if (fs.existsSync(docsDir) && readmeMap) {
-        for (const file of fs
-          .readdirSync(docsDir)
-          .filter(f => f.endsWith('.md') && !f.endsWith('/README.md'))) {
-          const fullPath = path.join(docsDir, file);
-          const functionName = file.replace(/\.md$/, '');
-          const readmeInfo = readmeMap.get(functionName);
-          if (!readmeInfo) continue;
+      if (packageInfo.constructors && fs.existsSync(docsDir)) {
+        for (const constructor of packageInfo.constructors) {
 
-          const mtime = getGitLastModified(fullPath);
-          const relativePath = path.relative(PACKAGES_DIR, fullPath);
-          const githubUrl = readmeInfo.path || getGithubUrl(relativePath);
+          // Constructors
+          const constructorDocFileName = `${constructor.name}.md`;
+          const constructorFullPath = path.join(docsDir, 'constructors', constructorDocFileName);
+          if (fs.existsSync(constructorFullPath)) {
+            const mtime = getGitLastModified(constructorFullPath);
+            const relativePath = path.relative(PACKAGES_DIR, constructorFullPath);
+            results.push({
+              packageName: pkg,
+              functionName: constructor.name,
+              docType: 'constructor',
+              filePath: relativePath,
+              githubUrl: getGithubUrl(relativePath),
+              fullPath: constructorFullPath,
+              mtime,
+              content: fs.readFileSync(constructorFullPath, 'utf-8'),
+            });
+          }
 
-          results.push({
-            packageName: pkg,
-            functionName,
-            docType: readmeInfo.type,
-            filePath: relativePath,
-            githubUrl,
-            fullPath,
-            mtime,
-            content: fs.readFileSync(fullPath, 'utf-8'),
-          });
+          // Functionalities
+          for (const functionality of constructor.functionalities) {
+            const docFileName = `${functionality}.md`;
+            const fullPath = path.join(docsDir, docFileName);
+
+            if (fs.existsSync(fullPath)) {
+              const mtime = getGitLastModified(fullPath);
+              const relativePath = path.relative(PACKAGES_DIR, fullPath);
+
+              results.push({
+                packageName: pkg,
+                functionName: functionality,
+                docType: 'functionality',
+                filePath: relativePath,
+                githubUrl: getGithubUrl(relativePath),
+                fullPath,
+                mtime,
+                content: fs.readFileSync(fullPath, 'utf-8'),
+              });
+            }
+          }
         }
       }
     }
