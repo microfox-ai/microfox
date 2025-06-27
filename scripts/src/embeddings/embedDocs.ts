@@ -53,15 +53,6 @@ interface ReadmeInfo {
   functionality: string;
   description: string;
 }
-interface PackageInfo {
-  readme_map: {
-    title: string;
-    description: string;
-    path: string;
-    functionalities: string[];
-    all_readmes: ReadmeInfo[];
-  };
-}
 
 function getGithubUrl(relativePath: string): string {
   return `${GITHUB_BASE_URL}${relativePath.replace(/\\/g, '/')}`;
@@ -110,9 +101,6 @@ function walkDocs() {
     if (fs.existsSync(packageInfoPath)) {
       const packageInfo: PackageInfo = JSON.parse(
         fs.readFileSync(packageInfoPath, 'utf-8'),
-      );
-      const readmeMap = new Map(
-        packageInfo?.readme_map?.all_readmes?.map(r => [r?.functionality, r]),
       );
 
       if (fs.existsSync(docsDir) && readmeMap) {

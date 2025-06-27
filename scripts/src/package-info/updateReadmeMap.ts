@@ -270,16 +270,6 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
   try {
     const packageInfo: PackageInfo = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
     
-    // Initialize readme_map if it doesn't exist
-    if (!packageInfo.readme_map) {
-      packageInfo.readme_map = {
-        description: `The full README for the ${packageInfo.title || packageName}`,
-        path: `${GITHUB_BASE_URL}${packageName}/README.md`,
-        functionalities: [],
-        all_readmes: []
-      };
-    }
-
     let hasChanges = false;
 
     // Process each change
@@ -287,13 +277,6 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
       const { functionality, action } = change;
       
       if (action === 'added') {
-        // Add functionality to readme_map functionalities array
-        if (!packageInfo.readme_map!.functionalities.includes(functionality)) {
-          packageInfo.readme_map!.functionalities.push(functionality);
-          hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to readme_map.functionalities`);
-        }
-        
         // Add functionality to all constructors functionalities arrays
         if (packageInfo.constructors) {
           packageInfo.constructors.forEach((constructor, index) => {
@@ -304,27 +287,7 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
             }
           });
         }
-        
-        // Create and add readme info to all_readmes array
-        const readmeInfo = createReadmeInfo(packageName, functionality);
-        if (readmeInfo && !packageInfo.readme_map!.all_readmes?.find(r => r.functionality === functionality)) {
-          if (!packageInfo.readme_map!.all_readmes) {
-            packageInfo.readme_map!.all_readmes = [];
-          }
-          packageInfo.readme_map!.all_readmes.push(readmeInfo);
-          hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to all_readmes`);
-        }
-        
       } else if (action === 'removed') {
-        // Remove functionality from readme_map functionalities array
-        const functIndex = packageInfo.readme_map!.functionalities.indexOf(functionality);
-        if (functIndex > -1) {
-          packageInfo.readme_map!.functionalities.splice(functIndex, 1);
-          hasChanges = true;
-          console.log(`  🗑️ Removed ${functionality} from readme_map.functionalities`);
-        }
-        
         // Remove functionality from all constructors functionalities arrays
         if (packageInfo.constructors) {
           packageInfo.constructors.forEach((constructor, index) => {
@@ -336,27 +299,11 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
             }
           });
         }
-        
-        // Remove readme info from all_readmes array
-        if (packageInfo.readme_map!.all_readmes) {
-          const readmeIndex = packageInfo.readme_map!.all_readmes.findIndex(r => r.functionality === functionality);
-          if (readmeIndex > -1) {
-            packageInfo.readme_map!.all_readmes.splice(readmeIndex, 1);
-            hasChanges = true;
-            console.log(`  🗑️ Removed ${functionality} from all_readmes`);
-          }
-        }
       }
     });
 
     if (hasChanges) {
       // Sort arrays alphabetically by functionality name
-      packageInfo.readme_map!.functionalities.sort();
-      packageInfo.readme_map!.all_readmes?.sort((a, b) => 
-        (a.functionality || '').localeCompare(b.functionality || '')
-      );
-      
-      // Sort constructors functionalities arrays
       if (packageInfo.constructors) {
         packageInfo.constructors.forEach(constructor => {
           constructor.functionalities.sort();

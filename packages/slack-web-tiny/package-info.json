@@ -9,47 +9,6 @@
   "authEndpoint": "/connect/slack",
   "documentation": "https://www.npmjs.com/package/@microfox/slack-web-tiny",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
-  "readme_map": {
-    "title": "Microfox Slack Web Tiny",
-    "description": "The full README for the Microfox Slack Web Tiny",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/README.md",
-    "functionalities": [
-      "createSlackSDK",
-      "sendMessage",
-      "updateMessage",
-      "uploadFile"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/createSlackSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createSlackSDK",
-        "description": "Creates a new instance of the Slack Web Tiny SDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/sendMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "sendMessage",
-        "description": "Sends a message to a Slack channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/updateMessage.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateMessage",
-        "description": "Updates an existing message in a Slack channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-web-tiny/docs/uploadFile.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "uploadFile",
-        "description": "Uploads a file to Slack."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "createSlackSDK",
@@ -113,35 +72,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for Slack OAuth authentication. This is used to specify the permissions that the client application needs.",
-          "defaultValue": [
-            "app_mentions:read",
-            "assistant:write",
-            "channels:history",
-            "channels:join",
-            "channels:read",
-            "channels:manage",
-            "chat:write",
-            "chat:write.customize",
-            "commands",
-            "files:read",
-            "files:write",
-            "groups:history",
-            "groups:write",
-            "groups:write.invites",
-            "groups:read",
-            "im:read",
-            "im:write",
-            "reactions:read",
-            "reactions:write",
-            "reminders:read",
-            "reminders:write",
-            "users:read.email",
-            "users:read",
-            "users.profile:read",
-            "metadata.message:read",
-            "team:read"
-          ]
+          "description": "The scopes for Slack OAuth authentication. This is used to specify the permissions that the client application needs."
         }
       ],
       "botConfig": [

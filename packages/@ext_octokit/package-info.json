@@ -20,12 +20,6 @@
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/octokit",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/github-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "octokit",
-    "functionalities": [],
-    "description": "The full README for the package"
-  },
   "constructors": [
     {
       "name": "Octokit",

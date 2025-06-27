@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS package_infos (
     status TEXT,
     documentation TEXT,
     icon TEXT,
-    readme_map JSON,
     constructors JSON,
     keys_info JSON,
     key_instructions JSON,

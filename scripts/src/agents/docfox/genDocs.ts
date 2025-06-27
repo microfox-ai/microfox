@@ -1009,58 +1009,6 @@ export async function generateDocs(
       const packageInfoPath = path.join(packageDir, 'package-info.json');
       const packageInfo = JSON.parse(fs.readFileSync(packageInfoPath, 'utf8'));
 
-      const safeFunctionNames = validatedData.functionsDocs
-        .map(f => f.name.replace(/[^a-zA-Z0-9_-]/g, '_'))
-        .filter(Boolean);
-
-      // Add readme_map
-      packageInfo.readme_map = {
-        title: metadata.title,
-        description: `The full README for the ${metadata.title}`,
-        path:
-          'https://github.com/microfox-ai/microfox/blob/main/packages/' +
-          metadata.packageName.replace('@microfox/', '') +
-          '/README.md',
-        functionalities: [
-          constructorName,
-          ...validatedData.functionsDocs.map(f => f.name),
-        ],
-        all_readmes: [
-          {
-            path:
-              'https://github.com/microfox-ai/microfox/blob/main/packages/' +
-              metadata.packageName.replace('@microfox/', '') +
-              '/docs/' +
-              constructorName +
-              '.md',
-            type: 'constructor',
-            extension: 'md',
-            functionality: constructorName,
-            description:
-              validatedData?.constructorDocs?.description ||
-              'The full README for the ' + metadata.title + ' constructor',
-          },
-          ...validatedData.functionsDocs.map((f, index) => ({
-            path:
-              'https://github.com/microfox-ai/microfox/blob/main/packages/' +
-              metadata.packageName.replace('@microfox/', '') +
-              '/docs/' +
-              safeFunctionNames[index] +
-              '.md',
-            type: 'functionality',
-            extension: 'md',
-            functionality: f.name,
-            description:
-              f.description ||
-              'The full README for the ' +
-                metadata.title +
-                ' ' +
-                f.name +
-                ' functionality',
-          })),
-        ],
-      };
-
       console.log('searching for the logo');
       const logoDir = path.join(__dirname, '../../logos');
       let listItemsInDirectory: string[] = [];

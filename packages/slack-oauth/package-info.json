@@ -3,83 +3,18 @@
   "title": "Microfox Slack OAuth",
   "description": "TypeScript package simplifying Slack OAuth 2.0, providing methods for authorization URL generation, token exchange, validation, and revocation.",
   "path": "packages/slack-oauth",
-  "dependencies": ["zod"],
   "status": "oauthConnector",
   "authEndpoint": "/connect/slack",
-  "oauth2Scopes": [
-    "app_mentions:read",
-    "assistant:write",
-    "channels:history",
-    "channels:join",
-    "chat:write",
-    "chat:write.customize",
-    "commands",
-    "files:read",
-    "files:write",
-    "groups:history",
-    "groups:read",
-    "groups:write",
-    "groups:write.invites",
-    "im:history",
-    "im:write",
-    "reactions:read",
-    "reactions:write",
-    "reminders:read",
-    "reminders:write",
-    "identify"
-  ],
   "installUrl": "https://slack.com/oauth?client_id=1613705032464.8883888765120&scope=app_mentions:read,channels:history,channels:join,chat:write,chat:write.customize,commands,files:read,files:write,groups:history,groups:read,groups:write,im:history,im:write,reactions:read,reactions:write,reminders:read,reminders:write&user_scope=identify&redirect_uri=https%3A%2F%2Fstaging.microfox.app%2Fconnect%2Fslack-oauth%2Fcallback&state=&granular_bot_scope=1&single_channel=0&install_redirect=&tracked=1&team=",
   "documentation": "https://www.npmjs.com/package/@microfox/slack-oauth",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack.svg",
-  "readme_map": {
-    "title": "Microfox Slack OAuth",
-    "description": "The full README for the Microfox Slack OAuth",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/README.md",
-    "functionalities": [
-      "SlackOAuthSdk",
-      "getAuthorizationUrl",
-      "exchangeCodeForToken",
-      "validateToken",
-      "revokeToken"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/SlackOAuthSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "SlackOAuthSdk",
-        "description": "Constructor for the SlackOAuthSdk class. This class handles the OAuth flow for Slack, including generating authorization URLs, exchanging codes for tokens, validating tokens, and revoking tokens."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl",
-        "description": "Generates the authorization URL for the Slack OAuth flow."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/exchangeCodeForToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "exchangeCodeForToken",
-        "description": "Exchanges the authorization code for an access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/validateToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateToken",
-        "description": "Validates a Slack access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/slack-oauth/docs/revokeToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "revokeToken",
-        "description": "Revokes a Slack access token."
-      }
-    ]
-  },
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
+  "dependencies": ["zod"],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
   "constructors": [
     {
       "name": "SlackOAuthSdk",
@@ -111,29 +46,7 @@
           "key": "SCOPES",
           "displayName": "Slack Scopes",
           "description": "The scopes for your Slack app.",
-          "required": true,
-          "defaultValue": [
-            "app_mentions:read",
-            "assistant:write",
-            "channels:history",
-            "channels:join",
-            "chat:write",
-            "chat:write.customize",
-            "commands",
-            "files:read",
-            "files:write",
-            "groups:history",
-            "groups:read",
-            "groups:write",
-            "groups:write.invites",
-            "im:history",
-            "im:write",
-            "reactions:read",
-            "reactions:write",
-            "reminders:read",
-            "reminders:write",
-            "team:read"
-          ]
+          "required": true
         },
         {
           "key": "USER_SCOPES",
@@ -191,11 +104,5 @@
   "keyInstructions": {
     "link": "https://api.slack.com/authentication/oauth-v2"
   },
-  "devDependencies": [
-    "@microfox/tsconfig",
-    "@types/node",
-    "tsup",
-    "typescript"
-  ],
   "platformType": "communication"
 }

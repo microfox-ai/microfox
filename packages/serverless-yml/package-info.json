@@ -10,47 +10,6 @@
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/serverless.svg",
-  "readme_map": {
-    "title": "Serverless YML",
-    "description": "The full README for the Serverless YML",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
-    "functionalities": [
-      "validateServerlessYML",
-      "mutateServerlessYML",
-      "batchMutateServerlessYML",
-      "config.serverless.json"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/docs/config.serverless.json.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "config.serverless.json",
-        "description": "Documentation for config.serverless.json, which allows packages to define how they affect the serverless.yml configuration."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#validation",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateServerlessYML",
-        "description": "Validates the structure and content of a serverless.yml file."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#mutation",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "mutateServerlessYML",
-        "description": "Automatically mutates the serverless.yml file to include necessary configurations based on the @microfox packages your service uses."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md#mutation",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "batchMutateServerlessYML",
-        "description": "Applies a batch of mutator functions to the serverless.yml content."
-      }
-    ]
-  },
   "addedDependencies": [],
   "constructors": [],
   "keyInstructions": {

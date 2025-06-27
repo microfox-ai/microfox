@@ -10,13 +10,6 @@
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-perplexity",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/perplexity-icon.svg",
-  "readme_map": {
-    "title": "Perplexity Provider",
-    "description": "The full README for the Perplexity Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-perplexity/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
   "addedDependencies": ["ai"],
   "constructors": [
     {

@@ -57,11 +57,5 @@
   "extraInfo": [
     "Use the `createYouTubeSDKWithTokens` constructor to create a new YouTube client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

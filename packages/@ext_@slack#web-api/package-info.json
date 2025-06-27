@@ -21,13 +21,6 @@
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@slack/web-api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "@slack/web-api",
-    "functionalities": [],
-    "description": "The full README for the package",
-    "all_readmes": []
-  },
   "constructors": [
     {
       "name": "WebClient",

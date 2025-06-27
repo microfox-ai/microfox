@@ -149,7 +149,6 @@ async function main() {
         status: pkg.content.status,
         documentation: pkg.content.documentation,
         icon: pkg.content.icon,
-        readme_map: pkg.content.readme_map,
         constructors: pkg.content.constructors,
         key_instructions: pkg.content.keyInstructions || null,
         extra_info: pkg.content.extraInfo,

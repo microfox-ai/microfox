@@ -10,13 +10,6 @@
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-anthropic",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/anthropic-icon.svg",
-  "readme_map": {
-    "title": "Anthropic Provider",
-    "description": "The full README for the Anthropic Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-anthropic/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
   "addedDependencies": ["ai"],
   "constructors": [
     {

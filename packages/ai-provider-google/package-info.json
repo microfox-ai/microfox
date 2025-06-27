@@ -10,13 +10,6 @@
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-google",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg",
-  "readme_map": {
-    "title": "Google AI Provider",
-    "description": "The full README for the Google AI Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-google/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
   "addedDependencies": ["ai"],
   "constructors": [
     {

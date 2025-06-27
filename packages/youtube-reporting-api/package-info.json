@@ -12,63 +12,6 @@
   ],
   "documentation": "https://www.npmjs.com/package/@microfox/youtube-reporting-api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube.svg",
-  "readme_map": {
-    "title": "YouTube Reporting API",
-    "description": "The full README for the YouTube Reporting API",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/README.md",
-    "functionalities": [
-      "YouTubeReportingAPISDK",
-      "listReportTypes",
-      "createJob",
-      "listJobs",
-      "listReports",
-      "downloadReport"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/YouTubeReportingAPISDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "YouTubeReportingAPISDK",
-        "description": "Initializes a new instance of the YouTubeReportingAPISDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/listReportTypes.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listReportTypes",
-        "description": "Lists available report types."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/createJob.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createJob",
-        "description": "Creates a new reporting job."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/listJobs.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listJobs",
-        "description": "Lists all reporting jobs."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/listReports.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listReports",
-        "description": "Lists reports for a given job ID."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-reporting-api/docs/downloadReport.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "downloadReport",
-        "description": "Downloads the report data from the provided URL."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "YouTubeReportingAPISDK",
