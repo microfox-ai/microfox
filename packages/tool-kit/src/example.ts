@@ -3,13 +3,14 @@ import {
   streamText,
   CoreMessage,
   ToolSet,
-  generateObject,
+  ToolCallPart,
+  UIMessage,
+  convertToModelMessages,
 } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import 'dotenv/config';
 
-import { createToolkit } from './client/Toolkit';
-import { Toolkit } from './client/Toolkit';
+import { createToolkit, Toolkit } from './client/Toolkit';
 
 // A minimal OpenAPI spec for the example
 const petstoreSpec = {
@@ -62,8 +63,6 @@ async function main() {
         return {
           shouldPause: true,
           args: {
-            originalToolCallId: toolCallId,
-            originalToolName: toolName,
             ui: {
               component: 'ApproveDeny',
               props: {
@@ -76,49 +75,47 @@ async function main() {
           },
         };
       }
-      return {
-        shouldPause: false,
-        args: undefined,
-      }; // Don't pause other tools
+      return { shouldPause: false, args: undefined }; // Don't pause other tools
     },
   });
 
-  const tools = await client.tools();
+  const toolResult = await client.tools();
+  const tools = toolResult.tools;
 
   // --- generateText Example ---
   console.log('\n--- Running generateText Example ---');
-  await generateTextExample(client, tools.tools);
+  await generateTextExample(client, tools);
 
   // --- streamText Example ---
   console.log('\n\n--- Running streamText Example ---');
-  // await streamTextExample(client, tools.tools);
+  await streamTextExample(client, tools);
 }
 
 async function generateTextExample(client: Toolkit, tools: ToolSet) {
-  const messages: CoreMessage[] = [
+  let messages: UIMessage[] = [
     {
+      id: '1',
       role: 'user',
-      content: 'Please delete the pet with ID 10. It was a test entry.',
+      parts: [
+        {
+          type: 'text',
+          text: 'Please delete the pet with ID 10. It was a test entry.',
+        },
+      ],
     },
   ];
 
-  console.log(`User: ${messages[0].content}`);
+  console.log(`User: ${(messages[0].parts[0] as any).text}`);
 
-  // 2. Get the prepareStep function from the client.
-  const prepareStep = client.createHitlPrepareStep();
-
-  // 3. Call generateText with the tools and the prepareStep function.
   const rawResult = await generateText({
     model: openai('gpt-4-turbo'),
-    messages: messages,
-    tools: tools,
-    experimental_prepareStep: prepareStep,
+    messages: convertToModelMessages(messages),
+    tools,
+    prepareStep: client.createHitlPrepareStep(),
   });
 
-  // 4. Process the raw result to transform HITL markers into fake tool calls.
   const finalResult = client.generate(rawResult);
 
-  // 5. Check for a human intervention request in the processed result.
   const humanInterventionCall = finalResult.toolCalls.find(tc =>
     client.isHumanLoop(tc),
   );
@@ -126,8 +123,19 @@ async function generateTextExample(client: Toolkit, tools: ToolSet) {
   if (humanInterventionCall) {
     const uiData = client.ui(humanInterventionCall);
     console.log(
-      `\n[UI PROMPT] > Component: ${uiData.component}, Title: "${uiData.props.title}"`,
+      `[UI PROMPT] > Component: ${uiData.ui.component}, Title: "${uiData.ui.props.title}"`,
     );
+    console.log('[SIMULATION] User clicks "Approve"');
+
+    const parsedMessages = await client.parse(messages);
+
+    const finalResponse = await generateText({
+      model: openai('gpt-4-turbo'),
+      messages: convertToModelMessages(parsedMessages),
+      tools,
+    });
+
+    console.log(`\nAssistant: ${finalResponse.text}`);
   } else {
     // If no intervention was needed, the conversation is complete.
     console.log(`\nAssistant: ${finalResult.text}`);
@@ -138,8 +146,64 @@ async function streamTextExample(client: Toolkit, tools: ToolSet) {
   let messages: CoreMessage[] = [
     { role: 'user', content: 'I need to remove the pet with id 12.' },
   ];
+  console.log(`User: ${messages[0].content}`);
 
-  console.log(); // Final newline for clean output
+  let result = await streamText({
+    model: openai('gpt-4-turbo'),
+    messages,
+    tools,
+    prepareStep: client.createHitlPrepareStep(),
+  });
+
+  const stream = client.stream(result.fullStream as any);
+
+  let assistantMessage: UIMessage = {
+    id: '1',
+    role: 'assistant',
+    parts: [],
+  };
+  let humanInterventionCall: ToolCallPart | undefined;
+
+  process.stdout.write('\nAssistant: ');
+  for await (const part of stream) {
+    if (part.type === 'text-delta') {
+      process.stdout.write(part.textDelta);
+      assistantMessage.parts.push({
+        type: 'text',
+        text: part.textDelta,
+      });
+    } else if (part.type === 'tool-call') {
+      assistantMessage.parts.push(part);
+      if (client.isHumanLoop(part)) {
+        humanInterventionCall = part;
+        const uiData = client.ui(part);
+        console.log(
+          `\n[UI PROMPT] > Component: ${uiData.ui.component}, Title: "${uiData.ui.props.title}"`,
+        );
+      }
+    }
+  }
+
+  if (humanInterventionCall) {
+    console.log('[SIMULATION] User clicks "Approve"');
+
+    const parsedMessages = await client.parse([assistantMessage]);
+
+    result = await streamText({
+      model: openai('gpt-4-turbo'),
+      messages: convertToModelMessages(parsedMessages),
+      tools,
+    });
+
+    process.stdout.write('\nAssistant: ');
+    for await (const part of result.fullStream as any) {
+      if (part.type === 'text') {
+        process.stdout.write(part.text);
+      }
+    }
+  }
+
+  console.log();
 }
 
 main().catch(console.error);

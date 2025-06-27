@@ -1,0 +1,89 @@
+{
+  "name": "@microfox/ai",
+  "title": "ai",
+  "description": "Wrapper for AI SDK by Vercel - Only for Internal use of microfox ai packages",
+  "path": "packages/ai",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/ai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/vercel-icon.svg",
+  "readme_map": {
+    "title": "ai",
+    "description": "The full README for the ai",
+    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai/README.md",
+    "functionalities": [
+      "ai_sdk_core",
+      "core_message",
+      "cosine_similarity",
+      "create_mcp_client",
+      "custom_provider",
+      "default_settings_middleware",
+      "embed",
+      "embed_many",
+      "generate_image",
+      "generate_object",
+      "generate_speech",
+      "generate_text",
+      "id-generation",
+      "json_schema",
+      "stream_object",
+      "stream_text",
+      "tool",
+      "transcribe",
+      "zod_schema"
+    ],
+    "all_readmes": []
+  },
+  "constructors": [
+    {
+      "name": "default",
+      "description": "Default wrapper for the AI SDK of Vercel - Only for Internal use of microfox ai packages",
+      "auth": "none",
+      "requiredKeys": [],
+      "internalKeys": [],
+      "functionalities": [
+        "ai_sdk_core",
+        "core_message",
+        "cosine_similarity",
+        "create_mcp_client",
+        "custom_provider",
+        "default_settings_middleware",
+        "embed",
+        "embed_many",
+        "environment-variables",
+        "extract_reasoning_middleware",
+        "generate_image",
+        "generate_object",
+        "generate_speech",
+        "generate_text",
+        "id-generation",
+        "json_schema",
+        "mcp_stdio_transport",
+        "stream_object",
+        "stream_text",
+        "tool",
+        "transcribe",
+        "valibot_schema",
+        "zod_schema"
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai/README.md"
+    }
+  ],
+  "keyInstructions": {
+    "link": "https://console.anthropic.com/settings/keys",
+    "setupInfo": "To use the Anthropic SDK, you need to obtain an API key from the Anthropic account dashboard.\n\n1. Sign up for an Anthropic account at https://console.anthropic.com/settings/keys\n2. Once you have an account, navigate to your dashboard to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-anthropic`\n2. Import and initialize the SDK:\n\n```typescript\nimport { AnthropicAiProvider } from '@microfox/ai-provider-anthropic';\n\nconst provider = new AnthropicAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Anthropic API:\n\n```typescript\nconst response = await provider.languageModel('claude-3-opus-20240229').generate({\n  prompt: 'Hello, world!'\n});\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `ANTHROPIC_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
+  },
+  "extraInfo": [
+    "To use the Anthropic SDK, you need to obtain an API key from the Anthropic account dashboard.\n\n1. Sign up for an Anthropic account at https://console.anthropic.com/settings/keys\n2. Once you have an account, navigate to your dashboard to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-anthropic`\n2. Import and initialize the SDK:\n\n```typescript\nimport { AnthropicAiProvider } from '@microfox/ai-provider-anthropic';\n\nconst provider = new AnthropicAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Anthropic API:\n\n```typescript\nconst response = await provider.languageModel('claude-3-opus-20240229').generate({\n  prompt: 'Hello, world!'\n});\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `ANTHROPIC_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "platformType": "tool"
+}
