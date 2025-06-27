@@ -1,5 +1,5 @@
 {
-  "name": "ai",
+  "name": "@microfox/ai",
   "version": "1.0.0",
   "description": "Wrapper for AI SDK by Vercel - Only for Internal use of microfox ai packages",
   "main": "./dist/index.js",
