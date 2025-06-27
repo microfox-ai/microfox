@@ -4,113 +4,11 @@
   "description": "A TypeScript SDK for interacting with the YouTube Analytics V3 API. Supports functionalities such as retrieving analyticsreports, managing groups and group items.  Provides methods for getReports, listGroups, insertGroup, updateGroup, deleteGroup, listGroupItems, insertGroupItem, deleteGroupItem, refreshAccessToken, and validateAccessToken.",
   "path": "packages/youtube-analytics",
   "dependencies": ["@microfox/google-oauth", "zod"],
+  "addedDependencies": ["@microfox/google-oauth"],
   "status": "semiStable",
   "authEndpoint": "/connect/google-oauth",
-  "oauth2Scopes": [
-    "https://www.googleapis.com/auth/yt-analytics.readonly",
-    "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
-    "https://www.googleapis.com/auth/youtube",
-    "https://www.googleapis.com/auth/youtubepartner"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/youtube-analytics",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/youtube-icon.svg",
-  "readme_map": {
-    "title": "Youtube Analytics SDK",
-    "description": "The full README for the Youtube Analytics SDK",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/README.md",
-    "functionalities": [
-      "YoutubeAnalyticsSDK",
-      "getReports",
-      "listGroups",
-      "insertGroup",
-      "updateGroup",
-      "deleteGroup",
-      "listGroupItems",
-      "insertGroupItem",
-      "deleteGroupItem",
-      "refreshAccessToken",
-      "validateAccessToken"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/YoutubeAnalyticsSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "YoutubeAnalyticsSDK",
-        "description": "Initializes a new instance of the YoutubeAnalyticsSDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/getReports.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getReports",
-        "description": "Retrieves reports from the YouTube Analytics API."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/listGroups.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listGroups",
-        "description": "Lists available groups."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/insertGroup.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "insertGroup",
-        "description": "Inserts a new group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/updateGroup.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "updateGroup",
-        "description": "Updates an existing group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/deleteGroup.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteGroup",
-        "description": "Deletes a group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/listGroupItems.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "listGroupItems",
-        "description": "Lists items within a group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/insertGroupItem.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "insertGroupItem",
-        "description": "Inserts a new item into a group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/deleteGroupItem.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "deleteGroupItem",
-        "description": "Deletes an item from a group."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken",
-        "description": "Refreshes the access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/youtube-analytics/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the access token."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "YoutubeAnalyticsSDK",
@@ -148,13 +46,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes required by the SDK",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/yt-analytics.readonly",
-            "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
-            "https://www.googleapis.com/auth/youtube",
-            "https://www.googleapis.com/auth/youtubepartner"
-          ]
+          "description": "The scopes required by the SDK"
         }
       ],
       "functionalities": [

@@ -6,18 +6,10 @@
   "dependencies": ["zod"],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-openai",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/openai-icon.svg",
-  "readme_map": {
-    "title": "OpenAI Provider",
-    "description": "The full README for the OpenAI Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-openai/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
-  "addedDependencies": ["ai"],
+  "addedDependencies": ["@microfox/ai"],
   "constructors": [
     {
       "name": "OpenAiProvider",

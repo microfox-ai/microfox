@@ -11,11 +11,5 @@
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg",
   "constructors": [],
   "extraInfo": [],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

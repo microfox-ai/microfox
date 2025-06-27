@@ -9,58 +9,8 @@
   ],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/veo-on-vertex-ai",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/veo-on-vertex-ai.svg",
-  "readme_map": {
-    "title": "Veo on Vertex AI SDK",
-    "description": "The full README for the Veo on Vertex AI SDK",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/README.md",
-    "functionalities": [
-      "VeoonVertexAIAPISdk",
-      "createVeoonVertexAIAPISDK",
-      "fetchOperationStatus",
-      "generateVideo",
-      "pollOperation"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/createVeoonVertexAIAPISDK.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "createVeoonVertexAIAPISDK",
-        "description": "A factory function that creates and returns a new instance of the `VeoonVertexAIAPISdk` client. This is the recommended way to instantiate the SDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/fetchOperationStatus.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "fetchOperationStatus",
-        "description": "Fetches the current status of a long-running video generation operation. This allows you to check if the task is still in progress, has completed successfully, or has failed."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/generateVideo.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "generateVideo",
-        "description": "Initiates a long-running operation to generate a video based on a text prompt and/or an initial image. This function sends a request to the specified Veo model on Vertex AI and returns an operation name that can be used to track the progress of the video generation."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/pollOperation.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "pollOperation",
-        "description": "Polls a long-running video generation operation until it is complete or a timeout is reached. It repeatedly calls `fetchOperationStatus` at a specified interval, simplifying the process of waiting for a result."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/veo-on-vertex-ai/docs/VeoonVertexAIAPISdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "VeoonVertexAIAPISdk",
-        "description": "Initializes a new instance of the `VeoonVertexAIAPISdk` client. This constructor sets up the configuration required to communicate with the Veo on Vertex AI API, including the Google Cloud project ID and location. It's recommended to use the `createVeoonVertexAIAPISDK` factory function for creating instances of the SDK."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "VeoonVertexAIAPISdk",

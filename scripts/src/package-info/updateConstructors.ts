@@ -6,20 +6,11 @@ import { getProjectRoot } from '../utils/getProjectRoot';
 
 const ROOT_DIR = getProjectRoot();
 const PACKAGES_DIR = path.join(ROOT_DIR, 'packages');
-const GITHUB_BASE_URL = 'https://github.com/microfox-ai/microfox/blob/main/packages/';
 
 console.log(`🏠 Root directory: ${ROOT_DIR}`);
 console.log(`📦 Packages directory: ${PACKAGES_DIR}`);
 console.log(`📂 Current working directory: ${process.cwd()}`);
 console.log(`📁 Packages directory exists: ${fs.existsSync(PACKAGES_DIR)}`);
-
-interface ReadmeInfo {
-  path: string;
-  type: 'main' | 'constructor' | 'functionality';
-  extension: 'md' | 'txt' | 'html';
-  functionality?: string;
-  description?: string;
-}
 
 interface FileChange {
   packageName: string;
@@ -223,42 +214,9 @@ function parseDocChanges(): FileChange[] {
 }
 
 /**
- * Create readme info for a specific doc file
- */
-function createReadmeInfo(packageName: string, functionality: string): ReadmeInfo | null {
-  const docsDir = path.join(PACKAGES_DIR, packageName, 'docs');
-  const filePath = path.join(docsDir, `${functionality}.md`);
-  
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-    
-    // Try to extract description from the file content
-    let description = `Documentation for ${functionality}`;
-
-    // Determine type based on common patterns
-    let type: 'main' | 'constructor' | 'functionality' = 'functionality';
-    if (functionality.toLowerCase().includes('create') || 
-        functionality.toLowerCase().includes('init') ||
-        functionality.toLowerCase().includes('sdk')) {
-      type = 'constructor';
-    }
-
-  const githubPath = `${GITHUB_BASE_URL}${packageName}/docs/${functionality}.md`;
-
-  return {
-      path: githubPath,
-      type,
-      extension: 'md',
-      functionality,
-      description
-  };
-}
-
-/**
  * Update package-info.json with targeted changes
  */
-function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): boolean {
+function updateConstructors(packageName: string, changes: FileChange[]): boolean {
   const pkgDir = path.join(PACKAGES_DIR, packageName);
   const packageInfoPath = path.join(pkgDir, 'package-info.json');
 
@@ -270,16 +228,6 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
   try {
     const packageInfo: PackageInfo = JSON.parse(fs.readFileSync(packageInfoPath, 'utf-8'));
     
-    // Initialize readme_map if it doesn't exist
-    if (!packageInfo.readme_map) {
-      packageInfo.readme_map = {
-        description: `The full README for the ${packageInfo.title || packageName}`,
-        path: `${GITHUB_BASE_URL}${packageName}/README.md`,
-        functionalities: [],
-        all_readmes: []
-      };
-    }
-
     let hasChanges = false;
 
     // Process each change
@@ -287,13 +235,6 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
       const { functionality, action } = change;
       
       if (action === 'added') {
-        // Add functionality to readme_map functionalities array
-        if (!packageInfo.readme_map!.functionalities.includes(functionality)) {
-          packageInfo.readme_map!.functionalities.push(functionality);
-          hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to readme_map.functionalities`);
-        }
-        
         // Add functionality to all constructors functionalities arrays
         if (packageInfo.constructors) {
           packageInfo.constructors.forEach((constructor, index) => {
@@ -304,27 +245,7 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
             }
           });
         }
-        
-        // Create and add readme info to all_readmes array
-        const readmeInfo = createReadmeInfo(packageName, functionality);
-        if (readmeInfo && !packageInfo.readme_map!.all_readmes?.find(r => r.functionality === functionality)) {
-          if (!packageInfo.readme_map!.all_readmes) {
-            packageInfo.readme_map!.all_readmes = [];
-          }
-          packageInfo.readme_map!.all_readmes.push(readmeInfo);
-          hasChanges = true;
-          console.log(`  ✅ Added ${functionality} to all_readmes`);
-        }
-        
       } else if (action === 'removed') {
-        // Remove functionality from readme_map functionalities array
-        const functIndex = packageInfo.readme_map!.functionalities.indexOf(functionality);
-        if (functIndex > -1) {
-          packageInfo.readme_map!.functionalities.splice(functIndex, 1);
-          hasChanges = true;
-          console.log(`  🗑️ Removed ${functionality} from readme_map.functionalities`);
-        }
-        
         // Remove functionality from all constructors functionalities arrays
         if (packageInfo.constructors) {
           packageInfo.constructors.forEach((constructor, index) => {
@@ -336,27 +257,11 @@ function updateReadmeMapTargeted(packageName: string, changes: FileChange[]): bo
             }
           });
         }
-        
-        // Remove readme info from all_readmes array
-        if (packageInfo.readme_map!.all_readmes) {
-          const readmeIndex = packageInfo.readme_map!.all_readmes.findIndex(r => r.functionality === functionality);
-          if (readmeIndex > -1) {
-            packageInfo.readme_map!.all_readmes.splice(readmeIndex, 1);
-            hasChanges = true;
-            console.log(`  🗑️ Removed ${functionality} from all_readmes`);
-          }
-        }
       }
     });
 
     if (hasChanges) {
       // Sort arrays alphabetically by functionality name
-      packageInfo.readme_map!.functionalities.sort();
-      packageInfo.readme_map!.all_readmes?.sort((a, b) => 
-        (a.functionality || '').localeCompare(b.functionality || '')
-      );
-      
-      // Sort constructors functionalities arrays
       if (packageInfo.constructors) {
         packageInfo.constructors.forEach(constructor => {
           constructor.functionalities.sort();
@@ -392,7 +297,7 @@ function getPackagesWithDocsChanges(): string[] {
 }
 
 /**
- * Main function to update readme maps for packages with targeted changes
+ * Main function to update constructors for packages with targeted changes
  */
 async function main() {
   console.log('🔍 Scanning for docs changes...');
@@ -422,7 +327,7 @@ async function main() {
   
   for (const [packageName, changes] of changesByPackage) {
     console.log(`\n📦 Processing ${packageName}:`);
-    if (updateReadmeMapTargeted(packageName, changes)) {
+    if (updateConstructors(packageName, changes)) {
       updatedCount++;
     }
   }
@@ -442,4 +347,4 @@ if (require.main === module) {
   });
 }
 
-export { updateReadmeMapTargeted as updateReadmeMap, getPackagesWithDocsChanges }; 
+export { updateConstructors, getPackagesWithDocsChanges }; 

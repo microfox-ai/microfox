@@ -8,55 +8,6 @@
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@hyperbrowser/sdk",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/hyperbrowser.svg",
-  "readme_map": {
-    "title": "@hyperbrowser/sdk",
-    "description": "The full README for the @hyperbrowser/sdk",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/README.md",
-    "functionalities": [
-      "agents",
-      "browser_use",
-      "claude_computer_use",
-      "environment-variables",
-      "openai_cua"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/agents.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "agents",
-        "description": "The full README for the @hyperbrowser/sdk agents functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/browser_use.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "browser_use",
-        "description": "The full README for the @hyperbrowser/sdk browser_use functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/claude_computer_use.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "claude_computer_use",
-        "description": "The full README for the @hyperbrowser/sdk claude_computer_use functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/environment-variables.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "environment-variables",
-        "description": "The full README for the @hyperbrowser/sdk environment-variables functionality"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/@ext_@hyperbrowser%23sdk/docs/openai_cua.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "openai_cua",
-        "description": "The full README for the @hyperbrowser/sdk openai_cua functionality"
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "Hyperbrowser",

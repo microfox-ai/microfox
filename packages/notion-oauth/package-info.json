@@ -9,51 +9,8 @@
   ],
   "status": "oauthConnector",
   "authEndpoint": "/connect/notion",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/notion-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion.svg",
-  "readme_map": {
-    "title": "Microfox Notion OAuth",
-    "description": "The full README for the Microfox Notion OAuth",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/README.md",
-    "functionalities": [
-      "NotionOAuthSdk",
-      "exchangeCodeForToken",
-      "exchangeCodeForTokens",
-      "getAuthUrl",
-      "validateAccessToken"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/exchangeCodeForTokens.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "exchangeCodeForTokens",
-        "description": "Exchanges an authorization code, received from Notion after a user successfully authorizes the application, for an access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/getAuthUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthUrl",
-        "description": "Generates the authorization URL required to initiate the Notion OAuth 2.0 flow. This URL is where you will redirect users to grant your application access to their Notion account."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/NotionOAuthSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "NotionOAuthSdk",
-        "description": "Initializes a new instance of the `NotionOAuthSdk` client. This client is used to handle the Notion OAuth 2.0 flow, including generating authorization URLs and exchanging authorization codes for access tokens. It requires your Notion integration's Client ID, Client Secret, and configured Redirect URI."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion-oauth/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates an access token by making a simple, authenticated request to the Notion API (`/v1/users/me`)."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "NotionOAuthSdk",

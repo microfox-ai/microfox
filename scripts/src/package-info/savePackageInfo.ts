@@ -4,6 +4,7 @@ import { execSync } from 'child_process';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import { PackageInfo } from '../types';
+import { embed } from '../embeddings/geminiEmbed';
 
 dotenv.config();
 
@@ -106,6 +107,84 @@ function walkPackageInfoFiles() {
   return results;
 }
 
+async function processPackage(pkg: {
+  content: PackageInfo;
+  fullPath: string;
+}) {
+  const packageInfo = pkg.content;
+
+  // Process addedDependencies to create added_packages
+  if (packageInfo.addedDependencies) {
+    packageInfo.added_packages = [];
+    for (const dep of packageInfo.addedDependencies) {
+      if (dep.startsWith('@microfox/')) {
+        const depPkgName = dep.replace('@microfox/', '');
+        const mainMdPath = path.join(
+          PACKAGES_DIR,
+          depPkgName,
+          'docs',
+          'main.md',
+        );
+        if (fs.existsSync(mainMdPath)) {
+          packageInfo.added_packages.push({
+            packageName: dep,
+            content: fs.readFileSync(mainMdPath, 'utf-8'),
+          });
+        }
+      }
+    }
+  }
+
+  // Process scopes.json
+  const pkgDir = path.dirname(pkg.fullPath);
+  const scopesPath = path.join(pkgDir, 'scopes.json');
+  if (fs.existsSync(scopesPath)) {
+    try {
+      const scopes = JSON.parse(fs.readFileSync(scopesPath, 'utf-8'));
+      packageInfo.oauth2Scopes = Array.isArray(scopes)
+        ? scopes.map(s => (typeof s === 'object' ? s.name : s)).filter(Boolean)
+        : [];
+
+      if (packageInfo.constructors) {
+        for (const constructor of packageInfo.constructors) {
+          if (constructor.internalKeys) {
+            for (const key of constructor.internalKeys) {
+              if (key.key.toUpperCase().includes('SCOPES')) {
+                key.defaultValue = packageInfo.oauth2Scopes;
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`Error processing scopes.json for ${packageInfo.name}`, e);
+    }
+  }
+
+  // Create and save embedding
+  try {
+    let textToEmbed = `${packageInfo.title}\n${packageInfo.description}`;
+    
+    if (packageInfo.constructors) {
+      const allFunctionalities = packageInfo.constructors.flatMap(c => c.functionalities || []);
+      if (allFunctionalities.length > 0) {
+        textToEmbed += `\n\nFunctionalities:\n${allFunctionalities.join(', ')}`;
+      }
+    }
+
+    const mainMdPath = path.join(path.dirname(pkg.fullPath), 'docs', 'main.md');
+    if (fs.existsSync(mainMdPath)) {
+      const mainMdContent = fs.readFileSync(mainMdPath, 'utf-8');
+      textToEmbed += `\n\n${mainMdContent}`;
+    }
+    
+    (packageInfo as any).embedding = await embed(textToEmbed);
+    console.log(`✨ Generated embedding for ${packageInfo.name}`);
+  } catch(e) {
+    console.error(`Error generating embedding for ${packageInfo.name}`, e);
+  }
+}
+
 async function main() {
   console.log('⏳ Fetching existing package info from DB…');
   const existing = await getExistingPackages();
@@ -134,6 +213,8 @@ async function main() {
     if (isNew || isStale) {
       console.log(`${isNew ? '✨ New' : '♻️ Updated'} → ${pkg.content.name}`);
 
+      await processPackage(pkg);
+
       upserts.push({
         package_name: pkg.content.name,
         package_title: pkg.content.title,
@@ -146,10 +227,10 @@ async function main() {
         description: pkg.content.description,
         dependencies: pkg.content.dependencies || null,
         added_dependencies: pkg.content.addedDependencies || null,
+        added_packages: pkg.content.added_packages || null,
         status: pkg.content.status,
         documentation: pkg.content.documentation,
         icon: pkg.content.icon,
-        readme_map: pkg.content.readme_map,
         constructors: pkg.content.constructors,
         key_instructions: pkg.content.keyInstructions || null,
         extra_info: pkg.content.extraInfo,
@@ -158,6 +239,7 @@ async function main() {
         file_path: pkg.githubUrl,
         github_url: pkg.githubUrl,
         updated_at: new Date().toISOString(),
+        embedding: (pkg.content as any).embedding || null,
       });
     }
   }

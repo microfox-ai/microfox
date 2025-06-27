@@ -3,21 +3,19 @@
   "title": "Puppeteer LinkedIn Provider",
   "description": "A simple and easy to use client for running Puppeteer on LinkedIn.",
   "path": "packages/puppeteer-linkedin",
-  "dependencies": ["@sparticuz/chromium", "puppeteer-core"],
-  "status": "stable",
+  "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-linkedin/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",
-  "readme_map": {
-    "title": "Puppeteer LinkedIn Provider",
-    "description": "The full README for the Puppeteer LinkedIn Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-linkedin/README.md",
-    "functionalities": [],
-    "all_readmes": []
-  },
-  "addedDependencies": [""],
+  "addedDependencies": ["@microfox/puppeteer-sls"],
+  "dependencies": ["@sparticuz/chromium", "puppeteer-core", "@microfox/puppeteer-sls"],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
   "constructors": [
     {
       "name": "PuppeteerLinkedIn",
@@ -35,11 +33,5 @@
     "setupInfo": ""
   },
   "extraInfo": [],
-  "devDependencies": [
-    "@microfox/tsconfig",
-    "@types/node",
-    "tsup",
-    "typescript"
-  ],
   "platformType": "tool"
 }

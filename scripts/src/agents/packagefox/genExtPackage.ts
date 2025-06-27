@@ -200,12 +200,6 @@ async function createPackageInfo(packageJson: any, readme: string) {
     icon:
       icon ||
       `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.split('/')[1] || packageName}-icon.svg`,
-    readme_map: {
-      path: '/README.md',
-      title: packageJson.name || 'Unknown Package',
-      functionalities: [],
-      description: 'The full README for the package',
-    },
     constructors: [],
     extraInfo: [],
   } as PackageInfo;

@@ -1,0 +1,18 @@
+[
+    {
+        "name": "https://www.googleapis.com/auth/yt-analytics.readonly",
+        "description": "Read-only access to your YouTube Analytics data"
+    },
+    {
+        "name": "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+        "description": "Read-only access to your YouTube Analytics data"
+    },
+    {
+        "name": "https://www.googleapis.com/auth/youtube",
+        "description": "Read and write access to your YouTube account"
+    },
+    {
+        "name": "https://www.googleapis.com/auth/youtubepartner",
+        "description": "Access to YouTube partner content"
+    }
+]

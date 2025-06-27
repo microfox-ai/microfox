@@ -1,0 +1,10 @@
+[
+    {
+        "name": "https://www.googleapis.com/auth/webmasters",
+        "description": "Read and write access to your Webmaster Central data"
+    },
+    {
+        "name": "https://www.googleapis.com/auth/webmasters.readonly",
+        "description": "Read-only access to your Webmaster Central data"
+    }
+]

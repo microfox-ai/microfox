@@ -1,0 +1,6 @@
+[
+    {
+        "name": "https://www.googleapis.com/auth/spreadsheets",
+        "description": "Read and write access to your Google Sheets data"
+    }
+]

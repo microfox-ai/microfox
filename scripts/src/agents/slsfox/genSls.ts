@@ -971,7 +971,7 @@ export async function generateSLSStructure(
     // Read constructor documentation (for SDK generation)
     const constructorDocContents = new Map<string, string>();
     for (const constructor of constructors) {
-      const constructorDocPath = path.join(docsDir, `${constructor.name}.md`);
+      const constructorDocPath = path.join(docsDir, 'constructors', `${constructor.name}.md`);
       if (!fs.existsSync(constructorDocPath)) {
         console.error(
           `❌ Constructor documentation not found: ${constructorDocPath}`,
@@ -1003,7 +1003,7 @@ export async function generateSLSStructure(
         continue;
       }
 
-      const docPath = path.join(docsDir, `${funcName}.md`);
+      const docPath = path.join(docsDir, 'functions', `${funcName}.md`);
       if (fs.existsSync(docPath)) {
         const docContent = fs.readFileSync(docPath, 'utf8');
         docContents.set(funcName, docContent);

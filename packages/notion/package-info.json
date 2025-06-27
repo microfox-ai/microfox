@@ -8,58 +8,12 @@
     "@tryfabric/martian",
     "zod"
   ],
+  "addedDependencies": ["@microfox/notion-oauth"],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://developers.notion.com",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/notion-icon.svg",
-  "readme_map": {
-    "title": "Notion Provider",
-    "description": "The full README for the Notion Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/README.md",
-    "functionalities": [
-      "listUsers",
-      "markdownToNotion",
-      "pageCOnstructors",
-      "pageCreation",
-      "readPages",
-      "retrieveFiles",
-      "updatePages",
-      "uploadFiles"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/markdownToBlocks.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "markdownToBlocks",
-        "description": "Sends a message to a Slack channel."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/markdownToNotion.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "markdownToNotion",
-        "description": "Documentation for markdownToNotion"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/pageCOnstructors.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "pageCOnstructors",
-        "description": "Documentation for pageCOnstructors"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/notion/docs/pageCreation.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "pageCreation",
-        "description": "Documentation for pageCreation"
-      }
-    ]
-  },
-  "addedDependencies": [],
   "constructors": [
     {
       "name": "NotionClient",

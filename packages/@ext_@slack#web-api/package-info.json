@@ -17,17 +17,11 @@
     "p-retry",
     "retry"
   ],
+  "addedDependencies": ["@microfox/slack-oauth"],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@slack/web-api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "@slack/web-api",
-    "functionalities": [],
-    "description": "The full README for the package",
-    "all_readmes": []
-  },
   "constructors": [
     {
       "name": "WebClient",
@@ -91,34 +85,7 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs.",
-          "defaultValue": [
-            "app_mentions:read",
-            "assistant:write",
-            "channels:history",
-            "channels:join",
-            "channels:read",
-            "channels:manage",
-            "chat:write",
-            "chat:write.customize",
-            "commands",
-            "files:read",
-            "files:write",
-            "groups:history",
-            "groups:write",
-            "groups:write.invites",
-            "groups:read",
-            "im:read",
-            "im:write",
-            "reactions:read",
-            "reactions:write",
-            "reminders:read",
-            "reminders:write",
-            "users:read.email",
-            "users:read",
-            "users.profile:read",
-            "metadata.message:read"
-          ]
+          "description": "The scopes for Google OAuth authentication. This is used to specify the permissions that the client application needs."
         }
       ],
       "botConfig": [

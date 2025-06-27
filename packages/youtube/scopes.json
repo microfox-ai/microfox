@@ -1,0 +1,22 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/youtube",
+    "description": "Read and write access to your YouTube account"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/youtube.readonly",
+    "description": "Read-only access to your YouTube account"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/youtube.upload",
+    "description": "Upload videos to your YouTube account"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/youtube.force-ssl",
+    "description": "Force SSL access to your YouTube account"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/youtubepartner",
+    "description": "Access to YouTube partner content"
+  }
+]
