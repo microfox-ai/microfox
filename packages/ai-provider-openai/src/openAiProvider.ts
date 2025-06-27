@@ -3,12 +3,9 @@ import {
   OpenAIProviderSettings,
   type OpenAIProvider as OpenAIP,
 } from '@ai-sdk/openai';
-import {
-  LanguageModelV1,
-  LanguageModelV1Middleware,
-  wrapLanguageModel,
-} from 'ai';
+import { LanguageModelV2Middleware } from '@ai-sdk/provider';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
+import { wrapLanguageModel } from 'ai';
 import {
   OpenAILanguageModelId,
   OpenAIChatSettings,
@@ -17,13 +14,15 @@ import {
 } from './types';
 
 export class OpenAiProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private apiKey: string;
   private openaiProvider: OpenAIP;
 
   constructor(props: {
     apiKey: string;
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
+    baseURL?: string;
+    headers?: Record<string, string>;
   }) {
     this.apiKey = props.apiKey;
 
@@ -40,8 +39,11 @@ export class OpenAiProvider {
             'ai-provider-openai',
             result.response.modelId,
             {
-              promptTokens: result.usage.promptTokens,
-              completionTokens: result.usage.completionTokens,
+              inputTokens: result.usage.inputTokens ?? 0,
+              outputTokens: result.usage.outputTokens ?? 0,
+              cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+              reasoningTokens: result.usage.reasoningTokens ?? 0,
+              totalTokens: result.usage.totalTokens ?? 0,
             },
           );
         } else {
@@ -56,26 +58,21 @@ export class OpenAiProvider {
 
     this.openaiProvider = createOpenAI({
       apiKey: this.apiKey,
+      baseURL: props.baseURL,
+      headers: props.headers,
     });
   }
 
   // Method to update middleware
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
-  languageModel(modelId: OpenAILanguageModelId, settings?: OpenAIChatSettings) {
+  languageModel(modelId: OpenAILanguageModelId) {
     return wrapLanguageModel({
-      model: this.openaiProvider.languageModel(modelId, {
-        ...(settings ?? {}),
-        structuredOutputs: true,
-      }),
+      model: this.openaiProvider.languageModel(modelId),
       middleware: this.middleware,
     });
-  }
-
-  embedding(modelId: OpenAIEmbeddingModelId) {
-    return this.openaiProvider.embedding(modelId);
   }
 
   textEmbeddingModel(modelId: OpenAIEmbeddingModelId) {
@@ -84,37 +81,5 @@ export class OpenAiProvider {
 
   imageModel(modelId: OpenAIImageModelId) {
     return this.openaiProvider.imageModel(modelId);
-  }
-
-  image(modelId: OpenAIImageModelId, settings?: any) {
-    return this.openaiProvider.image(modelId, settings);
-  }
-
-  speechModel(modelId: string) {
-    if (!this.openaiProvider.speechModel) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.speech(modelId);
-  }
-
-  speech(modelId: string) {
-    if (!this.openaiProvider.speech) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.speech(modelId);
-  }
-
-  transcription(modelId: string) {
-    if (!this.openaiProvider.transcription) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.transcription(modelId);
-  }
-
-  transcriptionModel(modelId: string) {
-    if (!this.openaiProvider.transcriptionModel) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.transcriptionModel(modelId);
   }
 }

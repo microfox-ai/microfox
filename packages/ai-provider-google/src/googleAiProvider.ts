@@ -2,13 +2,9 @@ import {
   createGoogleGenerativeAI,
   GoogleGenerativeAIProvider,
 } from '@ai-sdk/google';
+import { LanguageModelV2Middleware } from '@ai-sdk/provider';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
-import {
-  LanguageModelV1CallOptions,
-  LanguageModelV1Middleware,
-  LanguageModelV1StreamPart,
-  wrapLanguageModel,
-} from 'ai';
+import { wrapLanguageModel } from 'ai';
 import {
   GoogleEmbeddingModelId,
   GoogleGenerativeAISettings,
@@ -17,13 +13,13 @@ import {
 } from './types';
 
 export class GoogleAiProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private apiKey: string;
   private googleGenerativeAI: GoogleGenerativeAIProvider;
 
   constructor(props: {
     apiKey: string;
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
     headers?: Record<string, string>;
   }) {
     this.apiKey = props.apiKey;
@@ -41,8 +37,11 @@ export class GoogleAiProvider {
             'ai-provider-google',
             result.response.modelId,
             {
-              promptTokens: result.usage.promptTokens,
-              completionTokens: result.usage.completionTokens,
+              inputTokens: result.usage.inputTokens ?? 0,
+              outputTokens: result.usage.outputTokens ?? 0,
+              cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+              reasoningTokens: result.usage.reasoningTokens ?? 0,
+              totalTokens: result.usage.totalTokens ?? 0,
             },
           );
         } else {
@@ -61,19 +60,13 @@ export class GoogleAiProvider {
   }
 
   // Method to update middleware
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
-  languageModel(
-    modelId: GoogleLanguageModelId,
-    settings?: GoogleGenerativeAISettings,
-  ) {
+  languageModel(modelId: GoogleLanguageModelId) {
     return wrapLanguageModel({
-      model: this.googleGenerativeAI.languageModel(modelId, {
-        ...(settings ?? {}),
-        structuredOutputs: true,
-      }),
+      model: this.googleGenerativeAI.languageModel(modelId),
       middleware: this.middleware,
     });
   }
@@ -84,19 +77,5 @@ export class GoogleAiProvider {
 
   imageModel(modelId: GoogleImageModelId) {
     return this.googleGenerativeAI.imageModel?.(modelId);
-  }
-
-  speechModel(modelId: string) {
-    if (!this.googleGenerativeAI.speechModel) {
-      throw new Error('Google Generative AI provider not initialized');
-    }
-    return this.googleGenerativeAI.speechModel(modelId);
-  }
-
-  transcriptionModel(modelId: string) {
-    if (!this.googleGenerativeAI.transcriptionModel) {
-      throw new Error('Google Generative AI provider not initialized');
-    }
-    return this.googleGenerativeAI.transcriptionModel?.(modelId);
   }
 }
