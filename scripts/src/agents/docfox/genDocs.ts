@@ -1174,6 +1174,7 @@ export async function generateDocs(
         extraInfo,
       );
       fs.writeFileSync(path.join(packageDir, 'README.md'), readmeContent);
+      fs.writeFileSync(path.join(packageDir, 'docs', 'main.md'), readmeContent);
       console.log(`📝 Generated README.md at ${packageDir}`);
 
       console.log(
@@ -1278,12 +1279,12 @@ function generateMainReadme(
   content +=
     'For detailed documentation on the constructor and all available functions, please refer to the following files:\n\n';
 
-  content += `- [**${constructorName}** (Constructor)](./docs/${safeConstructorName}.md): Initializes the client.\n`;
+  content += `- [**${constructorName}** (Constructor)](./docs/constructors/${safeConstructorName}.md): Initializes the client.\n`;
 
   for (const func of functionsDocs) {
     const safeFuncName = func.name.replace(/[^a-zA-Z0-9_-]/g, '_');
     if (safeFuncName) {
-      content += `- [${func.name}](./docs/${safeFuncName}.md)\n`;
+      content += `- [${func.name}](./docs/functions/${safeFuncName}.md)\n`;
     }
   }
   content += '\n';
