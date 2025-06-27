@@ -1,0 +1,67 @@
+{
+  "name": "@microfox/puppeteer-linkedin",
+  "version": "1.0.0",
+  "description": "Puppeteer LinkedIn - Run puppeteer on LinkedIn",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test:authenticated": "vitest run src/__tests__/authenticated.test.ts",
+    "test:articles": "vitest run src/__tests__/articles.test.ts",
+    "test:jobs": "vitest run src/__tests__/jobs.test.ts",
+    "test:profile": "vitest run src/__tests__/profile.test.ts"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@microfox/puppeteer-sls": "1.0.3",
+    "puppeteer-core": "24.10.2",
+    "@sparticuz/chromium": "123.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/puppeteer-core": "^7.0.4",
+    "dotenv": "^16.5.0",
+    "tsup": "^8",
+    "typescript": "5.6.3",
+    "vitest": "^1.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "puppeteer",
+    "linkedin",
+    "ai",
+    "sdk",
+    "microfox",
+    "typescript"
+  ],
+  "author": ""
+}
