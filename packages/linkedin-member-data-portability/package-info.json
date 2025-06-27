@@ -7,7 +7,6 @@
   "authType": "oauth2",
   "status": "semiStable",
   "authEndpoint": "/connect/linkedin-oauth",
-  "oauth2Scopes": ["r_dma_portability_3rd_party"],
   "documentation": "https://www.npmjs.com/package/@microfox/linkedin-member-data-portability",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/linkedin-icon.svg",
   "constructors": [
