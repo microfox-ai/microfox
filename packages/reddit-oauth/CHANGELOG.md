@@ -1,5 +1,11 @@
 # @microfox/reddit-oauth
 
+## 1.2.4
+
+### Patch Changes
+
+- 6349b09: release: refactor: update package-info.json and schemas
+
 ## 1.2.3
 
 ### Patch Changes
