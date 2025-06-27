@@ -15,7 +15,25 @@ Part of the `linksAndComments` section. Edits the text of a self-post or a comme
 
 **Return Value:**
 
-- `Promise<any>`: A promise that resolves to an object containing information about the edited thing.
+- A promise that resolves to an object containing information about the edited thing. The response has the following structure:
+
+```typescript
+{
+  "json": {
+    "errors": [],
+    "data": {
+      "things": [
+        {
+          "kind": "t1" | "t3", // "t1" for comment, "t3" for post
+          "data": // Comment or Post object
+        }
+      ]
+    }
+  }
+}
+```
+
+The `Comment` object has the same structure as the one from the `getComments.md` function. Please refer to the `getComments.md` documentation for the detailed `Comment` type definition. The `Post` object has the same structure as the one from the `getHot.md` function. Please refer to the `getHot.md` documentation for the detailed `Post` type definition.
 
 **Usage Example:**
 
@@ -30,5 +48,8 @@ const result = await redditSdk.api.linksAndComments.editUserText({
   text: newText,
 });
 
-console.log('Comment edited successfully:', result.json.data.things[0].data.body);
-``` 
+console.log(
+  'Comment edited successfully:',
+  result.json.data.things[0].data.body,
+);
+```

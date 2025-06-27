@@ -8,7 +8,18 @@ Part of the `linksAndComments` section. Retrieves a list of categories under whi
 
 **Return Value:**
 
-- `Promise<any>`: A promise that resolves to an object containing the saved categories.
+- A promise that resolves to an object containing the saved categories. The response has the following structure:
+
+```typescript
+{
+  "categories": {
+    "key": string,
+    "value": {
+      "string": string
+    }[]
+  }[]
+}
+```
 
 **Usage Example:**
 
@@ -17,4 +28,4 @@ Part of the `linksAndComments` section. Retrieves a list of categories under whi
 const categories = await redditSdk.api.linksAndComments.getSavedCategories();
 
 console.log('Saved categories:', categories);
-``` 
+```

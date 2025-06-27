@@ -13,7 +13,13 @@ Part of the `subreddits` section. Search for subreddits by name.
 
 **Return Value:**
 
-- `Promise<any>`: A promise that resolves to the search results.
+A promise that resolves to the search results. The response is an object containing a list of subreddit names that match the query.
+
+```typescript
+{
+  names: string[]; // An array of subreddit names
+}
+```
 
 **Usage Examples:**
 
