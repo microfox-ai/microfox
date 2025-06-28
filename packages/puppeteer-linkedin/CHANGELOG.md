@@ -1,4 +1,4 @@
-# @microfox/kling-ai
+# @microfox/puppeteer-linkedin
 
 ## 1.1.0
 
@@ -6,8 +6,7 @@
 
 - b34aa2e: Changes from PR #536: docs_refactoring_june_2025
 
-## 1.0.1
-
 ### Patch Changes
 
-- 4c218d7: Changes from PR #445: vwjt_klingai_fixes_june_2025
+- Updated dependencies [b34aa2e]
+  - @microfox/puppeteer-sls@1.1.0

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/linkedin-share",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "LinkedIn Share SDK - A robust TypeScript SDK for LinkedIn Share API integration",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

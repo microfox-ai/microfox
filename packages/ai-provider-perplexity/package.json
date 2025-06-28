@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-provider-perplexity",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A Wrapped Perplexity Provider for Vercels AI SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

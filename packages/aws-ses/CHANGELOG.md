@@ -1,5 +1,18 @@
 # @microfox/aws-ses
 
+## 1.3.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- Updated dependencies [ac70f88]
+- Updated dependencies [b34aa2e]
+  - @microfox/usage-tracker@0.2.0
+  - @microfox/rest-sdk@1.2.0
+
 ## 1.2.0
 
 ### Minor Changes
