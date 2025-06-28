@@ -113,28 +113,6 @@ async function processPackage(pkg: {
 }) {
   const packageInfo = pkg.content;
 
-  // Process addedDependencies to create added_packages
-  if (packageInfo.addedDependencies) {
-    packageInfo.added_packages = [];
-    for (const dep of packageInfo.addedDependencies) {
-      if (dep.startsWith('@microfox/')) {
-        const depPkgName = dep.replace('@microfox/', '');
-        const mainMdPath = path.join(
-          PACKAGES_DIR,
-          depPkgName,
-          'docs',
-          'main.md',
-        );
-        if (fs.existsSync(mainMdPath)) {
-          packageInfo.added_packages.push({
-            packageName: dep,
-            content: fs.readFileSync(mainMdPath, 'utf-8'),
-          });
-        }
-      }
-    }
-  }
-
   // Process scopes.json
   const pkgDir = path.dirname(pkg.fullPath);
   const scopesPath = path.join(pkgDir, 'scopes.json');
@@ -227,7 +205,6 @@ async function main() {
         description: pkg.content.description,
         dependencies: pkg.content.dependencies || null,
         added_dependencies: pkg.content.addedDependencies || null,
-        added_packages: pkg.content.added_packages || null,
         status: pkg.content.status,
         documentation: pkg.content.documentation,
         icon: pkg.content.icon,

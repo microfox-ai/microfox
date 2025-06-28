@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS docs_embeddings (
     function_name TEXT,
     doc_type TEXT NOT NULL,
     file_path TEXT NOT NULL UNIQUE,
+    linked_packages TEXT[],
     content TEXT NOT NULL,
     embedding vector(768),
     updated_at TIMESTAMPTZ DEFAULT now()
@@ -40,6 +41,7 @@ RETURNS TABLE (
     function_name TEXT,
     doc_type TEXT,
     file_path TEXT,
+    linked_packages TEXT[],
     content TEXT,
     similarity FLOAT
 )
@@ -51,6 +53,7 @@ AS $$
       function_name,
       doc_type,
       file_path,
+      linked_packages,
       content,
       1 - (embedding <#> query_embedding) AS similarity
     FROM docs_embeddings
@@ -72,6 +75,7 @@ RETURNS TABLE (
     function_name TEXT,
     doc_type TEXT,
     file_path TEXT,
+    linked_packages TEXT[],
     content TEXT,
     similarity FLOAT
 )
@@ -83,6 +87,7 @@ AS $$
       function_name,
       doc_type,
       file_path,
+      linked_packages,
       content,
       1 - (embedding <#> query_embedding) AS similarity
     FROM docs_embeddings
