@@ -22,6 +22,8 @@ const LLMUsageSchema = z.object({
   model: z.string().optional(),
   inputTokens: z.number().optional(),
   outputTokens: z.number().optional(),
+  promptTokens: z.number().optional(),
+  completionTokens: z.number().optional(),
   cachedInputTokens: z.number().optional(),
   reasoningTokens: z.number().optional(),
   totalTokens: z.number().optional(),

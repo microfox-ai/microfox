@@ -53,6 +53,8 @@ export class MicrofoxUsageTracker {
       outputTokens: number;
       cachedInputTokens?: number;
       reasoningTokens?: number;
+      promptTokens?: number;
+      completionTokens?: number;
       totalTokens: number;
     },
   ) {

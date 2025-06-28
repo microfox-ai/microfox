@@ -6,6 +6,7 @@
     "build": "tsc",
     "process-issue": "ts-node src/process-issue.ts",
     "process-comment": "ts-node src/process-comment.ts",
+    "kickstart:pkg": "ts-node src/agents/packagefox/kickstartPackage.ts",
     "gen:pkg-build": "ts-node src/agents/packagefox/fixBuildIssues.ts",
     "gen:pkg-fix": "ts-node src/agents/packagefox/fixPackage.ts",
     "gen:pkg": "ts-node src/agents/packagefox/genPackage.ts",
