@@ -1,5 +1,16 @@
 # @microfox/google-sheets
 
+## 1.3.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- Updated dependencies [b34aa2e]
+  - @microfox/google-oauth@1.2.0
+
 ## 1.2.1
 
 ### Patch Changes

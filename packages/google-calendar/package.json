@@ -1,6 +1,6 @@
 {
   "name": "@microfox/google-calendar",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for interacting with the Google Calendar API.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "@microfox/google-oauth": "1.1.2",
+    "@microfox/google-oauth": "1.2.0",
     "zod": "3.24.4"
   },
   "devDependencies": {

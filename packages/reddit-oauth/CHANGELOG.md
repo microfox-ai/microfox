@@ -1,5 +1,11 @@
 # @microfox/reddit-oauth
 
+## 1.3.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
 ## 1.2.4
 
 ### Patch Changes
