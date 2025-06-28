@@ -95,3 +95,38 @@ AS $$
     ORDER BY embedding <#> query_embedding
     LIMIT k;
 $$;
+
+-- 7. Multi-package search using cosine distance (<#>)
+CREATE OR REPLACE FUNCTION match_docs_in_packages(
+    query_embedding vector,
+    pkg_names TEXT[],
+    k INT DEFAULT 5,
+    doc_type_filter TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+    id UUID,
+    package_name TEXT,
+    function_name TEXT,
+    doc_type TEXT,
+    file_path TEXT,
+    linked_packages JSON,
+    content TEXT,
+    similarity FLOAT
+)
+LANGUAGE SQL STABLE
+AS $$
+    SELECT
+      id,
+      package_name,
+      function_name,
+      doc_type,
+      file_path,
+      linked_packages,
+      content,
+      1 - (embedding <#> query_embedding) AS similarity
+    FROM docs_embeddings
+    WHERE package_name = ANY(pkg_names)
+      AND (doc_type_filter IS NULL OR doc_type = doc_type_filter)
+    ORDER BY embedding <#> query_embedding
+    LIMIT k;
+$$;
