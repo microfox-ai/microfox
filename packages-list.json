@@ -28,7 +28,6 @@
     "packages/brave",
     "packages/google-sheets",
     "packages/linkedin-share",
-    "packages/puppeteer-linkedin",
     "packages/puppeteer-sls",
     "packages/slack-web-tiny",
     "packages/whatsapp-business"
@@ -49,8 +48,8 @@
     "packages/instagram",
     "packages/instagram-fb",
     "packages/kling-ai",
-    "packages/linkedin-member-data-portability",
     "packages/notion",
+    "packages/puppeteer-linkedin",
     "packages/reddit",
     "packages/slack",
     "packages/veo-on-vertex-ai",
@@ -59,7 +58,8 @@
     "packages/youtube-reporting-api"
   ],
   "unstablePackages": [
-    "packages/ai-provider-vertex"
+    "packages/ai-provider-vertex",
+    "packages/linkedin-member-data-portability"
   ],
   "partialPackages": [
     "packages/core",
@@ -83,5 +83,5 @@
     "packages/webhook-core"
   ],
   "total": 65,
-  "generatedAt": "2025-06-27T09:56:46.190Z"
+  "generatedAt": "2025-06-28T10:00:14.336Z"
 }
