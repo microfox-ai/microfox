@@ -51,7 +51,7 @@ function getGithubUrl(relativePath: string): string {
   return `${GITHUB_BASE_URL}${relativePath.replace(/\\/g, '/')}`;
 }
 
-function walkDocs() {
+async function walkDocs() {
   const results: Array<{
     packageName: string;
     functionName: string | null;
@@ -61,6 +61,7 @@ function walkDocs() {
     fullPath: string;
     mtime: Date;
     content: string;
+    linkedPackages: string[];
   }> = [];
 
   if (!fs.existsSync(PACKAGES_DIR)) {
@@ -71,91 +72,113 @@ function walkDocs() {
   for (const pkg of fs.readdirSync(PACKAGES_DIR)) {
     const pkgDir = path.join(PACKAGES_DIR, pkg);
     const docsDir = path.join(pkgDir, 'docs');
-    const packageInfoPath = path.join(pkgDir, 'package-info.json');
 
-    // Main README
-    const mainReadmePath = path.join(pkgDir, 'docs', 'main.md');
-    if (fs.existsSync(mainReadmePath)) {
-      const mtime = getGitLastModified(mainReadmePath);
-      const relativePath = path.relative(PACKAGES_DIR, mainReadmePath);
-      results.push({
-        packageName: pkg,
-        functionName: null,
-        docType: 'main',
-        filePath: relativePath,
-        githubUrl: getGithubUrl(relativePath),
-        fullPath: mainReadmePath,
-        mtime,
-        content: fs.readFileSync(mainReadmePath, 'utf-8'),
-      });
+    // Query DB for packages that have this package as a dependency.
+    const dependencyIdentifier = `@microfox/${pkg}`;
+    const { data: linkedPackagesData, error } = await supabase
+      .from('package_infos')
+      .select('package_name')
+      .contains('added_dependencies', [dependencyIdentifier]);
+
+    if (error) {
+      console.error(`Error fetching linked packages for ${pkg}:`, error);
     }
+    const linkedPackages = linkedPackagesData
+      ? linkedPackagesData.map(p => p.package_name)
+      : [];
 
-    // Rules README
-    const rulesReadmePath = path.join(pkgDir, 'docs', 'rules.md');
-    if (fs.existsSync(rulesReadmePath)) {
-      const mtime = getGitLastModified(rulesReadmePath);
-      const relativePath = path.relative(PACKAGES_DIR, rulesReadmePath);
-      results.push({
-        packageName: pkg,
-        functionName: null,
-        docType: 'rules',
-        filePath: relativePath,
-        githubUrl: getGithubUrl(relativePath),
-        fullPath: rulesReadmePath,
-        mtime,
-        content: fs.readFileSync(rulesReadmePath, 'utf-8'),
-      });
-    }
-
-    // package-info and sub-docs
-    if (fs.existsSync(packageInfoPath)) {
-      const packageInfo: PackageInfo = JSON.parse(
-        fs.readFileSync(packageInfoPath, 'utf-8'),
-      );
-
-      if (packageInfo.constructors && fs.existsSync(docsDir)) {
-        for (const constructor of packageInfo.constructors) {
-
-          // Constructors
-          const constructorDocFileName = `${constructor.name}.md`;
-          const constructorFullPath = path.join(docsDir, 'constructors', constructorDocFileName);
-          if (fs.existsSync(constructorFullPath)) {
-            const mtime = getGitLastModified(constructorFullPath);
-            const relativePath = path.relative(PACKAGES_DIR, constructorFullPath);
+    if (fs.existsSync(docsDir)) {
+      // Constructors
+      const constructorsDir = path.join(docsDir, 'constructors');
+      if (fs.existsSync(constructorsDir)) {
+        const constructorFiles = fs.readdirSync(constructorsDir);
+        for (const file of constructorFiles) {
+          if (file.endsWith('.md')) {
+            const name = path.basename(file, '.md');
+            const fullPath = path.join(constructorsDir, file);
+            const mtime = getGitLastModified(fullPath);
+            const relativePath = path.relative(PACKAGES_DIR, fullPath);
             results.push({
               packageName: pkg,
-              functionName: constructor.name,
+              functionName: name,
               docType: 'constructor',
               filePath: relativePath,
               githubUrl: getGithubUrl(relativePath),
-              fullPath: constructorFullPath,
+              fullPath,
               mtime,
-              content: fs.readFileSync(constructorFullPath, 'utf-8'),
+              content: fs.readFileSync(fullPath, 'utf-8'),
+              linkedPackages: [...linkedPackages, dependencyIdentifier],
             });
           }
+        }
+      }
 
-          // Functionalities
-          for (const functionality of constructor.functionalities) {
-            const docFileName = `${functionality}.md`;
-            const fullPath = path.join(docsDir, docFileName);
-
-            if (fs.existsSync(fullPath)) {
-              const mtime = getGitLastModified(fullPath);
-              const relativePath = path.relative(PACKAGES_DIR, fullPath);
-
-              results.push({
-                packageName: pkg,
-                functionName: functionality,
-                docType: 'functionality',
-                filePath: relativePath,
-                githubUrl: getGithubUrl(relativePath),
-                fullPath,
-                mtime,
-                content: fs.readFileSync(fullPath, 'utf-8'),
-              });
-            }
+      // Functions
+      const functionsDir = path.join(docsDir, 'functions');
+      if (fs.existsSync(functionsDir)) {
+        const functionFiles = fs.readdirSync(functionsDir);
+        for (const file of functionFiles) {
+          if (file.endsWith('.md')) {
+            const name = path.basename(file, '.md');
+            const fullPath = path.join(functionsDir, file);
+            const mtime = getGitLastModified(fullPath);
+            const relativePath = path.relative(PACKAGES_DIR, fullPath);
+            results.push({
+              packageName: pkg,
+              functionName: name,
+              docType: 'function',
+              filePath: relativePath,
+              githubUrl: getGithubUrl(relativePath),
+              fullPath,
+              mtime,
+              content: fs.readFileSync(fullPath, 'utf-8'),
+              linkedPackages: [...linkedPackages, dependencyIdentifier],
+            });
           }
         }
+      }
+
+      // Rules
+      const rulesDir = path.join(docsDir, 'rules');
+      if (fs.existsSync(rulesDir)) {
+        const ruleFiles = fs.readdirSync(rulesDir);
+        for (const file of ruleFiles) {
+          if (file.endsWith('.md')) {
+            const name = path.basename(file, '.md');
+            const fullPath = path.join(rulesDir, file);
+            const mtime = getGitLastModified(fullPath);
+            const relativePath = path.relative(PACKAGES_DIR, fullPath);
+            results.push({
+              packageName: pkg,
+              functionName: name,
+              docType: 'rule',
+              filePath: relativePath,
+              githubUrl: getGithubUrl(relativePath),
+              fullPath,
+              mtime,
+              content: fs.readFileSync(fullPath, 'utf-8'),
+              linkedPackages: [...linkedPackages, dependencyIdentifier],
+            });
+          }
+        }
+      }
+
+      // Main
+      const mainFile = path.join(docsDir, 'main.md');
+      if (fs.existsSync(mainFile)) {
+        const mtime = getGitLastModified(mainFile);
+        const relativePath = path.relative(PACKAGES_DIR, mainFile);
+        results.push({
+          packageName: pkg,
+          functionName: 'main',
+          docType: 'main',
+          filePath: relativePath,
+          githubUrl: getGithubUrl(relativePath),
+          fullPath: mainFile,
+          mtime,
+          content: fs.readFileSync(mainFile, 'utf-8'),
+          linkedPackages: [...linkedPackages, dependencyIdentifier],
+        });
       }
     }
   }
@@ -168,8 +191,8 @@ async function main() {
   const existing = await getExistingDocs();
   const existingMap = new Map(existing.map(r => [r.file_path, r]));
 
-  console.log('⏳ Scanning filesystem…');
-  const localDocs = walkDocs();
+  console.log('⏳ Scanning filesystem and querying for linked packages…');
+  const localDocs = await walkDocs();
   const localPaths = new Set(localDocs.map(d => d.githubUrl));
 
   // 1) Delete removed
@@ -198,6 +221,7 @@ async function main() {
         content: doc.content,
         embedding,
         updated_at: new Date().toISOString(),
+        linked_packages: doc.linkedPackages,
       });
     }
   }

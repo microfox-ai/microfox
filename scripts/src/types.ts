@@ -160,15 +160,6 @@ export const PackageInfo = z
       .array(z.string())
       .optional()
       .describe('The added dependencies of the package'),
-    added_packages: z
-      .array(
-        z.object({
-          packageName: z.string(),
-          content: z.string(),
-        }),
-      )
-      .optional()
-      .describe('The added packages of the package'),
     dependencies: z
       .array(z.string())
       .describe('The dependencies of the package'),
