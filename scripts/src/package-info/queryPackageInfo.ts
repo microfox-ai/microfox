@@ -42,7 +42,16 @@ export async function findSimilarPackages(
       return [];
     }
 
-    return packages;
+    const packagesWithFunctionalities = packages.map((pkg: any) => {
+      const functionalities =
+        pkg.constructors?.flatMap((c: any) => c.functionalities || []) || [];
+      return {
+        ...pkg,
+        functionalities,
+      };
+    });
+
+    return packagesWithFunctionalities;
   } catch (err) {
     console.error('An unexpected error occurred:', err);
     throw err;

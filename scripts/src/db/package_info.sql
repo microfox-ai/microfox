@@ -59,6 +59,9 @@ RETURNS TABLE (
   package_name TEXT,
   package_title TEXT,
   description TEXT,
+  constructors JSON,
+  added_dependencies TEXT[],
+  status TEXT,
   similarity float
 )
 LANGUAGE sql STABLE
@@ -68,6 +71,9 @@ AS $$
     p.package_name,
     p.package_title,
     p.description,
+    p.constructors,
+    p.added_dependencies,
+    p.status,
     1 - (p.embedding <=> query_embedding) AS similarity
   FROM
     package_infos AS p

@@ -141,19 +141,13 @@ async function processPackage(pkg: {
 
   // Create and save embedding
   try {
-    let textToEmbed = `${packageInfo.title}\n${packageInfo.description}`;
+    let textToEmbed = `Title: ${packageInfo.title}\nDescription: ${packageInfo.description}\n\n`;
     
     if (packageInfo.constructors) {
       const allFunctionalities = packageInfo.constructors.flatMap(c => c.functionalities || []);
       if (allFunctionalities.length > 0) {
-        textToEmbed += `\n\nFunctionalities:\n${allFunctionalities.join(', ')}`;
+        textToEmbed += `Functionalities: ${allFunctionalities.join(', ')}\n\n`;
       }
-    }
-
-    const mainMdPath = path.join(path.dirname(pkg.fullPath), 'docs', 'main.md');
-    if (fs.existsSync(mainMdPath)) {
-      const mainMdContent = fs.readFileSync(mainMdPath, 'utf-8');
-      textToEmbed += `\n\n${mainMdContent}`;
     }
     
     (packageInfo as any).embedding = await embed(textToEmbed);
