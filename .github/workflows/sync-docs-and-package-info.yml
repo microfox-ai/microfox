@@ -46,7 +46,7 @@ jobs:
           
           # Run the script - it will handle git comparison internally
           cd scripts
-          npm run update:readme-map
+          update:constructors
           
           # Check if any package-info.json files were modified
           echo "🐛 Current directory: $(pwd)"
