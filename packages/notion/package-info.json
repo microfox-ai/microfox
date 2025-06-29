@@ -8,7 +8,6 @@
     "@tryfabric/martian",
     "zod"
   ],
-  "addedDependencies": ["@microfox/notion-oauth"],
   "status": "semiStable",
   "authEndpoint": "",
   "authType": "apikey",
