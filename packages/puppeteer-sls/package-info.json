@@ -9,7 +9,6 @@
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",
-  "addedDependencies": [""],
   "constructors": [
     {
       "name": "PuppeteerSLS",
