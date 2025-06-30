@@ -13,7 +13,24 @@ Part of the `listings` section. Fetch the new posts.
 
 **Return Value:**
 
-- `Promise<Listing<Post>>`: A promise that resolves to a listing of posts.
+-
+
+```typescript
+{
+  "kind": "Listing",
+  "data": {
+    "after": string | null,
+    "dist": number,
+    "modhash": string | null,
+    "geo_filter": string,
+    "children": {
+      "kind": "t5",
+      "data": Post
+    }[],
+    "before": string | null
+  }
+}
+```
 
 **Post Type:**
 

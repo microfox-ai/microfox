@@ -1,0 +1,60 @@
+{
+  "name": "@microfox/puppeteer-suno",
+  "version": "1.0.0",
+  "description": "A Microfox SDK for Puppeteer Suno.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "vitest"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "zod": "^3.24.2",
+    "@microfox/puppeteer-sls": "1.0.3",
+    "puppeteer-core": "24.10.2"
+  },
+  "devDependencies": {
+    "@sparticuz/chromium": "123.0.1",
+    "@microfox/tsconfig": "*",
+    "@types/node": "^18",
+    "@types/puppeteer-core": "^7.0.4",
+    "vitest": "^1.6.0",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "microfox",
+    "sdk",
+    "typescript"
+  ]
+}
