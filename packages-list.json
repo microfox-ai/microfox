@@ -59,7 +59,8 @@
   ],
   "unstablePackages": [
     "packages/ai-provider-vertex",
-    "packages/linkedin-member-data-portability"
+    "packages/linkedin-member-data-portability",
+    "packages/puppeteer-suno"
   ],
   "partialPackages": [
     "packages/core",
@@ -82,6 +83,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 65,
-  "generatedAt": "2025-06-28T10:00:14.336Z"
+  "total": 66,
+  "generatedAt": "2025-06-30T12:00:43.379Z"
 }
