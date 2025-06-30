@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.4.1
+
+### Patch Changes
+
+- 909e5eb: Changes from PR #542: suno
+
 ## 1.4.0
 
 ### Minor Changes
