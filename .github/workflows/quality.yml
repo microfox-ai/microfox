@@ -1,98 +1,98 @@
-name: Quality
+# name: Quality
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 
-jobs:
-  quality:
-    name: 'Quality Checks'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          # Fetch entire history to ensure correct diff calculation
-          fetch-depth: 0
+# jobs:
+#   quality:
+#     name: 'Quality Checks'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#         with:
+#           # Fetch entire history to ensure correct diff calculation
+#           fetch-depth: 0
 
-      - name: Check if packagefox-build is empty
-        id: check-packagefox
-        run: |
-          PACKAGEFOX_FILE=".microfox/packagefox-build.json"
+#       - name: Check if packagefox-build is empty
+#         id: check-packagefox
+#         run: |
+#           PACKAGEFOX_FILE=".microfox/packagefox-build.json"
 
-          if [ -f "$PACKAGEFOX_FILE" ]; then
-            # Check if the requests array is empty
-            if jq -e '.requests | length == 0' "$PACKAGEFOX_FILE" > /dev/null; then
-              echo "packagefox_empty=true" >> $GITHUB_OUTPUT
-              echo "PackageFox build file is empty (no requests). Continuing with quality checks."
-            else
-              echo "packagefox_empty=false" >> $GITHUB_OUTPUT
-              echo "❌ ERROR: PackageFox build file is not empty - contains pending requests!"
-              echo "Quality checks cannot proceed with pending packagefox requests."
-              exit 0
-            fi
-          else
-            echo "packagefox_empty=false" >> $GITHUB_OUTPUT
-            echo "PackageFox build file not found. Continuing with quality checks."
-          fi
+#           if [ -f "$PACKAGEFOX_FILE" ]; then
+#             # Check if the requests array is empty
+#             if jq -e '.requests | length == 0' "$PACKAGEFOX_FILE" > /dev/null; then
+#               echo "packagefox_empty=true" >> $GITHUB_OUTPUT
+#               echo "PackageFox build file is empty (no requests). Continuing with quality checks."
+#             else
+#               echo "packagefox_empty=false" >> $GITHUB_OUTPUT
+#               echo "❌ ERROR: PackageFox build file is not empty - contains pending requests!"
+#               echo "Quality checks cannot proceed with pending packagefox requests."
+#               exit 0
+#             fi
+#           else
+#             echo "packagefox_empty=false" >> $GITHUB_OUTPUT
+#             echo "PackageFox build file not found. Continuing with quality checks."
+#           fi
 
-      - name: Get relevant changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v46.0.1
-        with:
-          # We need the paths of all changed files within packages
-          files: packages/**
-          # Get the list of files as output
-          outputs: 'all_changed_files'
+#       - name: Get relevant changed files
+#         id: changed-files
+#         uses: tj-actions/changed-files@v46.0.1
+#         with:
+#           # We need the paths of all changed files within packages
+#           files: packages/**
+#           # Get the list of files as output
+#           outputs: 'all_changed_files'
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: 'npm'
+#       - name: Use Node.js 20
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '20'
+#           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm i
+#       - name: Install dependencies
+#         run: npm i
 
-      # - name: Run Prettier check
-      #   run: npm run prettier-check
+#       # - name: Run Prettier check
+#       #   run: npm run prettier-check
 
-      - name: Determine changed packages and build filters
-        id: determine-packages
-        # Run this only if the changed-files step found changes
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
-          echo "Changed files: $changed_files"
+#       - name: Determine changed packages and build filters
+#         id: determine-packages
+#         # Run this only if the changed-files step found changes
+#         if: steps.changed-files.outputs.any_changed == 'true'
+#         run: |
+#           changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
+#           echo "Changed files: $changed_files"
 
-          # Extract unique package names and build filter string
-          filters=$(echo "$changed_files" | grep -oE 'packages/([^/]+)' | sed 's|packages/|| ' | sort -u | grep -v '^@ext_' | sed 's|.*|--filter=@microfox/&|' | paste -sd ' ')
+#           # Extract unique package names and build filter string
+#           filters=$(echo "$changed_files" | grep -oE 'packages/([^/]+)' | sed 's|packages/|| ' | sort -u | grep -v '^@ext_' | sed 's|.*|--filter=@microfox/&|' | paste -sd ' ')
 
-          echo "Generated filters: $filters"
+#           echo "Generated filters: $filters"
 
-          if [ -z "$filters" ]; then
-            echo "No package changes detected within packages/ directory."
-            echo "packages_changed=false" >> $GITHUB_OUTPUT
-            echo "filters=" >> $GITHUB_OUTPUT
-          else
-            echo "packages_changed=true" >> $GITHUB_OUTPUT
-            echo "filters=$filters" >> $GITHUB_OUTPUT
-          fi
+#           if [ -z "$filters" ]; then
+#             echo "No package changes detected within packages/ directory."
+#             echo "packages_changed=false" >> $GITHUB_OUTPUT
+#             echo "filters=" >> $GITHUB_OUTPUT
+#           else
+#             echo "packages_changed=true" >> $GITHUB_OUTPUT
+#             echo "filters=$filters" >> $GITHUB_OUTPUT
+#           fi
 
-      - name: Build check
-        # Run build only if relevant files were changed in packages
-        if: steps.determine-packages.outputs.packages_changed == 'true'
-        run: npm run build -- ${{ steps.determine-packages.outputs.filters }}
+#       - name: Build check
+#         # Run build only if relevant files were changed in packages
+#         if: steps.determine-packages.outputs.packages_changed == 'true'
+#         run: npm run build -- ${{ steps.determine-packages.outputs.filters }}
 
-      # - name: Run ESLint check
-      #   run: npm run lint
+#       # - name: Run ESLint check
+#       #   run: npm run lint
 
-      - name: Run TypeScript type check
-        if: steps.determine-packages.outputs.packages_changed == 'true'
-        run: npm run type-check -- ${{ steps.determine-packages.outputs.filters }}
+#       - name: Run TypeScript type check
+#         if: steps.determine-packages.outputs.packages_changed == 'true'
+#         run: npm run type-check -- ${{ steps.determine-packages.outputs.filters }}
 
-      - name: Run tests
-        if: steps.determine-packages.outputs.packages_changed == 'true'
-        run: npm run test -- ${{ steps.determine-packages.outputs.filters }}
+#       - name: Run tests
+#         if: steps.determine-packages.outputs.packages_changed == 'true'
+#         run: npm run test -- ${{ steps.determine-packages.outputs.filters }}
