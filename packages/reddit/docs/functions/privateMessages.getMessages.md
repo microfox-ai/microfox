@@ -1,67 +1,65 @@
 ## Function: `getMessages`
 
-Part of the `privateMessages` section. Get private messages from the user's inbox, unread messages, or sent messages.
+Fetches a listing of private messages for the authenticated user from a specified location (e.g., inbox, unread, sent).
 
 **Parameters:**
 
-- `where` (string): The location to get messages from. One of: 'inbox', 'unread', 'sent'.
-- `after` (string, optional): Return items after this fullname.
-- `before` (string, optional): Return items before this fullname.
-- `count` (number, optional): The number of items already seen in this listing.
-- `limit` (number, optional): The maximum number of items to return in this slice of the listing.
-- `show` (string, optional): Optional parameter for listings. Can be "all".
-- `sr_detail` (boolean, optional): Optional parameter to expand subreddit details.
-- `mark` (string, optional): Can be 'true' or 'false'.
-- `max_replies` (number, optional): The maximum number of replies to return.
-- `mid` (string, optional): The ID of a message.
+- `where`: "inbox" | "unread" | "sent" - The message box to retrieve messages from.
+- `mark`: boolean (optional, default: false) - If `true`, marks messages as read.
+- `after`: string (optional) - The fullname of an item to list after for pagination.
+- `before`: string (optional) - The fullname of an item to list before for pagination.
+- `count`: number (optional) - The number of items already seen in the listing.
+- `limit`: number (optional, default: 25) - The maximum number of items to return.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<Listing<Message>>`: A promise that resolves to a listing of messages.
+- `Promise<ThingListing<Message>>`: A promise that resolves to a listing of `Message` objects.
 
-**Message Type:**
+**ThingListing<Message> Object Details:**
+
+- `kind`: string (always 'Listing') - The type of the object.
+- `data`: object - The main data payload.
+  - `after`: string | null - The fullname of the next item in the list for pagination.
+  - `before`: string | null - The fullname of the previous item in the list for pagination.
+  - `dist`: number - The number of items in the listing.
+  - `modhash`: string - A token for moderation actions.
+  - `geo_filter`: string | null - The geofilter used for the request.
+  - `children`: `Message[]` - An array of Message objects.
+
+**Message Object Details:**
+
+- `id`: string
+- `subject`: string
+- `was_comment`: boolean
+- `author`: string
+- `first_message`: number | null
+- `first_message_name`: string | null
+- `created`: number
+- `created_utc`: number
+- `dest`: string
+- `body`: string
+- `body_html`: string
+- `name`: string
+- `distinguished`: "moderator" | "admin" | "special" | null
+- `new`: boolean
+- `replies`: `ThingListing<Message>` | ""
+- `parent_id`: string | null
+- `subreddit`: string | null
+- `score`: number
+- `likes`: boolean | null
+- `author_fullname`: string
+- `context`: string
+- `num_comments`: number | null
+- `subreddit_name_prefixed`: string | null
+- `type`: "comment" | "unknown"
+- `associated_awarding_id`: string | null
+
+**Usage Example:**
 
 ```typescript
-export interface Message {
-  author?: Redditor; // The author of the message.
-  body?: string; // The body of the message, as Markdown.
-  body_html?: string; // The body of the message, as HTML.
-  created_utc?: number; // Time the message was created, represented in Unix Time.
-  dest?: Redditor; // The recipient of the message.
-  id?: string; // The ID of the message.
-  name?: string; // The full ID of the message, prefixed with t4_.
-  subject?: string; // The subject of the message.
-  was_comment?: boolean; // Whether or not the message was a comment reply.
-  parent_id?: string; // Fullname of the parent, or null if not a reply to a message.
-  replies?: Listing<Message>; // A Listing of Message objects.
-}
-```
+// Get the first 10 messages from the inbox
+const inboxMessages = await reddit.privateMessages.getMessages({ where: 'inbox', limit: 10 });
 
-**Usage Examples:**
-
-```typescript
-// 1. Get the 25 most recent messages from the inbox
-const inboxMessages = await reddit.api.privateMessages.getMessages({
-  where: 'inbox',
-  limit: 25,
-});
-console.log(inboxMessages);
-```
-
-```typescript
-// 2. Get unread messages and mark them as read in the process
-const unreadMessages = await reddit.api.privateMessages.getMessages({
-  where: 'unread',
-  mark: 'true',
-});
-console.log(unreadMessages);
-```
-
-```typescript
-// 3. Get the 10 most recent sent messages
-const sentMessages = await reddit.api.privateMessages.getMessages({
-  where: 'sent',
-  limit: 10,
-});
-console.log(sentMessages);
-```
+// Get unread messages and mark them as read
+const unreadMessages = await reddit.privateMessages.getMessages({ where: 'unread', mark: true });
+```  

@@ -1,21 +1,19 @@
-## Function: `search`
+## Function: `getHotFromSubreddit`
 
-Performs a search across all of Reddit.
+Fetches "hot" posts from a specific subreddit.
 
 **Parameters:**
 
-- `q`: string - The search query.
-- `sort`: "relevance" | "hot" | "top" | "new" | "comments" (optional, default: "relevance") - The sorting method for the results.
-- `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the search, used with sorts like "top".
+- `subreddit`: string - The name of the subreddit.
 - `after`: string (optional) - The fullname of an item to list after for pagination.
 - `before`: string (optional) - The fullname of an item to list before for pagination.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
-- `show`: "all" | undefined (optional) - If "all", include results that would otherwise be hidden by user preferences.
+- `g`: string (optional) - The geofilter for results.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts matching the search query.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
 
 **ThingListing<Post> Object Details:**
 
@@ -259,29 +257,24 @@ Performs a search across all of Reddit.
 **Usage Example:**
 
 ```typescript
-// Search all of Reddit for "gemini" and sort by new
-const searchResults = await reddit.listings.search({
-  q: 'gemini',
-  sort: 'new',
-});
-
-console.log(`Found ${searchResults.data.children.length} results.`);
+const hotPosts = await reddit.listings.getHotFromSubreddit({ subreddit: 'programming', limit: 15 });
+hotPosts.data.children.forEach(post => console.log(post.data.title));
 ```
 
 **Code Example:**
 
 ```typescript
-async function searchAllReddit(query, sortBy) {
+async function fetchHottestInSub(subredditName) {
   try {
-    const results = await reddit.listings.search({ q: query, sort: sortBy });
-    console.log(`--- Search Results for "${query}" (sorted by ${sortBy}) ---`);
-    results.data.children.forEach(post => {
-      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+    const listing = await reddit.listings.getHotFromSubreddit({ subreddit: subredditName, limit: 5 });
+    console.log(`--- Hot Posts in r/${subredditName} ---`);
+    listing.data.children.forEach(post => {
+      console.log(`- [${post.data.score}] ${post.data.title}`);
     });
   } catch (error) {
-    console.error("Failed to perform search:", error);
+    console.error(`Failed to fetch hot posts from r/${subredditName}:`, error);
   }
 }
 
-searchAllReddit('reactjs', 'top');
+fetchHottestInSub('webdev');
 ```  

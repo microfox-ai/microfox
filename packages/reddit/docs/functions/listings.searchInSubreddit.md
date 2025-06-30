@@ -1,9 +1,10 @@
-## Function: `search`
+## Function: `searchInSubreddit`
 
-Performs a search across all of Reddit.
+Performs a search for posts within a specific subreddit.
 
 **Parameters:**
 
+- `subreddit`: string - The subreddit to search within.
 - `q`: string - The search query.
 - `sort`: "relevance" | "hot" | "top" | "new" | "comments" (optional, default: "relevance") - The sorting method for the results.
 - `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the search, used with sorts like "top".
@@ -15,7 +16,7 @@ Performs a search across all of Reddit.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts matching the search query.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
 
 **ThingListing<Post> Object Details:**
 
@@ -259,29 +260,35 @@ Performs a search across all of Reddit.
 **Usage Example:**
 
 ```typescript
-// Search all of Reddit for "gemini" and sort by new
-const searchResults = await reddit.listings.search({
-  q: 'gemini',
-  sort: 'new',
+// Search for "javascript" in the "webdev" subreddit, sorting by top of all time.
+const searchResults = await reddit.listings.searchInSubreddit({
+  subreddit: 'webdev',
+  q: 'javascript',
+  sort: 'top',
+  t: 'all',
 });
 
-console.log(`Found ${searchResults.data.children.length} results.`);
+console.log(`Found ${searchResults.data.children.length} results in r/webdev.`);
 ```
 
 **Code Example:**
 
 ```typescript
-async function searchAllReddit(query, sortBy) {
+async function searchSubreddit(subreddit, query) {
   try {
-    const results = await reddit.listings.search({ q: query, sort: sortBy });
-    console.log(`--- Search Results for "${query}" (sorted by ${sortBy}) ---`);
+    const results = await reddit.listings.searchInSubreddit({
+      subreddit: subreddit,
+      q: query,
+      sort: 'new',
+    });
+    console.log(`--- New Posts in r/${subreddit} for "${query}" ---`);
     results.data.children.forEach(post => {
-      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+      console.log(`- ${post.data.title}`);
     });
   } catch (error) {
-    console.error("Failed to perform search:", error);
+    console.error(`Failed to search in r/${subreddit}:`, error);
   }
 }
 
-searchAllReddit('reactjs', 'top');
+searchSubreddit('reactjs', 'hooks');
 ```  

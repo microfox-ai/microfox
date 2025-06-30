@@ -1,32 +1,44 @@
 ## Function: `searchSubreddits`
 
-Part of the `subreddits` section. Search for subreddits by name.
+Searches for subreddits by a query string. This endpoint is different from `searchSubredditsListing` and `searchRedditNamesPost` and provides a different response structure.
 
 **Parameters:**
 
-- `query` (string): The search query.
-- `exact` (boolean, optional): If true, find an exact match for the query.
-- `include_over_18` (boolean, optional): Whether to include over-18 subreddits in the results.
-- `include_unadvertisable` (boolean, optional): Whether to include unadvertisable subreddits.
-- `search_query_id` (string, optional): A UUID for the search query.
-- `typeahead_active` (boolean, optional): Whether typeahead is active.
+- `query`: string - The search query for subreddits.
 
-**Return Value:**
+**Return Type:**
 
-A promise that resolves to the search results. The response is an object containing a list of subreddit names that match the query.
+- `Promise<{ subreddits: SubredditInfo[] }>`: A promise that resolves to an object containing an array of `SubredditInfo` objects.
+
+**SubredditInfo Object Details:**
+
+- `name`: string - The name of the subreddit.
+- `num_subscribers`: number - The number of subscribers.
+- `id`: string - The unique ID of the subreddit.
+- `created_utc`: number - The UTC timestamp of when the subreddit was created.
+- `allow_images`: boolean - Whether the subreddit allows image posts.
+
+**Usage Example:**
 
 ```typescript
-{
-  names: string[]; // An array of subreddit names
+const searchResults = await reddit.subreddits.searchSubreddits({ query: 'history' });
+console.log(searchResults.subreddits);
+```
+
+**Code Example:**
+
+```typescript
+async function searchForSubreddits(query) {
+  try {
+    const { subreddits } = await reddit.subreddits.searchSubreddits({ query: query });
+    console.log(`Found ${subreddits.length} subreddits for query "${query}":`);
+    subreddits.forEach(sr => {
+      console.log(`- r/${sr.name} (${sr.num_subscribers} subscribers)`);
+    });
+  } catch (error) {
+    console.error(`Failed to search for subreddits:`, error);
+  }
 }
-```
 
-**Usage Examples:**
-
-```typescript
-// Search for subreddits with 'react' in the name
-const results = await reddit.api.subreddits.searchSubreddits({
-  query: 'react',
-});
-console.log(results);
-```
+searchForSubreddits('science');
+``` 

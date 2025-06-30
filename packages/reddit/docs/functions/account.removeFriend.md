@@ -1,22 +1,32 @@
 ## Function: `removeFriend`
 
-Part of the `account` section. Removes a user from the authenticated user's friends list.
+Removes a user from the authenticated user's friends list.
 
 **Parameters:**
 
-- `params`: object
-  - An object containing the user to remove.
-  - `username`: string - The username of the user to remove from the friends list.
+- `username`: string - The username of the user to remove from the friends list.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the friend has been successfully removed.
+- `Promise<void>`: A promise that resolves when the user has been successfully removed.
 
 **Usage Example:**
 
 ```typescript
-// Example: Remove a friend
-const usernameToRemove = 'some_username';
-await redditSdk.api.account.removeFriend({ username: usernameToRemove });
-console.log(`${usernameToRemove} has been removed from your friends list.`);
+await reddit.account.removeFriend({ username: 'some_username' });
+```
+
+**Code Example:**
+
+```typescript
+async function unfriendUser(username) {
+  try {
+    await reddit.account.removeFriend({ username: username });
+    console.log(`Successfully removed ${username} from friends.`);
+  } catch (error) {
+    console.error(`Failed to remove friend:`, error);
+  }
+}
+
+unfriendUser('some_username_here');
 ``` 

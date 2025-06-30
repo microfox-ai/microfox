@@ -1,27 +1,32 @@
 ## Function: `readAllMessages`
 
-Part of the `privateMessages` section. Mark all private messages as read.
+Marks all private messages in the user's inbox as read.
 
 **Parameters:**
 
-- `filter_types` (string, optional): A comma-separated list of items to filter by.
+- `filter_types`: "inbox" | "unread" | "mod" (optional) - The types of messages to mark as read. If not provided, it will mark all types.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when all messages have been marked as read. The API returns a `202 Accepted` status code, and the SDK returns an empty string `''` on success.
 
-**Usage Examples:**
-
-```typescript
-// 1. Mark all unread messages as read
-await reddit.api.privateMessages.readAllMessages({});
-console.log('All messages have been marked as read.');
-```
+**Usage Example:**
 
 ```typescript
-// 2. Mark only certain types of notifications as read
-// The `filter_types` parameter is optional and its values are not strictly
-// defined in the public API, but you could potentially filter.
-await reddit.api.privateMessages.readAllMessages({ filter_types: 'messages' });
-console.log('All messages of the specified types have been marked as read.');
+await reddit.privateMessages.readAllMessages({ filter_types: 'inbox' });
 ```
+
+**Code Example:**
+
+```typescript
+async function markAllAsRead() {
+  try {
+    await reddit.privateMessages.readAllMessages();
+    console.log("Successfully marked all messages as read.");
+  } catch (error) {
+    console.error("Failed to mark all messages as read:", error);
+  }
+}
+
+markAllAsRead();
+``` 

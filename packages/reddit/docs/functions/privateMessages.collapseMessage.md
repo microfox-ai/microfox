@@ -1,28 +1,37 @@
 ## Function: `collapseMessage`
 
-Part of the `privateMessages` section. Collapse a message.
+Collapses a private message, removing it from the main inbox view.
 
 **Parameters:**
 
-- `id` (string): A comma-separated list of thing fullnames.
+- `id`: string | string[] - A comma-separated list or an array of fullnames for the messages to collapse.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when the message(s) have been collapsed.
 
-**Usage Examples:**
-
-```typescript
-// 1. Collapse a single private message
-// The `id` is the fullname of the message.
-await reddit.api.privateMessages.collapseMessage({ id: 't4_1cehp4a' });
-console.log('Message collapsed successfully.');
-```
+**Usage Example:**
 
 ```typescript
-// 2. Collapse multiple private messages
-// Provide a comma-separated string of message fullnames.
-const messageIds = 't4_1cehp4a,t4_1cehp4b,t4_1cehp4c';
-await reddit.api.privateMessages.collapseMessage({ id: messageIds });
-console.log('Multiple messages collapsed successfully.');
+// Collapse a single message
+await reddit.privateMessages.collapseMessage({ id: 't4_1c2c3c' });
+
+// Collapse multiple messages
+await reddit.privateMessages.collapseMessage({ id: ['t4_1c2c3c', 't4_1d4d5d'] });
 ```
+
+**Code Example:**
+
+```typescript
+async function collapseMessages(messageIds) {
+  try {
+    await reddit.privateMessages.collapseMessage({ id: messageIds });
+    console.log(`Successfully collapsed messages: ${messageIds.join(', ')}`);
+  } catch (error) {
+    console.error('Failed to collapse messages:', error);
+  }
+}
+
+// Example usage:
+collapseMessages(['t4_1c2c3c', 't4_1d4d5d']);
+``` 

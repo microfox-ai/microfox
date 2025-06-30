@@ -1,21 +1,20 @@
-## Function: `search`
+## Function: `getSortedFromSubreddit`
 
-Performs a search across all of Reddit.
+Fetches posts from a specific subreddit, sorted by a specified method (e.g., "top", "controversial").
 
 **Parameters:**
 
-- `q`: string - The search query.
-- `sort`: "relevance" | "hot" | "top" | "new" | "comments" (optional, default: "relevance") - The sorting method for the results.
-- `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the search, used with sorts like "top".
+- `subreddit`: string - The name of the subreddit.
+- `sort`: "top" | "controversial" - The sorting method.
+- `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the sort, required for "top" and "controversial".
 - `after`: string (optional) - The fullname of an item to list after for pagination.
 - `before`: string (optional) - The fullname of an item to list before for pagination.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
-- `show`: "all" | undefined (optional) - If "all", include results that would otherwise be hidden by user preferences.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts matching the search query.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
 
 **ThingListing<Post> Object Details:**
 
@@ -259,29 +258,32 @@ Performs a search across all of Reddit.
 **Usage Example:**
 
 ```typescript
-// Search all of Reddit for "gemini" and sort by new
-const searchResults = await reddit.listings.search({
-  q: 'gemini',
-  sort: 'new',
-});
+// Get the top posts of all time from r/AskReddit
+const topPosts = await reddit.listings.getSortedFromSubreddit({ subreddit: 'AskReddit', sort: 'top', t: 'all', limit: 10 });
 
-console.log(`Found ${searchResults.data.children.length} results.`);
+// Get the most controversial posts of the last week from r/unpopularopinion
+const controversialPosts = await reddit.listings.getSortedFromSubreddit({ subreddit: 'unpopularopinion', sort: 'controversial', t: 'week', limit: 5 });
 ```
 
 **Code Example:**
 
 ```typescript
-async function searchAllReddit(query, sortBy) {
+async function fetchSortedFromSub(subredditName, sortMethod, timeFrame) {
   try {
-    const results = await reddit.listings.search({ q: query, sort: sortBy });
-    console.log(`--- Search Results for "${query}" (sorted by ${sortBy}) ---`);
-    results.data.children.forEach(post => {
-      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+    const listing = await reddit.listings.getSortedFromSubreddit({
+      subreddit: subredditName,
+      sort: sortMethod,
+      t: timeFrame,
+      limit: 3
+    });
+    console.log(`--- Top 3 ${sortMethod} posts in r/${subredditName} for time frame "${timeFrame}" ---`);
+    listing.data.children.forEach(post => {
+      console.log(`- [${post.data.score}] ${post.data.title}`);
     });
   } catch (error) {
-    console.error("Failed to perform search:", error);
+    console.error(`Failed to fetch ${sortMethod} posts from r/${subredditName}:`, error);
   }
 }
 
-searchAllReddit('reactjs', 'top');
+fetchSortedFromSub('photography', 'top', 'year');
 ```  
