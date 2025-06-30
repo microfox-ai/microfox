@@ -1,0 +1,33 @@
+{
+  "name": "@microfox/puppeteer-suno",
+  "title": "Puppeteer Suno",
+  "description": "A Microfox SDK for Puppeteer Suno.",
+  "platformType": "tool",
+  "path": "packages/puppeteer-suno",
+  "dependencies": ["zod"],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/@microfox/puppeteer-suno",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/puppeteer-suno.svg",
+  "constructors": [
+    {
+      "name": "sunoAuthenticated",
+      "description": "Create a new authenticated Suno client",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "SUNO_EMAIL",
+          "displayName": "Suno Email",
+          "description": "The email for the Suno account."
+        },
+        {
+          "key": "SUNO_PASSWORD",
+          "displayName": "Suno Password",
+          "description": "The password for the Suno account."
+        }
+      ]
+    }
+  ],
+  "extraInfo": [],
+  "authType": "apikey"
+}
