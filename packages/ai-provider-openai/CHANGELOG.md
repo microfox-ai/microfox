@@ -1,5 +1,11 @@
 # @microfox/ai-provider-openai
 
+## 1.2.1
+
+### Patch Changes
+
+- 909e5eb: Changes from PR #542: suno
+
 ## 1.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/puppeteer-suno",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Microfox SDK for Puppeteer Suno.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
