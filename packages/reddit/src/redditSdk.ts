@@ -4,6 +4,18 @@ import { redditSDKConfigSchema } from './schemas';
 
 import { Endpoints } from './routes';
 
+export class RedditApiError extends Error {
+  public statusCode: number;
+  public body: any;
+
+  constructor(message: string, statusCode: number, body: any) {
+    super(message);
+    this.name = 'RedditApiError';
+    this.statusCode = statusCode;
+    this.body = body;
+  }
+}
+
 type EndpointMethods = {
   [key in keyof typeof Endpoints]: {
     [key2 in keyof (typeof Endpoints)[key]]: (params?: any) => Promise<any>;
@@ -50,21 +62,42 @@ export class RedditSDK {
     endpoint: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
     body?: unknown,
+    contentType: 'application/json' | 'application/x-www-form-urlencoded' = 'application/json',
   ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method,
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    let response: Response;
+    let requestBody: BodyInit | undefined;
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${this.accessToken}`,
+    };
+
+    if (body) {
+      if (contentType === 'application/json') {
+        requestBody = JSON.stringify(body);
+        headers['Content-Type'] = 'application/json';
+      } else if (contentType === 'application/x-www-form-urlencoded') {
+        requestBody = new URLSearchParams(body as Record<string, string>).toString();
+        headers['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+    }
+
+    try {
+      response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method,
+        headers,
+        body: requestBody,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Network request failed: ${error.message}`);
+      }
+      throw new Error('An unknown network error occurred during the request.');
+    }
 
     if (response.status === 401 && !this.isRefreshing) {
       try {
         await this.refreshAccessToken();
         // Retry the original request with the new token
-        return this.request(endpoint, method, body);
+        return this.request(endpoint, method, body, contentType);
       } catch (refreshError) {
         throw new Error(
           `Failed to refresh access token: ${refreshError instanceof Error ? refreshError.message : 'Unknown error'}`,
@@ -73,9 +106,31 @@ export class RedditSDK {
     }
 
     if (!response.ok) {
-      throw new Error(
-        `Reddit API error: ${response.status} ${response.statusText}`,
-      );
+      let errorBody: any = null;
+      let errorMessage = `Reddit API error: ${response.status} ${response.statusText}`;
+
+      try {
+        const text = await response.text();
+        try {
+          errorBody = JSON.parse(text);
+          const { reason, explanation, message } = errorBody;
+          if (reason) errorMessage += ` - Reason: ${reason}`;
+          if (explanation) errorMessage += ` - Explanation: ${explanation}`;
+          if (message) errorMessage += ` - Message: ${message}`;
+        } catch (e) {
+          // Body is not JSON, use the raw text if available
+          errorBody = text;
+        }
+      } catch (e) {
+        // Could not read body, stick with the original message
+      }
+
+      throw new RedditApiError(errorMessage, response.status, errorBody);
+    }
+
+    // Handle successful responses with no content
+    if (response.status === 202 || response.status === 204) {
+      return '' as unknown as T;
     }
 
     if (response.headers.get('content-type')?.includes('application/json')) {
@@ -158,7 +213,7 @@ export class RedditSDK {
                   const body =
                     Object.keys(bodyParams).length > 0 ? bodyParams : undefined;
 
-                  const result = await this.request(finalUrl, method, body);
+                  const result = await this.request(finalUrl, method, body, endpointInfo.contentType);
 
                   // If the endpoint has a response schema, parse the result using the schema
                   // if (endpointInfo.responseSchema) {
