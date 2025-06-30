@@ -114,8 +114,10 @@ export class RedditSDK {
                     }
                   }
 
-                  // Remove any remaining optional path segments
-                  url = url.replace(/{\/?[^}]+}/g, '');
+                  // Remove optional path segments that still contain placeholders
+                  url = url.replace(/{\/[^}]*{[^}]+}[^}]*}/g, '');
+                  // Unwrap the filled optional path segments
+                  url = url.replace(/{(\/[^}]+)}/g, '$1');
 
                   let method = endpointInfo.method;
                   if (Array.isArray(method)) {

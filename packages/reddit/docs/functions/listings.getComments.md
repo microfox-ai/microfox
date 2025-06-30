@@ -21,7 +21,22 @@ Part of the `listings` section. Get the comments for a post.
 
 **Return Value:**
 
-- `Promise<[Listing<Post>, Listing<Comment>]>`: A promise that resolves to a tuple containing a listing of the post and a listing of the comments.
+```typescript
+{
+  "kind": "Listing",
+  "data": {
+    "after": string | null,
+    "dist": number,
+    "modhash": string | null,
+    "geo_filter": string,
+    "children": {
+      "kind": "t5",
+      "data": Post
+    }[],
+    "before": string | null
+  }
+}
+```
 
 **Comment Type:**
 
