@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <rect x="2" y="3" width="20" height="18" rx="2" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  <circle cx="4.5" cy="5.5" r="0.5" fill="#ff5f56"/>
+  <circle cx="6.5" cy="5.5" r="0.5" fill="#ffbd2e"/>
+  <circle cx="8.5" cy="5.5" r="0.5" fill="#27ca3f"/>
+  <text x="4" y="11" fill="#00ff00" font-family="monospace" font-size="3">$</text>
+  <rect x="6" y="9.5" width="2" height="0.5" fill="#fff"/>
+  <text x="4" y="15" fill="#0099ff" font-family="monospace" font-size="2.5">init</text>
+  <text x="4" y="18" fill="#888" font-family="monospace" font-size="2">CLI</text>
+</svg> 
