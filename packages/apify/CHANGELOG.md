@@ -1,5 +1,11 @@
 # @microfox/apify
 
+## 1.1.2
+
+### Patch Changes
+
+- 86fb80e: Triggered by issue #547: release @microfox/apify patch
+
 ## 1.1.0
 
 ### Minor Changes
