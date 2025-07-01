@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import readlineSync from 'readline-sync';
 import { PackageInfo } from '../types';
 import { getWorkingDirectory } from '../utils/getProjectRoot';
 import { checkPackageNameAndPrompt } from '../utils/npmChecker';
@@ -219,17 +220,22 @@ async function createSourceFiles(srcDir: string, packageName: string): Promise<v
     .join('') + 'Sdk';
 
   // Main index.ts
-  const indexContent = `export { ${className} } from './${simpleName}Sdk';
+  const indexContent = `// Main exports for ${simpleName}
+export { ${className} } from './${simpleName}Sdk';
 export * from './types';
 export * from './schemas';
+
+// Example usage:
+// import { ${className} } from '${packageName}';
+// const sdk = new ${className}({ apiKey: 'your-key' });
 `;
 
   // Main SDK file
-  const sdkContent = `import { ${className}Config, ${className}Response, ApiOptions } from './types';
+  const sdkContent = `import { ${className}Config, ${className}Response } from './types';
 import { ${className}ConfigSchema } from './schemas';
 
 /**
- * ${className} SDK - A comprehensive TypeScript SDK
+ * ${className} - A TypeScript SDK template
  * 
  * @example
  * \`\`\`typescript
@@ -237,234 +243,75 @@ import { ${className}ConfigSchema } from './schemas';
  * 
  * const sdk = new \${className}({
  *   apiKey: 'your-api-key',
- *   baseUrl: 'https://api.example.com',
- *   timeout: 5000
+ *   baseUrl: 'https://api.example.com'
  * });
  * 
- * // Get user information
- * const user = await sdk.getUser('user123');
- * 
- * // Create a new resource
- * const result = await sdk.createResource({
- *   name: 'My Resource',
- *   description: 'A sample resource'
- * });
+ * const result = await sdk.hello('World');
+ * console.log(result.data);
  * \`\`\`
  */
 export class ${className} {
   private config: ${className}Config;
-  private baseUrl: string;
 
   /**
-   * Creates a new ${className} instance
+   * Create a new ${className} instance
    * 
-   * @param config - Configuration options for the SDK
-   * @throws {Error} If the configuration is invalid
+   * @param config - Configuration for the SDK
    */
   constructor(config: ${className}Config) {
-    const validatedConfig = ${className}ConfigSchema.parse(config);
-    this.config = validatedConfig;
-    this.baseUrl = config.baseUrl || 'https://api.example.com';
+    // Validate configuration using Zod schema
+    this.config = ${className}ConfigSchema.parse(config);
   }
 
   /**
-   * Get the current SDK configuration
+   * Get current configuration
    * 
-   * @returns A copy of the current configuration
+   * @returns Copy of the current config
    */
   getConfig(): ${className}Config {
     return { ...this.config };
   }
 
   /**
-   * Make a generic API request
-   * 
-   * @param endpoint - The API endpoint to call
-   * @param options - Request options
-   * @returns Promise with the API response
-   * 
-   * @example
-   * \`\`\`typescript
-   * const response = await sdk.request('/users/123', {
-   *   method: 'GET',
-   *   headers: { 'X-Custom-Header': 'value' }
-   * });
-   * \`\`\`
-   */
-  async request<T = any>(
-    endpoint: string, 
-    options: ApiOptions = {}
-  ): Promise<${className}Response<T>> {
-    const { method = 'GET', headers = {}, body, timeout = this.config.timeout } = options;
-    
-    const url = \`\${this.baseUrl}\${endpoint}\`;
-    const controller = new AbortController();
-    const timeoutId = timeout ? setTimeout(() => controller.abort(), timeout) : null;
-
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': \`Bearer \${this.config.apiKey}\`,
-          ...headers,
-        },
-        body: body ? JSON.stringify(body) : undefined,
-        signal: controller.signal,
-      });
-
-      if (timeoutId) clearTimeout(timeoutId);
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(\`API Error: \${response.status} - \${data.message || 'Unknown error'}\`);
-      }
-
-      return {
-        data,
-        success: true,
-        status: response.status,
-        message: 'Request successful'
-      };
-    } catch (error) {
-      if (timeoutId) clearTimeout(timeoutId);
-      
-      return {
-        data: null,
-        success: false,
-        status: 0,
-        message: error instanceof Error ? error.message : 'Unknown error',
-        error: error instanceof Error ? error : new Error('Unknown error')
-      };
-    }
-  }
-
-  /**
-   * Get user information by ID
-   * 
-   * @param userId - The user ID to retrieve
-   * @returns Promise with user data
-   * 
-   * @example
-   * \`\`\`typescript
-   * const user = await sdk.getUser('user123');
-   * if (user.success) {
-   *   console.log('User name:', user.data.name);
-   * }
-   * \`\`\`
-   */
-  async getUser(userId: string): Promise<${className}Response<any>> {
-    return this.request(\`/users/\${userId}\`);
-  }
-
-  /**
-   * Create a new resource
-   * 
-   * @param data - The resource data to create
-   * @returns Promise with creation result
-   * 
-   * @example
-   * \`\`\`typescript
-   * const result = await sdk.createResource({
-   *   name: 'My Resource',
-   *   description: 'A sample resource'
-   * });
-   * \`\`\`
-   */
-  async createResource(data: Record<string, any>): Promise<${className}Response<any>> {
-    return this.request('/resources', {
-      method: 'POST',
-      body: data
-    });
-  }
-
-  /**
-   * Update an existing resource
-   * 
-   * @param resourceId - The resource ID to update
-   * @param data - The updated resource data
-   * @returns Promise with update result
-   */
-  async updateResource(
-    resourceId: string, 
-    data: Record<string, any>
-  ): Promise<${className}Response<any>> {
-    return this.request(\`/resources/\${resourceId}\`, {
-      method: 'PUT',
-      body: data
-    });
-  }
-
-  /**
-   * Delete a resource
-   * 
-   * @param resourceId - The resource ID to delete
-   * @returns Promise with deletion result
-   */
-  async deleteResource(resourceId: string): Promise<${className}Response<any>> {
-    return this.request(\`/resources/\${resourceId}\`, {
-      method: 'DELETE'
-    });
-  }
-
-  /**
-   * List resources with optional filtering
-   * 
-   * @param filters - Optional filters for the resource list
-   * @returns Promise with list of resources
-   * 
-   * @example
-   * \`\`\`typescript
-   * const resources = await sdk.listResources({
-   *   limit: 10,
-   *   offset: 0,
-   *   search: 'example'
-   * });
-   * \`\`\`
-   */
-  async listResources(filters: Record<string, any> = {}): Promise<${className}Response<any[]>> {
-    const query = new URLSearchParams(filters).toString();
-    const endpoint = query ? \`/resources?\${query}\` : '/resources';
-    return this.request(endpoint);
-  }
-
-  /**
-   * Hello world example method
+   * Example hello method - replace with your own methods
    * 
    * @param name - Name to greet
-   * @returns Promise with greeting message
-   * 
-   * @example
-   * \`\`\`typescript
-   * const greeting = await sdk.hello('World');
-   * console.log(greeting.data); // "Hello, World! This is my-package SDK."
-   * \`\`\`
+   * @returns Promise with greeting response
    */
   async hello(name: string): Promise<${className}Response<string>> {
     return {
-      data: \`Hello, \${name}! This is \${this.config.name || '${simpleName}'} SDK.\`,
+      data: \`Hello, \${name}! Welcome to \${this.config.name || '${simpleName}'} SDK.\`,
       success: true,
       status: 200,
-      message: 'Greeting generated successfully'
+      message: 'Success'
     };
   }
+
+  // TODO: Add your SDK methods here
+  // Example:
+  // async getData(id: string): Promise<${className}Response<any>> {
+  //   // Your implementation
+  // }
+  
+  // async createItem(data: any): Promise<${className}Response<any>> {
+  //   // Your implementation  
+  // }
 }
 
 
 `;
 
   // Types index.ts
-  const typesIndexContent = `/**
+  const typesIndexContent = `// Type definitions for ${simpleName} SDK
+
+/**
  * Configuration options for the ${className}
  */
 export interface ${className}Config {
   /** API key for authentication */
   apiKey: string;
-  /** Base URL for the API (optional, defaults to https://api.example.com) */
+  /** Base URL for the API (optional) */
   baseUrl?: string;
-  /** Request timeout in milliseconds (optional, defaults to 5000) */
-  timeout?: number;
   /** SDK name identifier (optional) */
   name?: string;
   /** API version to use (optional) */
@@ -487,59 +334,28 @@ export interface ${className}Response<T = any> {
   error?: Error;
 }
 
-/**
- * Options for API requests
- */
-export interface ApiOptions {
-  /** HTTP method (default: GET) */
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  /** Additional headers to include */
-  headers?: Record<string, string>;
-  /** Request body data */
-  body?: any;
-  /** Request timeout in milliseconds */
-  timeout?: number;
-}
+// TODO: Define your own types here
+// Example:
+// export interface User {
+//   id: string;
+//   name: string;
+//   email: string;
+// }
 
-/**
- * User data structure
- */
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * Resource data structure
- */
-export interface Resource {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  ownerId: string;
-}
-
-/**
- * List response with pagination
- */
-export interface ListResponse<T> {
-  items: T[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-
-// Add your other types here
+// export interface ApiResponse<T> {
+//   data: T;
+//   pagination?: {
+//     total: number;
+//     page: number;
+//     limit: number;
+//   };
+// }
 `;
 
   // Schemas index.ts
   const schemasIndexContent = `import { z } from 'zod';
+
+// Zod schemas for ${simpleName} SDK validation
 
 /**
  * Schema for ${className} configuration validation
@@ -547,7 +363,6 @@ export interface ListResponse<T> {
 export const ${className}ConfigSchema = z.object({
   apiKey: z.string().min(1, 'API key is required'),
   baseUrl: z.string().url().optional(),
-  timeout: z.number().positive().optional(),
   name: z.string().optional(),
   version: z.string().optional(),
 });
@@ -563,51 +378,18 @@ export const ${className}ResponseSchema = z.object({
   error: z.instanceof(Error).optional(),
 });
 
-/**
- * Schema for API request options
- */
-export const ApiOptionsSchema = z.object({
-  method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).optional(),
-  headers: z.record(z.string()).optional(),
-  body: z.any().optional(),
-  timeout: z.number().positive().optional(),
-});
+// TODO: Add your validation schemas here
+// Example:
+// export const UserSchema = z.object({
+//   id: z.string(),
+//   name: z.string().min(1, 'Name is required'),
+//   email: z.string().email('Invalid email format')
+// });
 
-/**
- * Schema for User data validation
- */
-export const UserSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string().email(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-});
-
-/**
- * Schema for Resource data validation
- */
-export const ResourceSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, 'Resource name is required'),
-  description: z.string().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  ownerId: z.string(),
-});
-
-/**
- * Schema for list response validation
- */
-export const ListResponseSchema = <T>(itemSchema: z.ZodSchema<T>) => z.object({
-  items: z.array(itemSchema),
-  total: z.number().nonnegative(),
-  limit: z.number().positive(),
-  offset: z.number().nonnegative(),
-  hasMore: z.boolean(),
-});
-
-// Add your other Zod schemas here
+// export const CreateUserSchema = z.object({
+//   name: z.string().min(1, 'Name is required'),
+//   email: z.string().email('Invalid email format')
+// });
 `;
 
   // Test file
@@ -622,7 +404,6 @@ describe('${className}', () => {
     config = {
       apiKey: 'test-api-key',
       baseUrl: 'https://api.test.com',
-      timeout: 5000,
       name: '${simpleName}',
       version: '1.0.0',
     };
@@ -634,99 +415,32 @@ describe('${className}', () => {
       expect(sdk).toBeInstanceOf(${className});
     });
 
-
-
     it('should throw error with invalid config', () => {
       const invalidConfig = { ...config, apiKey: '' };
       expect(() => new ${className}(invalidConfig)).toThrow();
     });
-
-    it('should use default baseUrl when not provided', () => {
-      const configWithoutUrl = { ...config };
-      delete configWithoutUrl.baseUrl;
-      const sdk = new ${className}(configWithoutUrl);
-      expect(sdk).toBeInstanceOf(${className});
-    });
   });
 
-      describe('Configuration', () => {
-    it('should return config', () => {
-      const sdk = new ${className}(config);
-      const returnedConfig = sdk.getConfig();
-      expect(returnedConfig).toEqual(config);
-      expect(returnedConfig).not.toBe(config); // Should be a copy
-    });
-  });
-
-      describe('Hello Method', () => {
+  describe('Hello Method', () => {
     it('should return a successful greeting response', async () => {
       const sdk = new ${className}(config);
       const result = await sdk.hello('World');
       
       expect(result.success).toBe(true);
       expect(result.status).toBe(200);
-      expect(result.data).toBe('Hello, World! This is ${simpleName} SDK.');
-      expect(result.message).toBe('Greeting generated successfully');
-    });
-
-    it('should use config name in greeting', async () => {
-      const sdk = new ${className}(config);
-      const result = await sdk.hello('Test');
-      expect(result.data).toContain(config.name);
-    });
-
-    it('should fallback to package name when config.name is not provided', async () => {
-      const configWithoutName = { ...config };
-      delete configWithoutName.name;
-      const sdk = new ${className}(configWithoutName);
-      const result = await sdk.hello('Test');
-      expect(result.data).toContain('${simpleName}');
+      expect(result.data).toContain('Hello, World!');
+      expect(result.message).toBe('Success');
     });
   });
 
-  describe('API Methods', () => {
-    let sdk: ${className};
-
-    beforeEach(() => {
-      sdk = new ${className}(config);
-    });
-
-    // Note: These tests would require mocking fetch in a real implementation
-    it('should have getUser method', () => {
-      expect(typeof sdk.getUser).toBe('function');
-    });
-
-    it('should have createResource method', () => {
-      expect(typeof sdk.createResource).toBe('function');
-    });
-
-    it('should have updateResource method', () => {
-      expect(typeof sdk.updateResource).toBe('function');
-    });
-
-    it('should have deleteResource method', () => {
-      expect(typeof sdk.deleteResource).toBe('function');
-    });
-
-    it('should have listResources method', () => {
-      expect(typeof sdk.listResources).toBe('function');
-    });
-
-    it('should have request method', () => {
-      expect(typeof sdk.request).toBe('function');
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle missing required fields', () => {
-      expect(() => new ${className}({} as ${className}Config)).toThrow();
-    });
-
-    it('should validate API key requirement', () => {
-      const invalidConfig = { ...config, apiKey: '' };
-      expect(() => new ${className}(invalidConfig)).toThrow('API key is required');
-    });
-  });
+  // TODO: Add your own tests here
+  // Example:
+  // describe('Your API Method', () => {
+  //   it('should do something', async () => {
+  //     const sdk = new ${className}(config);
+  //     // Your test implementation
+  //   });
+  // });
 });
 `;
 
@@ -752,9 +466,18 @@ describe('${className}', () => {
   }
 }
 
-export async function initCommand(packageName: string): Promise<void> {
+export async function kickstartCommand(): Promise<void> {
+  console.log(chalk.cyan('🚀 Let\'s kickstart your new TypeScript package!\n'));
+  
+  // Ask for package name interactively
+  const packageName = readlineSync.question(chalk.yellow('📦 Enter package name: '));
+  
+  if (!packageName.trim()) {
+    throw new Error('Package name cannot be empty');
+  }
+  
   // Check npm availability and get final package name
-  const finalPackageName = await checkPackageNameAndPrompt(packageName);
+  const finalPackageName = await checkPackageNameAndPrompt(packageName.trim());
   
   const simpleName = finalPackageName.includes('/') ? finalPackageName.split('/')[1] : finalPackageName;
   const titleName = simpleName
@@ -801,6 +524,7 @@ export async function initCommand(packageName: string): Promise<void> {
   // Create README.md
   const readmeContent = `# ${titleName}
 
+<!-- Add your project description here -->
 ${description}
 
 ## Installation
@@ -812,181 +536,54 @@ npm install ${finalPackageName}
 ## Quick Start
 
 \`\`\`typescript
-import { \${className} } from '${packageName}';
+import { \${className} } from '${finalPackageName}';
 
 // Initialize the SDK
 const sdk = new \${className}({
   apiKey: 'your-api-key',
-  baseUrl: 'https://api.example.com', // optional
-  timeout: 5000, // optional, default 5000ms
+  // Add other config options
 });
 
-// Example: Get user information
-const user = await sdk.getUser('user123');
-if (user.success) {
-  console.log('User:', user.data);
-} else {
-  console.error('Error:', user.message);
-}
-
-// Example: Create a resource
-const newResource = await sdk.createResource({
-  name: 'My Resource',
-  description: 'A sample resource'
-});
+// Example usage
+const result = await sdk.hello('World');
+console.log(result.data);
 \`\`\`
 
 ## Configuration
 
-The SDK requires a configuration object with the following properties:
-
-### Required
-
-- \`apiKey\` (string): Your API key for authentication
-
-### Optional
-
-- \`baseUrl\` (string): Base URL for the API (default: 'https://api.example.com')
-- \`timeout\` (number): Request timeout in milliseconds (default: 5000)
-- \`name\` (string): SDK name identifier
-- \`version\` (string): API version to use
-
-## API Reference
-
-### Core Methods
-
-#### \`request<T>(endpoint: string, options?: ApiOptions): Promise<\${className}Response<T>>\`
-
-Make a generic API request to any endpoint.
-
 \`\`\`typescript
-const response = await sdk.request('/custom-endpoint', {
-  method: 'POST',
-  body: { key: 'value' },
-  headers: { 'X-Custom-Header': 'value' }
-});
-\`\`\`
-
-### User Management
-
-#### \`getUser(userId: string): Promise<\${className}Response<User>>\`
-
-Retrieve user information by ID.
-
-\`\`\`typescript
-const user = await sdk.getUser('user123');
-\`\`\`
-
-### Resource Management
-
-#### \`createResource(data: Record<string, any>): Promise<\${className}Response<Resource>>\`
-
-Create a new resource.
-
-\`\`\`typescript
-const resource = await sdk.createResource({
-  name: 'My Resource',
-  description: 'Resource description'
-});
-\`\`\`
-
-#### \`updateResource(resourceId: string, data: Record<string, any>): Promise<\${className}Response<Resource>>\`
-
-Update an existing resource.
-
-\`\`\`typescript
-const updated = await sdk.updateResource('resource123', {
-  name: 'Updated Name'
-});
-\`\`\`
-
-#### \`deleteResource(resourceId: string): Promise<\${className}Response<any>>\`
-
-Delete a resource by ID.
-
-\`\`\`typescript
-const result = await sdk.deleteResource('resource123');
-\`\`\`
-
-#### \`listResources(filters?: Record<string, any>): Promise<\${className}Response<Resource[]>>\`
-
-List resources with optional filtering.
-
-\`\`\`typescript
-const resources = await sdk.listResources({
-  limit: 10,
-  offset: 0,
-  search: 'example'
-});
-\`\`\`
-
-### Utility Methods
-
-#### \`hello(name: string): Promise<\${className}Response<string>>\`
-
-Example greeting method for testing.
-
-\`\`\`typescript
-const greeting = await sdk.hello('World');
-console.log(greeting.data); // "Hello, World! This is ${simpleName} SDK."
-\`\`\`
-
-#### \`getConfig(): \${className}Config\`
-
-Get the current SDK configuration.
-
-\`\`\`typescript
-const config = sdk.getConfig();
-\`\`\`
-
-## Response Format
-
-All SDK methods return a standardized response format:
-
-\`\`\`typescript
-interface \${className}Response<T> {
-  data: T;           // The actual response data
-  success: boolean;  // Whether the request was successful
-  status: number;    // HTTP status code
-  message: string;   // Response message
-  error?: Error;     // Error object (only present on failure)
+interface \${className}Config {
+  apiKey: string;        // Required: Your API key
+  baseUrl?: string;      // Optional: Custom base URL
+  name?: string;         // Optional: SDK instance name
+  version?: string;      // Optional: API version
 }
 \`\`\`
 
-## Error Handling
+## Methods
 
-The SDK provides comprehensive error handling:
+### hello(name: string)
 
-\`\`\`typescript
-const result = await sdk.getUser('invalid-id');
-
-if (!result.success) {
-  console.error('Request failed:', result.message);
-  if (result.error) {
-    console.error('Error details:', result.error);
-  }
-}
-\`\`\`
-
-## TypeScript Support
-
-This SDK is written in TypeScript and provides full type definitions:
+Example method - replace with your own API methods.
 
 \`\`\`typescript
-import type { \${className}Config, \${className}Response, User, Resource } from '${packageName}';
+const result = await sdk.hello('World');
+// Returns: { data: "Hello, World!", success: true, status: 200, message: "Success" }
 \`\`\`
 
-## Alternative Import
+<!-- 
+## TODO: Add your API documentation here
 
-You can import the SDK class directly:
-
+### getData(id: string)
 \`\`\`typescript
-import { \${className} } from '${packageName}';
-
-const sdk = new \${className}({
-  apiKey: 'your-api-key'
-});
+const data = await sdk.getData('123');
 \`\`\`
+
+### createItem(item: object)
+\`\`\`typescript
+const result = await sdk.createItem({ name: 'Example' });
+\`\`\`
+-->
 
 ## Development
 
@@ -994,40 +591,19 @@ const sdk = new \${className}({
 # Install dependencies
 npm install
 
-# Build the package
+# Build the project
 npm run build
 
 # Run tests
 npm test
 
-# Run tests in watch mode
-npm run test:watch
-
 # Lint code
 npm run lint
-
-# Check code formatting
-npm run prettier-check
-
-# Build and test together
-npm run build && npm test
 \`\`\`
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (\`git checkout -b feature/amazing-feature\`)
-3. Commit your changes (\`git commit -m 'Add some amazing feature'\`)
-4. Push to the branch (\`git push origin feature/amazing-feature\`)
-5. Open a Pull Request
 
 ## License
 
 MIT
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md) for a detailed history of changes.
 `;
 
   fs.writeFileSync(path.join(packageDir, 'README.md'), readmeContent);
@@ -1036,16 +612,31 @@ See [CHANGELOG.md](./CHANGELOG.md) for a detailed history of changes.
   // Create CHANGELOG.md
   const changelogContent = `# Changelog
 
+All notable changes to this project will be documented in this file.
+
 ## [1.0.0] - ${new Date().toISOString().split('T')[0]}
 
 ### Added
-- Initial release of ${titleName}
-- Basic SDK structure and configuration
-- Example hello method
-- TypeScript support with full type definitions
-- Comprehensive test suite
-- Modern build system with tsup
-- ESLint and Prettier configuration
+- Initial release
+- Basic SDK structure
+- TypeScript support
+
+<!-- Add your changes here using this format:
+
+## [1.1.0] - YYYY-MM-DD
+
+### Added
+- New feature
+
+### Changed
+- Updated feature
+
+### Fixed
+- Bug fix
+
+### Removed
+- Deprecated feature
+-->
 `;
 
   fs.writeFileSync(path.join(packageDir, 'CHANGELOG.md'), changelogContent);
