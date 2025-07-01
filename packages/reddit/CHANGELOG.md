@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.5.1
+
+### Patch Changes
+
+- 02d9ad3: Triggered by issue #549: release @microfox/reddit patch
+
 ## 1.5.0
 
 ### Minor Changes
