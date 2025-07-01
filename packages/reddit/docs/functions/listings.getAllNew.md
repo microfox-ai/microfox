@@ -1,18 +1,17 @@
-## Function: `getBest`
+## Function: `getAllNew`
 
-Fetches the "best" posts from the front page. The "best" algorithm is determined by Reddit.
+Fetches a list of "new" posts from the front page.
 
 **Parameters:**
 
-- `after`: string (optional) - The fullname of an item to list after for pagination.
-- `before`: string (optional) - The fullname of an item to list before for pagination.
+- `after`: string (optional) - The fullname of an item to list after.
+- `before`: string (optional) - The fullname of an item to list before.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
-- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts.
 
 **ThingListing<Post> Object Details:**
 
@@ -256,24 +255,9 @@ Fetches the "best" posts from the front page. The "best" algorithm is determined
 **Usage Example:**
 
 ```typescript
-const bestPosts = await reddit.listings.getBest({ limit: 10 });
-console.log(`Fetched ${bestPosts.data.children.length} of the best posts.`);
+// Get new posts from the front page
+const newPosts = await reddit.listings.getAllNew({ limit: 5 });
+
+// Get new posts from a specific subreddit
+const newInRSlashPics = await reddit.listings.getAllNew({ subreddit: 'pics', limit: 10 });
 ```
-
-**Code Example:**
-
-```typescript
-async function fetchBestPosts() {
-  try {
-    const listing = await reddit.listings.getBest({ limit: 5 });
-    console.log("--- Best Posts on Reddit ---");
-    listing.data.children.forEach(post => {
-      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
-    });
-  } catch (error) {
-    console.error("Failed to fetch best posts:", error);
-  }
-}
-
-fetchBestPosts();
-``` 

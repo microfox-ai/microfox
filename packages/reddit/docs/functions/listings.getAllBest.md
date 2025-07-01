@@ -1,18 +1,18 @@
-## Function: `getHot`
+## Function: `getAllBest`
 
-Fetches a list of "hot" posts. This can be from the default front page or from a specific subreddit if one is provided in the parameters.
+Fetches the "best" posts from the front page. The "best" algorithm is determined by Reddit.
 
 **Parameters:**
 
-- `g`: string (optional) - The geofilter for results.
-- `after`: string (optional) - The fullname of an item to list after.
-- `before`: string (optional) - The fullname of an item to list before.
+- `after`: string (optional) - The fullname of an item to list after for pagination.
+- `before`: string (optional) - The fullname of an item to list before for pagination.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
+- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
 
 **ThingListing<Post> Object Details:**
 
@@ -256,9 +256,24 @@ Fetches a list of "hot" posts. This can be from the default front page or from a
 **Usage Example:**
 
 ```typescript
-// Get hot posts from the front page
-const hotPosts = await reddit.listings.getHot({ limit: 5 });
+const bestPosts = await reddit.listings.getAllBest({ limit: 10 });
+console.log(`Fetched ${bestPosts.data.children.length} of the best posts.`);
+```
 
-// Get hot posts from a specific subreddit
-const hotInRSlashPics = await reddit.listings.getHot({ subreddit: 'pics', limit: 10 });
+**Code Example:**
+
+```typescript
+async function fetchBestPosts() {
+  try {
+    const listing = await reddit.listings.getAllBest({ limit: 5 });
+    console.log("--- Best Posts on Reddit ---");
+    listing.data.children.forEach(post => {
+      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+    });
+  } catch (error) {
+    console.error("Failed to fetch best posts:", error);
+  }
+}
+
+fetchBestPosts();
 ``` 

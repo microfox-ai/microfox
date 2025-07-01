@@ -666,7 +666,7 @@
     "path": "/api/vote"
   },
   {
-    "functionName": "getBest",
+    "functionName": "getAllBest",
     "priority": 1,
     "methods": [
       "GET"
@@ -711,7 +711,7 @@
     "path": "/duplicates/article"
   },
   {
-    "functionName": "getHot",
+    "functionName": "getAllHot",
     "priority": 1,
     "methods": [
       "GET"
@@ -720,7 +720,7 @@
     "path": "/hot"
   },
   {
-    "functionName": "getNew",
+    "functionName": "getAllNew",
     "priority": 1,
     "methods": [
       "GET"
@@ -729,7 +729,7 @@
     "path": "/new"
   },
   {
-    "functionName": "getRising",
+    "functionName": "getAllRising",
     "priority": 1,
     "methods": [
       "GET"
@@ -738,7 +738,7 @@
     "path": "/rising"
   },
   {
-    "functionName": "getTop",
+    "functionName": "getAllTop",
     "priority": 1,
     "methods": [
       "GET"

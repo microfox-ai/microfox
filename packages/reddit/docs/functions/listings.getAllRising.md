@@ -1,20 +1,17 @@
-## Function: `getSorted`
+## Function: `getAllRising`
 
-Fetches posts from the front page, sorted by a specified method (e.g., "top", "controversial").
+Fetches a list of "rising" posts from the front page.
 
 **Parameters:**
 
-- `sort`: "top" | "controversial" - The sorting method.
-- `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the sort, required for "top" and "controversial".
-- `after`: string (optional) - The fullname of an item to list after for pagination.
-- `before`: string (optional) - The fullname of an item to list before for pagination.
+- `after`: string (optional) - The fullname of an item to list after.
+- `before`: string (optional) - The fullname of an item to list before.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
-- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts.
 
 **ThingListing<Post> Object Details:**
 
@@ -258,27 +255,9 @@ Fetches posts from the front page, sorted by a specified method (e.g., "top", "c
 **Usage Example:**
 
 ```typescript
-// Get the top posts of all time from the front page
-const topPosts = await reddit.listings.getSorted({ sort: 'top', t: 'all', limit: 10 });
+// Get rising posts from the front page
+const risingPosts = await reddit.listings.getAllRising({ limit: 5 });
 
-// Get the most controversial posts of the last week
-const controversialPosts = await reddit.listings.getSorted({ sort: 'controversial', t: 'week', limit: 5 });
-```
-
-**Code Example:**
-
-```typescript
-async function fetchSortedPosts(sortMethod, timeFrame) {
-  try {
-    const listing = await reddit.listings.getSorted({ sort: sortMethod, t: timeFrame, limit: 3 });
-    console.log(`--- Top 3 ${sortMethod} posts for time frame "${timeFrame}" ---`);
-    listing.data.children.forEach(post => {
-      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
-    });
-  } catch (error) {
-    console.error(`Failed to fetch ${sortMethod} posts:`, error);
-  }
-}
-
-fetchSortedPosts('top', 'month');
+// Get rising posts from a specific subreddit
+const risingInRSlashPics = await reddit.listings.getAllRising({ subreddit: 'pics', limit: 10 });
 ```  

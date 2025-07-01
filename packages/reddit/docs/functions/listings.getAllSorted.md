@@ -1,17 +1,20 @@
-## Function: `getNew`
+## Function: `getAllSorted`
 
-Fetches a list of "new" posts. This can be from the default front page or from a specific subreddit if one is provided in the parameters.
+Fetches posts from the front page, sorted by a specified method (e.g., "top", "controversial").
 
 **Parameters:**
 
-- `after`: string (optional) - The fullname of an item to list after.
-- `before`: string (optional) - The fullname of an item to list before.
+- `sort`: "top" | "controversial" - The sorting method.
+- `t`: "hour" | "day" | "week" | "month" | "year" | "all" (optional) - The time frame for the sort, required for "top" and "controversial".
+- `after`: string (optional) - The fullname of an item to list after for pagination.
+- `before`: string (optional) - The fullname of an item to list before for pagination.
 - `count`: number (optional) - The number of items already seen in the listing.
 - `limit`: number (optional, default: 25) - The maximum number of items to return.
+- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
 **Return Type:**
 
-- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of posts.
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
 
 **ThingListing<Post> Object Details:**
 
@@ -255,9 +258,27 @@ Fetches a list of "new" posts. This can be from the default front page or from a
 **Usage Example:**
 
 ```typescript
-// Get new posts from the front page
-const newPosts = await reddit.listings.getNew({ limit: 5 });
+// Get the top posts of all time from the front page
+const topPosts = await reddit.listings.getAllSorted({ sort: 'top', t: 'all', limit: 10 });
 
-// Get new posts from a specific subreddit
-const newInRSlashPics = await reddit.listings.getNew({ subreddit: 'pics', limit: 10 });
+// Get the most controversial posts of the last week
+const controversialPosts = await reddit.listings.getAllSorted({ sort: 'controversial', t: 'week', limit: 5 });
 ```
+
+**Code Example:**
+
+```typescript
+async function fetchSortedPosts(sortMethod, timeFrame) {
+  try {
+    const listing = await reddit.listings.getAllSorted({ sort: sortMethod, t: timeFrame, limit: 3 });
+    console.log(`--- Top 3 ${sortMethod} posts for time frame "${timeFrame}" ---`);
+    listing.data.children.forEach(post => {
+      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+    });
+  } catch (error) {
+    console.error(`Failed to fetch ${sortMethod} posts:`, error);
+  }
+}
+
+fetchSortedPosts('top', 'month');
+```  

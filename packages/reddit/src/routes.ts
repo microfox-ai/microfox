@@ -429,7 +429,7 @@ export const Endpoints = {
     },
   },
   listings: {
-    getBest: {
+    getAllBest: {
       method: 'GET',
       url: '/best',
       bodySchema: listingsSchemas.getBestSchema,
@@ -449,7 +449,7 @@ export const Endpoints = {
       url: '/duplicates/{articleId}',
       bodySchema: listingsSchemas.getDuplicatesSchema,
     },
-    getHot: {
+    getAllHot: {
       method: 'GET',
       url: '/hot',
       bodySchema: listingsSchemas.getHotSchema,
@@ -459,7 +459,7 @@ export const Endpoints = {
       url: '/r/{subreddit}/hot',
       bodySchema: listingsSchemas.getHotSchema,
     },
-    getNew: {
+    getAllNew: {
       method: 'GET',
       url: '/new',
       bodySchema: listingsSchemas.getNewSchema,
@@ -469,7 +469,7 @@ export const Endpoints = {
       url: '/r/{subreddit}/new',
       bodySchema: listingsSchemas.getNewSchema,
     },
-    getRising: {
+    getAllRising: {
       method: 'GET',
       url: '/rising',
       bodySchema: listingsSchemas.getRisingSchema,
@@ -479,7 +479,7 @@ export const Endpoints = {
       url: '/r/{subreddit}/rising',
       bodySchema: listingsSchemas.getRisingSchema,
     },
-    getSorted: {
+    getAllSorted: {
       method: 'GET',
       url: '/{sort}',
       bodySchema: listingsSchemas.getSortedSchema,

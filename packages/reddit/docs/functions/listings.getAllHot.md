@@ -1,9 +1,10 @@
-## Function: `getRising`
+## Function: `getAllHot`
 
-Fetches a list of "rising" posts. This can be from the default front page or from a specific subreddit if one is provided in the parameters.
+Fetches a list of "hot" posts from the front page.
 
 **Parameters:**
 
+- `g`: string (optional) - The geofilter for results.
 - `after`: string (optional) - The fullname of an item to list after.
 - `before`: string (optional) - The fullname of an item to list before.
 - `count`: number (optional) - The number of items already seen in the listing.
@@ -255,9 +256,9 @@ Fetches a list of "rising" posts. This can be from the default front page or fro
 **Usage Example:**
 
 ```typescript
-// Get rising posts from the front page
-const risingPosts = await reddit.listings.getRising({ limit: 5 });
+// Get hot posts from the front page
+const hotPosts = await reddit.listings.getAllHot({ limit: 5 });
 
-// Get rising posts from a specific subreddit
-const risingInRSlashPics = await reddit.listings.getRising({ subreddit: 'pics', limit: 10 });
-```  
+// Get hot posts from a specific subreddit
+const hotInRSlashPics = await reddit.listings.getAllHot({ subreddit: 'pics', limit: 10 });
+``` 
