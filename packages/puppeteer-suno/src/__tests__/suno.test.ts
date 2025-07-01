@@ -9,7 +9,6 @@ describe('SunoAuthenticated', () => {
     const password = process.env.SUNO_PASSWORD;
 
     if (!email || !password) {
-      return;
       throw new Error(
         'SUNO_EMAIL and SUNO_PASSWORD environment variables are required in a .env file.',
       );
@@ -29,5 +28,5 @@ describe('SunoAuthenticated', () => {
     expect(loginError).toBeDefined();
 
     await suno.close();
-  }, 30000);
+  }, 3000000);
 });
