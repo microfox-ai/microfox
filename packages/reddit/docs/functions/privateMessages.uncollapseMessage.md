@@ -1,28 +1,37 @@
 ## Function: `uncollapseMessage`
 
-Part of the `privateMessages` section. Uncollapse a private message.
+Uncollapses a private message, returning it to the main inbox view.
 
 **Parameters:**
 
-- `id` (string): A comma-separated list of thing fullnames of messages to uncollapse.
+- `id`: string | string[] - A comma-separated list or an array of fullnames for the messages to uncollapse.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when the message(s) have been uncollapsed.
 
-**Usage Examples:**
-
-```typescript
-// 1. Uncollapse a single private message
-// The `id` is the fullname of the message.
-await reddit.api.privateMessages.uncollapseMessage({ id: 't4_1cehp4a' });
-console.log('Message uncollapsed successfully.');
-```
+**Usage Example:**
 
 ```typescript
-// 2. Uncollapse multiple private messages
-// Provide a comma-separated string of message fullnames.
-const messageIds = 't4_1cehp4a,t4_1cehp4b,t4_1cehp4c';
-await reddit.api.privateMessages.uncollapseMessage({ id: messageIds });
-console.log('Multiple messages uncollapsed successfully.');
+// Uncollapse a single message
+await reddit.privateMessages.uncollapseMessage({ id: 't4_1c2c3c' });
+
+// Uncollapse multiple messages
+await reddit.privateMessages.uncollapseMessage({ id: ['t4_1c2c3c', 't4_1d4d5d'] });
 ```
+
+**Code Example:**
+
+```typescript
+async function uncollapseMessages(messageIds) {
+  try {
+    await reddit.privateMessages.uncollapseMessage({ id: messageIds });
+    console.log(`Successfully uncollapsed messages: ${messageIds.join(', ')}`);
+  } catch (error) {
+    console.error('Failed to uncollapse messages:', error);
+  }
+}
+
+// Example usage:
+uncollapseMessages(['t4_1c2c3c', 't4_1d4d5d']);
+``` 

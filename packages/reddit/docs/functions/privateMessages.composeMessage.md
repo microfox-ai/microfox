@@ -1,41 +1,43 @@
 ## Function: `composeMessage`
 
-Part of the `privateMessages` section. Compose a private message.
+Sends a private message to another Reddit user.
 
 **Parameters:**
 
-- `api_type` ('json', optional): Must be 'json'.
-- `from_sr` (string, optional): Subreddit name to message from.
-- `g-recaptcha-response` (string, optional): The recaptcha response.
-- `subject` (string): The subject of the message (max 100 characters).
-- `text` (string): The message text.
-- `to` (string): The name of an existing user to send the message to.
+- `to`: string - The username of the recipient.
+- `subject`: string - The subject line of the message.
+- `text`: string - The body of the message.
+- `from_sr`: string (optional) - The subreddit from which the message is sent.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when the message has been sent successfully.
 
-**Usage Examples:**
+**Usage Example:**
 
 ```typescript
-// 1. Send a simple private message to a user
-await reddit.api.privateMessages.composeMessage({
-  to: 'someuser',
+await reddit.privateMessages.composeMessage({
+  to: 'some_username',
   subject: 'Hello!',
-  text: 'Just wanted to say hi.',
-  api_type: 'json',
+  text: 'This is a test message from the Microfox Reddit SDK.'
 });
-console.log('Message sent successfully.');
 ```
 
+**Code Example:**
+
 ```typescript
-// 2. Send a message on behalf of a subreddit you moderate
-await reddit.api.privateMessages.composeMessage({
-  to: 'someuser',
-  from_sr: 'some_subreddit_i_moderate',
-  subject: 'A message from r/some_subreddit_i_moderate',
-  text: 'This is an official message.',
-  api_type: 'json',
-});
-console.log('Message sent on behalf of the subreddit.');
-```
+async function sendMessage(recipient, subject, body) {
+  try {
+    await reddit.privateMessages.composeMessage({
+      to: recipient,
+      subject: subject,
+      text: body,
+    });
+    console.log(`Message sent successfully to ${recipient}.`);
+  } catch (error) {
+    console.error('Failed to send message:', error);
+  }
+}
+
+sendMessage('some_user_here', 'Greetings', 'Just wanted to say hi!');
+```  

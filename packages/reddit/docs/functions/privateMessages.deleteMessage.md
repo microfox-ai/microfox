@@ -1,28 +1,38 @@
 ## Function: `deleteMessage`
 
-Part of the `privateMessages` section. Delete a private message.
+Deletes a private message.
 
 **Parameters:**
 
-- `id` (string): A comma-separated list of thing fullnames of messages to delete.
+- `id`: string - The fullname of the message to delete. Note: Unlike other message management functions, this endpoint appears to only support a single ID at a time.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when the message has been deleted.
 
-**Usage Examples:**
-
-```typescript
-// 1. Delete a single private message
-// The `id` is the fullname of the message.
-await reddit.api.privateMessages.deleteMessage({ id: 't4_1cehp4a' });
-console.log('Message deleted successfully.');
-```
+**Usage Example:**
 
 ```typescript
-// 2. Delete multiple private messages
-// The `id` parameter can be a comma-separated string of message fullnames.
-const messageIds = 't4_1cehp4a,t4_1cehp4b';
-await reddit.api.privateMessages.deleteMessage({ id: messageIds });
-console.log('Messages deleted successfully.');
+await reddit.privateMessages.deleteMessage({ id: 't4_1c2d3e' });
 ```
+
+**Code Example:**
+
+```typescript
+async function deleteLatestSentMessage() {
+  try {
+    const sentListing = await reddit.privateMessages.getMessages({ where: 'sent', limit: 1 });
+    if (sentListing.data.children.length > 0) {
+      const messageId = sentListing.data.children[0].data.name;
+      await reddit.privateMessages.deleteMessage({ id: messageId });
+      console.log(`Message ${messageId} has been deleted.`);
+    } else {
+      console.log("No sent messages found to delete.");
+    }
+  } catch (error) {
+    console.error("Failed to delete message:", error);
+  }
+}
+
+deleteLatestSentMessage();
+```  

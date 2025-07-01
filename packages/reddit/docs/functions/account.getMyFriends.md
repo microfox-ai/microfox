@@ -1,43 +1,41 @@
 ## Function: `getMyFriends`
 
-Part of the `account` section. Gets the list of friends for the currently authenticated user.
+Retrieves a list of the user's friends.
 
-**Parameters:**
+**Return Type:**
 
-This function does not take any parameters.
+- `Promise<UserList>`: A promise that resolves to a UserList object containing a list of friends.
 
-**Return Value:**
+**UserList Object Details:**
 
-- `Promise<RelationshipListing>`: A promise that resolves to a list of friends.
+- `kind`: string (always 'UserList') - The type of the object.
+- `data`: object - The main data payload.
+  - `children`: `Relationship[]` - An array of friend relationships.
 
-**RelationshipListing Type:**
+**Relationship Object Details:**
 
-```typescript
-export interface RelationshipListing {
-  kind: "UserList";
-  data: {
-    children: Relationship[];
-  };
-}
-```
-
-**Relationship Type:**
-
-```typescript
-export interface Relationship {
-  name: string; // The username.
-  id: string; // The user's fullname.
-  rel_id?: string; // The relation ID (for friends).
-  date: number; // A UTC timestamp of when the relationship was created.
-}
-```
+- `name`: string - The username of the friend.
+- `id`: string - The friend's unique user ID (fullname).
+- `rel_id`: string - The relationship ID.
+- `date`: number - A UTC timestamp of when the friendship was created.
 
 **Usage Example:**
 
 ```typescript
-// Example: Get friends list
-const friends = await redditSdk.api.account.getMyFriends();
-friends.data.children.forEach(friend => {
-  console.log(friend.name);
-});
+const friendsList = await reddit.account.getMyFriends();
+console.log(friendsList);
+```
+
+**Code Example:**
+
+```typescript
+async function listFriends() {
+  const friendsData = await reddit.account.getMyFriends();
+  console.log('My Friends:');
+  friendsData.data.children.forEach(friend => {
+    console.log(`- ${friend.name} (since ${new Date(friend.date * 1000).toLocaleDateString()})`);
+  });
+}
+
+listFriends();
 ``` 

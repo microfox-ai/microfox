@@ -1,35 +1,42 @@
 ## Function: `subscribe`
 
-Part of the `subreddits` section. Subscribe to or unsubscribe from a subreddit.
+Subscribes to or unsubscribes from a subreddit.
 
 **Parameters:**
 
-- `action` (string): The action to perform: 'sub' for subscribe, 'unsub' for unsubscribe.
-- `sr_name` (string): The name of the subreddit to subscribe to.
-- `sr` (string, optional): The fullname of the subreddit.
-- `action_source` (string, optional): The source of the action, e.g., 'onboarding'.
-- `skip_initial_defaults` (boolean, optional): Skip initial defaults.
+- `action`: "sub" | "unsub" - The action to perform.
+- `sr_name`: string - The name of the subreddit to subscribe to or unsubscribe from.
 
-**Return Value:**
+**Return Type:**
 
 - `Promise<void>`: A promise that resolves when the action is complete.
 
-**Usage Examples:**
+**Usage Example:**
 
 ```typescript
-// Subscribe to the 'learnprogramming' subreddit
-await reddit.api.subreddits.subscribe({
-  action: 'sub',
-  sr_name: 'learnprogramming',
-});
-console.log('Subscribed to r/learnprogramming.');
+// Subscribe to a subreddit
+await reddit.subreddits.subscribe({ action: 'sub', sr_name: 'learnprogramming' });
+
+// Unsubscribe from a subreddit
+await reddit.subreddits.subscribe({ action: 'unsub', sr_name: 'learnprogramming' });
 ```
 
+**Code Example:**
+
 ```typescript
-// Unsubscribe from the 'reactjs' subreddit
-await reddit.api.subreddits.subscribe({
-  action: 'unsub',
-  sr_name: 'reactjs',
-});
-console.log('Unsubscribed from r/reactjs.');
-```
+async function manageSubscription(subreddit, shouldSubscribe) {
+  const action = shouldSubscribe ? 'sub' : 'unsub';
+  try {
+    await reddit.subreddits.subscribe({ action: action, sr_name: subreddit });
+    console.log(`Successfully performed '${action}' action on r/${subreddit}.`);
+  } catch (error) {
+    console.error(`Failed to ${action} to r/${subreddit}:`, error);
+  }
+}
+
+// Example: Subscribe
+manageSubscription('corgi', true);
+
+// Example: Unsubscribe
+// manageSubscription('corgi', false);
+``` 

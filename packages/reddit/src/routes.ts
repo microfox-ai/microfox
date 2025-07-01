@@ -451,28 +451,54 @@ export const Endpoints = {
     },
     getHot: {
       method: 'GET',
-      url: '{/r/{subreddit}}/hot',
+      url: '/hot',
+      bodySchema: listingsSchemas.getHotSchema,
+    },
+    getHotFromSubreddit: {
+      method: 'GET',
+      url: '/r/{subreddit}/hot',
       bodySchema: listingsSchemas.getHotSchema,
     },
     getNew: {
       method: 'GET',
-      url: '{/r/{subreddit}}/new',
+      url: '/new',
+      bodySchema: listingsSchemas.getNewSchema,
+    },
+    getNewFromSubreddit: {
+      method: 'GET',
+      url: '/r/{subreddit}/new',
       bodySchema: listingsSchemas.getNewSchema,
     },
     getRising: {
       method: 'GET',
-      url: '{/r/{subreddit}}/rising',
+      url: '/rising',
+      bodySchema: listingsSchemas.getRisingSchema,
+    },
+    getRisingFromSubreddit: {
+      method: 'GET',
+      url: '/r/{subreddit}/rising',
       bodySchema: listingsSchemas.getRisingSchema,
     },
     getSorted: {
       method: 'GET',
-      url: '{/r/{subreddit}}/{sort}',
+      url: '/{sort}',
+      bodySchema: listingsSchemas.getSortedSchema,
+    },
+    getSortedFromSubreddit: {
+      method: 'GET',
+      url: '/r/{subreddit}/{sort}',
       bodySchema: listingsSchemas.getSortedSchema,
     },
     search: {
       method: 'GET',
-      url: '{/r/{subreddit}}/search',
+      url: '/search',
       bodySchema: listingsSchemas.searchSchema,
+    },
+    searchInSubreddit: {
+      method: 'GET',
+      url: '/r/{subreddit}/search',
+      bodySchema: listingsSchemas.searchSchema,
+      params: { restrict_sr: true },
     },
   },
   liveThreads: {
@@ -594,16 +620,19 @@ export const Endpoints = {
       method: 'POST',
       url: '/api/collapse_message',
       bodySchema: privateMessagesSchemas.messageIdListSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     composeMessage: {
       method: 'POST',
       url: '/api/compose',
       bodySchema: privateMessagesSchemas.composeMessageSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     deleteMessage: {
       method: 'POST',
       url: '/api/del_msg',
       bodySchema: privateMessagesSchemas.messageIdListSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     readAllMessages: {
       method: 'POST',
@@ -614,6 +643,7 @@ export const Endpoints = {
       method: 'POST',
       url: '/api/read_message',
       bodySchema: privateMessagesSchemas.messageIdListSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     unblockSubreddit: {
       method: 'POST',
@@ -624,11 +654,13 @@ export const Endpoints = {
       method: 'POST',
       url: '/api/uncollapse_message',
       bodySchema: privateMessagesSchemas.messageIdListSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     unreadMessage: {
       method: 'POST',
       url: '/api/unread_message',
       bodySchema: privateMessagesSchemas.messageIdListSchema,
+      contentType: 'application/x-www-form-urlencoded',
     },
     getMessages: {
       method: 'GET',

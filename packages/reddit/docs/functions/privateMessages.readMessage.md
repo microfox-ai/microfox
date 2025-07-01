@@ -1,26 +1,42 @@
 ## Function: `readMessage`
 
-Part of the `privateMessages` section. Mark a private message as read.
+Marks one or more private messages as read.
 
 **Parameters:**
 
-- `id` (string): A comma-separated list of thing fullnames of messages to mark as read.
+- `id`: string - A comma-separated list of message fullnames to mark as read.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<void>`: A promise that resolves when the request is complete.
+- `Promise<void>`: A promise that resolves when the messages have been marked as read.
 
-**Usage Examples:**
-
-```typescript
-// 1. Mark a single message as read by its fullname
-await reddit.api.privateMessages.readMessage({ id: 't4_1cehp4a' });
-console.log('Message has been marked as read.');
-```
+**Usage Example:**
 
 ```typescript
-// 2. Mark multiple messages as read in one request
-const messageIds = 't4_1cehp4a,t4_1cehp4b,t4_1cehp4c';
-await reddit.api.privateMessages.readMessage({ id: messageIds });
-console.log('Specified messages have been marked as read.');
+// Mark a single message as read
+await reddit.privateMessages.readMessage({ id: 't4_1c2d3e' });
+
+// Mark multiple messages as read
+await reddit.privateMessages.readMessage({ id: 't4_1c2d3e,t4_4f5g6h' });
 ```
+
+**Code Example:**
+
+```typescript
+async function markFirstUnreadAsRead() {
+  try {
+    const unreadListing = await reddit.privateMessages.getMessages({ where: 'unread', limit: 1 });
+    if (unreadListing.data.children.length > 0) {
+      const messageId = unreadListing.data.children[0].data.name;
+      await reddit.privateMessages.readMessage({ id: messageId });
+      console.log(`Message ${messageId} has been marked as read.`);
+    } else {
+      console.log("No unread messages found.");
+    }
+  } catch (error) {
+    console.error("Failed to mark message as read:", error);
+  }
+}
+
+markFirstUnreadAsRead();
+```  

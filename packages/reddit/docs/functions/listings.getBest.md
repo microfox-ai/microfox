@@ -1,314 +1,279 @@
 ## Function: `getBest`
 
-Part of the `listings` section. Fetch the best posts.
+Fetches the "best" posts from the front page. The "best" algorithm is determined by Reddit.
 
 **Parameters:**
 
-- `limit` (number, optional): The maximum number of items to return in this slice of the listing.
-- `after` (string, optional): Return items after this fullname.
-- `before` (string, optional): Return items before this fullname.
-- `count` (number, optional): The number of items already seen in this listing.
-- `show` (string, optional): Optional parameter for listings. Can be "all".
-- `sr_detail` (boolean, optional): Optional parameter to expand subreddit details.
-- `g` (string, optional): A geofilter for the listing.
+- `after`: string (optional) - The fullname of an item to list after for pagination.
+- `before`: string (optional) - The fullname of an item to list before for pagination.
+- `count`: number (optional) - The number of items already seen in the listing.
+- `limit`: number (optional, default: 25) - The maximum number of items to return.
+- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
-**Return Value:**
+**Return Type:**
+
+- `Promise<ThingListing<Post>>`: A promise that resolves to a listing of `Post` objects.
+
+**ThingListing<Post> Object Details:**
+
+- `kind`: string (always 'Listing') - The type of the object.
+- `data`: object - The main data payload.
+  - `after`: string | null - The fullname of the next item in the list, for pagination.
+  - `before`: string | null - The fullname of the previous item in the list, for pagination.
+  - `dist`: number - The number of items in the listing.
+  - `modhash`: string - A token for moderation actions.
+  - `geo_filter`: string | null - The geofilter used for the request.
+  - `children`: `Post[]` - An array of Post objects.
+
+**Post Object Details:**
+
+- `approved_at_utc`: number | null
+- `subreddit`: string
+- `selftext`: string
+- `author_fullname`: string
+- `saved`: boolean
+- `mod_reason_title`: string | null
+- `gilded`: number
+- `clicked`: boolean
+- `title`: string
+- `link_flair_richtext`: `RichText[]`
+- `subreddit_name_prefixed`: string
+- `hidden`: boolean
+- `pwls`: number | null
+- `link_flair_css_class`: string | null
+- `downs`: number
+- `thumbnail_height`: number | null
+- `top_awarded_type`: string | null
+- `hide_score`: boolean
+- `name`: string
+- `quarantine`: boolean
+- `link_flair_template_id`: string | null
+- `upvote_ratio`: number
+- `author_flair_background_color`: string | null
+- `subreddit_type`: "public" | "restricted" | "private" | "archived" | "gold_only"
+- `ups`: number
+- `total_awards_received`: number
+- `media_embed`: `MediaEmbed`
+- `thumbnail_width`: number | null
+- `author_flair_template_id`: string | null
+- `is_original_content`: boolean
+- `user_reports`: `UserReport[]`
+- `secure_media`: `Media` | null
+- `is_reddit_media_domain`: boolean
+- `is_meta`: boolean
+- `category`: string | null
+- `secure_media_embed`: `MediaEmbed`
+- `link_flair_text`: string | null
+- `can_mod_post`: boolean
+- `score`: number
+- `approved_by`: string | null
+- `is_created_from_ads_ui`: boolean
+- `author_premium`: boolean
+- `thumbnail`: string
+- `edited`: boolean | number
+- `author_flair_css_class`: string | null
+- `author_flair_richtext`: `RichText[]`
+- `gildings`: `Gildings`
+- `post_hint`: string
+- `content_categories`: string[] | null
+- `is_self`: boolean
+- `mod_note`: string | null
+- `created`: number
+- `link_flair_type`: "text" | "richtext"
+- `wls`: number | null
+- `removed_by_category`: string | null
+- `banned_by`: string | null
+- `author_flair_type`: "text" | "richtext"
+- `domain`: string
+- `allow_live_comments`: boolean
+- `selftext_html`: string | null
+- `likes`: boolean | null
+- `suggested_sort`: string | null
+- `banned_at_utc`: number | null
+- `url_overridden_by_dest`: string
+- `view_count`: number | null
+- `archived`: boolean
+- `no_follow`: boolean
+- `is_crosspostable`: boolean
+- `pinned`: boolean
+- `over_18`: boolean
+- `preview`: `Preview`
+- `all_awardings`: `Awarding[]`
+- `awarders`: string[]
+- `media_only`: boolean
+- `can_gild`: boolean
+- `spoiler`: boolean
+- `locked`: boolean
+- `author_flair_text`: string | null
+- `treatment_tags`: string[]
+- `visited`: boolean
+- `removed_by`: string | null
+- `num_reports`: number | null
+- `distinguished`: "moderator" | "admin" | "special" | null
+- `subreddit_id`: string
+- `mod_reason_by`: string | null
+- `removal_reason`: string | null
+- `link_flair_background_color`: string
+- `id`: string
+- `is_robot_indexable`: boolean
+- `report_reasons`: string[] | null
+- `author`: string
+- `discussion_type`: "CHAT" | "LIVE" | null
+- `num_comments`: number
+- `send_replies`: boolean
+- `whitelist_status`: string | null
+- `contest_mode`: boolean
+- `mod_reports`: `ModReport[]`
+- `author_patreon_flair`: boolean
+- `author_flair_text_color`: string | null
+- `permalink`: string
+- `parent_whitelist_status`: string | null
+- `stickied`: boolean
+- `url`: string
+- `subreddit_subscribers`: number
+- `created_utc`: number
+- `num_crossposts`: number
+- `media`: `Media` | null
+- `is_video`: boolean
+- `comment_type`: string | null
+- `replies`: `ThingListing<Comment>` | ""
+- `collapsed_reason_code`: string | null
+- `parent_id`: string
+- `collapsed`: boolean
+- `body`: string
+- `is_submitter`: boolean
+- `body_html`: string
+- `collapsed_reason`: string | null
+- `associated_award`: string | null
+- `unrepliable_reason`: string | null
+- `score_hidden`: boolean
+- `link_id`: string
+- `controversiality`: number
+- `depth`: number
+- `collapsed_because_crowd_control`: boolean | null
+
+**RichText Object Details:**
+
+- `e`: string
+- `t`: string
+- `a`: string | undefined
+- `u`: string | undefined
+
+**MediaEmbed Object Details:**
+
+- `content`: string | undefined
+- `width`: number | undefined
+- `scrolling`: boolean | undefined
+- `height`: number | undefined
+
+**UserReport Object Details:**
+
+- `[string, number, boolean, string]`
+
+**Media Object Details:**
+
+- `type`: string | undefined
+- `oembed`: `OEmbed` | undefined
+
+**OEmbed Object Details:**
+
+- `provider_url`: string
+- `description`: string
+- `title`: string
+- `author_name`: string
+- `height`: number
+- `width`: number
+- `html`: string
+- `thumbnail_width`: number
+- `version`: string
+- `provider_name`: string
+- `thumbnail_url`: string
+- `type`: "video" | "rich"
+- `thumbnail_height`: number
+
+**Gildings Object Details:**
+
+- `gid_1`: number | undefined
+- `gid_2`: number | undefined
+- `gid_3`: number | undefined
+
+**Preview Object Details:**
+
+- `images`: `Image[]`
+- `enabled`: boolean
+
+**Image Object Details:**
+
+- `source`: `ImageSource`
+- `resolutions`: `ImageSource[]`
+- `variants`: object
+- `id`: string
+
+**ImageSource Object Details:**
+
+- `url`: string
+- `width`: number
+- `height`: number
+
+**Awarding Object Details:**
+
+- `giver_coin_reward`: number | null
+- `subreddit_id`: string | null
+- `is_new`: boolean
+- `days_of_drip_extension`: number | null
+- `coin_price`: number
+- `id`: string
+- `penny_donate`: number | null
+- `award_sub_type`: "GLOBAL" | "PREMIUM" | "GROUP" | "COMMUNITY" | "APPRECIATION" | "MODERATOR"
+- `coin_reward`: number
+- `icon_url`: string
+- `days_of_premium`: number | null
+- `tiers_by_required_awardings`: object | null
+- `resized_icons`: `ImageSource[]`
+- `icon_width`: number
+- `static_icon_width`: number
+- `start_date`: number | null
+- `is_enabled`: boolean
+- `awardings_required_to_grant_benefits`: number | null
+- `description`: string
+- `end_date`: number | null
+- `sticky_duration_seconds`: number | null
+- `subreddit_coin_reward`: number
+- `count`: number
+- `static_icon_height`: number
+- `name`: string
+- `resized_static_icons`: `ImageSource[]`
+- `icon_format`: "APNG" | "PNG" | "JPG" | "GIF" | null
+- `icon_height`: number
+- `penny_price`: number | null
+- `award_type`: "global" | "community" | "moderator"
+- `static_icon_url`: string
+
+**ModReport Object Details:**
+
+- `[string, string]`
+
+**Usage Example:**
 
 ```typescript
-{
-  "kind": "Listing",
-  "data": {
-    "after": string | null,
-    "dist": number,
-    "modhash": string | null,
-    "geo_filter": string,
-    "children": {
-      "kind": "t5",
-      "data": Post
-    }[],
-    "before": string | null
+const bestPosts = await reddit.listings.getBest({ limit: 10 });
+console.log(`Fetched ${bestPosts.data.children.length} of the best posts.`);
+```
+
+**Code Example:**
+
+```typescript
+async function fetchBestPosts() {
+  try {
+    const listing = await reddit.listings.getBest({ limit: 5 });
+    console.log("--- Best Posts on Reddit ---");
+    listing.data.children.forEach(post => {
+      console.log(`- [${post.data.score}] ${post.data.title} (r/${post.data.subreddit})`);
+    });
+  } catch (error) {
+    console.error("Failed to fetch best posts:", error);
   }
 }
-```
 
-**Post Type:**
-
-```typescript
-export interface Post {
-  allAwardings: Awarding[]; // A list of all awards on this post.
-  allowLiveComments?: boolean; // Whether live comments are allowed.
-  approved?: boolean; // Whether the post is approved.
-  approvedAtUtc?: number; // The UTC timestamp of when the post was approved.
-  approvedBy?: string; // The user who approved the post.
-  archived?: boolean; // Whether the post is archived.
-  author?: string; // The author of the post.
-  authorFlairBackgroundColor?: string; // The background color of the author's flair.
-  authorFlairCssClass?: string; // The CSS class of the author's flair.
-  authorFlairRichtext: AuthorFlairRichText[]; // The rich text of the author's flair.
-  authorFlairTemplateId?: string; // The template ID of the author's flair.
-  authorFlairText?: string; // The text of the author's flair.
-  authorFlairTextColor?: string; // The text color of the author's flair.
-  authorFlairType?: string; // The type of the author's flair.
-  authorFullname?: string; // The fullname of the author.
-  authorIsBlocked?: boolean; // Whether the author is blocked by the current user.
-  authorPatreonFlair?: boolean; // Whether the author has Patreon flair.
-  authorPremium?: boolean; // Whether the author has Reddit Premium.
-  awarders: string[]; // A list of users who awarded the post.
-  bannedAtUtc?: number; // The UTC timestamp of when the author was banned.
-  bannedBy?: string; // The user who banned the author.
-  canGild?: boolean; // Whether the post can be gilded.
-  canModPost?: boolean; // Whether the current user can moderate the post.
-  category?: string; // The category of the post.
-  clicked?: boolean; // Whether the post has been clicked by the current user.
-  contentCategories: string[]; // A list of content categories.
-  contestMode?: boolean; // Whether the post is in contest mode.
-  created?: number; // The timestamp of when the post was created.
-  createdUtc?: number; // The UTC timestamp of when the post was created.
-  discussionType?: string; // The type of discussion.
-  distinguished?: string; // How the post is distinguished (e.g., "moderator").
-  domain?: string; // The domain of the link.
-  downs?: number; // The number of downvotes.
-  edited?: boolean; // Whether the post has been edited.
-  gilded?: number; // The number of times the post has been gilded.
-  gildings?: Gildings; // The gildings for the post.
-  hidden?: boolean; // Whether the post is hidden by the current user.
-  hideScore?: boolean; // Whether the score is hidden.
-  id?: string; // The ID of the post.
-  ignoreReports?: boolean; // Whether reports on the post are ignored.
-  isCreatedFromAdsUi?: boolean; // Whether the post was created from the ads UI.
-  isCrosspostable?: boolean; // Whether the post is crosspostable.
-  isMeta?: boolean; // Whether the post is a meta post.
-  isOriginalContent?: boolean; // Whether the post is marked as original content.
-  isRedditMediaDomain?: boolean; // Whether the post is from a Reddit media domain.
-  isRobotIndexable?: boolean; // Whether the post is indexable by robots.
-  isSelf?: boolean; // Whether the post is a self-post (text-only).
-  isVideo?: boolean; // Whether the post contains a video.
-  likes?: boolean; // Whether the current user has liked the post.
-  linkFlairBackgroundColor?: string; // The background color of the link flair.
-  linkFlairCssClass?: string; // The CSS class of the link flair.
-  linkFlairRichtext: string[]; // The rich text of the link flair.
-  linkFlairTextColor?: string; // The text color of the link flair.
-  linkFlairText?: string; // The text of the link flair.
-  linkFlairType?: string; // The type of the link flair.
-  locked?: boolean; // Whether the post is locked.
-  mediaEmbed?: MediaEmbed; // Embedded media for the post.
-  mediaOnly?: boolean; // Whether the post is media-only.
-  media?: Media; // Media content of the post.
-  modNote?: string; // A note from a moderator.
-  modReasonBy?: string; // The user who provided the moderator reason.
-  modReasonTitle?: string; // The title of the moderator reason.
-  modReports: any[][]; // Moderator reports on the post.
-  name?: string; // The fullname of the post.
-  noFollow?: boolean; // Whether to apply "nofollow" to links in the post.
-  numComments?: number; // The number of comments on the post.
-  numCrossposts?: number; // The number of crossposts.
-  numDuplicates?: number; // The number of duplicate posts.
-  numReports?: number; // The number of reports on the post.
-  over18?: boolean; // Whether the post is marked as NSFW.
-  parentWhitelistStatus?: string; // The whitelist status of the parent.
-  permalink?: string; // The permalink of the post.
-  pinned?: boolean; // Whether the post is pinned.
-  postHint?: string; // A hint for the type of post.
-  preview?: Preview; // The preview of the post.
-  pwls?: number; // Parent whitelist status (numerical).
-  quarantine?: boolean; // Whether the post is quarantined.
-  removalReason?: string; // The reason for the post's removal.
-  removedByCategory?: string; // The category of the removal.
-  removedBy?: string; // The user who removed the post.
-  removed?: boolean; // Whether the post was removed.
-  reportReasons: string[]; // A list of reasons for reports.
-  rteMode?: string; // The rich text editor mode used.
-  saved?: boolean; // Whether the post is saved by the current user.
-  score?: number; // The score of the post.
-  secureMediaEmbed?: MediaEmbed; // Secure embedded media for the post.
-  secureMedia?: Media; // Secure media content of the post.
-  selftextHtml?: string; // The HTML representation of the self-text.
-  selftext?: string; // The self-text of the post as markdown.
-  sendReplies?: boolean; // Whether the author wants to receive replies.
-  spam?: boolean; // Whether the post is marked as spam.
-  spoiler?: boolean; // Whether the post is marked as a spoiler.
-  stickied?: boolean; // Whether the post is stickied.
-  subredditId?: string; // The ID of the subreddit.
-  subredditNamePrefixed?: string; // The prefixed name of the subreddit (e.g., "r/pics").
-  subredditSubscribers?: number; // The number of subscribers to the subreddit.
-  subredditType?: string; // The type of the subreddit.
-  subreddit?: string; // The subreddit the post belongs to.
-  suggestedSort?: string; // The suggested sort for comments.
-  thumbnailHeight?: number; // The height of the thumbnail.
-  thumbnailWidth?: number; // The width of the thumbnail.
-  thumbnail?: string; // The URL of the thumbnail.
-  title?: string; // The title of the post.
-  topAwardedType?: string; // The type of the top award.
-  totalAwardsReceived?: number; // The total number of awards received.
-  treatmentTags: string[]; // A list of treatment tags.
-  ups?: number; // The number of upvotes.
-  upvoteRatio?: number; // The ratio of upvotes to downvotes.
-  urlOverriddenByDest?: string; // The URL overridden by the destination.
-  url?: string; // The URL of the post.
-  userReports: any[][]; // User reports on the post.
-  viewCount?: number; // The number of views.
-  visited?: boolean; // Whether the post has been visited by the current user.
-  whitelistStatus?: string; // The whitelist status.
-  wls?: number; // Whitelist status (numerical).
-  linkFlairTemplateId?: string; // The template ID of the link flair.
-  crowdControlLevel?: number; // The crowd control level of the post.
-}
-```
-
-**AwardingIcon Type:**
-
-```typescript
-export interface AwardingIcon {
-  height?: number; // Height of the icon.
-  url?: string; // URL of the icon.
-  width?: number; // Width of the icon.
-}
-```
-
-**Awarding Type:**
-
-```typescript
-export interface Awarding {
-  awardSubType?: string; // The sub-type of the award.
-  awardType?: string; // The type of the award (e.g., "global", "moderator").
-  awardingsRequiredToGrantBenefits?: number; // Number of awards required to grant benefits.
-  coinPrice?: number; // The price of the award in Reddit Coins.
-  coinReward?: number; // The amount of Reddit Coins given to the recipient.
-  count?: number; // The number of this award given to the content.
-  daysOfDripExtension?: number; // Number of days the drip extension lasts.
-  daysOfPremium?: number; // Number of days of Reddit Premium given to the recipient.
-  description?: string; // The description of the award.
-  endDate?: string; // The end date of the award's availability.
-  giverCoinReward?: number; // The amount of Reddit Coins given to the giver.
-  iconFormat?: string; // The format of the icon (e.g., "APNG", "PNG").
-  iconHeight?: number; // The height of the icon.
-  iconUrl?: string; // The URL of the icon.
-  iconWidth?: number; // The width of the icon.
-  id?: string; // The ID of the award.
-  isEnabled?: boolean; // Whether the award is enabled.
-  isNew?: boolean; // Whether the award is new.
-  name?: string; // The name of the award.
-  pennyDonate?: number; // The amount of pennies donated.
-  pennyPrice?: number; // The price of the award in pennies.
-  resizedIcons: AwardingIcon[]; // Array of resized icons for the award.
-  resizedStaticIcons: AwardingIcon[]; // Array of resized static icons for the award.
-  startDate?: string; // The start date of the award's availability.
-  staticIconHeight?: number; // The height of the static icon.
-  staticIconUrl?: string; // The URL of the static icon.
-  staticIconWidth?: number; // The width of the static icon.
-  stickyDurationSeconds?: number; // The duration in seconds the award is sticky.
-  subredditCoinReward?: number; // The amount of Reddit Coins given to the subreddit.
-  subredditId?: string; // The ID of the subreddit where the award is available.
-  tiersByRequiredAwardings?: string; // Tiers by required awardings.
-}
-```
-
-**AuthorFlairRichText Type:**
-
-```typescript
-export interface AuthorFlairRichText {
-  e?: string; // Type of the flair element (e.g., "text", "emoji").
-  t?: string; // Text of the flair element.
-}
-```
-
-**Gildings Type:**
-
-```typescript
-export interface Gildings {
-  gid1?: number; // Count of silver awards.
-  gid2?: number; // Count of gold awards.
-  gid3?: number; // Count of platinum awards.
-}
-```
-
-**MediaEmbed Type:**
-
-```typescript
-export interface MediaEmbed {
-  content?: string; // The HTML content of the embedded media.
-  width?: number; // The width of the embedded media.
-  height?: number; // The height of the embedded media.
-  sandbox?: boolean; // Whether the embed is sandboxed.
-  scrolling?: boolean; // Whether the embed is scrollable.
-  publicThumbnailUrl?: string; // The URL of the public thumbnail.
-}
-```
-
-**MediaRedditVideo Type:**
-
-```typescript
-export interface MediaRedditVideo {
-  bitrateKbps?: number; // The bitrate of the video in kbps.
-  dashUrl?: string; // The URL of the DASH manifest.
-  duration?: number; // The duration of the video in seconds.
-  fallbackUrl?: string; // A fallback URL for the video.
-  height?: number; // The height of the video.
-  hlsUrl?: string; // The URL of the HLS manifest.
-  isGif?: boolean; // Whether the video is a GIF.
-  scrubberMediaUrl?: string; // The URL of the scrubber media.
-  transcodingStatus?: string; // The status of the video transcoding.
-  width?: number; // The width of the video.
-}
-```
-
-**Media Type:**
-
-```typescript
-export interface Media {
-  redditVideo?: MediaRedditVideo; // A Reddit-hosted video.
-}
-```
-
-**PreviewPreviewImageImage Type:**
-
-```typescript
-export interface PreviewPreviewImageImage {
-  height?: number; // The height of the image.
-  url?: string; // The URL of the image.
-  width?: number; // The width of the image.
-}
-```
-
-**PreviewPreviewImage Type:**
-
-```typescript
-export interface PreviewPreviewImage {
-  id?: string; // The ID of the preview image.
-  resolutions: PreviewPreviewImageImage[]; // A list of available resolutions for the image.
-  source?: PreviewPreviewImageImage; // The source image.
-  variants?: PreviewPreviewImageImage; // Variants of the image.
-}
-```
-
-**Preview Type:**
-
-```typescript
-export interface Preview {
-  enabled?: boolean; // Whether previews are enabled for the post.
-  images: PreviewPreviewImage[]; // A list of preview images.
-}
-```
-
-**Usage Examples:**
-
-```typescript
-// 1. Get the top 10 best posts
-const bestPosts = await reddit.api.listings.getBest({ limit: 10 });
-console.log(bestPosts);
-```
-
-```typescript
-// 2. Get the next page of best posts using 'after'
-const nextPage = await reddit.api.listings.getBest({
-  limit: 25,
-  after: 't3_somepostid',
-});
-console.log(nextPage);
-```
-
-```typescript
-// 3. Get posts from a specific geographic region (e.g., United States)
-const usPosts = await reddit.api.listings.getBest({ g: 'US' });
-console.log(usPosts);
-```
+fetchBestPosts();
+``` 

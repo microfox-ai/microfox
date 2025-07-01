@@ -36,7 +36,16 @@ jobs:
         uses: changesets/action@v1
         with:
           version: npm run ci:version
-          publish: npm run ci:release
+          publish: |
+            set -e
+            PACKAGES_TO_BUILD=$(npx changeset status --json | jq -r '.releases[].name' | awk '{printf "--filter=%s ", $0}')
+            if [ -n "$PACKAGES_TO_BUILD" ]; then
+              echo "Building packages: $PACKAGES_TO_BUILD"
+              npx turbo run build $PACKAGES_TO_BUILD
+            else
+              echo "No packages to build."
+            fi
+            npx changeset publish
           ignore: microfox-scripts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

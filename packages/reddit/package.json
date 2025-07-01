@@ -14,7 +14,14 @@
     "build:watch": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "eslint \"./**/*.ts*\"",
-    "prettier-check": "prettier --check \"./**/*.ts*\""
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "vitest run",
+    "test:account": "vitest run src/__tests__/account.test.ts",
+    "test:listings": "vitest run src/__tests__/listings.test.ts",
+    "test:private_messages": "vitest run src/__tests__/private_messages.test.ts",
+    "test:search": "vitest run src/__tests__/search.test.ts",
+    "test:subreddits": "vitest run src/__tests__/subreddits.test.ts",
+    "test:users": "vitest run src/__tests__/users.test.ts"
   },
   "exports": {
     "./package.json": "./package.json",

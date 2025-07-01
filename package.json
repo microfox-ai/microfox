@@ -14,7 +14,7 @@
     "test": "turbo test -- --passWithNoTests --",
     "test:watch": "turbo test --watch",
     "test:coverage": "turbo test --coverage",
-    "ci:release": "turbo clean && turbo build && changeset publish",
+    "ci:release": "turbo clean && changeset publish",
     "ci:version": "changeset version && npm install",
     "clean-examples": "node .github/scripts/cleanup-examples-changesets.mjs && npm install"
   },

@@ -1,29 +1,43 @@
 ## Function: `getPostRequirements`
 
-Retrieves the post requirements for a specific subreddit. This includes details like the body restriction policy.
+Retrieves the posting requirements and rules for a specific subreddit.
 
 **Parameters:**
 
-- `subreddit` (string): The name of the subreddit (e.g., 'learnprogramming').
+- `subreddit`: string - The name of the subreddit.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<SubredditPostRequirements>`: A promise that resolves to the subreddit's post requirements.
+- `Promise<PostRequirements>`: A promise that resolves to an object containing the posting requirements for the subreddit.
 
-**SubredditPostRequirements Type:**
+**PostRequirements Object Details:**
 
-```typescript
-export interface SubredditPostRequirements {
-  bodyRestrictionPolicy?: string; // The restriction policy for post bodies.
-}
-```
+- `guidelines_text`: string - The text of the posting guidelines.
+- `guidelines_display_html`: string - The HTML representation of the posting guidelines.
+- `submission_text`: string - The text displayed on the submission page.
+- `submission_text_html`: string - The HTML representation of the text on the submission page.
 
 **Usage Example:**
 
 ```typescript
-// Get post requirements for the 'learnprogramming' subreddit
-const requirements = await reddit.api.subreddits.getPostRequirements({
-  subreddit: 'learnprogramming',
-});
-console.log(requirements);
+const requirements = await reddit.subreddits.getPostRequirements({ subreddit: 'AskScience' });
+console.log(requirements.guidelines_text);
 ```
+
+**Code Example:**
+
+```typescript
+async function checkPostRules(subredditName) {
+  try {
+    const postRules = await reddit.subreddits.getPostRequirements({ subreddit: subredditName });
+    console.log(`--- Posting Guidelines for r/${subredditName} ---`);
+    console.log(postRules.guidelines_text);
+    console.log(`\n--- Submission Page Text ---`);
+    console.log(postRules.submission_text);
+  } catch (error) {
+    console.error(`Could not fetch posting requirements for r/${subredditName}:`, error);
+  }
+}
+
+checkPostRules('explainlikeimfive');
+``` 

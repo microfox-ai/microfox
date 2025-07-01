@@ -1,26 +1,41 @@
 ## Function: `searchRedditNamesPost`
 
-Part of the `subreddits` section. Search for subreddit names using a POST request.
+Searches for subreddit names based on a query.
 
 **Parameters:**
 
-- `query` (string): The search query.
-- `exact` (boolean, optional): If true, find an exact match for the query.
-- `include_over_18` (boolean, optional): Whether to include over-18 subreddits in the results.
-- `include_unadvertisable` (boolean, optional): Whether to include unadvertisable subreddits.
-- `search_query_id` (string, optional): A UUID for the search query.
-- `typeahead_active` (boolean, optional): Whether typeahead is active.
+- `query`: string - The search query for subreddit names.
+- `exact`: boolean (optional) - If true, only returns exact matches for the query.
+- `include_over_18`: boolean (optional) - If true, includes NSFW subreddits in the results.
+- `include_unadvertisable`: boolean (optional) - If true, includes unadvertisable subreddits in the results.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<any>`: A promise that resolves to the search results.
+- `Promise<{ names: string[] }>`: A promise that resolves to an object containing an array of subreddit names that match the query.
 
-**Usage Examples:**
+**Usage Example:**
 
 ```typescript
-// Search for subreddits with 'react' in the name
-const results = await reddit.api.subreddits.searchRedditNamesPost({
-  query: 'react',
-});
-console.log(results);
+const searchResults = await reddit.subreddits.searchRedditNamesPost({ query: 'tech', exact: false });
+console.log(searchResults.names);
 ```
+
+**Code Example:**
+
+```typescript
+async function findSubreddits(searchTerm) {
+  try {
+    const { names } = await reddit.subreddits.searchRedditNamesPost({
+      query: searchTerm,
+      exact: false,
+      include_over_18: true,
+    });
+    console.log(`Found ${names.length} subreddits for '${searchTerm}':`);
+    names.forEach(name => console.log(`- r/${name}`));
+  } catch (error) {
+    console.error(`Failed to search for subreddits:`, error);
+  }
+}
+
+findSubreddits('webdev');
+``` 

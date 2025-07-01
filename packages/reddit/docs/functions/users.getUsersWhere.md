@@ -1,40 +1,38 @@
 ## Function: `getUsersWhere`
 
-Retrieves a list of users based on the specified category.
+Retrieves a listing of users by category.
 
 **Parameters:**
 
-- `where` (string): The category of users to retrieve. Can be one of: `popular`, `new`.
-- `limit` (number, optional): The maximum number of items to return in this slice of the listing.
-- `after` (string, optional): Return items after this fullname.
-- `before` (string, optional): Return items before this fullname.
-- `count` (number, optional): The number of items already seen in this listing.
-- `show` (string, optional): Can be 'all'.
-- `sr_detail` (boolean, optional): Optional parameter to expand subreddit details.
+- `where`: "popular" | "new" - The category of users to retrieve.
+- `after`: string (optional) - The fullname of an item to list after for pagination.
+- `before`: string (optional) - The fullname of an item to list before for pagination.
+- `count`: number (optional) - The number of items already seen in the listing.
+- `limit`: number (optional, default: 25) - The maximum number of items to return.
+- `show`: "all" | undefined (optional) - If "all", posts that have been voted on will be included.
 
-**Return Value:**
+**Return Type:**
 
-- `Promise<Listing<User>>`: A promise that resolves to a listing of users.
+- `Promise<ThingListing<User>>`: A promise that resolves to a listing of `User` objects.
 
-**User Type:**
+**ThingListing<User> Object Details:**
 
-The `User` object has the same structure as the one from the `getMe` function in the `account` section. Please refer to the `account.getMe.md` documentation for the detailed `User` type definition.
+- `kind`: string (always 'Listing')
+- `data`: object
+  - `after`: string | null
+  - `before`: string | null
+  - `dist`: number
+  - `modhash`: string
+  - `geo_filter`: string | null
+  - `children`: `User[]`
 
-**Usage Examples:**
+**User Object Details:**
+
+- See the `User` object schema in the `account.getMe` documentation.
+
+**Usage Example:**
 
 ```typescript
-// Get a list of popular users
-const popularUsers = await reddit.api.users.getUsersWhere({
-  where: 'popular',
-  limit: 10,
-});
-console.log(popularUsers);
-```
-
-```typescript
-// Get a list of new users
-const newUsers = await reddit.api.users.getUsersWhere({
-  where: 'new',
-});
-console.log(newUsers);
-```
+const popularUsers = await reddit.users.getUsersWhere({ where: 'popular', limit: 10 });
+console.log(popularUsers.data.children.map(user => user.data.name));
+``` 
