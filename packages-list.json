@@ -12,6 +12,7 @@
   ],
   "internalPackages": [
     "packages/ai",
+    "packages/cli",
     "packages/crypto-sdk",
     "packages/oauth-kit",
     "packages/rest-sdk",
@@ -83,6 +84,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 66,
-  "generatedAt": "2025-06-30T12:00:43.379Z"
+  "total": 67,
+  "generatedAt": "2025-07-01T08:41:59.413Z"
 }
