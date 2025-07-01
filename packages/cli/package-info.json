@@ -1,0 +1,26 @@
+{
+  "name": "@microfox/cli",
+  "title": "Universal Package CLI",
+  "description": "Universal CLI tool for creating modern TypeScript packages with npm availability checking",
+  "platformType": "tool",
+  "path": "packages/cli",
+  "dependencies": [
+    "commander",
+    "chalk",
+    "zod",
+    "axios",
+    "readline-sync"
+  ],
+  "status": "internal",
+  "documentation": "https://www.npmjs.com/package/@microfox/cli",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/cli.svg",
+  "constructors": [],
+  "extraInfo": [
+    "Use via npx: `npx @microfox/cli init package-name`",
+    "Global install: `npm install -g @microfox/cli`",
+    "Checks npm availability automatically",
+    "Creates modern TypeScript packages with full tooling",
+    "Supports both scoped and unscoped package names"
+  ],
+  "authType": "none"
+} 
