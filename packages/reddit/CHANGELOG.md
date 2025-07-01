@@ -1,5 +1,15 @@
 # @microfox/reddit
 
+## 1.5.0
+
+### Minor Changes
+
+- a2bf5ad: Changes from PR #544: vwjt_reddit_fixes_june_2025
+
+### Patch Changes
+
+- db7ed13: Triggered by issue #545: release @microfox/reddit patch
+
 ## 1.4.1
 
 ### Patch Changes
