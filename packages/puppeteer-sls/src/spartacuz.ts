@@ -7,11 +7,17 @@ const isLocal = process.env.IS_OFFLINE || process.env.SERVERLESS_OFFLINE;
 
 chromium.setGraphicsMode = false;
 
-export const puppeteerLaunchProps = async (defaultViewport?: {
-  width: number;
-  height: number;
-}) => {
+export const puppeteerLaunchProps = async (
+  defaultViewport?: {
+    width: number;
+    height: number;
+  },
+  _isLocal?: boolean,
+  headless?: boolean,
+) => {
   let executablePath: string | undefined;
+
+  console.log('isLocal', isLocal);
   const CHROME_PATHS = {
     darwin: [
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -72,8 +78,10 @@ export const puppeteerLaunchProps = async (defaultViewport?: {
       `${process.env.ProgramFiles}\\Chromium\\Application\\chrome.exe`,
     ],
   };
-  
-  if (isLocal) {
+
+  if (process.env.CHROME_EXECUTABLE_PATH) {
+    executablePath = process.env.CHROME_EXECUTABLE_PATH;
+  } else if (isLocal || _isLocal) {
     const platform = process.platform as keyof typeof CHROME_PATHS;
     const paths = CHROME_PATHS[platform];
 
@@ -88,7 +96,7 @@ export const puppeteerLaunchProps = async (defaultViewport?: {
 
     if (!executablePath) {
       console.error(
-        'Could not find Chrome in default locations. Please install Chrome or specify the path manually.',
+        'Could not find Chrome in default locations. Please install Chrome or specify the path manually via the CHROME_EXECUTABLE_PATH environment variable.',
       );
       throw new Error('Chrome not found');
     }
@@ -97,9 +105,15 @@ export const puppeteerLaunchProps = async (defaultViewport?: {
     executablePath = await chromium.executablePath();
   }
 
+  const finalHeadless = isLocal || _isLocal ? (headless ?? false) : true;
+
+  const args = finalHeadless
+    ? chromium.args
+    : chromium.args.filter(arg => !arg.startsWith('--headless'));
+
   return {
     args: [
-      ...chromium.args,
+      ...args,
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
@@ -110,6 +124,6 @@ export const puppeteerLaunchProps = async (defaultViewport?: {
       height: defaultViewport?.height || 1080,
     },
     executablePath,
-    headless: true,
+    headless: finalHeadless,
   };
 };

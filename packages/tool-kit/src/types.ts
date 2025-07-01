@@ -49,7 +49,7 @@ export type OpenAPISchema = {
 
 export type OpenAPIParameter = {
   name: string;
-  in: 'query' | 'path' | 'header' | 'cookie' | 'body';
+  in: 'query' | 'path' | 'header' | 'cookie' | 'body' | string;
   required?: boolean;
   schema: OpenAPISchema;
   description?: string;

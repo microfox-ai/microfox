@@ -49,6 +49,10 @@ export class Toolkit {
       this.clients.push(
         new OpenApiMCP({
           ...opt,
+          baseUrl:
+            typeof opt.schema === 'object' && 'url' in opt.schema
+              ? opt.schema.url
+              : (opt.baseUrl ?? ''),
           schema:
             typeof opt.schema === 'string'
               ? JSON.parse(opt.schema)
@@ -230,6 +234,80 @@ export class Toolkit {
     return combinedTools;
   }
 
+  async processToolResult(
+    messages: Message[],
+    dataStream?: UIMessageStreamWriter,
+  ): Promise<Message[]> {
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage) return messages;
+    const parts = lastMessage.parts;
+    if (!parts) return messages;
+
+    const thisClientTools = await this.tools();
+
+    const processedParts = await Promise.all(
+      parts.map(async (part: any) => {
+        // Only process tool invocations parts
+        if (!part.type.startsWith('tool-')) return part;
+
+        const toolName = (part as any).type.replace('tool-', '');
+
+        console.log(
+          'toolName',
+          toolName,
+          Object.keys(thisClientTools.executions),
+        );
+
+        // Only continue if we have an execute function for the tool (meaning it requires confirmation) and it's in a 'result' state
+        if (!(toolName in thisClientTools.executions)) return part;
+
+        let result;
+
+        if (
+          (part as any).state === 'output-available' &&
+          'approved' in (part as any).output
+        ) {
+          // Get the tool and check if the tool has an execute function.
+          const correspondingCall = thisClientTools.executions[toolName];
+          if (!correspondingCall) {
+            result = 'Error: No execute function found on tool';
+          } else if ((part as any).output.approved) {
+            result = await correspondingCall(part.input as any, {
+              toolCallId: (part as any).toolCallId,
+              messages: messages as any[],
+            });
+          } else {
+            result = 'Error: User denied access to tool execution';
+          }
+        }
+
+        console.log('result', result);
+        // Forward updated tool result to the client.
+        if (dataStream && result) {
+          dataStream.write({
+            type: 'tool-output-available',
+            toolCallId: (part as any).toolCallId,
+            output: result as any,
+            //providerMetadata: {},
+          });
+        }
+
+        // Return updated toolInvocation with the actual result.
+        return {
+          ...part,
+          state: 'output-available',
+          output: result as any,
+        };
+      }),
+    );
+
+    // Finally return the processed messages
+    return [
+      ...messages.slice(0, -1),
+      { ...lastMessage, parts: processedParts },
+    ];
+  }
+
   /**
    * Parses incoming messages for HITL responses, resumes the original tool,
    * and returns a cleaned message history.
@@ -373,6 +451,7 @@ export class Toolkit {
     return async ({ steps }) => {
       const lastStep = steps[steps.length - 1];
       if (
+        lastStep &&
         lastStep.toolResults.some(r => (r.output as any)?._humanIntervention)
       ) {
         // If we find a HITL marker, we tell `generateText` to stop after the current step.

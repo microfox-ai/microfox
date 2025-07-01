@@ -238,6 +238,9 @@ export class OpenApiMCP {
       'Content-Type': 'application/json',
     };
 
+    console.log('operation', operation);
+    console.log('args', args);
+
     // Process path parameters
     if (operation.parameters) {
       const pathParams = operation.parameters.filter(
@@ -400,7 +403,10 @@ export class OpenApiMCP {
       );
     }
 
-    const { url, headers, body } = this.prepareRequest(operation, args);
+    const { url, headers, body } = this.prepareRequest(
+      operation,
+      args.body ?? args,
+    );
 
     return this.makeRequest({
       url,
@@ -842,7 +848,7 @@ export class OpenApiMCP {
       ) as OpenAPIOperation & { path: string; method: string };
       if (!cleanedOperation.path || !cleanedOperation.method) continue;
 
-      const toolName = this.name ? `${this.name}:${id}` : id;
+      const toolName = this.name ? `${id}` : id;
 
       const isDisabled =
         disableAllExecutions ||
@@ -884,8 +890,26 @@ export class OpenApiMCP {
               _humanIntervention: true,
               toolCallId: options?.toolCallId,
               args: decision.args,
+              metadata: {
+                name: toolName,
+                description,
+                jsonSchema,
+              },
             };
           }
+        }
+
+        if (disableAllExecutions) {
+          return {
+            _humanIntervention: true,
+            toolCallId: options?.toolCallId,
+            args: args,
+            metadata: {
+              name: toolName,
+              description,
+              jsonSchema,
+            },
+          };
         }
 
         // If not paused, proceed with normal execution.
@@ -926,15 +950,13 @@ export class OpenApiMCP {
         return this.callOperation(id, structuredArgs, options);
       };
 
-      if (!isDisabled) {
-        tools[toolName] = {
-          name: toolName,
-          description,
-          inputSchema: zodSchema,
-          execute: executeFn,
-        };
-        toolExecutions[toolName] = executeFn;
-      }
+      tools[toolName] = {
+        name: toolName,
+        description,
+        inputSchema: zodSchema,
+        execute: executeFn, //isDisabled ? undefined : executeFn,
+      };
+      toolExecutions[toolName] = executeFn;
 
       metadata[toolName] = {
         name: toolName,

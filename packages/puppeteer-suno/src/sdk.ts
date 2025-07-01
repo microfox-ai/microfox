@@ -36,19 +36,30 @@ export class SunoAuthenticated {
   }
 
   async launch(options?: { headless?: boolean }) {
-    const launchProps = await puppeteerLaunchProps();
-    const isLocal = process.env.IS_OFFLINE || process.env.SERVERLESS_OFFLINE;
+    try {
+      const isLocal =
+        !!process.env.IS_OFFLINE || !!process.env.SERVERLESS_OFFLINE;
+      const launchProps = await puppeteerLaunchProps(
+        { width: 1280, height: 720 },
+        isLocal,
+        options?.headless,
+      );
 
-    this.browser = await puppeteer.launch({
-      ...launchProps,
-      headless: options?.headless ?? true,
-      slowMo: isLocal ? 50 : 0,
-    });
-    this.page = await this.browser.newPage();
-    await this.page.setUserAgent(
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-    );
-    await this.page.setViewport({ width: 1920, height: 1080 });
+      this.browser = await puppeteer.launch({
+        //...launchProps,
+        executablePath: launchProps.executablePath,
+        headless: launchProps.headless,
+        slowMo: isLocal ? 50 : 0,
+      });
+      this.page = await this.browser.newPage();
+      await this.page.setUserAgent(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      );
+      await this.page.setViewport({ width: 1920, height: 1080 });
+    } catch (error) {
+      console.error('Failed to launch browser:', error);
+      throw new Error('Failed to launch browser.');
+    }
   }
 
   async goto(url: string, options?: Parameters<Page['goto']>[1]) {
@@ -108,26 +119,83 @@ export class SunoAuthenticated {
       throw new Error('Page not initialized');
     }
 
-    await this.page.goto('https://suno.ai/', {
+    console.log('Logging in', e, p);
+
+    await this.page.goto('https://suno.com/', {
       // TODO: Check if this is the correct login page
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle0',
     });
 
-    // TODO: The following selectors are placeholders. I need the actual selectors from the user.
-    await this.page.waitForSelector('input#username_placeholder');
-    await this.page.type('input#username_placeholder', e);
-    await this.page.waitForSelector('input#password_placeholder');
-    await this.page.type('input#password_placeholder', p);
+    console.log('Navigated to login page');
 
-    await this.page.click('button[type="submit"]');
+    // Click the "Sign In" button to open the login modal.
+    const signInButtonXPath = `//button[.//span[normalize-space()='Sign In']]`;
+    await (this.page as any).waitForXPath(signInButtonXPath);
+    const [signInButton] = await (this.page as any).$x(signInButtonXPath);
+    if (signInButton) {
+      await signInButton.click();
+    } else {
+      throw new Error('Could not find "Sign In" button.');
+    }
 
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    // Wait for the login dialog to appear.
+    await this.page.waitForSelector('.cl-modalContent');
+
+    // Click the "Continue with Google" button.
+    const googleButtonSelector = '.cl-socialButtonsIconButton__google';
+    await this.page.waitForSelector(googleButtonSelector);
+
+    const googlePagePromise = new Promise<Page>(resolve => {
+      this.browser?.once('targetcreated', async target => {
+        const newPage = await target.page();
+        if (newPage) {
+          resolve(newPage);
+        }
+      });
+    });
+
+    await this.page.click(googleButtonSelector);
+
+    const googlePage = await googlePagePromise;
+    if (!googlePage) {
+      throw new Error('Google Login page not opened');
+    }
+
+    await googlePage.bringToFront();
+
+    await googlePage.waitForSelector('input[type="email"]');
+    await googlePage.type('input[type="email"]', e);
+
+    const nextButtonXPath = `//button[.//span[normalize-space()='Next']]`;
+    await (googlePage as any).waitForXPath(nextButtonXPath);
+    const [nextButton] = await (googlePage as any).$x(nextButtonXPath);
+    if (nextButton) {
+      await nextButton.click();
+    } else {
+      throw new Error('Could not find "Next" button.');
+    }
+
+    await googlePage.waitForSelector('input[type="password"]', {
+      visible: true,
+    });
+    await googlePage.type('input[type="password"]', p);
+
+    await (googlePage as any).waitForXPath(nextButtonXPath);
+    const [passwordNextButton] = await (googlePage as any).$x(nextButtonXPath);
+    if (passwordNextButton) {
+      await passwordNextButton.click();
+    } else {
+      throw new Error('Could not find "Next" button for password.');
+    }
+
+    // Wait for the original page to reflect the login status.
+    await this.page.bringToFront();
 
     try {
-      // TODO: This is a placeholder. I need a selector to confirm login was successful.
+      // Verify you are logged in by checking for this element.
       await this.page.waitForSelector(
-        'div#successful_login_selector_placeholder',
-        { timeout: 15000 },
+        'button[data-testid="profile-menu-button"]',
+        { timeout: 30000 },
       );
       console.log('Login successful');
     } catch (error) {
