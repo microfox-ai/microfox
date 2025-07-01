@@ -15,7 +15,7 @@
     "clean": "rm -rf dist",
     "lint": "eslint \"./**/*.ts*\"",
     "prettier-check": "prettier --check \"./**/*.ts*\"",
-    "test": "vitest run",
+    "test": "ts-node ../../scripts/src/getTestEnvs.ts . && vitest run",
     "test:account": "vitest run src/__tests__/account.test.ts",
     "test:listings": "vitest run src/__tests__/listings.test.ts",
     "test:private_messages": "vitest run src/__tests__/private_messages.test.ts",
