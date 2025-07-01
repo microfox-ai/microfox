@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { initCommand } from './commands/init';
+import { kickstartCommand } from './commands/init';
 import { version } from '../package.json';
 
 const program = new Command();
@@ -11,12 +11,12 @@ program
   .version(version);
 
 program
-  .command('init <packageName>')
-  .description('Initialize a new npm package with modern TypeScript setup')
-  .action(async (packageName: string) => {
+  .command('kickstart')
+  .description('Kickstart a new TypeScript SDK package with modern tooling')
+  .action(async () => {
     try {
-      console.log(chalk.blue('📦 Package Initializer\n'));
-      await initCommand(packageName);
+      console.log(chalk.blue('🚀 Package Kickstarter\n'));
+      await kickstartCommand();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);
