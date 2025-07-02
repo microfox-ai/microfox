@@ -2,7 +2,8 @@ service: public-slack-api
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-api-gateway-throttling
+  # - serverless-api-gateway-throttling
+  - serverless-offline
 
 provider:
   name: aws
@@ -11,10 +12,15 @@ provider:
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
 
+# Configuration
 custom:
-  apiGatewayThrottling:
-    maxRequestsPerSecond: 50
-    maxConcurrentRequests: 20
+  # Get environment from env or default to dev
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    printOutput: true
+    httpPort: 4000
+    lambdaPort: 4002
+    environment: ${file(env.json)}
 
 functions:
   unifiedHandler:

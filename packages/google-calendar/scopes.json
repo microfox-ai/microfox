@@ -1,0 +1,22 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/calendar.app.created",
+    "description": "Create and manage calendar apps"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+    "description": "Read-only access to your Google Calendar calendar list"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.events.freebusy",
+    "description": "Read-only access to your Google Calendar free/busy information"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.freebusy",
+    "description": "Read-only access to your Google Calendar free/busy information"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.events.owned",
+    "description": "Read-only access to your Google Calendar events"
+  }
+]

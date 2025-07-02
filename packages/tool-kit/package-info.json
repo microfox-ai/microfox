@@ -10,11 +10,5 @@
   "documentation": "https://www.npmjs.com/package/@microfox/tool-kit",
   "constructors": [],
   "extraInfo": [],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "A central tool kit for building integrations in Microfox",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

@@ -2209,18 +2209,11 @@ export const redditSDKConfigSchema = z
     clientSecret: z
       .string()
       .describe('The client secret for your Reddit application.'),
-    redirectUri: z
-      .string()
-      .describe('The redirect URI for your Reddit application.'),
-    scopes: z
-      .array(z.string())
-      .describe('An array of scopes your application is requesting.'),
     accessToken: z
       .string()
       .describe('The access token for making authenticated requests.'),
     refreshToken: z
       .string()
-      .optional()
       .describe('The refresh token for obtaining new access tokens.'),
   })
   .describe('Schema for the Reddit SDK configuration.');

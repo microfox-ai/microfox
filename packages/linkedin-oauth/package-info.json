@@ -48,11 +48,5 @@
   "extraInfo": [
     "Use the `createLinkedInClient` constructor to create a new LinkedIn OAuth client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "communication"
 }

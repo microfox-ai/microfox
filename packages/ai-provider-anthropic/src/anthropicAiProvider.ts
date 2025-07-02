@@ -1,16 +1,17 @@
 import { AnthropicProvider, createAnthropic } from '@ai-sdk/anthropic';
+import { LanguageModelV2Middleware } from '@ai-sdk/provider';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
-import { LanguageModelV1Middleware, wrapLanguageModel } from 'ai';
-import { AnthropicMessagesSettings, AnthropicModelId } from './types';
+import { wrapLanguageModel } from 'ai';
+import { AnthropicModelId } from './types';
 
 export class AnthropicAiProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private apiKey: string;
   private anthropicProvider: AnthropicProvider;
 
   constructor(props: {
     apiKey: string;
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
     baseURL?: string;
     headers?: Record<string, string>;
   }) {
@@ -29,8 +30,11 @@ export class AnthropicAiProvider {
             'ai-provider-anthropic',
             result.response.modelId,
             {
-              promptTokens: result.usage.promptTokens,
-              completionTokens: result.usage.completionTokens,
+              inputTokens: result.usage.inputTokens ?? 0,
+              outputTokens: result.usage.outputTokens ?? 0,
+              cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+              reasoningTokens: result.usage.reasoningTokens ?? 0,
+              totalTokens: result.usage.totalTokens ?? 0,
             },
           );
         } else {
@@ -49,18 +53,13 @@ export class AnthropicAiProvider {
   }
 
   // Method to update middleware
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
-  languageModel(
-    modelId: AnthropicModelId,
-    settings?: AnthropicMessagesSettings,
-  ) {
+  languageModel(modelId: AnthropicModelId) {
     return wrapLanguageModel({
-      model: this.anthropicProvider.languageModel(modelId, {
-        ...(settings ?? {}),
-      }),
+      model: this.anthropicProvider.languageModel(modelId),
       middleware: this.middleware,
     });
   }

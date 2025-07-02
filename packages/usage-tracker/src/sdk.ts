@@ -49,8 +49,13 @@ export class MicrofoxUsageTracker {
     packageName: string,
     modelId: string,
     usage: {
-      promptTokens: number;
-      completionTokens: number;
+      inputTokens: number;
+      outputTokens: number;
+      cachedInputTokens?: number;
+      reasoningTokens?: number;
+      promptTokens?: number;
+      completionTokens?: number;
+      totalTokens: number;
     },
   ) {
     if (

@@ -20,8 +20,13 @@ export type UsageTrackerConstructorOptions = z.infer<
 const LLMUsageSchema = z.object({
   type: z.literal('llm'),
   model: z.string().optional(),
-  promptTokens: z.number(),
-  completionTokens: z.number(),
+  inputTokens: z.number().optional(),
+  outputTokens: z.number().optional(),
+  promptTokens: z.number().optional(),
+  completionTokens: z.number().optional(),
+  cachedInputTokens: z.number().optional(),
+  reasoningTokens: z.number().optional(),
+  totalTokens: z.number().optional(),
 });
 
 const API1UsageSchema = z.object({
@@ -29,6 +34,7 @@ const API1UsageSchema = z.object({
   requestKey: z.string().optional(),
   requestCount: z.number(),
   requestData: z.number().optional(),
+  markup: z.number().optional(),
 });
 
 const BaseUsageSchema = z.object({
@@ -37,7 +43,8 @@ const BaseUsageSchema = z.object({
   markup: z.number().optional(),
 });
 
-export const UsageSchema = BaseUsageSchema.and(
+export const UsageSchema = z.intersection(
+  BaseUsageSchema,
   z.discriminatedUnion('type', [LLMUsageSchema, API1UsageSchema]),
 );
 

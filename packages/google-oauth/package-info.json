@@ -49,11 +49,5 @@
   "extraInfo": [
     "Use the `GoogleOAuthSdk` class to create a new Google OAuth client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

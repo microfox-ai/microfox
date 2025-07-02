@@ -9,13 +9,6 @@
   "authEndpoint": "/connect/instagram-fb",
   "documentation": "https://www.npmjs.com/package/@microfox/instagram-fb-business-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "InstagramFBBusinessOAuth Microfox",
-    "functionalities": [],
-    "description": "The full README for the Instagram FB Business OAuth SDK",
-    "all_readmes": []
-  },
   "constructors": [
     {
       "name": "InstagramFbBusinessOAuthSdk",

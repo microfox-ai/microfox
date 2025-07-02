@@ -1,8 +1,8 @@
 export interface RedditOAuthConfig {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
-  scopes: string[];
+  redirectUri?: string;
+  scopes?: string[];
 }
 
 export interface RedditTokenResponse {

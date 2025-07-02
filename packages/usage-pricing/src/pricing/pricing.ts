@@ -6,6 +6,7 @@ import { UsageWithPricing } from '../types';
 import { AnthropicAIPricingConfig } from './ai-provider-anthropic';
 import { GoogleAIPricingConfig } from './ai-provider-google';
 import { DeepSeekAIPricingConfig } from './ai-provider-deepseek';
+import { VertexAIPricingConfig } from './ai-provider-vertex';
 
 /**
  * Configuration object containing pricing information for different services and providers.
@@ -18,6 +19,7 @@ export const PricingConfig = {
   ...AnthropicAIPricingConfig,
   ...DeepSeekAIPricingConfig,
   ...BravePricingConfig,
+  ...VertexAIPricingConfig,
 };
 
 // Create a type that combines the base usage fields with LLM usage fields
@@ -147,12 +149,37 @@ export const attachPricingLLM = (usage: LLMUsageWithBase): UsageWithPricing => {
       originalPriceUSD: 0,
     } as UsageWithPricing;
   }
+  let inputTokenConfig =
+    modelPricingConfig.promptToken ?? modelPricingConfig.inputToken;
+  let outputTokenConfig =
+    modelPricingConfig.completionToken ?? modelPricingConfig.outputToken;
+  if (!inputTokenConfig || !outputTokenConfig) {
+    console.warn(
+      'No input or output token config found for model',
+      usage.model,
+    );
+    return {
+      ...usage,
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    } as UsageWithPricing;
+  }
+
+  const inputTokens = usage.inputTokens ?? usage.promptTokens;
+  const outputTokens = usage.outputTokens ?? usage.completionTokens;
+  if (!inputTokens || !outputTokens) {
+    console.warn('No input or output tokens found for model', usage.model);
+    return {
+      ...usage,
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    } as UsageWithPricing;
+  }
   usagePriceUSD +=
-    modelPricingConfig.promptToken.basePriceUSD *
-    ((usage.promptTokens ?? 0) / modelPricingConfig.promptToken.per);
+    inputTokenConfig.basePriceUSD * (inputTokens / inputTokenConfig.per);
   usagePriceUSD +=
-    modelPricingConfig.completionToken.basePriceUSD *
-    ((usage.completionTokens ?? 0) / modelPricingConfig.completionToken.per);
+    outputTokenConfig.basePriceUSD *
+    ((usage.outputTokens ?? 0) / outputTokenConfig.per);
   return {
     ...usage,
     package: _package,
@@ -180,8 +207,10 @@ export const attachPricing = (usage: Usage): UsageWithPricing => {
 
 export const getPricingForLLM = (props: {
   model: string;
-  promptTokens: number;
-  completionTokens: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  promptTokens?: number;
+  completionTokens?: number;
   markup?: number;
 }) => {
   const _package = fetchProviderPackage(props.model);
@@ -198,12 +227,22 @@ export const getPricingForLLM = (props: {
       originalPriceUSD: 0,
     };
   }
+  const inputTokens = props.inputTokens ?? props.promptTokens;
+  const outputTokens = props.outputTokens ?? props.completionTokens;
+  if (!inputTokens || !outputTokens) {
+    return {
+      priceUSD: 0,
+      originalPriceUSD: 0,
+    };
+  }
   const modelPricingConfig = (pricingConfig as any)[props.model];
+  const inputPricingConfig =
+    modelPricingConfig.promptToken ?? modelPricingConfig.inputToken;
+  const outputPricingConfig =
+    modelPricingConfig.completionToken ?? modelPricingConfig.outputToken;
   const usagePriceUSD =
-    modelPricingConfig.promptToken.basePriceUSD *
-      (props.promptTokens / modelPricingConfig.promptToken.per) +
-    modelPricingConfig.completionToken.basePriceUSD *
-      (props.completionTokens / modelPricingConfig.completionToken.per);
+    inputPricingConfig.basePriceUSD * (inputTokens / inputPricingConfig.per) +
+    outputPricingConfig.basePriceUSD * (outputTokens / outputPricingConfig.per);
   return {
     provider: _package?.replace('ai-provider-', ''),
     priceUSD: usagePriceUSD * (1 - (props.markup ?? 0) / 100),

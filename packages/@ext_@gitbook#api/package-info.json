@@ -9,12 +9,6 @@
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/@gitbook/api",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/api-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "@gitbook/api",
-    "functionalities": [],
-    "description": "The full README for the package"
-  },
   "constructors": [],
   "extraInfo": []
 }

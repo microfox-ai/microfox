@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "deploy": "npm run build && serverless deploy --stage dev",
     "deploy:preview": "npm run build && serverless deploy --stage preview",
     "deploy:prod": "npm run build && serverless deploy --stage prod",
@@ -18,7 +19,7 @@
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
     "dotenv": "^16.4.5",
-    "@microfox/slack": "*"
+    "@microfox/slack": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
@@ -29,6 +30,7 @@
     "eslint-plugin-import": "^2.31.0",
     "serverless": "^3.38.0",
     "serverless-api-gateway-throttling": "^2.0.3",
+    "serverless-offline": "^13.3.3",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.3.3"
   },

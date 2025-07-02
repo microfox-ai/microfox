@@ -13,6 +13,7 @@ export const redditOAuthConfigSchema = z.object({
     .optional(),
   scopes: z
     .array(z.string())
+    .optional()
     .describe('An array of scopes required for your application'),
 });
 

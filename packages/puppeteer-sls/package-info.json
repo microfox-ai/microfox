@@ -6,18 +6,9 @@
   "dependencies": ["@sparticuz/chromium", "puppeteer-core"],
   "status": "stable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "none",
   "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",
-  "readme_map": {
-    "title": "Puppeteer SLS Provider",
-    "description": "The full README for the Puppeteer SLS Provider",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
-    "functionalities": ["puppeteerLaunchProps"],
-    "all_readmes": []
-  },
-  "addedDependencies": [""],
   "constructors": [
     {
       "name": "PuppeteerSLS",

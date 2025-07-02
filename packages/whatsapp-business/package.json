@@ -1,6 +1,6 @@
 {
   "name": "@microfox/whatsapp-business",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "WhatsApp Business API SDK: A lightweight, type-safe SDK for interacting with the WhatsApp Business API",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

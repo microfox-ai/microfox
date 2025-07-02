@@ -9,11 +9,6 @@
   "webhookEndpoint": "/webhook/webhook-slack",
   "documentation": "https://www.npmjs.com/package/@microfox/webhook-slack",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/webhook-slack.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "description": "The full README for the Microfox Slack Webhook",
-    "functionalities": []
-  },
   "constructors": [],
   "extraInfo": [],
   "keyInstructions": {

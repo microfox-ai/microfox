@@ -46,7 +46,7 @@ jobs:
           
           # Run the script - it will handle git comparison internally
           cd scripts
-          npm run update:readme-map
+          update:constructors
           
           # Check if any package-info.json files were modified
           echo "🐛 Current directory: $(pwd)"
@@ -75,7 +75,7 @@ jobs:
         if: steps.update-package-info.outputs.no_changes != 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'chore: update package-info.json readme_map for docs changes'
+          commit_message: 'chore: update package-info.json for docs changes'
           file_pattern: '**/package-info.json'
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'

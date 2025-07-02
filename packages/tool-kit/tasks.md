@@ -1,5 +1,17 @@
 # @microfox/tool-kit Refactoring Plan
 
+//Each tool call must have a corresponding tool result. If you do not add a tool result, all subsequent generations will fail
+//bypass execute function process it, and return void, to put a temp stop
+// format a dataStreamPart with tool_call, and speciall toolName, & some state args, that help
+// get answer and push this part jsut above the preivously paused part, making it look like,
+// when asked for pramod, what his best time to meet is, pramod answered in {slack} message that he wants to connect on tuesday. aslong with all result data
+// add/modify args & permit the execute function to be called,
+// human layer will tell what tool to call, to get permission / input but will not execute in here, as it does not know the client secrets
+/\*\*
+
+- Returns a set of tools generated from the OpenAPI schema
+  \*/
+
 This document outlines the step-by-step plan to refactor the `@microfox/tool-kit` to support advanced human-in-the-loop interactions and multi-source toolsets, based on our discussion.
 
 ## Phase 1: Implement the Core Human Interaction Model

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-provider-google",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A Wrapped Google AI Provider for Vercels AI SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -26,9 +26,10 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.2.19",
+    "@ai-sdk/google": "^2.0.0-beta",
+    "@ai-sdk/provider": "^2.0.0-beta",
     "@microfox/usage-tracker": "*",
-    "ai": "^4.3.16",
+    "ai": "^5.0.0-beta",
     "zod": "^3.24.2"
   },
   "devDependencies": {

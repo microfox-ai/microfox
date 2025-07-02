@@ -1,5 +1,15 @@
 # @microfox/usage-tracker
 
+## 0.2.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- ac70f88: release: usage backward support + degrade linkedin + kickstartPackageScript
+
 ## 0.1.0
 
 ### Minor Changes

@@ -159,10 +159,6 @@ function createInitialPackageInfo(
     oauth2Scopes: [],
     documentation: `https://www.npmjs.com/package/${packageName}`,
     icon: `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.replace('@microfox/', '').replace('-oauth', '').replace('-', '-').replace('_', '-')}.svg`,
-    readme_map: {
-      path: '/README.md',
-      description: `The full README for the ${title}`,
-    },
     constructors: [],
     extraInfo: [],
   };

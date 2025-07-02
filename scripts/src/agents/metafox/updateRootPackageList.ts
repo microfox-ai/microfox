@@ -249,15 +249,6 @@ function generatePackageStats(pkgInfo: PackageInfo | null): string {
     }
   }
   stats.push(`${keysCount} keys`);
-
-  // Count functionalities from readme_map
-  if (
-    pkgInfo.readme_map?.functionalities &&
-    pkgInfo.readme_map?.functionalities.length > 0
-  ) {
-    stats.push(`${pkgInfo.readme_map?.functionalities?.length ?? 0} fns`);
-  }
-
   return stats.length > 0 ? stats.join(', ') : 'N/A';
 }
 
@@ -343,9 +334,7 @@ async function updatePackageList() {
         status: status,
         title: pkgInfo?.title,
         logo: pkgInfo?.icon,
-        docsPath:
-          pkgInfo?.readme_map?.path ??
-          `https://github.com/microfox-ai/microfox/tree/main/packages/${dir}/README.md`,
+        docsPath: `https://github.com/microfox-ai/microfox/tree/main/packages/${dir}/README.md`,
         stats: generatePackageStats(pkgInfo),
         authType: pkgInfo?.authType,
       };

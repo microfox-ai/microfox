@@ -48,10 +48,14 @@ export const microfoxPackageMutator: MicrofoxPackageMutator = async (
 ) => {
   let newConfig = { ...config };
 
+  // Check for environment variable (NODE_ENV, MICROFOX_ENV, or STAGE), default to 'prod'
+  const env = process.env.MICROFOX_ENV || 'prod';
+
+  // Environment-specific config path
   const packageServerlessPath = `/refs/heads/main/packages/${packageName.replace(
     '@microfox/',
     '',
-  )}/config.serverless.json`;
+  )}/config.serverless.${env}.json`;
 
   try {
     const jsonConfig = await fetchGithubJson(

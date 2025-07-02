@@ -3,25 +3,21 @@ import {
   PerplexityProviderSettings,
   type PerplexityProvider as PerplexityP,
 } from '@ai-sdk/perplexity';
-import {
-  LanguageModelV1,
-  LanguageModelV1Middleware,
-  wrapLanguageModel,
-} from 'ai';
+import { LanguageModelV2Middleware } from '@ai-sdk/provider';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
-import {
-  PerplexityLanguageModelId,
-  PerplexityChatSettings,
-} from './types';
+import { wrapLanguageModel } from 'ai';
+import { PerplexityLanguageModelId, PerplexityChatSettings } from './types';
 
 export class PerplexityProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private apiKey: string;
   private perplexityProvider: PerplexityP;
 
   constructor(props: {
     apiKey: string;
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
+    baseURL?: string;
+    headers?: Record<string, string>;
   }) {
     this.apiKey = props.apiKey;
 
@@ -38,8 +34,11 @@ export class PerplexityProvider {
             'ai-provider-perplexity',
             result.response.modelId,
             {
-              promptTokens: result.usage.promptTokens,
-              completionTokens: result.usage.completionTokens,
+              inputTokens: result.usage.inputTokens ?? 0,
+              outputTokens: result.usage.outputTokens ?? 0,
+              cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+              reasoningTokens: result.usage.reasoningTokens ?? 0,
+              totalTokens: result.usage.totalTokens ?? 0,
             },
           );
         } else {
@@ -54,11 +53,13 @@ export class PerplexityProvider {
 
     this.perplexityProvider = createPerplexity({
       apiKey: this.apiKey,
+      baseURL: props.baseURL,
+      headers: props.headers,
     });
   }
 
   // Method to update middleware
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
@@ -68,4 +69,4 @@ export class PerplexityProvider {
       middleware: this.middleware,
     });
   }
-} 
+}

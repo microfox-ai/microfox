@@ -1,5 +1,60 @@
 # @microfox/reddit
 
+## 1.5.1
+
+### Patch Changes
+
+- 02d9ad3: Triggered by issue #549: release @microfox/reddit patch
+
+## 1.5.0
+
+### Minor Changes
+
+- a2bf5ad: Changes from PR #544: vwjt_reddit_fixes_june_2025
+
+### Patch Changes
+
+- db7ed13: Triggered by issue #545: release @microfox/reddit patch
+
+## 1.4.1
+
+### Patch Changes
+
+- 909e5eb: Changes from PR #542: suno
+
+## 1.4.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- Updated dependencies [b34aa2e]
+  - @microfox/reddit-oauth@1.3.0
+
+## 1.3.3
+
+### Patch Changes
+
+- 6349b09: release: refactor: update package-info.json and schemas
+- Updated dependencies [6349b09]
+  - @microfox/reddit-oauth@1.2.4
+
+## 1.3.2
+
+### Patch Changes
+
+- b398833: Triggered by issue #529: release @microfox/reddit[minor]
+
+## 1.3.1
+
+### Patch Changes
+
+- e7557a0: Changes from PR #516: reddit-fix
+- Updated dependencies [e7557a0]
+  - @microfox/reddit-oauth@1.2.2
+
 ## 1.3.0
 
 ### Minor Changes

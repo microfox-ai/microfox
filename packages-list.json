@@ -3,11 +3,16 @@
     "packages/@ext_@gitbook#api",
     "packages/@ext_@hyperbrowser#sdk",
     "packages/@ext_@slack#web-api",
-    "packages/@ext_octokit",
-    "packages/@ext_puppeteer"
+    "packages/@ext_octokit"
+  ],
+  "webhookConnectorPackages": [
+    "packages/agent-kit",
+    "packages/webhook-octokit",
+    "packages/webhook-slack"
   ],
   "internalPackages": [
-    "packages/@ext_ai",
+    "packages/ai",
+    "packages/cli",
     "packages/crypto-sdk",
     "packages/oauth-kit",
     "packages/rest-sdk",
@@ -16,11 +21,6 @@
     "packages/usage-pricing",
     "packages/usage-tracker",
     "packages/webhook-kit"
-  ],
-  "webhookConnectorPackages": [
-    "packages/agent-kit",
-    "packages/webhook-octokit",
-    "packages/webhook-slack"
   ],
   "stablePackages": [
     "packages/ai-provider-anthropic",
@@ -37,6 +37,7 @@
     "packages/ai-provider-openai",
     "packages/ai-provider-perplexity",
     "packages/amazon-rekognition-face-detection",
+    "packages/apify",
     "packages/coingecko-sdk",
     "packages/discord",
     "packages/fillout",
@@ -48,13 +49,19 @@
     "packages/instagram",
     "packages/instagram-fb",
     "packages/kling-ai",
-    "packages/linkedin-member-data-portability",
     "packages/notion",
+    "packages/puppeteer-linkedin",
     "packages/reddit",
     "packages/slack",
+    "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
+  ],
+  "unstablePackages": [
+    "packages/ai-provider-vertex",
+    "packages/linkedin-member-data-portability",
+    "packages/puppeteer-suno"
   ],
   "partialPackages": [
     "packages/core",
@@ -74,8 +81,9 @@
     "packages/slack-oauth"
   ],
   "unknownPackages": [
+    "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 61,
-  "generatedAt": "2025-06-22T02:23:13.070Z"
+  "total": 67,
+  "generatedAt": "2025-07-01T08:41:59.413Z"
 }

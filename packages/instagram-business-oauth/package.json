@@ -1,6 +1,6 @@
 {
   "name": "@microfox/instagram-business-oauth",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "OAuth SDK for instagram-business: A robust TypeScript SDK for instagram-business OAuth 2.0 authentication and API integration",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

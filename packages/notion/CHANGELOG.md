@@ -1,5 +1,17 @@
 # @microfox/notion
 
+## 1.1.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+## 1.0.5
+
+### Patch Changes
+
+- 2ba1b7d: Changes from PR #523: notion-markdown-updates
+
 ## 1.0.4
 
 ### Patch Changes

@@ -23,7 +23,7 @@ export class RedditOAuthSdk {
     this.clientId = validatedConfig.clientId;
     this.clientSecret = validatedConfig.clientSecret;
     this.redirectUri = validatedConfig.redirectUri || '';
-    this.scopes = validatedConfig.scopes;
+    this.scopes = validatedConfig.scopes || [];
   }
 
   /**
