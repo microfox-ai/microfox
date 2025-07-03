@@ -6,3 +6,6 @@ export {
   type WebhookVerificationError,
 } from '@microfox/webhook-core';
 export * from './schemas';
+export { convertGitHubPayloadToWebhookEvent } from './helpers/octokit';
+export { convertSlackPayloadToWebhookEvent } from './helpers/slack';
+export { convertWhatsAppPayloadToWebhookEvent } from './helpers/whatsapp';
