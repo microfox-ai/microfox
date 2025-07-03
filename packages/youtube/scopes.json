@@ -18,5 +18,9 @@
   {
     "name": "https://www.googleapis.com/auth/youtubepartner",
     "description": "Access to YouTube partner content"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/youtube.download",
+    "description": "Download videos from your YouTube account"
   }
 ]
