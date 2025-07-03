@@ -42,48 +42,13 @@
         {
           "key": "SCOPES",
           "displayName": "Scopes",
-          "description": "The scopes for the YouTube client",
-          "defaultValue": [
-            "https://www.googleapis.com/auth/youtube.download"
-          ]
+          "description": "The scopes for the YouTube client"
         }
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The access token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The refresh token for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client ID for the YouTube client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["createYouTubeSDKWithTokens"],
-      "description": "The client secret for the YouTube client",
-      "required": true
     }
   ],
   "extraInfo": [
     "Use the `createYouTubeSDKWithTokens` constructor to create a new YouTube client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

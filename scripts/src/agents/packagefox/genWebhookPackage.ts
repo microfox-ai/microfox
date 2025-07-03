@@ -163,12 +163,7 @@ function createInitialPackageInfo(
     webhookEndpoint: `/webhook/${packageName.replace('@microfox/', '').replace('-webhook', '')}`,
     documentation: `https://www.npmjs.com/package/${packageName}`,
     icon: `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.replace('@microfox/', '').replace('-webhook', '').replace('-', '-').replace('_', '-')}.svg`,
-    readme_map: {
-      path: '/README.md',
-      description: `The full README for the ${title}`,
-    },
     constructors: [],
-    keysInfo: [],
     extraInfo: [],
   };
 }

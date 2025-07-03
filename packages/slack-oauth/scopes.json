@@ -1,0 +1,90 @@
+[
+  {
+    "name": "app_mentions:read",
+    "description": "Read mentions of your app in Slack"
+  },
+  {
+    "name": "assistant:write",
+    "description": "Write to your app's assistants"
+  },
+  {
+    "name": "channels:history",
+    "description": "Read messages from channels"
+  },
+  {
+    "name": "channels:join",
+    "description": "Join channels"
+  },
+  {
+    "name": "channels:read",
+    "description": "Read channels"
+  },
+  {
+    "name": "channels:manage",
+    "description": "Manage channels"
+  },
+  {
+    "name": "chat:write",
+    "description": "Write messages to channels"
+  },
+  {
+    "name": "chat:write.customize",
+    "description": "Write messages to channels with customizations"
+  },
+  {
+    "name": "commands",
+    "description": "Use commands in Slack"
+  },
+  {
+    "name": "files:read",
+    "description": "Read files"
+  },
+  {
+    "name": "files:write",
+    "description": "Write files"
+  },
+  {
+    "name": "groups:history",
+    "description": "Read messages from groups"
+  },
+  {
+    "name": "groups:read",
+    "description": "Read groups"
+  },
+  {
+    "name": "groups:write",
+    "description": "Write to groups"
+  },
+  {
+    "name": "groups:write.invites",
+    "description": "Write to groups with invites"
+  },
+  {
+    "name": "im:history",
+    "description": "Read messages from direct messages"
+  },
+  {
+    "name": "im:write",
+    "description": "Write to direct messages"
+  },
+  {
+    "name": "reactions:read",
+    "description": "Read reactions"
+  },
+  {
+    "name": "reactions:write",
+    "description": "Write reactions"
+  },
+  {
+    "name": "reminders:read",
+    "description": "Read reminders"
+  },
+  {
+    "name": "reminders:write",
+    "description": "Write reminders"
+  },
+  {
+    "name": "team:read",
+    "description": "Read team information"
+  }
+]

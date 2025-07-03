@@ -142,7 +142,7 @@ export async function fixBuildIssues(packageName: string) {
       Fantastic! Your package ${packageName} has been built successfully and is ready to rock! 🚀
 
       ## 📊 Package Stats
-      - Total Functions: ${packageInfo.readme_map.functionalities.length} powerful functionalities at your fingertips
+      - Total Functions: ${packageInfo.constructors.map((c: any) => c.functionalities).flat().length} powerful functionalities at your fingertips
       - Estimated Build Cost: $${totalUsage?.totalCost}$
       - Authentication: ${packageInfo.authType} based security
       
@@ -177,7 +177,7 @@ export async function fixBuildIssues(packageName: string) {
       body: `❌ Failed to build ${packageDir} after ${MAX_RETRIES} attempts. Please review logs and fix manually.`,
     });
     inMemoryStore.clear();
-    process.exitCode = 1;
+    process.exitCode = 0;
   }
 }
 

@@ -2,38 +2,67 @@
   "externalPackages": [
     "packages/@ext_@gitbook#api",
     "packages/@ext_@hyperbrowser#sdk",
-    "packages/@ext_@notionhq#client",
     "packages/@ext_@slack#web-api",
-    "packages/@ext_ai",
-    "packages/@ext_octokit",
-    "packages/@ext_puppeteer"
+    "packages/@ext_octokit"
+  ],
+  "webhookConnectorPackages": [
+    "packages/agent-kit",
+    "packages/webhook-octokit",
+    "packages/webhook-slack"
+  ],
+  "internalPackages": [
+    "packages/ai",
+    "packages/ai-router",
+    "packages/cli",
+    "packages/crypto-sdk",
+    "packages/oauth-kit",
+    "packages/rest-sdk",
+    "packages/serverless-yml",
+    "packages/tool-kit",
+    "packages/usage-pricing",
+    "packages/usage-tracker",
+    "packages/webhook-kit"
   ],
   "stablePackages": [
-    "packages/ai-provider-openai",
+    "packages/ai-provider-anthropic",
+    "packages/ai-provider-google",
     "packages/aws-ses",
     "packages/brave",
     "packages/google-sheets",
     "packages/linkedin-share",
+    "packages/puppeteer-sls",
     "packages/slack-web-tiny",
     "packages/whatsapp-business"
   ],
   "semiStablePackages": [
+    "packages/ai-provider-openai",
+    "packages/ai-provider-perplexity",
     "packages/amazon-rekognition-face-detection",
+    "packages/apify",
     "packages/coingecko-sdk",
     "packages/discord",
-    "packages/drive",
     "packages/fillout",
     "packages/gmail",
     "packages/google-analytics",
     "packages/google-calendar",
+    "packages/google-drive",
     "packages/google-seo",
     "packages/instagram",
     "packages/instagram-fb",
-    "packages/linkedin-member-data-portability",
+    "packages/kling-ai",
+    "packages/notion",
+    "packages/puppeteer-linkedin",
     "packages/reddit",
+    "packages/slack",
+    "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
+  ],
+  "unstablePackages": [
+    "packages/ai-provider-vertex",
+    "packages/linkedin-member-data-portability",
+    "packages/puppeteer-suno"
   ],
   "partialPackages": [
     "packages/core",
@@ -48,17 +77,14 @@
     "packages/instagram-business-oauth",
     "packages/instagram-fb-business-oauth",
     "packages/linkedin-oauth",
+    "packages/notion-oauth",
     "packages/reddit-oauth",
     "packages/slack-oauth"
   ],
-  "internalPackages": [
-    "packages/rest-sdk",
-    "packages/usage-pricing",
-    "packages/usage-tracker"
+  "unknownPackages": [
+    "packages/task-kit",
+    "packages/webhook-core"
   ],
-  "webhookConnectorPackages": [
-    "packages/webhook-slack"
-  ],
-  "total": 46,
-  "generatedAt": "2025-05-26T14:41:59.767Z"
+  "total": 68,
+  "generatedAt": "2025-07-02T11:57:32.886Z"
 }

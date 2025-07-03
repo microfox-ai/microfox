@@ -1,5 +1,40 @@
 # @microfox/google-sheets
 
+## 1.3.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- Updated dependencies [b34aa2e]
+  - @microfox/google-oauth@1.2.0
+
+## 1.2.1
+
+### Patch Changes
+
+- 9d77d8a: Changes from PR #517: google-sheets-token-refresh
+
+## 1.2.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
+### Patch Changes
+
+- Updated dependencies [16d112d]
+  - @microfox/google-oauth@1.1.0
+
+## 1.1.3
+
+### Patch Changes
+
+- 0e76275: Changes from PR #395: vwjt_slsfox_may_2025
+- eef1616: Changes from PR #396: vwjt_slsfox_may_2025
+
 ## 1.1.2
 
 ### Patch Changes

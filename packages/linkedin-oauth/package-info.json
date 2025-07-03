@@ -45,46 +45,8 @@
       ]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": ["linkedinOAuthManager"],
-      "description": "The access token for the LinkedIn client",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_REFRESH_TOKEN",
-      "constructors": ["linkedinOAuthManager"],
-      "description": "The refresh token for the LinkedIn client",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_CLIENT_ID",
-      "constructors": ["linkedinOAuthManager"],
-      "description": "The client ID for the LinkedIn application",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_CLIENT_SECRET",
-      "constructors": ["linkedinOAuthManager"],
-      "description": "The client secret for the LinkedIn application",
-      "required": true
-    },
-    {
-      "key": "LINKEDIN_SCOPES",
-      "constructors": ["linkedinOAuthManager"],
-      "description": "The scopes for the LinkedIn client",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createLinkedInClient` constructor to create a new LinkedIn OAuth client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "communication"
 }

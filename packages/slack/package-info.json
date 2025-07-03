@@ -1,0 +1,111 @@
+{
+  "name": "@microfox/slack",
+  "title": "Microfox Slack",
+  "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
+  "path": "packages/slack",
+  "dependencies": [
+    "@slack/web-api"
+  ],
+  "status": "semiStable",
+  "authType": "apikey",
+  "authEndpoint": "/connect/slack",
+  "documentation": "https://www.npmjs.com/package/@microfox/slack",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
+  "constructors": [
+    {
+      "name": "WebClient",
+      "description": "Create a new Slack WebClient client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "bot_token",
+      "requiredKeys": [
+        {
+          "key": "SLACK_BOT_TOKEN",
+          "displayName": "Slack Bot Token",
+          "description": "The bot token for authenticating with the Slack API."
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "MicrofoxSlackClient",
+        "WebClient",
+        "addUserToChannel",
+        "chat.postMessage",
+        "chat.update",
+        "conversations.history",
+        "conversations.join",
+        "conversations.list",
+        "createChannel",
+        "getChannelConversationInfo",
+        "getFileInfo",
+        "getUserInfo",
+        "listChannelUsers",
+        "listChannels",
+        "listUsers",
+        "messageChannel",
+        "messageUser",
+        "reactMessage",
+        "reactions.add",
+        "removeUserFromChannel",
+        "replyMessage",
+        "searchChannel",
+        "searchUser",
+        "sendFile",
+        "setReminder",
+        "users.info",
+        "users.list",
+        "users.lookupByEmail",
+        "views.open"
+      ]
+    },
+    {
+      "name": "MicrofoxSlackClient",
+      "description": "Create a new Slack MicrofoxSlackClient client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "bot_token",
+      "requiredKeys": [
+        {
+          "key": "SLACK_BOT_TOKEN",
+          "displayName": "Slack Bot Token",
+          "description": "The bot token for authenticating with the Slack API."
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "MicrofoxSlackClient",
+        "WebClient",
+        "addUserToChannel",
+        "chat.postMessage",
+        "chat.update",
+        "conversations.history",
+        "conversations.join",
+        "conversations.list",
+        "createChannel",
+        "getChannelConversationInfo",
+        "getFileInfo",
+        "getUserInfo",
+        "listChannelUsers",
+        "listChannels",
+        "listUsers",
+        "messageChannel",
+        "messageUser",
+        "reactMessage",
+        "reactions.add",
+        "removeUserFromChannel",
+        "replyMessage",
+        "searchChannel",
+        "searchUser",
+        "sendFile",
+        "setReminder",
+        "users.info",
+        "users.list",
+        "users.lookupByEmail",
+        "views.open"
+      ]
+    }
+  ],
+  "extraInfo": [
+    "This package is a proxy for @slack/web-api.",
+    "Use `new WebClient(token)` to create a new Slack client."
+  ],
+  "platformType": "communication"
+}

@@ -36,6 +36,8 @@ export class SlackOAuthSdk {
     this.isGovSlack = validatedConfig.isGovSlack || false;
   }
 
+  //not-added  = single_channel=0&install_redirect=&tracked=1&team=
+
   /**
    * Generates the authorization URL for Slack OAuth
    * @param state Optional state parameter to maintain state across the redirect
@@ -46,15 +48,15 @@ export class SlackOAuthSdk {
       ? 'https://slack-gov.com/oauth/v2/authorize'
       : 'https://slack.com/oauth/v2/authorize';
 
+    const scopes = [...this.scopes, 'team:read'].join(',');
+
     const params = new URLSearchParams({
       client_id: this.clientId,
-      scope: this.scopes.join(','),
+      scope: scopes,
+      user_scope: this.userScopes?.join(',') ?? '',
       redirect_uri: this.redirectUri,
+      granular_bot_scope: '1',
     });
-
-    if (this.userScopes && this.userScopes.length > 0) {
-      params.append('user_scope', this.userScopes.join(','));
-    }
 
     if (this.team) {
       params.append('team', this.team);

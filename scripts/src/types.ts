@@ -27,41 +27,6 @@ export const ReadMeObject = z.object({
     ),
 });
 
-export const PackageReadmeMap = z
-  .object({
-    path: z
-      .string()
-      .describe('The path to the main README file in the package'),
-    functionalities: z
-      .array(z.string())
-      .describe('The functionalities of the package'),
-    all_readmes: z
-      .array(ReadMeObject)
-      .optional()
-      .describe('The main readmes of the package'),
-    description: z.string().describe('The description of the package'),
-  })
-  .refine(
-    data => {
-      // If all_readmes is not provided, validation passes
-      if (!data.all_readmes) return true;
-
-      // Check if any functionality in all_readmes exists in functionalities
-      return data.all_readmes.every(readme => {
-        // If readme doesn't have a functionality field, it's valid
-        if (!readme.functionality) return true;
-
-        // Check if the functionality exists in the functionalities array
-        return data.functionalities.includes(readme.functionality);
-      });
-    },
-    {
-      message:
-        'Each functionality specified in all_readmes must exist in the functionalities array',
-      path: ['all_readmes'],
-    },
-  );
-
 export const Instructions = z.object({
   type: z.enum(['video', 'image', 'externalLink']),
   url: z.string().url(),
@@ -111,6 +76,7 @@ export const Constructor = z
   .object({
     name: z.string().describe('The name of the constructor'),
     description: z.string().describe('The description of the constructor'),
+    docUrl: z.string().url().optional(),
     auth: z
       .enum(['oauth2', 'apikey', 'none'])
       .describe('The authentication method of the constructor'),
@@ -213,14 +179,7 @@ export const PackageInfo = z
       .string()
       .describe('The icon url of the package')
       .startsWith('https://'),
-    readme_map: PackageReadmeMap,
     constructors: z.array(Constructor),
-    keysInfo: z.array(
-      KeyInfo.partial({ displayName: true, description: true }).extend({
-        constructors: z.array(z.string()),
-        required: z.boolean().optional(),
-      }),
-    ),
     keyInstructions: z
       .object({
         link: z.string().url(),

@@ -1,0 +1,179 @@
+import dotenv from 'dotenv';
+import { CryptoVault } from '@microfox/crypto-sdk';
+import { sdkInit } from './sdkInit.js';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+
+dotenv.config(); // for any local vars
+
+// Initialize CryptoVault with environment key
+const RAW_KEY = process.env.ENCRYPTION_KEY;
+if (!RAW_KEY) {
+  throw new Error('Missing ENCRYPTION_KEY in environment');
+}
+
+const cryptoVault = new CryptoVault({
+  key: RAW_KEY,
+  keyFormat: 'base64',
+  encryptionAlgo: 'aes-256-gcm',
+  hashAlgo: 'sha256',
+  outputEncoding: 'base64url'
+});
+
+export const handler = async (event: APIGatewayProxyEvent): Promise<any> => {
+  try {
+    // Extract the functionName from the path: /{constructorName}/{functionName}
+    console.log("event", event);
+    const segments = event.path.split("/").filter(Boolean);
+    if (segments.length < 2) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid path format. Expected /{constructorName}/{functionName}" }),
+      };
+    }
+    const functionSlug = segments[1];
+    console.log("functionSlug", functionSlug);
+
+    if (!functionSlug) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: 'Missing functionSlug in request body' }),
+      };
+    }
+
+    const constructorName = segments[0];
+    console.log("constructorName", constructorName);
+
+    if (!constructorName) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: 'Missing constructorName in request body' }),
+      };
+    }
+
+    // Parse the request body
+    let requestBody: any;
+    try {
+      requestBody = event.body ? JSON.parse(event.body) : {};
+    } catch (parseError) {
+      console.error("Error parsing request body:", parseError);
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid JSON in request body" }),
+      };
+    }
+
+    // Extract environment variables from the new structure
+    const authVariables = requestBody?.body?.auth?.variables;
+    if (!authVariables || !Array.isArray(authVariables)) {
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: 'Missing or invalid auth.variables in request body' }),
+      };
+    }
+
+    // Decrypt environment variables
+    const credentials: Record<string, string> = {};
+    try {
+      for (const variable of authVariables) {
+        if (!variable.key || !variable.value) {
+          console.warn("Skipping invalid variable:", variable);
+          continue;
+        }
+
+        // Decrypt the value
+        const decryptedValue = cryptoVault.decrypt(variable.value);
+        credentials[variable.key] = decryptedValue;
+      }
+    } catch (decryptionError) {
+      console.error("Error decrypting credentials:", decryptionError);
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Failed to decrypt credentials" }),
+      };
+    }
+
+    // Initialize SDK using the factory
+    const sdk = sdkInit({ constructorName, ...credentials });
+
+    // Resolve the function from the slug (e.g., 'chat-post_message' -> sdk.chat.postMessage)
+    const slugParts = functionSlug.split('-');
+    const methodSlug = slugParts.pop()!;
+    const objectPath = slugParts; // e.g., ['chat']
+
+    const methodName = methodSlug.replace(/_(\w)/g, (k) => k[1].toUpperCase());
+
+    let context: any = sdk;
+    for (const prop of objectPath) {
+        if (context && typeof context[prop] === 'object' && context[prop] !== null) {
+            context = context[prop];
+        } else {
+            context = undefined; // Path does not exist
+            break;
+        }
+    }
+    
+    const fn = (context && typeof context[methodName] === 'function') 
+        ? context[methodName].bind(context)
+        : undefined;
+
+    if (!fn) {
+      return {
+        statusCode: 404,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: `Function matching slug '${functionSlug}' not found on SDK instance for constructor '${constructorName}'` }),
+      };
+    }
+
+    // Extract function arguments
+    let args: any[] = [];
+    try {
+      const bodyArgs = requestBody?.body?.arguments;
+      if (bodyArgs) {
+        args = Array.isArray(bodyArgs) ? bodyArgs : [bodyArgs];
+      }
+    } catch (argsError) {
+      console.error("Error parsing function arguments:", argsError);
+      return {
+        statusCode: 400,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid function arguments" }),
+      };
+    }
+
+    // Invoke the function
+    try {
+      const result = await fn(...args);
+      return {
+        statusCode: 200,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result),
+      };
+    } catch (functionError) {
+      console.error("Error executing SDK function:", functionError);
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          error: functionError instanceof Error ? functionError.message : String(functionError),
+        }),
+      };
+    }
+
+  } catch (generalError) {
+    console.error("Unexpected error in handler:", generalError);
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        error: "Internal server error",
+        details: generalError instanceof Error ? generalError.message : String(generalError),
+      }),
+    };
+  }
+};

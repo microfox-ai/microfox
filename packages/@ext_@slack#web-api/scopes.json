@@ -1,0 +1,102 @@
+[
+  {
+    "name": "app_mentions:read",
+    "description": "Read app mentions"
+  },
+  {
+    "name": "assistant:write",
+    "description": "Write to assistant"
+  },
+  {
+    "name": "channels:history",
+    "description": "Read channel history"
+  },
+  {
+    "name": "channels:join",
+    "description": "Join channels"
+  },
+  {
+    "name": "channels:read",
+    "description": "Read channels"
+  },
+  {
+    "name": "channels:manage",
+    "description": "Manage channels"
+  },
+  {
+    "name": "chat:write",
+    "description": "Write messages"
+  },
+  {
+    "name": "chat:write.customize",
+    "description": "Write messages with customizations"
+  },
+  {
+    "name": "commands",
+    "description": "Read commands"
+  },
+  {
+    "name": "files:read",
+    "description": "Read files"
+  },
+  {
+    "name": "files:write",
+    "description": "Write files"
+  },
+  {
+    "name": "groups:history",
+    "description": "Read group history"
+  },
+  {
+    "name": "groups:write",
+    "description": "Write to group"
+  },
+  {
+    "name": "groups:write.invites",
+    "description": "Write to group invites"
+  },
+  {
+    "name": "groups:read",
+    "description": "Read group"
+  },
+  {
+    "name": "im:read",
+    "description": "Read IM"
+  },
+  {
+    "name": "im:write",
+    "description": "Write to IM"
+  },
+  {
+    "name": "reactions:read",
+    "description": "Read reactions"
+  },
+  {
+    "name": "reactions:write",
+    "description": "Write reactions"
+  },
+  {
+    "name": "reminders:read",
+    "description": "Read reminders"
+  },
+  {
+    "name": "reminders:write",
+    "description": "Write reminders"
+  },
+  {
+    "name": "users:read.email",
+    "description": "Read user email"
+  },
+  {
+    "name": "users:read",
+    "description": "Read users"
+  },
+  {
+    "name": "users.profile:read",
+    "description": "Read user profile"
+  },
+  {
+    "name": "metadata.message:read",
+    "description": "Read message metadata"
+  }
+]

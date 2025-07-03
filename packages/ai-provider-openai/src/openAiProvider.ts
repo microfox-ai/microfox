@@ -1,78 +1,28 @@
-import { createOpenAI, type OpenAIProvider as OpenAIP } from '@ai-sdk/openai';
 import {
-  LanguageModelV1,
-  LanguageModelV1Middleware,
-  wrapLanguageModel,
-} from 'ai';
+  createOpenAI,
+  OpenAIProviderSettings,
+  type OpenAIProvider as OpenAIP,
+} from '@ai-sdk/openai';
+import { LanguageModelV2Middleware } from '@ai-sdk/provider';
 import { createDefaultMicrofoxUsageTracker } from '@microfox/usage-tracker';
-
-export type OpenAIImageModelId =
-  | 'dall-e-3'
-  | 'dall-e-3-hd'
-  | 'dall-e-2'
-  | (string & {});
-
-export type OpenAILanguageModelId =
-  | 'o1'
-  | 'o1-2024-12-17'
-  | 'o1-mini'
-  | 'o1-mini-2024-09-12'
-  | 'o1-preview'
-  | 'o1-preview-2024-09-12'
-  | 'o3-mini'
-  | 'o3-mini-2025-01-31'
-  | 'o3'
-  | 'o3-2025-04-16'
-  | 'o4-mini'
-  | 'o4-mini-2025-04-16'
-  | 'gpt-4.1'
-  | 'gpt-4.1-2025-04-14'
-  | 'gpt-4.1-mini'
-  | 'gpt-4.1-mini-2025-04-14'
-  | 'gpt-4.1-nano'
-  | 'gpt-4.1-nano-2025-04-14'
-  | 'gpt-4o'
-  | 'gpt-4o-2024-05-13'
-  | 'gpt-4o-2024-08-06'
-  | 'gpt-4o-2024-11-20'
-  | 'gpt-4o-audio-preview'
-  | 'gpt-4o-audio-preview-2024-10-01'
-  | 'gpt-4o-audio-preview-2024-12-17'
-  | 'gpt-4o-search-preview'
-  | 'gpt-4o-search-preview-2025-03-11'
-  | 'gpt-4o-mini-search-preview'
-  | 'gpt-4o-mini-search-preview-2025-03-11'
-  | 'gpt-4o-mini'
-  | 'gpt-4o-mini-2024-07-18'
-  | 'gpt-4-turbo'
-  | 'gpt-4-turbo-2024-04-09'
-  | 'gpt-4-turbo-preview'
-  | 'gpt-4-0125-preview'
-  | 'gpt-4-1106-preview'
-  | 'gpt-4'
-  | 'gpt-4-0613'
-  | 'gpt-4.5-preview'
-  | 'gpt-4.5-preview-2025-02-27'
-  | 'gpt-3.5-turbo-0125'
-  | 'gpt-3.5-turbo'
-  | 'gpt-3.5-turbo-1106'
-  | 'chatgpt-4o-latest'
-  | (string & {});
-
-export type OpenAIEmbeddingModelId =
-  | 'text-embedding-3-small'
-  | 'text-embedding-3-large'
-  | 'text-embedding-ada-002'
-  | (string & {});
+import { wrapLanguageModel } from 'ai';
+import {
+  OpenAILanguageModelId,
+  OpenAIChatSettings,
+  OpenAIEmbeddingModelId,
+  OpenAIImageModelId,
+} from './types';
 
 export class OpenAiProvider {
-  private middleware: LanguageModelV1Middleware;
+  private middleware: LanguageModelV2Middleware;
   private apiKey: string;
   private openaiProvider: OpenAIP;
 
   constructor(props: {
     apiKey: string;
-    middleware?: LanguageModelV1Middleware;
+    middleware?: LanguageModelV2Middleware;
+    baseURL?: string;
+    headers?: Record<string, string>;
   }) {
     this.apiKey = props.apiKey;
 
@@ -83,17 +33,17 @@ export class OpenAiProvider {
       },
       async wrapGenerate({ doGenerate, params }) {
         const result = await doGenerate();
-        if (
-          result.response?.modelId &&
-          process.env.OPENAI_SECRET_TEMPLATE_TYPE === 'markup'
-        ) {
+        if (result.response?.modelId) {
           const tracker = createDefaultMicrofoxUsageTracker();
           tracker?.trackLLMUsage(
             'ai-provider-openai',
             result.response.modelId,
             {
-              promptTokens: result.usage.promptTokens,
-              completionTokens: result.usage.completionTokens,
+              inputTokens: result.usage.inputTokens ?? 0,
+              outputTokens: result.usage.outputTokens ?? 0,
+              cachedInputTokens: result.usage.cachedInputTokens ?? 0,
+              reasoningTokens: result.usage.reasoningTokens ?? 0,
+              totalTokens: result.usage.totalTokens ?? 0,
             },
           );
         } else {
@@ -108,11 +58,13 @@ export class OpenAiProvider {
 
     this.openaiProvider = createOpenAI({
       apiKey: this.apiKey,
+      baseURL: props.baseURL,
+      headers: props.headers,
     });
   }
 
   // Method to update middleware
-  setMiddleware(middleware: LanguageModelV1Middleware) {
+  setMiddleware(middleware: LanguageModelV2Middleware) {
     this.middleware = middleware;
   }
 
@@ -123,47 +75,11 @@ export class OpenAiProvider {
     });
   }
 
-  embedding(modelId: OpenAIEmbeddingModelId) {
-    return this.openaiProvider.embedding(modelId);
-  }
-
   textEmbeddingModel(modelId: OpenAIEmbeddingModelId) {
     return this.openaiProvider.textEmbeddingModel(modelId);
   }
 
   imageModel(modelId: OpenAIImageModelId) {
     return this.openaiProvider.imageModel(modelId);
-  }
-
-  image(modelId: OpenAIImageModelId, settings?: any) {
-    return this.openaiProvider.image(modelId, settings);
-  }
-
-  speechModel(modelId: string) {
-    if (!this.openaiProvider.speechModel) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.speech(modelId);
-  }
-
-  speech(modelId: string) {
-    if (!this.openaiProvider.speech) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.speech(modelId);
-  }
-
-  transcription(modelId: string) {
-    if (!this.openaiProvider.transcription) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.transcription(modelId);
-  }
-
-  transcriptionModel(modelId: string) {
-    if (!this.openaiProvider.transcriptionModel) {
-      throw new Error('OpenAI provider not initialized');
-    }
-    return this.openaiProvider.transcriptionModel(modelId);
   }
 }

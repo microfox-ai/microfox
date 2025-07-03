@@ -234,13 +234,7 @@ function createInitialPackageInfo(
     authType: authType === 'auto' ? undefined : authType,
     documentation: `https://www.npmjs.com/package/${packageName}`,
     icon: `https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/${packageName.replace('@microfox/', '').replace('-', '-').replace('_', '-')}.svg`,
-    readme_map: {
-      path: '/README.md',
-      description: `The full README for the ${title}`,
-      functionalities: [],
-    },
     constructors: [],
-    keysInfo: [],
     keyInstructions: {
       link: '',
       setupInfo: '',

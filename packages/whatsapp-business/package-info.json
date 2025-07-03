@@ -9,50 +9,6 @@
   "authEndpoint": "/connect/whatsapp",
   "documentation": "https://www.npmjs.com/package/@microfox/whatsapp-business",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "WhatsAppBusinessSDK Microfox",
-    "functionalities": [
-      "sendTextMessage",
-      "sendImageMessage",
-      "sendVideoMessage",
-      "sendDocumentMessage",
-      "sendAudioMessage",
-      "sendStickerMessage",
-      "sendLocationMessage",
-      "sendLocationRequestMessage",
-      "sendContactMessage",
-      "sendInteractiveMessage",
-      "sendInteractiveCtaMessage",
-      "sendTemplateMessage",
-      "sendFlowMessage",
-      "sendReaction",
-      "sendTypingIndicator",
-      "sendFlowMessage",
-      "sendReply",
-      "markMessageAsRead",
-      "markMessagesAsRead",
-      "uploadMedia",
-      "downloadMedia",
-      "getMediaUrl",
-      "registerPhone",
-      "deregisterPhone",
-      "getBusinessProfile",
-      "updateBusinessProfile",
-      "getTemplates",
-      "createTemplate",
-      "deleteTemplate",
-      "getQRCode",
-      "getPhoneNumbers",
-      "getAnalytics",
-      "getCommerceSettings",
-      "updateCommerceSettings",
-      "configureConversationalComponents",
-      "getConversationalComponents"
-    ],
-    "description": "The full README for the WhatsApp Business SDK",
-    "all_readmes": []
-  },
   "constructors": [
     {
       "name": "WhatsAppBusinessSDK",
@@ -158,38 +114,6 @@
           }
         }
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "WHATSAPP_BUSINESS_PHONE_NUMBER",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "Your whatsapp business phone number to send the text from",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_PHONE_NUMBER_ID",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The phone number ID for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The business account ID for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_ACCESS_TOKEN",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The access token for the WhatsApp Business API",
-      "required": true
-    },
-    {
-      "key": "WHATSAPP_WEBHOOK_VERIFY_TOKEN",
-      "constructors": ["WhatsAppBusinessSDK"],
-      "description": "The verify token for the WhatsApp Webhook",
-      "required": true
     }
   ],
   "extraInfo": [

@@ -33,7 +33,7 @@ jobs:
 
       - name: Clean up  & reset .microfox files
         run: |
-          echo "{ requests: [] }" > .microfox/packagefox-build.json
+          echo '{"requests": []}' > .microfox/packagefox-build.json
           echo "{}" > .microfox/pr-usage.json
 
       - name: Check for changes

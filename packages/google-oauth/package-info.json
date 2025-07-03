@@ -42,49 +42,12 @@
           "displayName": "Scopes",
           "description": "The scopes for the Google client"
         }
-      ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "GOOGLE_ACCESS_TOKEN",
-      "constructors": ["GoogleOAuthSdk"],
-      "description": "The access token for the Google client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_REFRESH_TOKEN",
-      "constructors": ["GoogleOAuthSdk"],
-      "description": "The refresh token for the Google client",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_ID",
-      "constructors": ["GoogleOAuthSdk"],
-      "description": "The client ID for the Google application",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_CLIENT_SECRET",
-      "constructors": ["GoogleOAuthSdk"],
-      "description": "The client secret for the Google application",
-      "required": true
-    },
-    {
-      "key": "GOOGLE_SCOPES",
-      "constructors": ["GoogleOAuthSdk"],
-      "description": "The scopes for the Google client",
-      "required": true
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/google-oauth/docs/GoogleOAuthSdk.md"
     }
   ],
   "extraInfo": [
     "Use the `GoogleOAuthSdk` class to create a new Google OAuth client."
   ],
-  "readme_map": {
-    "path": "/README.md",
-    "functionalities": [],
-    "description": "No description provided",
-    "all_readmes": []
-  },
   "platformType": "tool"
 }

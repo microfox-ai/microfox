@@ -1,0 +1,62 @@
+{
+  "name": "@microfox/ai",
+  "version": "1.1.0",
+  "description": "Wrapper for AI SDK by Vercel - Only for Internal use of microfox ai packages",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@microfox/usage-tracker": "*",
+    "ai": "^5.0.0-beta",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^18",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8",
+    "typescript": "5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://github.com/microfox-ai/microfox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microfox-ai/microfox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "keywords": [
+    "Vercel",
+    "ai",
+    "sdk",
+    "typescript"
+  ]
+}

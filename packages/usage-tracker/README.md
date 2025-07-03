@@ -1,20 +1,146 @@
-<p align="center">
-  <a href="https://microfox.so">
-    <img alt="Microfox" src="https://raw.githubusercontent.com/microfox-ai/microfox/main/docs/media/microfox-header.jpg" width="308">
-  </a>
-</p>
+# Microfox Usage Tracker
 
-<p align="center">
-  <em>AI agent stdlib that works with any LLM and TypeScript AI SDK.</em>
-</p>
+A powerful usage tracking system for Microfox AI that enables tracking of LLM and API usage across your applications.
 
-<p align="center">
-  <a href="https://github.com/microfox-ai/microfox/actions/workflows/main.yml"><img alt="Build Status" src="https://github.com/microfox-ai/microfox/actions/workflows/main.yml/badge.svg" /></a>
-  <a href="https://www.npmjs.com/package/@microfox/stdlib"><img alt="NPM" src="https://img.shields.io/npm/v/@microfox/stdlib.svg" /></a>
-  <a href="https://github.com/microfox-ai/microfox/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
-  <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
-</p>
+## Features
 
-# Microfox
+- Track LLM usage (tokens, models)
+- Track API usage (request counts, data)
+- Daily, monthly, and yearly usage reports
+- Redis-based storage with Upstash
+- TypeScript support with full type safety
+- Environment variable configuration
+
+## Installation
+
+```bash
+npm install @microfox/usage-tracker
+```
+
+## Configuration
+
+The usage tracker requires Redis configuration. You can provide this either through environment variables or constructor options:
+
+### Environment Variables
+
+```env
+MICROFOX_REDIS_URL_TRACKER=your_redis_url
+MICROFOX_REDIS_TOKEN_TRACKER=your_redis_token
+MICROFOX_CLIENT_REQUEST_ID=your_client_id
+```
+
+### Constructor Options
+
+```typescript
+interface UsageTrackerConstructorOptions {
+  redisOptions?: {
+    url: string;
+    token: string;
+  };
+  prefix?: string;
+}
+```
+
+## Supported Usage Types
+
+### 1. LLM Usage
+
+Track language model usage including:
+
+- Model identifier
+- Prompt tokens
+- Completion tokens
+- Optional markup percentage
+
+```typescript
+interface LLMUsage {
+  type: 'llm';
+  model?: string;
+  promptTokens: number;
+  completionTokens: number;
+}
+```
+
+### 2. API Usage
+
+Track API usage including:
+
+- Request key
+- Request count
+- Optional request data size
+- Optional markup percentage
+
+```typescript
+interface API1Usage {
+  type: 'api_1';
+  requestKey?: string;
+  requestCount: number;
+  requestData?: number;
+}
+```
+
+## Usage Examples
+
+### Basic Setup
+
+```typescript
+import { createMicrofoxUsageTracker } from '@microfox/usage-tracker';
+
+const tracker = createMicrofoxUsageTracker({
+  redisOptions: {
+    url: 'your_redis_url',
+    token: 'your_redis_token',
+  },
+});
+```
+
+### Tracking LLM Usage
+
+```typescript
+await tracker.trackLLMUsage('my-package', 'gpt-4', {
+  promptTokens: 100,
+  completionTokens: 50,
+});
+```
+
+### Tracking API Usage
+
+```typescript
+await tracker.trackApi1Usage('my-package', 'api-key', {
+  requestCount: 1,
+  requestData: 1024,
+});
+```
+
+### Retrieving Usage Data
+
+```typescript
+// Get today's usage
+const dailyUsage = await tracker.getDailyUsage();
+
+// Get monthly usage
+const monthlyUsage = await tracker.getMonthlyUsage();
+
+// Get yearly usage
+const yearlyUsage = await tracker.getYearlyUsage();
+
+// Get usage for specific package
+const packageUsage = await tracker.getDailyUsage('my-package');
+```
+
+## Environment Variables for Package-Specific Tracking
+
+For each package you want to track, you can set these environment variables:
+
+```env
+PACKAGE_NAME_SECRET_TRACKING=markup
+PACKAGE_NAME_SECRET_MARKUP_PERCENT=10
+```
+
+Replace `PACKAGE_NAME` with your actual package name (converted to uppercase with hyphens/spaces replaced by underscores).
+
+## License
+
+MIT
 
 **See the [github repo](https://github.com/microfox-ai/microfox) or [docs](https://microfox.so) for more info.**

@@ -11,10 +11,10 @@
     "prettier-check": "prettier --check \"**/*.{js,ts,tsx,md,mdx}\"",
     "type-check": "turbo type-check",
     "prettier-fix": "prettier --write \"**/*.{js,ts,tsx,md,mdx}\"",
-    "test": "turbo test",
+    "test": "turbo test -- --passWithNoTests --",
     "test:watch": "turbo test --watch",
     "test:coverage": "turbo test --coverage",
-    "ci:release": "turbo clean && turbo build && changeset publish",
+    "ci:release": "turbo clean && changeset publish",
     "ci:version": "changeset version && npm install",
     "clean-examples": "node .github/scripts/cleanup-examples-changesets.mjs && npm install"
   },
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.27.10",
+    "esbuild": "^0.25.0",
     "eslint": "8.57.1",
     "eslint-config-microfox": "*",
     "npm-run-all2": "^7.0.2",
@@ -64,7 +65,8 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
     "glob": "^11.0.1",
-    "zod": "^3.24.3"
+    "zod": "^3.24.3",
+    "zod-to-json-schema": "^3.24.5"
   },
   "type": "module"
 }

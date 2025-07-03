@@ -1,0 +1,22 @@
+{
+  "sdkMetadata": {
+    "apiName": "Kling-ai",
+    "packageName": "@microfox/kling-ai",
+    "title": "Klingai SDK",
+    "description": "A TypeScript SDK for integrating with the Klingai API.",
+    "keywords": [
+      "klingai",
+      "api",
+      "integration",
+      "typescript",
+      "microfox",
+      "sdk"
+    ],
+    "authType": "auto",
+    "inputArgs": {
+      "query": "Create a package for klingai API integration.",
+      "url": "https://app.klingai.com/global/dev/document-api",
+      "isBaseUrl": false
+    }
+  }
+}

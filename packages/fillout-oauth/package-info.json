@@ -7,50 +7,8 @@
   "dependencies": ["zod"],
   "status": "oauthConnector",
   "authEndpoint": "/connect/fillout",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/fillout-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/fillout.png",
-  "readme_map": {
-    "title": "Microfox Fillout OAuth",
-    "description": "The full README for the Microfox Fillout OAuth",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/README.md",
-    "functionalities": [
-      "FilloutOAuthSdk",
-      "getAuthorizationUrl",
-      "getAccessToken",
-      "validateAccessToken"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/FilloutOAuthSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "FilloutOAuthSdk",
-        "description": "Initializes a new instance of the FilloutOAuthSdk."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl",
-        "description": "Generates the authorization URL for the OAuth flow."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/getAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAccessToken",
-        "description": "Exchanges an authorization code for an access token."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/fillout-oauth/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken",
-        "description": "Validates the access token by making a request to the Fillout API."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "FilloutOAuthSdk",
@@ -84,26 +42,6 @@
         "getAccessToken",
         "validateAccessToken"
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "FILLOUT_CLIENT_ID",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The client ID for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_CLIENT_SECRET",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The client secret for your Fillout application.",
-      "required": true
-    },
-    {
-      "key": "FILLOUT_REDIRECT_URI",
-      "constructors": ["FilloutOAuthSdk"],
-      "description": "The redirect URI for your Fillout application.",
-      "required": true
     }
   ],
   "extraInfo": [

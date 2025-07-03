@@ -1,0 +1,2216 @@
+[
+  {
+    "functionName": "getMe",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me"
+  },
+  {
+    "functionName": "getBlocked",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me/blocked"
+  },
+  {
+    "functionName": "getFriends",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me/friends"
+  },
+  {
+    "functionName": "getKarma",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me/karma"
+  },
+  {
+    "functionName": "getPrefs",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me/prefs"
+  },
+  {
+    "functionName": "getTrophies",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/api/v1/me/trophies"
+  },
+  {
+    "functionName": "getPrefsBlocked",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/prefs/blocked"
+  },
+  {
+    "functionName": "getPrefsFriends",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/prefs/friends"
+  },
+  {
+    "functionName": "getPrefsMessaging",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/prefs/messaging"
+  },
+  {
+    "functionName": "getPrefsTrusted",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/prefs/trusted"
+  },
+  {
+    "functionName": "getPrefsWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "account",
+    "path": "/prefs/where"
+  },
+  {
+    "functionName": "getAnnouncements",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "announcements",
+    "path": "/api/announcements/v1"
+  },
+  {
+    "functionName": "hideAnnouncement",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "announcements",
+    "path": "/api/announcements/v1/hide"
+  },
+  {
+    "functionName": "readAnnouncement",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "announcements",
+    "path": "/api/announcements/v1/read"
+  },
+  {
+    "functionName": "readAllAnnouncements",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "announcements",
+    "path": "/api/announcements/v1/read_all"
+  },
+  {
+    "functionName": "unreadAnnouncement",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "announcements",
+    "path": "/api/announcements/v1/unread"
+  },
+  {
+    "functionName": "needsCaptcha",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "captcha",
+    "path": "/api/needs_captcha"
+  },
+  {
+    "functionName": "addPostToCollection",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/add_post_to_collection"
+  },
+  {
+    "functionName": "getCollection",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/collection"
+  },
+  {
+    "functionName": "createCollection",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/create_collection"
+  },
+  {
+    "functionName": "deleteCollection",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/delete_collection"
+  },
+  {
+    "functionName": "removePostInCollection",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/remove_post_in_collection"
+  },
+  {
+    "functionName": "reorderCollection",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/reorder_collection"
+  },
+  {
+    "functionName": "getSubredditCollections",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/subreddit_collections"
+  },
+  {
+    "functionName": "updateCollectionDescription",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/update_collection_description"
+  },
+  {
+    "functionName": "updateCollectionDisplayLayout",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/update_collection_display_layout"
+  },
+  {
+    "functionName": "updateCollectionTitle",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "collections",
+    "path": "/api/v1/collections/update_collection_title"
+  },
+  {
+    "functionName": "getSubredditEmoji",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "emoji",
+    "path": "/api/v1/subreddit/emoji.json"
+  },
+  {
+    "functionName": "deleteSubredditEmoji",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "emoji",
+    "path": "/api/v1/subreddit/emoji/emoji_name"
+  },
+  {
+    "functionName": "uploadEmojiAsset",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "emoji",
+    "path": "/api/v1/subreddit/emoji_asset_upload_s3.json"
+  },
+  {
+    "functionName": "setCustomEmojiSize",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "emoji",
+    "path": "/api/v1/subreddit/emoji_custom_size"
+  },
+  {
+    "functionName": "getAllEmojis",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "emoji",
+    "path": "/api/v1/subreddit/emojis/all"
+  },
+  {
+    "functionName": "clearFlairTemplates",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/clearflairtemplates"
+  },
+  {
+    "functionName": "deleteFlair",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/deleteflair"
+  },
+  {
+    "functionName": "deleteFlairTemplate",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/deleteflairtemplate"
+  },
+  {
+    "functionName": "setFlair",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flair"
+  },
+  {
+    "functionName": "setFlairTemplateOrder",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flair_template_order"
+  },
+  {
+    "functionName": "setFlairConfig",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flairconfig"
+  },
+  {
+    "functionName": "setFlairCsv",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flaircsv"
+  },
+  {
+    "functionName": "getFlairList",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/flairlist"
+  },
+  {
+    "functionName": "getFlairSelector",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/flairselector"
+  },
+  {
+    "functionName": "createFlairTemplate",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flairtemplate"
+  },
+  {
+    "functionName": "createFlairTemplateV2",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/flairtemplate_v2"
+  },
+  {
+    "functionName": "getLinkFlair",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/link_flair"
+  },
+  {
+    "functionName": "getLinkFlairV2",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/link_flair_v2"
+  },
+  {
+    "functionName": "selectFlair",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/selectflair"
+  },
+  {
+    "functionName": "setFlairEnabled",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "flair",
+    "path": "/api/setflairenabled"
+  },
+  {
+    "functionName": "getUserFlair",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/user_flair"
+  },
+  {
+    "functionName": "getUserFlairV2",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "flair",
+    "path": "/api/user_flair_v2"
+  },
+  {
+    "functionName": "postComment",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/comment"
+  },
+  {
+    "functionName": "delete",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/del"
+  },
+  {
+    "functionName": "editUserText",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/editusertext"
+  },
+  {
+    "functionName": "followPost",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/follow_post"
+  },
+  {
+    "functionName": "hide",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/hide"
+  },
+  {
+    "functionName": "getInfo",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "links & comments",
+    "path": "/api/info"
+  },
+  {
+    "functionName": "lock",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/lock"
+  },
+  {
+    "functionName": "markNsfw",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/marknsfw"
+  },
+  {
+    "functionName": "getMoreChildren",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "links & comments",
+    "path": "/api/morechildren"
+  },
+  {
+    "functionName": "report",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/report"
+  },
+  {
+    "functionName": "save",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/save"
+  },
+  {
+    "functionName": "getSavedCategories",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "links & comments",
+    "path": "/api/saved_categories"
+  },
+  {
+    "functionName": "sendReplies",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/sendreplies"
+  },
+  {
+    "functionName": "setContestMode",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/set_contest_mode"
+  },
+  {
+    "functionName": "setSubredditSticky",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/set_subreddit_sticky"
+  },
+  {
+    "functionName": "setSuggestedSort",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/set_suggested_sort"
+  },
+  {
+    "functionName": "spoiler",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/spoiler"
+  },
+  {
+    "functionName": "storeVisits",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/store_visits"
+  },
+  {
+    "functionName": "submit",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/submit"
+  },
+  {
+    "functionName": "unhide",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/unhide"
+  },
+  {
+    "functionName": "unlock",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/unlock"
+  },
+  {
+    "functionName": "unmarkNsfw",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/unmarknsfw"
+  },
+  {
+    "functionName": "unsave",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/unsave"
+  },
+  {
+    "functionName": "unspoiler",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/unspoiler"
+  },
+  {
+    "functionName": "vote",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "links & comments",
+    "path": "/api/vote"
+  },
+  {
+    "functionName": "getAllBest",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/best"
+  },
+  {
+    "functionName": "getByIds",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/by_id/names"
+  },
+  {
+    "functionName": "getComments",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/comments/article"
+  },
+  {
+    "functionName": "getControversial",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/controversial"
+  },
+  {
+    "functionName": "getDuplicates",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/duplicates/article"
+  },
+  {
+    "functionName": "getAllHot",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/hot"
+  },
+  {
+    "functionName": "getAllNew",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/new"
+  },
+  {
+    "functionName": "getAllRising",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/rising"
+  },
+  {
+    "functionName": "getAllTop",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "listings",
+    "path": "/top"
+  },
+  {
+    "functionName": "setSort",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "listings",
+    "path": "/sort"
+  },
+  {
+    "functionName": "getLiveByIds",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/api/live/by_id/names"
+  },
+  {
+    "functionName": "createLiveThread",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/create"
+  },
+  {
+    "functionName": "getHappeningNow",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/api/live/happening_now"
+  },
+  {
+    "functionName": "acceptContributorInvite",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/accept_contributor_invite"
+  },
+  {
+    "functionName": "closeLiveThread",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/close_thread"
+  },
+  {
+    "functionName": "deleteLiveThreadUpdate",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/delete_update"
+  },
+  {
+    "functionName": "editLiveThread",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/edit"
+  },
+  {
+    "functionName": "hideLiveThreadDiscussion",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/hide_discussion"
+  },
+  {
+    "functionName": "inviteLiveThreadContributor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/invite_contributor"
+  },
+  {
+    "functionName": "leaveLiveThreadContributor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/leave_contributor"
+  },
+  {
+    "functionName": "reportLiveThread",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/report"
+  },
+  {
+    "functionName": "removeLiveThreadContributor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/rm_contributor"
+  },
+  {
+    "functionName": "removeLiveThreadContributorInvite",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/rm_contributor_invite"
+  },
+  {
+    "functionName": "setLiveThreadContributorPermissions",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/set_contributor_permissions"
+  },
+  {
+    "functionName": "strikeLiveThreadUpdate",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/strike_update"
+  },
+  {
+    "functionName": "unhideLiveThreadDiscussion",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/unhide_discussion"
+  },
+  {
+    "functionName": "updateLiveThread",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "live threads",
+    "path": "/api/live/thread/update"
+  },
+  {
+    "functionName": "getLiveThread",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/live/thread"
+  },
+  {
+    "functionName": "getLiveThreadAbout",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/live/thread/about"
+  },
+  {
+    "functionName": "getLiveThreadContributors",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/live/thread/contributors"
+  },
+  {
+    "functionName": "getLiveThreadDiscussions",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/live/thread/discussions"
+  },
+  {
+    "functionName": "getLiveThreadUpdate",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "live threads",
+    "path": "/live/thread/updates/update_id"
+  },
+  {
+    "functionName": "blockUser",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/block"
+  },
+  {
+    "functionName": "collapseMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/collapse_message"
+  },
+  {
+    "functionName": "composeMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/compose"
+  },
+  {
+    "functionName": "deleteMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/del_msg"
+  },
+  {
+    "functionName": "readAllMessages",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/read_all_messages"
+  },
+  {
+    "functionName": "readMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/read_message"
+  },
+  {
+    "functionName": "unblockSubreddit",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/unblock_subreddit"
+  },
+  {
+    "functionName": "uncollapseMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/uncollapse_message"
+  },
+  {
+    "functionName": "unreadMessage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "private messages",
+    "path": "/api/unread_message"
+  },
+  {
+    "functionName": "getInbox",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "private messages",
+    "path": "/message/inbox"
+  },
+  {
+    "functionName": "getSent",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "private messages",
+    "path": "/message/sent"
+  },
+  {
+    "functionName": "getUnread",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "private messages",
+    "path": "/message/unread"
+  },
+  {
+    "functionName": "getMessagesWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "private messages",
+    "path": "/message/where"
+  },
+  {
+    "functionName": "getScopes",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "misc",
+    "path": "/api/v1/scopes"
+  },
+  {
+    "functionName": "getEdited",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/edited"
+  },
+  {
+    "functionName": "getLog",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/log"
+  },
+  {
+    "functionName": "getModqueue",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/modqueue"
+  },
+  {
+    "functionName": "getReports",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/reports"
+  },
+  {
+    "functionName": "getSpam",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/spam"
+  },
+  {
+    "functionName": "getUnmoderated",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/unmoderated"
+  },
+  {
+    "functionName": "getLocation",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/about/location"
+  },
+  {
+    "functionName": "acceptModeratorInvite",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/accept_moderator_invite"
+  },
+  {
+    "functionName": "approve",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/approve"
+  },
+  {
+    "functionName": "distinguish",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/distinguish"
+  },
+  {
+    "functionName": "ignoreReports",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/ignore_reports"
+  },
+  {
+    "functionName": "leaveContributor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/leavecontributor"
+  },
+  {
+    "functionName": "leaveModerator",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/leavemoderator"
+  },
+  {
+    "functionName": "remove",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/remove"
+  },
+  {
+    "functionName": "showComment",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/api/show_comment"
+  },
+  {
+    "functionName": "snoozeReports",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/snooze_reports"
+  },
+  {
+    "functionName": "unignoreReports",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/unignore_reports"
+  },
+  {
+    "functionName": "unsnoozeReports",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/unsnooze_reports"
+  },
+  {
+    "functionName": "updateCrowdControlLevel",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "moderation",
+    "path": "/api/update_crowd_control_level"
+  },
+  {
+    "functionName": "getStylesheet",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "moderation",
+    "path": "/stylesheet"
+  },
+  {
+    "functionName": "bulkRead",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/bulk_read"
+  },
+  {
+    "functionName": "getConversations",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations"
+  },
+  {
+    "functionName": "getConversation",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id"
+  },
+  {
+    "functionName": "approveConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/approve"
+  },
+  {
+    "functionName": "archiveConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/archive"
+  },
+  {
+    "functionName": "disapproveConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/disapprove"
+  },
+  {
+    "functionName": "highlightConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/highlight"
+  },
+  {
+    "functionName": "muteConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/mute"
+  },
+  {
+    "functionName": "tempBan",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/temp_ban"
+  },
+  {
+    "functionName": "unarchiveConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/unarchive"
+  },
+  {
+    "functionName": "unban",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/unban"
+  },
+  {
+    "functionName": "unmuteConversation",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/:conversation_id/unmute"
+  },
+  {
+    "functionName": "readConversations",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/read"
+  },
+  {
+    "functionName": "getSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/subreddits"
+  },
+  {
+    "functionName": "getUnreadConversations",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/unread"
+  },
+  {
+    "functionName": "getUnreadConversationsCount",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "new modmail",
+    "path": "/api/mod/conversations/unread/count"
+  },
+  {
+    "functionName": "getModNotes",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "modnote",
+    "path": "/api/mod/notes"
+  },
+  {
+    "functionName": "getRecentModNotes",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "modnote",
+    "path": "/api/mod/notes/recent"
+  },
+  {
+    "functionName": "getFilter",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/filter/filterpath"
+  },
+  {
+    "functionName": "getFilterBySubreddit",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/filter/filterpath/r/srname"
+  },
+  {
+    "functionName": "copyMulti",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "multis",
+    "path": "/api/multi/copy"
+  },
+  {
+    "functionName": "getMyMultis",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/multi/mine"
+  },
+  {
+    "functionName": "getUserMultis",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/multi/user/username"
+  },
+  {
+    "functionName": "getMulti",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/multi/multipath"
+  },
+  {
+    "functionName": "getMultiDescription",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/multi/multipath/description"
+  },
+  {
+    "functionName": "getMultiSubreddit",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "multis",
+    "path": "/api/multi/multipath/r/srname"
+  },
+  {
+    "functionName": "search",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "search",
+    "path": "/search"
+  },
+  {
+    "functionName": "getBanned",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/banned"
+  },
+  {
+    "functionName": "getContributors",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/contributors"
+  },
+  {
+    "functionName": "getModerators",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/moderators"
+  },
+  {
+    "functionName": "getMuted",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/muted"
+  },
+  {
+    "functionName": "getWikiBanned",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/wikibanned"
+  },
+  {
+    "functionName": "getWikiContributors",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/wikicontributors"
+  },
+  {
+    "functionName": "getSubredditsWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/about/where"
+  },
+  {
+    "functionName": "deleteSubredditBanner",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/delete_sr_banner"
+  },
+  {
+    "functionName": "deleteSubredditHeader",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/delete_sr_header"
+  },
+  {
+    "functionName": "deleteSubredditIcon",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/delete_sr_icon"
+  },
+  {
+    "functionName": "deleteSubredditImage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/delete_sr_img"
+  },
+  {
+    "functionName": "getRecommendedSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/recommend/sr/srnames"
+  },
+  {
+    "functionName": "searchRedditNames",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/search_reddit_names"
+  },
+  {
+    "functionName": "searchSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/search_subreddits"
+  },
+  {
+    "functionName": "siteAdmin",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/site_admin"
+  },
+  {
+    "functionName": "submitText",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/submit_text"
+  },
+  {
+    "functionName": "subredditAutocomplete",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/subreddit_autocomplete"
+  },
+  {
+    "functionName": "subredditAutocompleteV2",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/subreddit_autocomplete_v2"
+  },
+  {
+    "functionName": "getSubredditStylesheet",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/subreddit_stylesheet"
+  },
+  {
+    "functionName": "subscribe",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/subscribe"
+  },
+  {
+    "functionName": "uploadSubredditImage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/api/upload_sr_img"
+  },
+  {
+    "functionName": "getSubredditPostRequirements",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/api/v1/subreddit/post_requirements"
+  },
+  {
+    "functionName": "getSubredditAbout",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/r/subreddit/about"
+  },
+  {
+    "functionName": "editSubreddit",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "subreddits",
+    "path": "/r/subreddit/about/edit"
+  },
+  {
+    "functionName": "getSubredditRules",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/r/subreddit/about/rules"
+  },
+  {
+    "functionName": "getSubredditTraffic",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/r/subreddit/about/traffic"
+  },
+  {
+    "functionName": "getSidebar",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/sidebar"
+  },
+  {
+    "functionName": "getSticky",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/sticky"
+  },
+  {
+    "functionName": "getDefaultSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/default"
+  },
+  {
+    "functionName": "getGoldSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/gold"
+  },
+  {
+    "functionName": "getMyContributorSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/mine/contributor"
+  },
+  {
+    "functionName": "getMyModeratorSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/mine/moderator"
+  },
+  {
+    "functionName": "getMyStreamsSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/mine/streams"
+  },
+  {
+    "functionName": "getMySubscriberSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/mine/subscriber"
+  },
+  {
+    "functionName": "getMySubredditsWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/mine/where"
+  },
+  {
+    "functionName": "getNewSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/new"
+  },
+  {
+    "functionName": "getPopularSubreddits",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/popular"
+  },
+  {
+    "functionName": "searchSubredditsByName",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/search"
+  },
+  {
+    "functionName": "getSubredditsByTopic",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/subreddits/where"
+  },
+  {
+    "functionName": "getNewUsers",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/users/new"
+  },
+  {
+    "functionName": "getPopularUsers",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/users/popular"
+  },
+  {
+    "functionName": "searchUsers",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/users/search"
+  },
+  {
+    "functionName": "getUsersWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "subreddits",
+    "path": "/users/where"
+  },
+  {
+    "functionName": "blockUser",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "users",
+    "path": "/api/block_user"
+  },
+  {
+    "functionName": "friend",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "users",
+    "path": "/api/friend"
+  },
+  {
+    "functionName": "reportUser",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "users",
+    "path": "/api/report_user"
+  },
+  {
+    "functionName": "setPermissions",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "users",
+    "path": "/api/setpermissions"
+  },
+  {
+    "functionName": "unfriend",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "users",
+    "path": "/api/unfriend"
+  },
+  {
+    "functionName": "getUserDataByAccountIds",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/api/user_data_by_account_ids"
+  },
+  {
+    "functionName": "isUsernameAvailable",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/api/username_available"
+  },
+  {
+    "functionName": "getFriendDetails",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/api/v1/me/friends/username"
+  },
+  {
+    "functionName": "getUserTrophies",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/api/v1/user/username/trophies"
+  },
+  {
+    "functionName": "getUserAbout",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/about"
+  },
+  {
+    "functionName": "getUserComments",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/comments"
+  },
+  {
+    "functionName": "getUserDownvoted",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/downvoted"
+  },
+  {
+    "functionName": "getUserGilded",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/gilded"
+  },
+  {
+    "functionName": "getUserHidden",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/hidden"
+  },
+  {
+    "functionName": "getUserOverview",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/overview"
+  },
+  {
+    "functionName": "getUserSaved",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/saved"
+  },
+  {
+    "functionName": "getUserSubmitted",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/submitted"
+  },
+  {
+    "functionName": "getUserUpvoted",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/upvoted"
+  },
+  {
+    "functionName": "getUserWhere",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "users",
+    "path": "/user/username/where"
+  },
+  {
+    "functionName": "getWidget",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "widgets",
+    "path": "/api/widget"
+  },
+  {
+    "functionName": "getWidgetById",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "widgets",
+    "path": "/api/widget/widget_id"
+  },
+  {
+    "functionName": "uploadWidgetImage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "widgets",
+    "path": "/api/widget_image_upload_s3"
+  },
+  {
+    "functionName": "setWidgetOrder",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "widgets",
+    "path": "/api/widget_order/section"
+  },
+  {
+    "functionName": "getWidgets",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "widgets",
+    "path": "/api/widgets"
+  },
+  {
+    "functionName": "addWikiEditor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/alloweditor/add"
+  },
+  {
+    "functionName": "deleteWikiEditor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/alloweditor/del"
+  },
+  {
+    "functionName": "actOnWikiEditor",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/alloweditor/act"
+  },
+  {
+    "functionName": "editWikiPage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/edit"
+  },
+  {
+    "functionName": "hideWikiPage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/hide"
+  },
+  {
+    "functionName": "revertWikiPage",
+    "priority": 1,
+    "methods": [
+      "POST"
+    ],
+    "group": "wiki",
+    "path": "/api/wiki/revert"
+  },
+  {
+    "functionName": "getWikiDiscussions",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/discussions/page"
+  },
+  {
+    "functionName": "getWikiPages",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/pages"
+  },
+  {
+    "functionName": "getWikiRevisions",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/revisions"
+  },
+  {
+    "functionName": "getWikiPageRevisions",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/revisions/page"
+  },
+  {
+    "functionName": "getWikiSettings",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/settings/page"
+  },
+  {
+    "functionName": "getWikiPage",
+    "priority": 1,
+    "methods": [
+      "GET"
+    ],
+    "group": "wiki",
+    "path": "/wiki/page"
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "name": "@microfox/veo-on-vertex-ai",
+  "title": "Veo on Vertex AI SDK",
+  "description": "The Veo on Vertex AI SDK provides a simple interface for generating videos using the Veo API on Google Cloud's Vertex AI platform.  Use this SDK to create, monitor, and manage video generation jobs.",
+  "platformType": "tool",
+  "path": "packages/veo-on-vertex-ai",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/@microfox/veo-on-vertex-ai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/veo-on-vertex-ai.svg",
+  "constructors": [
+    {
+      "name": "VeoonVertexAIAPISdk",
+      "description": "Create a new Veo on Vertex AI SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "GOOGLE_CLOUD_PROJECT",
+          "displayName": "Google Cloud Project ID",
+          "description": "Your Google Cloud project ID. This is required to identify the project to use for Vertex AI services.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_CLOUD_LOCATION",
+          "displayName": "Google Cloud Location",
+          "description": "The Google Cloud location for your Vertex AI resources (e.g., 'us-central1'). This is required to specify the regional endpoint for the API.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "VeoonVertexAIAPISdk",
+        "createVeoonVertexAIAPISDK",
+        "fetchOperationStatus",
+        "generateVideo",
+        "pollOperation"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Veo on Vertex AI SDK, you need to set up Google Cloud authentication:\n\n1. Install the Google Cloud SDK: https://cloud.google.com/sdk/docs/install\n2. Authenticate with Google Cloud: Run `gcloud auth application-default login`\n3. Set up your Google Cloud project and enable the Vertex AI API\n4. Set the following environment variables:\n   - GOOGLE_CLOUD_PROJECT: Your Google Cloud project ID\n   - GOOGLE_CLOUD_LOCATION: The location of your Vertex AI resources (e.g., \"us-central1\")\n\nThe SDK uses the Google Cloud access token for authentication. You don't need to manually provide the token, as the SDK will use the Google Cloud SDK to obtain it automatically.\n\nMake sure you have the necessary permissions to access the Vertex AI API and the Veo models."
+  },
+  "extraInfo": [
+    "To use the Veo on Vertex AI SDK, you need to set up Google Cloud authentication:\n\n1. Install the Google Cloud SDK: https://cloud.google.com/sdk/docs/install\n2. Authenticate with Google Cloud: Run `gcloud auth application-default login`\n3. Set up your Google Cloud project and enable the Vertex AI API\n4. Set the following environment variables:\n   - GOOGLE_CLOUD_PROJECT: Your Google Cloud project ID\n   - GOOGLE_CLOUD_LOCATION: The location of your Vertex AI resources (e.g., \"us-central1\")\n\nThe SDK uses the Google Cloud access token for authentication. You don't need to manually provide the token, as the SDK will use the Google Cloud SDK to obtain it automatically.\n\nMake sure you have the necessary permissions to access the Vertex AI API and the Veo models."
+  ],
+  "authType": "apikey",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

@@ -238,18 +238,17 @@ function generatePackageStats(pkgInfo: PackageInfo | null): string {
   const stats: string[] = [];
 
   // Count constructors
-  if (pkgInfo.keysInfo && pkgInfo.keysInfo.length > 0) {
-    stats.push(`${pkgInfo.keysInfo.length} envs`);
+  let keysCount = 0;
+  if (pkgInfo.constructors && pkgInfo.constructors.length > 0) {
+    stats.push(`${pkgInfo.constructors.length} constructors`);
+    for (const constructor of pkgInfo.constructors) {
+      keysCount +=
+        (constructor.requiredKeys?.length ?? 0) +
+        (constructor.internalKeys?.length ?? 0) +
+        (constructor.botConfig?.length ?? 0);
+    }
   }
-
-  // Count functionalities from readme_map
-  if (
-    pkgInfo.readme_map?.functionalities &&
-    pkgInfo.readme_map?.functionalities.length > 0
-  ) {
-    stats.push(`${pkgInfo.readme_map?.functionalities?.length ?? 0} fns`);
-  }
-
+  stats.push(`${keysCount} keys`);
   return stats.length > 0 ? stats.join(', ') : 'N/A';
 }
 
@@ -335,9 +334,7 @@ async function updatePackageList() {
         status: status,
         title: pkgInfo?.title,
         logo: pkgInfo?.icon,
-        docsPath:
-          pkgInfo?.readme_map?.path ??
-          `https://github.com/microfox-ai/microfox/tree/main/packages/${dir}/README.md`,
+        docsPath: `https://github.com/microfox-ai/microfox/tree/main/packages/${dir}/README.md`,
         stats: generatePackageStats(pkgInfo),
         authType: pkgInfo?.authType,
       };

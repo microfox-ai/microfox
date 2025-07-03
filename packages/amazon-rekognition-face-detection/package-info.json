@@ -6,32 +6,9 @@
   "dependencies": ["zod"],
   "status": "semiStable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "authType": "apikey",
   "documentation": "https://www.npmjs.com/package/@microfox/amazon-rekognition-face-detection",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/aws.svg",
-  "readme_map": {
-    "title": "Amazon Rekognition Face Detection SDK",
-    "description": "The full README for the Amazon Rekognition Face Detection SDK",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/README.md",
-    "functionalities": ["AmazonRekognitionFaceDetectionSdk", "detectFaces"],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/AmazonRekognitionFaceDetectionSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "AmazonRekognitionFaceDetectionSdk",
-        "description": "Initializes the Amazon Rekognition Face Detection SDK."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/amazon-rekognition-face-detection/docs/detectFaces.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "detectFaces",
-        "description": "Detects faces in an image provided as base64 encoded bytes or an S3 object."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "AmazonRekognitionFaceDetectionSdk",
@@ -60,26 +37,6 @@
       ],
       "internalKeys": [],
       "functionalities": ["detectFaces"]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "AWS_ACCESS_KEY_ID",
-      "constructors": ["AmazonRekognitionFaceDetectionSdk"],
-      "description": "AWS Access Key ID",
-      "required": true
-    },
-    {
-      "key": "AWS_SECRET_ACCESS_KEY",
-      "constructors": ["AmazonRekognitionFaceDetectionSdk"],
-      "description": "AWS Secret Access Key",
-      "required": true
-    },
-    {
-      "key": "AWS_REGION",
-      "constructors": ["AmazonRekognitionFaceDetectionSdk"],
-      "description": "AWS Region",
-      "required": false
     }
   ],
   "keyInstructions": {

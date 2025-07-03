@@ -1,0 +1,90 @@
+{
+  "name": "@microfox/apify",
+  "title": "Apify SDK",
+  "description": "The Apify SDK provides a convenient way to manage Apify actors, datasets, key-value stores, queues, webhooks, and user details through the Apify API.",
+  "platformType": "tool",
+  "path": "packages/apify",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/apify",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/apify.svg",
+  "constructors": [
+    {
+      "name": "ApifySdk",
+      "description": "Create a new Apify SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "APIFY_API_TOKEN",
+          "displayName": "Apify API Token",
+          "description": "Your personal API token for accessing the Apify API. You can find it in your Apify account settings under the 'Integrations' tab after signing up or logging in at https://console.apify.com/.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "ApifySdk",
+        "createActor",
+        "createActorBuild",
+        "createActorVersion",
+        "createApifySDK",
+        "createDataset",
+        "createKeyValueStore",
+        "createRequestQueue",
+        "createWebhook",
+        "deleteActor",
+        "deleteActorVersion",
+        "deleteDataset",
+        "deleteKeyValueStore",
+        "deleteRecord",
+        "deleteRequestQueue",
+        "deleteWebhook",
+        "getActor",
+        "getActorBuild",
+        "getActorRun",
+        "getActorVersion",
+        "getCurrentUser",
+        "getDataset",
+        "getKeyValueStore",
+        "getRecord",
+        "getRequestQueue",
+        "getWebhook",
+        "listActorBuilds",
+        "listActorRuns",
+        "listActorVersions",
+        "listActors",
+        "listDatasets",
+        "listKeyValueStoreRecords",
+        "listKeyValueStores",
+        "listRequestQueues",
+        "listWebhooks",
+        "runActor",
+        "setRecord",
+        "updateActor",
+        "updateActorVersion",
+        "updateDataset",
+        "updateKeyValueStore",
+        "updateRequestQueue",
+        "updateWebhook"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Apify SDK, you need to obtain an API token from Apify. Follow these steps:\n\n1. Sign up for an Apify account at https://console.apify.com/sign-up\n2. Once logged in, go to the Account Settings page\n3. In the \"Integrations\" tab, find the \"API token\" section\n4. Click \"Generate new token\" to create a new API token\n5. Copy the generated token\n\nWhen initializing the SDK, provide your API token:\n\n```typescript\nimport { createApifySDK } from '@microfox/apify';\n\nconst apify = createApifySDK({\n  apiToken: 'your-api-token-here'\n});\n```\n\nAlternatively, you can set the `APIFY_API_TOKEN` environment variable with your API token, and the SDK will use it automatically if no token is provided in the constructor.\n\nNote: Keep your API token secure and never share it publicly or commit it to version control systems."
+  },
+  "extraInfo": [
+    "To use the Apify SDK, you need to obtain an API token from Apify. Follow these steps:\n\n1. Sign up for an Apify account at https://console.apify.com/sign-up\n2. Once logged in, go to the Account Settings page\n3. In the \"Integrations\" tab, find the \"API token\" section\n4. Click \"Generate new token\" to create a new API token\n5. Copy the generated token\n\nWhen initializing the SDK, provide your API token:\n\n```typescript\nimport { createApifySDK } from '@microfox/apify';\n\nconst apify = createApifySDK({\n  apiToken: 'your-api-token-here'\n});\n```\n\nAlternatively, you can set the `APIFY_API_TOKEN` environment variable with your API token, and the SDK will use it automatically if no token is provided in the constructor.\n\nNote: Keep your API token secure and never share it publicly or commit it to version control systems."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

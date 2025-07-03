@@ -1,5 +1,2 @@
-export {
-  OpenAiProvider,
-  type OpenAILanguageModelId,
-  type OpenAIImageModelId,
-} from './openAiProvider';
+export * from './openAiProvider';
+export * from './types';

@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/tool-kit",
+  "title": "Tool Kit",
+  "description": "A central tool kit for building integrations in Microfox",
+  "path": "packages/tool-kit",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "authType": "api-key",
+  "authEndpoint": "/connect/tool-kit",
+  "documentation": "https://www.npmjs.com/package/@microfox/tool-kit",
+  "constructors": [],
+  "extraInfo": [],
+  "platformType": "tool"
+}

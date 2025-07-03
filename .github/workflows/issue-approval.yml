@@ -123,13 +123,26 @@ jobs:
 
           echo "Existing JSON: $EXISTING_JSON"
           echo "New Payload: $NEW_REQUEST_PAYLOAD"
+          
+          # Validate that NEW_REQUEST_PAYLOAD is valid JSON
+          if ! echo "$NEW_REQUEST_PAYLOAD" | jq empty 2>/dev/null; then
+            echo "Error: NEW_REQUEST_PAYLOAD is not valid JSON"
+            exit 1
+          fi
+          
+          # Validate that EXISTING_JSON is valid JSON, if not create default structure
+          if ! echo "$EXISTING_JSON" | jq empty 2>/dev/null; then
+            echo "Warning: EXISTING_JSON is not valid JSON, using default structure"
+            EXISTING_JSON='{"requests":[]}'
+          fi
+          
           UPDATED_JSON=$(echo "$EXISTING_JSON" | jq --argjson payload "$NEW_REQUEST_PAYLOAD" '
             if type == "object" and has("requests") and (.requests | type == "array") then
               .requests += [$payload]
             else
               {"requests": [$payload]}
             end
-          ' || echo "{"requests": [$NEW_REQUEST_PAYLOAD]}")
+          ')
 
           echo "Updated JSON: $UPDATED_JSON"
           echo "$UPDATED_JSON" | jq '.' > .microfox/packagefox-build.json

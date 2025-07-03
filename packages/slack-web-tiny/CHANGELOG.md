@@ -1,5 +1,30 @@
 # @microfox/slack-web-tiny
 
+## 1.4.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+## 1.3.1
+
+### Patch Changes
+
+- 0dca5ff: release: add "team:read" scope to Slack OAuth and Slack Web Tiny package permissions
+
+## 1.3.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
+## 1.2.5
+
+### Patch Changes
+
+- 0e76275: Changes from PR #395: vwjt_slsfox_may_2025
+- eef1616: Changes from PR #396: vwjt_slsfox_may_2025
+
 ## 1.2.4
 
 ### Patch Changes

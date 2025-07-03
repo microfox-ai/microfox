@@ -39,7 +39,6 @@
     "@microfox/wikidata",
     "@microfox/wikipedia",
     "@microfox/wolfram-alpha",
-    "@microfox/zoominfo",
     "@e2b/code-interpreter",
     "zod"
   ],

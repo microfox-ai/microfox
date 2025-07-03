@@ -1,0 +1,86 @@
+{
+  "name": "@microfox/google-drive",
+  "title": "Google Drive SDK",
+  "description": "Manage Google Drive resources (drives, files, and access proposals) using the Google Drive API.",
+  "platformType": "tool",
+  "path": "packages/google-drive",
+  "dependencies": ["@microfox/google-oauth", "zod"],
+  "addedDependencies": ["@microfox/google-oauth"],
+  "status": "semiStable",
+  "authEndpoint": "/connect/google-oauth",
+  "authType": "oauth2",
+  "documentation": "https://www.npmjs.com/package/@microfox/google-drive",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-drive.svg",
+  "constructors": [
+    {
+      "name": "GoogleDriveSdk",
+      "description": "Create a new Google Drive SDK client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/google-oauth",
+      "authEndpoint": "/connect/google-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GOOGLE_DRIVE_CLIENT_ID",
+          "displayName": "Google Drive Client ID",
+          "description": "Client ID for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_CLIENT_SECRET",
+          "displayName": "Google Drive Client Secret",
+          "description": "Client Secret for your Google Cloud project OAuth 2.0 credentials. Obtain this from the Google Cloud Console.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_REDIRECT_URI",
+          "displayName": "Google Drive Redirect URI",
+          "description": "The redirect URI registered in your Google Cloud project for the OAuth 2.0 client. This URI is where Google will redirect the user after they authorize the application.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_SCOPES",
+          "displayName": "Google Drive Scopes",
+          "description": "A space-separated string of OAuth 2.0 scopes required for Google Drive API access. These scopes define the permissions your application requests. For example: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly'. The SDK expects this as an array of strings, so your application will need to split this environment variable.",
+          "required": true
+        },
+        {
+          "key": "GOOGLE_DRIVE_ACCESS_TOKEN",
+          "displayName": "Google Drive Access Token",
+          "description": "Optional. An OAuth 2.0 access token for Google Drive API. If not provided, the SDK may attempt to use a refresh token or require an OAuth flow.",
+          "required": false
+        },
+        {
+          "key": "GOOGLE_DRIVE_REFRESH_TOKEN",
+          "displayName": "Google Drive Refresh Token",
+          "description": "Optional. An OAuth 2.0 refresh token for Google Drive API. Used to obtain new access tokens without requiring user re-authentication.",
+          "required": false
+        }
+      ],
+      "functionalities": [
+        "createGoogleDriveSDK",
+        "deleteDrive",
+        "getAbout",
+        "getAccessProposal",
+        "getApp",
+        "getDrive",
+        "getStartPageToken",
+        "hideDrive",
+        "listAccessProposals",
+        "listApps",
+        "listChanges",
+        "listDrives",
+        "resolveAccessProposal",
+        "unhideDrive",
+        "updateDrive",
+        "watchChanges"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Google Drive SDK, you need to set up OAuth 2.0 credentials:\n\n1. Go to the Google Cloud Console (https://console.cloud.google.com/).\n2. Create a new project or select an existing one.\n3. Enable the Google Drive API for your project.\n4. Create OAuth 2.0 credentials (OAuth client ID) for a Web application.\n5. Set the authorized redirect URIs for your application.\n\nOnce you have your credentials, you can use them to initialize the SDK:\n\n```typescript\nimport { createGoogleDriveSDK } from '@microfox/google-drive';\n\nconst sdk = createGoogleDriveSDK({\n  clientId: 'YOUR_CLIENT_ID',\n  clientSecret: 'YOUR_CLIENT_SECRET',\n  redirectUri: 'YOUR_REDIRECT_URI',\n  accessToken: 'YOUR_ACCESS_TOKEN',\n  refreshToken: 'YOUR_REFRESH_TOKEN',\n});\n```\n\nEnvironment variables:\n- GOOGLE_CLIENT_ID: Your Google OAuth 2.0 client ID\n- GOOGLE_CLIENT_SECRET: Your Google OAuth 2.0 client secret\n- GOOGLE_REDIRECT_URI: Your authorized redirect URI\n- GOOGLE_ACCESS_TOKEN: The OAuth 2.0 access token\n- GOOGLE_REFRESH_TOKEN: The OAuth 2.0 refresh token\n\nMake sure to keep your client secret and tokens secure and never expose them in client-side code."
+  },
+  "extraInfo": [],
+  "devDependencies": ["@microfox/tsconfig", "@types/node", "tsup", "typescript"]
+}

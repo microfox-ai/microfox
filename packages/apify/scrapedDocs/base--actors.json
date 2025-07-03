@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.apify.com/api/v2/actors",
+  "content": "Skip to main content\nGitHub\nDiscord\nSearch\nK\nActors - Introduction\n\nThe API endpoints in this section allow you to manage Apify Actors. For more details about Actors, refer to the Actor documentation.\n\nFor API endpoints that require the actorId parameter to identify an Actor, you can provide either:\n\nThe Actor ID (e.g., HG7ML7M8z78YcAPEB), or\nA tilde-separated combination of the Actor owner's username and the Actor name (e.g., janedoe~my-actor).\n Get list of Actors\n/acts\n Create Actor\n/acts\n Get Actor\n/acts/{actorId}\n Update Actor\n/acts/{actorId}\n Delete Actor\n/acts/{actorId}\nLEARN\nAcademy\nPlatform\nAPI\nReference\nClient for JavaScript\nClient for Python\nSDK\nSDK for JavaScript\nSDK for Python\nOTHER\nCLI\nOpen source\nMORE\nCrawlee\nGitHub\nTrust Center",
+  "updatedAt": "2025-06-22T21:17:15.523Z"
+}

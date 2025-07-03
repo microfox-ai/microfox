@@ -1,0 +1,37 @@
+# This workflow has been replaced by sync-docs-and-package-info.yml
+# which handles both docs changes and package-info updates together
+
+name: Index Changed Package Info (DEPRECATED)
+
+on:
+  # Disabled - use sync-docs-and-package-info.yml instead
+  workflow_dispatch: # Only allow manual trigger
+
+jobs:
+  index-package-info:
+    name: 🔄 Index Package Info on PR (DEPRECATED)
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Get the full git history for accurate git-based timestamps
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # 2) Install Node.js
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      # 3) Run your savePackageInfo script
+      - name: Index changed package info
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "⚠️ This workflow is deprecated. Use sync-docs-and-package-info.yml instead."
+          echo "Running savePackageInfo.ts to sync changed package-info.json files…"
+          cd scripts
+          npm i
+          npm run save:package-info 

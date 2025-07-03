@@ -1,23 +1,15 @@
-name: Index Changed Docs
+# This workflow has been replaced by sync-docs-and-package-info.yml
+# which handles both docs changes and package-info updates together
+
+name: Index Changed Docs (DEPRECATED)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**/*.md'
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-    paths:
-      - '**/*.md'
+  # Disabled - use sync-docs-and-package-info.yml instead
+  workflow_dispatch: # Only allow manual trigger
 
 jobs:
   index-docs:
-    name: 🔄 Index Docs on PR
+    name: 🔄 Index Docs on PR (DEPRECATED)
     runs-on: ubuntu-latest
     steps:
       # 1) Get the full git history for accurate git-based timestamps
@@ -27,10 +19,10 @@ jobs:
           fetch-depth: 0
 
       # 2) Install Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '23'
 
       # 3) Run your embedDocs script
       - name: Index changed docs
@@ -39,6 +31,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+          echo "⚠️ This workflow is deprecated. Use sync-docs-and-package-info.yml instead."
           echo "Running embedDocs.ts to sync changed docs…"
           cd scripts
           npm i

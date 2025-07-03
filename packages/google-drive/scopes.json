@@ -1,0 +1,14 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/drive.file",
+    "description": "Read and write access to your Google Drive files"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/drive.appdata",
+    "description": "Read and write access to your Google Drive app data"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/drive.install",
+    "description": "Install and manage Google Drive apps"
+  }
+]

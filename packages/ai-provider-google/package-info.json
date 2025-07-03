@@ -1,0 +1,47 @@
+{
+  "name": "@microfox/ai-provider-google",
+  "title": "Google AI Provider",
+  "description": "A comprehensive TypeScript SDK providing convenient access to Google AI Rest API endpoints for AI model interactions and text generation.",
+  "path": "packages/ai-provider-google",
+  "dependencies": ["zod"],
+  "status": "stable",
+  "authEndpoint": "",
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-google",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/google-icon.svg",
+  "addedDependencies": ["@microfox/ai"],
+  "constructors": [
+    {
+      "name": "GoogleAiProvider",
+      "description": "Create a new Google AI provider through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "GOOGLE_API_KEY",
+          "displayName": "Google API Key",
+          "description": "Google API Key. Obtain from your Google Cloud Console.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "botConfig": [],
+      "functionalities": [],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/ai-provider-google/docs/GoogleAiProvider.md"
+    }
+  ],
+  "keyInstructions": {
+    "link": "https://console.cloud.google.com/apis/credentials",
+    "setupInfo": "To use the Google AI SDK, you need to obtain an API key from the Google Cloud Console.\n\n1. Sign up for a Google Cloud account at https://console.cloud.google.com/apis/credentials\n2. Once you have an account, navigate to your credentials page to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-google`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createGoogleAiProvider } from '@microfox/ai-provider-google';\n\nconst provider = createGoogleAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Google AI API:\n\n```typescript\nconst response = await provider.generateText({ model: 'gemini-pro', prompt: 'Hello, world!' });\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `GOOGLE_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
+  },
+  "extraInfo": [
+    "To use the Google AI SDK, you need to obtain an API key from the Google Cloud Console.\n\n1. Sign up for a Google Cloud account at https://console.cloud.google.com/apis/credentials\n2. Once you have an account, navigate to your credentials page to find your API key\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-google`\n2. Import and initialize the SDK:\n\n```typescript\nimport { createGoogleAiProvider } from '@microfox/ai-provider-google';\n\nconst provider = createGoogleAiProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Google AI API:\n\n```typescript\nconst response = await provider.generateText({ model: 'gemini-pro', prompt: 'Hello, world!' });\nconsole.log(response);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `GOOGLE_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
+  ],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "platformType": "tool"
+}

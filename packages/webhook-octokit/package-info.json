@@ -1,0 +1,17 @@
+{
+  "name": "@microfox/webhook-octokit",
+  "title": "Microfox Octokit Webhook",
+  "description": "A TypeScript package for receiving webhooks from Octokit.",
+  "platformType": "internal",
+  "path": "packages/webhook-octokit",
+  "dependencies": ["zod"],
+  "status": "webhookConnector",
+  "webhookEndpoint": "/webhook/webhook-octokit",
+  "documentation": "https://www.npmjs.com/package/@microfox/webhook-octokit",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/github-icon.svg",
+  "constructors": [],
+  "extraInfo": [],
+  "keyInstructions": {
+    "link": "https://www.npmjs.com/package/@octokit/webhooks"
+  }
+}

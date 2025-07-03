@@ -6,107 +6,8 @@
   "dependencies": [],
   "status": "stable",
   "authEndpoint": "",
-  "oauth2Scopes": [],
   "documentation": "https://www.npmjs.com/package/@microfox/brave",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg",
-  "readme_map": {
-    "title": "Brave SDK",
-    "description": "The full README for the Brave SDK",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/README.md",
-    "functionalities": [
-      "BraveSDK",
-      "request",
-      "webSearch",
-      "localPoiSearch",
-      "localDescriptionsSearch",
-      "summarizerSearch",
-      "imageSearch",
-      "videoSearch",
-      "newsSearch",
-      "suggestSearch",
-      "spellcheckSearch",
-      "createBraveSDK"
-    ],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/request.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "request",
-        "description": "Sends a request to the Brave Search API."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/webSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "webSearch",
-        "description": "Performs a web search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localPoiSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "localPoiSearch",
-        "description": "Performs a local POI (Points of Interest) search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/localDescriptionsSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "localDescriptionsSearch",
-        "description": "Performs a local descriptions search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/summarizerSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "summarizerSearch",
-        "description": "Performs a summarizer search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/imageSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "imageSearch",
-        "description": "Performs an image search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/videoSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "videoSearch",
-        "description": "Performs a video search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/newsSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "newsSearch",
-        "description": "Performs a news search."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/suggestSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "suggestSearch",
-        "description": "Retrieves search suggestions."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/spellcheckSearch.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "spellcheckSearch",
-        "description": "Performs a spell check."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/brave/docs/createBraveSDK.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createBraveSDK",
-        "description": "Creates a new instance of the Brave SDK."
-      }
-    ]
-  },
   "constructors": [
     {
       "name": "createBraveSDK",
@@ -148,14 +49,6 @@
         "spellcheckSearch",
         "createBraveSDK"
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "BRAVE_API_KEY",
-      "constructors": ["BraveSDK"],
-      "description": "Your Brave Search API key.  Obtain this by subscribing to a plan (including the free plan) at https://brave.com/search/api/.",
-      "required": true
     }
   ],
   "keyInstructions": {

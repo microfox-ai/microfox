@@ -1,4 +1,4 @@
-service: public-slack-tiny-api
+service: public-slack-web-tiny-api
 
 plugins:
   - serverless-plugin-typescript

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/fillout-oauth",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "TypeScript OAuth package for Fillout",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

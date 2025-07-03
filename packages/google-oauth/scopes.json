@@ -1,0 +1,19 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/userinfo.email",
+    "description": "Read your email address"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/userinfo.profile",
+    "description": "Read your profile information"
+  },
+
+  {
+    "name": "https://www.googleapis.com/auth/userinfo.address",
+    "description": "Read your address information"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/userinfo.phone",
+    "description": "Read your phone number"
+  }
+]

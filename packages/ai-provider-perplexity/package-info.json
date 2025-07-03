@@ -1,0 +1,42 @@
+{
+  "name": "@microfox/ai-provider-perplexity",
+  "title": "Perplexity Provider",
+  "description": "A wrapper for the Perplexity API, providing access to language models with real-time web search capabilities.",
+  "path": "packages/ai-provider-perplexity",
+  "dependencies": ["zod"],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "authType": "apikey",
+  "documentation": "https://www.npmjs.com/package/@microfox/ai-provider-perplexity",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/perplexity-icon.svg",
+  "addedDependencies": ["@microfox/ai"],
+  "constructors": [
+    {
+      "name": "PerplexityProvider",
+      "description": "Create a new Perplexity provider through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "PERPLEXITY_API_KEY",
+          "displayName": "Perplexity API Key",
+          "description": "Perplexity API Key. Obtain from your Perplexity account dashboard.",
+          "required": true
+        }
+      ],
+      "internalKeys": []
+    }
+  ],
+  "keyInstructions": {
+    "link": "https://perplexity.ai/settings/api",
+    "setupInfo": "To use the Perplexity SDK, you need to obtain an API key from the Perplexity AI Platform.\n\n1. Sign up for a Perplexity account at https://perplexity.ai/\n2. Once you have an account, navigate to your API settings at https://perplexity.ai/settings/api to create an API key.\n3. Store your API key securely and never share it publicly\n\nTo use the SDK:\n\n1. Install the package: `npm install @microfox/ai-provider-perplexity`\n2. Import and initialize the SDK:\n\n```typescript\nimport { PerplexityProvider } from '@microfox/ai-provider-perplexity';\n\nconst provider = new PerplexityProvider({\n  apiKey: 'YOUR_API_KEY_HERE'\n});\n```\n\n3. You can now use the SDK methods to interact with the Perplexity API:\n\n```typescript\nconst response = await provider.languageModel('sonar-pro').generateText({ prompt: 'Hello, world!' });\nconsole.log(response.text);\n```\n\nEnvironment Variables:\nYou can also use an environment variable to store your API key. Set the `PERPLEXITY_API_KEY` environment variable, and the SDK will automatically use it if no API key is provided during initialization."
+  },
+  "extraInfo": [],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "platformType": "tool"
+}

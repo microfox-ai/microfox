@@ -561,29 +561,6 @@ export async function generateExternalDocs(
       .filter(file => file.endsWith('.md'))
       .map(file => file.replace('.md', ''));
 
-    // Add readme_map
-    packageInfo.readme_map = {
-      title: packageInfo.title,
-      description: `The full README for the ${packageInfo.title}`,
-      path:
-        'https://github.com/microfox-ai/microfox/blob/main/packages/' +
-        packageName.replace('@microfox/', '') +
-        '/README.md',
-      functionalities: safeFunctionNames,
-      all_readmes: safeFunctionNames.map(name => ({
-        path:
-          'https://github.com/microfox-ai/microfox/blob/main/packages/' +
-          packageName.replace('@microfox/', '') +
-          '/docs/' +
-          name +
-          '.md',
-        type: name === 'constructor' ? 'constructor' : 'functionality',
-        extension: 'md',
-        functionality: name,
-        description: `The full README for the ${packageInfo.title} ${name === 'constructor' ? 'constructor' : name + ' functionality'}`,
-      })),
-    };
-
     // Add constructor info
     packageInfo.constructors = [
       {
@@ -629,18 +606,6 @@ export async function generateExternalDocs(
         ),
       },
     ];
-
-    // Add keysInfo
-    packageInfo.keysInfo = envKeys.map(key => ({
-      key: key.key,
-      constructors: ['constructor'],
-      description: key.description,
-      required: key.required,
-      ...(key.key.includes('SCOPES') &&
-        packageInfo.oauth2Scopes && {
-          defaultValue: packageInfo.oauth2Scopes,
-        }),
-    }));
 
     // Add extraInfo
     packageInfo.extraInfo = extraInfo;

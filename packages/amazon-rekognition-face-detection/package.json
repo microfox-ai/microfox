@@ -1,6 +1,6 @@
 {
   "name": "@microfox/amazon-rekognition-face-detection",
-  "version": "1.0.2",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for Amazon Rekognition Face Detection, enabling developers to easily integrate face detection capabilities into their applications.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

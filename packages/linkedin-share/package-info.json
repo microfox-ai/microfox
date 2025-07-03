@@ -26,45 +26,8 @@
       "functionalities": ["post", "getUserId"]
     }
   ],
-  "keysInfo": [
-    {
-      "key": "LINKEDIN_ACCESS_TOKEN",
-      "constructors": ["LinkedinShareSdk"],
-      "description": "The LinkedIn access token required for authentication.",
-      "required": true
-    }
-  ],
   "extraInfo": [
     "Use the `createLinkedInShareClient` constructor to create a new LinkedIn Share client for posting content to LinkedIn."
   ],
-  "readme_map": {
-    "title": "LinkedIn Share",
-    "description": "The full README for the LinkedIn Share",
-    "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/README.md",
-    "functionalities": ["LinkedinShareSdk", "post", "getUserId"],
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/LinkedinShareSdk.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "LinkedinShareSdk",
-        "description": "Initializes a new instance of the LinkedinShareSdk."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/post.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "post",
-        "description": "Post content to LinkedIn."
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/linkedin-share/docs/getUserId.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getUserId",
-        "description": "Get the current user's LinkedIn ID."
-      }
-    ]
-  },
   "platformType": "communication"
 }

@@ -1,0 +1,20 @@
+{
+  "name": "@microfox/serverless-yml",
+  "title": "Serverless YML",
+  "description": "A utility package for validating and mutating `serverless.yml` files, with a focus on automating configurations for services using `@microfox` packages.",
+  "path": "packages/serverless-yml",
+  "dependencies": ["yaml"],
+  "status": "internal",
+  "authEndpoint": "",
+  "authType": "none",
+  "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/serverless-yml/README.md",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/serverless.svg",
+  "addedDependencies": [],
+  "constructors": [],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": ""
+  },
+  "extraInfo": [],
+  "platformType": "tool"
+}

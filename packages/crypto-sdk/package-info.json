@@ -1,0 +1,15 @@
+{
+  "name": "@microfox/crypto-sdk",
+  "title": "Microfox Crypto SDK",
+  "description": "Crypto SDK for Microfox",
+  "path": "packages/crypto-sdk",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "authType": "none",
+  "documentation": "https://www.npmjs.com/package/@microfox/crypto-sdk",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/crypto-sdk.svg",
+  "constructors": [],
+  "extraInfo": [],
+  "platformType": "tool",
+  "version": "1.0.0"
+}

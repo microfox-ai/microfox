@@ -1,5 +1,27 @@
 # @microfox/instagram-fb
 
+## 1.3.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+### Patch Changes
+
+- Updated dependencies [b34aa2e]
+  - @microfox/instagram-fb-business-oauth@1.2.0
+
+## 1.2.0
+
+### Minor Changes
+
+- 16d112d: Changes from PR #339: pkg-create-googledrive-20250526
+
+### Patch Changes
+
+- Updated dependencies [16d112d]
+  - @microfox/instagram-fb-business-oauth@1.1.0
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,0 +1,37 @@
+# @microfox/notion
+
+## 1.1.0
+
+### Minor Changes
+
+- b34aa2e: Changes from PR #536: docs_refactoring_june_2025
+
+## 1.0.5
+
+### Patch Changes
+
+- 2ba1b7d: Changes from PR #523: notion-markdown-updates
+
+## 1.0.4
+
+### Patch Changes
+
+- b7d8123: release: notion updates
+
+## 1.0.3
+
+### Patch Changes
+
+- ad97d41: release: notion package
+
+## 1.0.2
+
+### Patch Changes
+
+- 985f303: release: feat: export additional helpers from Notion client
+
+## 1.0.1
+
+### Patch Changes
+
+- d1a1479: Changes from PR #435: oauth-sdks

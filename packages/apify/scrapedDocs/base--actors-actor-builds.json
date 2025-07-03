@@ -1,0 +1,5 @@
+{
+  "url": "https://docs.apify.com/api/v2/actors-actor-builds",
+  "content": "Skip to main content\nGitHub\nDiscord\nSearch\nK\nActor builds - Introduction\n\nThe API endpoints in this section allow you to manage your Apify Actors builds.\n\n Get list of builds\n/acts/{actorId}/builds\n Build Actor\n/acts/{actorId}/builds\n Get default build\n/acts/{actorId}/builds/default\n Get OpenAPI definition\n/acts/{actorId}/builds/{buildId}/openapi.json\n Get build\n/acts/{actorId}/builds/{buildId}\n Abort build\n/acts/{actorId}/builds/{buildId}/abort\nLEARN\nAcademy\nPlatform\nAPI\nReference\nClient for JavaScript\nClient for Python\nSDK\nSDK for JavaScript\nSDK for Python\nOTHER\nCLI\nOpen source\nMORE\nCrawlee\nGitHub\nTrust Center",
+  "updatedAt": "2025-06-22T21:19:06.740Z"
+}

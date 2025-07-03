@@ -1,0 +1,80 @@
+{
+  "name": "@microfox/kling-ai",
+  "title": "Klingai SDK",
+  "description": "The Klingai SDK provides a comprehensive set of tools for generating and manipulating images and videos, including features like lip syncing, virtual try-on, and various video effects, all through the Klingai API.",
+  "platformType": "tool",
+  "path": "packages/kling-ai",
+  "dependencies": [
+    "jsonwebtoken",
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "documentation": "https://www.npmjs.com/package/@microfox/kling-ai",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/klingai.svg",
+  "constructors": [
+    {
+      "name": "createKlingaiSDK",
+      "description": "Create a new Klingai SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "KLINGAI_ACCESS_KEY",
+          "displayName": "Klingai Access Key",
+          "description": "Your Klingai access key for API authentication. Obtain it from the Klingai platform.",
+          "required": true
+        },
+        {
+          "key": "KLINGAI_SECRET_KEY",
+          "displayName": "Klingai Secret Key",
+          "description": "Your Klingai secret key for generating JWT tokens. Obtain it from the Klingai platform.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "createKlingaiSDK",
+        "imageGeneration",
+        "imageToVideo",
+        "lipSync",
+        "listImageGenerationTasks",
+        "listImageToVideoTasks",
+        "listLipSyncTasks",
+        "listMultiImageToVideoTasks",
+        "listTextToVideoTasks",
+        "listVideoEffectsTasks",
+        "listVideoExtendTasks",
+        "listVirtualTryOnTasks",
+        "multiImageToVideo",
+        "queryImageGenerationTask",
+        "queryImageToVideoTask",
+        "queryLipSyncTask",
+        "queryMultiImageToVideoTask",
+        "queryTextToVideoTask",
+        "queryVideoEffectsTask",
+        "queryVideoExtendTask",
+        "queryVirtualTryOnTask",
+        "textToVideo",
+        "videoEffects",
+        "videoExtend",
+        "virtualTryOn"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Klingai SDK, you need to obtain an access key and a secret key from the Klingai platform. These keys are used to generate a JWT token for API authentication.\n\nEnvironment variables:\n- KLINGAI_ACCESS_KEY: Your Klingai access key\n- KLINGAI_SECRET_KEY: Your Klingai secret key\n\nTo set up the SDK:\n\n1. Install the package:\n   npm install @microfox/klingai\n\n2. Import and create an instance of the SDK:\n   import { createKlingaiSDK } from '@microfox/klingai';\n\n   const klingai = createKlingaiSDK({\n     accessKey: process.env.KLINGAI_ACCESS_KEY,\n     secretKey: process.env.KLINGAI_SECRET_KEY\n   });\n\n3. Use the SDK methods to interact with the Klingai API:\n   const response = await klingai.textToVideo({\n     prompt: \"A beautiful sunset over the ocean\"\n   });\n\nNote: The SDK automatically handles JWT token generation and renewal. You don't need to manage tokens manually."
+  },
+  "extraInfo": [
+    "To use the Klingai SDK, you need to obtain an access key and a secret key from the Klingai platform. These keys are used to generate a JWT token for API authentication.\n\nEnvironment variables:\n- KLINGAI_ACCESS_KEY: Your Klingai access key\n- KLINGAI_SECRET_KEY: Your Klingai secret key\n\nTo set up the SDK:\n\n1. Install the package:\n   npm install @microfox/klingai\n\n2. Import and create an instance of the SDK:\n   import { createKlingaiSDK } from '@microfox/klingai';\n\n   const klingai = createKlingaiSDK({\n     accessKey: process.env.KLINGAI_ACCESS_KEY,\n     secretKey: process.env.KLINGAI_SECRET_KEY\n   });\n\n3. Use the SDK methods to interact with the Klingai API:\n   const response = await klingai.textToVideo({\n     prompt: \"A beautiful sunset over the ocean\"\n   });\n\nNote: The SDK automatically handles JWT token generation and renewal. You don't need to manage tokens manually."
+  ],
+  "authType": "apikey",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/jsonwebtoken",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

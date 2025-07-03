@@ -1,10 +1,7 @@
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import { z } from 'zod';
 import { PackageInfo } from '../../types';
 import fs from 'fs';
 import path from 'path';
-import { glob, globSync } from 'glob';
+import { globSync } from 'glob';
 
 interface FixResult {
   file: string;
@@ -20,13 +17,6 @@ const defaultValues = {
   dependencies: [],
   extraInfo: [],
   constructors: [],
-  keysInfo: [],
-  readme_map: {
-    path: '/README.md',
-    functionalities: [],
-    description: 'No description provided',
-    all_readmes: [],
-  },
 };
 
 function fixPackageInfo(filePath: string): FixResult {
@@ -49,19 +39,6 @@ function fixPackageInfo(filePath: string): FixResult {
         updatedContent[key] = defaultValue;
         result.addedFields.push(key);
         modified = true;
-      }
-    }
-
-    // Check readme_map fields
-    if (content.readme_map) {
-      for (const [key, defaultValue] of Object.entries(
-        defaultValues.readme_map,
-      )) {
-        if (content.readme_map[key] === undefined) {
-          updatedContent.readme_map[key] = defaultValue;
-          result.addedFields.push(`readme_map.${key}`);
-          modified = true;
-        }
       }
     }
 

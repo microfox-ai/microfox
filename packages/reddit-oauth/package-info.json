@@ -3,84 +3,14 @@
   "title": "Microfox Reddit OAuth",
   "description": "A TypeScript OAuth package for Reddit.",
   "path": "packages/reddit-oauth",
-  "dependencies": ["zod"],
+  "dependencies": [
+    "zod"
+  ],
   "status": "oauthConnector",
   "authType": "oauth2",
   "authEndpoint": "/connect/reddit",
-  "oauth2Scopes": [
-    "identity",
-    "edit",
-    "flair",
-    "history",
-    "modconfig",
-    "modflair",
-    "modlog",
-    "modposts",
-    "modwiki",
-    "mysubreddits",
-    "privatemessages",
-    "read",
-    "report",
-    "save",
-    "submit",
-    "subscribe",
-    "vote",
-    "wikiedit",
-    "wikiread"
-  ],
   "documentation": "https://www.npmjs.com/package/@microfox/reddit-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/reddit-icon.svg",
-  "readme_map": {
-    "path": "/README.md",
-    "title": "@microfox/@microfox/reddit-oauth README",
-    "description": "The full README for the Microfox Reddit OAuth",
-    "all_readmes": [
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/createRedditOAuth.md",
-        "type": "constructor",
-        "extension": "md",
-        "functionality": "createRedditOAuth"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAuthorizationUrl.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAuthorizationUrl"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/getAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "getAccessToken"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/refreshAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "refreshAccessToken"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/validateAccessToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "validateAccessToken"
-      },
-      {
-        "path": "https://github.com/microfox-ai/microfox/blob/main/packages/reddit-oauth/docs/revokeToken.md",
-        "type": "functionality",
-        "extension": "md",
-        "functionality": "revokeToken"
-      }
-    ],
-    "functionalities": [
-      "createRedditOAuth",
-      "getAuthorizationUrl",
-      "getAccessToken",
-      "refreshAccessToken",
-      "validateAccessToken",
-      "revokeToken"
-    ]
-  },
   "constructors": [
     {
       "name": "createRedditOAuth",
@@ -103,35 +33,21 @@
           "key": "REDDIT_REDIRECT_URI",
           "displayName": "Reddit Redirect URI",
           "description": "The redirect URI you specified when creating your Reddit app."
+        },
+        {
+          "key": "REDDIT_SCOPES",
+          "displayName": "Reddit Scopes",
+          "description": "The scopes for the Reddit client."
         }
       ],
       "functionalities": [
-        "getAuthorizationUrl",
+        "createRedditOAuth",
         "getAccessToken",
+        "getAuthorizationUrl",
         "refreshAccessToken",
-        "validateAccessToken",
-        "revokeToken"
+        "revokeToken",
+        "validateAccessToken"
       ]
-    }
-  ],
-  "keysInfo": [
-    {
-      "key": "REDDIT_CLIENT_ID",
-      "constructors": ["createRedditOAuth"],
-      "description": "Your Reddit application's client ID. Obtain this from your Reddit app settings.",
-      "required": true
-    },
-    {
-      "key": "REDDIT_CLIENT_SECRET",
-      "constructors": ["createRedditOAuth"],
-      "description": "Your Reddit application's client secret. Obtain this from your Reddit app settings.",
-      "required": true
-    },
-    {
-      "key": "REDDIT_REDIRECT_URI",
-      "constructors": ["createRedditOAuth"],
-      "description": "The redirect URI you specified when creating your Reddit app.",
-      "required": true
     }
   ],
   "extraInfo": [

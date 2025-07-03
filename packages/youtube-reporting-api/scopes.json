@@ -1,0 +1,10 @@
+[
+  {
+    "name": "https://www.googleapis.com/auth/yt-analytics.readonly",
+    "description": "Read-only access to your YouTube Analytics data"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+    "description": "Read-only access to your YouTube Analytics data"
+  }
+]

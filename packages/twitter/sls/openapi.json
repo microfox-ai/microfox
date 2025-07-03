@@ -1,0 +1,2832 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Microfox X SDK API",
+    "version": "1.0.0",
+    "mcp_version": "1.0.1",
+    "description": "Single entry-point API for all Microfox X SDK functions via a wrapper Lambda",
+    "contact": {
+      "name": "Microfox Dev Support",
+      "email": "support@microfox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.microfox.com/c/twitter",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "paths": {
+    "/create": {
+      "post": {
+        "operationId": "create",
+        "summary": "Creates a new tweet on X with specified content and options.",
+        "description": "This function allows users to post a new tweet on the X platform. It supports various options including text content, media attachments, polls, reply settings, and more. The function returns a promise that resolves to the created tweet data.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the create sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "TweetCreate object containing the tweet content and options",
+                            "properties": {
+                              "text": {
+                                "type": "string",
+                                "description": "The text content of the tweet"
+                              },
+                              "card_uri": {
+                                "type": "string",
+                                "description": "The URI of a card to attach to the tweet"
+                              },
+                              "community_id": {
+                                "type": "string",
+                                "description": "The ID of the community to post the tweet to"
+                              },
+                              "direct_message_deep_link": {
+                                "type": "string",
+                                "description": "A deep link to a direct message"
+                              },
+                              "for_super_followers_only": {
+                                "type": "boolean",
+                                "description": "Whether the tweet is for super followers only",
+                                "default": false
+                              },
+                              "geo": {
+                                "type": "object",
+                                "description": "Geographic location information",
+                                "properties": {
+                                  "place_id": {
+                                    "type": "string",
+                                    "description": "The ID of the place to attach to the tweet"
+                                  }
+                                }
+                              },
+                              "media": {
+                                "type": "object",
+                                "description": "Media information to attach to the tweet",
+                                "properties": {
+                                  "media_ids": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "description": "An array of media IDs to attach to the tweet"
+                                  },
+                                  "tagged_user_ids": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "description": "An array of user IDs to tag in the media"
+                                  }
+                                }
+                              },
+                              "nullcast": {
+                                "type": "boolean",
+                                "description": "Whether the tweet is a nullcast",
+                                "default": false
+                              },
+                              "poll": {
+                                "type": "object",
+                                "description": "Poll options for the tweet",
+                                "properties": {
+                                  "duration_minutes": {
+                                    "type": "number",
+                                    "description": "The duration of the poll in minutes (min: 5, max: 10080)"
+                                  },
+                                  "options": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "description": "An array of poll options"
+                                  },
+                                  "reply_settings": {
+                                    "type": "string",
+                                    "enum": [
+                                      "following",
+                                      "mentionedUsers"
+                                    ],
+                                    "description": "The reply settings for the poll"
+                                  }
+                                }
+                              },
+                              "quote_tweet_id": {
+                                "type": "string",
+                                "description": "The ID of the tweet to quote"
+                              },
+                              "reply": {
+                                "type": "object",
+                                "description": "Reply information",
+                                "properties": {
+                                  "in_reply_to_tweet_id": {
+                                    "type": "string",
+                                    "description": "The ID of the tweet being replied to"
+                                  },
+                                  "exclude_reply_user_ids": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "description": "An array of user IDs to exclude from the reply"
+                                  }
+                                }
+                              },
+                              "reply_settings": {
+                                "type": "string",
+                                "enum": [
+                                  "following",
+                                  "mentionedUsers",
+                                  "subscribers"
+                                ],
+                                "description": "The reply settings for the tweet"
+                              }
+                            },
+                            "required": [
+                              "text"
+                            ]
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The unique identifier of the tweet"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The text content of the tweet"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "description": "The creation time of the tweet"
+                    },
+                    "author_id": {
+                      "type": "string",
+                      "description": "The ID of the author of the tweet"
+                    },
+                    "edit_history_tweet_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "An array of previous tweet IDs"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "text"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get": {
+      "post": {
+        "operationId": "get",
+        "summary": "Retrieves a single tweet by its ID from X.",
+        "description": "This function fetches a specific tweet from X using its unique identifier. It allows for optional expansions to be included in the response, providing flexibility in the data retrieved. The function returns a promise that resolves to the tweet data, including details such as the tweet's text, creation time, and author information.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the get sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the tweet to retrieve.",
+                            "required": true
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the tweet retrieval.",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response."
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the tweet."
+                        },
+                        "text": {
+                          "type": "string",
+                          "description": "The text content of the tweet."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "The creation time of the tweet."
+                        },
+                        "author_id": {
+                          "type": "string",
+                          "description": "The ID of the author of the tweet."
+                        },
+                        "edit_history_tweet_ids": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "An array of previous tweet IDs."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "text"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error."
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error."
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error."
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMultiple": {
+      "post": {
+        "operationId": "getMultiple",
+        "summary": "Retrieves multiple tweets by their IDs from X (formerly Twitter) in a single request.",
+        "description": "The getMultiple function fetches multiple tweets from X using their unique identifiers. It allows for efficient retrieval of up to 100 tweets in a single API call, with optional parameters for expanding the returned data. This function is useful for bulk tweet retrieval operations.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getMultiple sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "array",
+                            "description": "An array of tweet IDs to retrieve. Must contain between 1 and 100 IDs.",
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "maxItems": 100
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the tweet retrieval",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "description": "An array of expansions to include in the response",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response containing the requested tweets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier of the tweet"
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "The text content of the tweet"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "The creation time of the tweet",
+                            "format": "date-time"
+                          },
+                          "author_id": {
+                            "type": "string",
+                            "description": "The ID of the author of the tweet"
+                          },
+                          "edit_history_tweet_ids": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "An array of previous tweet IDs"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "text"
+                        ]
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete": {
+      "post": {
+        "operationId": "delete",
+        "summary": "Deletes a tweet by its ID.",
+        "description": "This function removes a specific tweet from X using its unique identifier. It returns a promise that resolves to a deletion confirmation object, which includes information about whether the tweet was successfully deleted and any errors that may have occurred during the process.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the delete sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the tweet to delete.",
+                            "required": true
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful deletion of the tweet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deleted": {
+                          "type": "boolean",
+                          "description": "True if the tweet was deleted, false otherwise"
+                        }
+                      },
+                      "required": [
+                        "deleted"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getByUsername": {
+      "post": {
+        "operationId": "getByUsername",
+        "summary": "Retrieves a single user by their username from X.",
+        "description": "This function fetches a specific user from X using their username. It allows for optional expansions to be included in the response. The function returns a promise that resolves to the user data, including various user attributes and public metrics.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getByUsername sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The username of the user to retrieve.",
+                            "required": true
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the request.",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response."
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the user"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the user"
+                        },
+                        "username": {
+                          "type": "string",
+                          "description": "The username of the user"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "The creation time of the user's account"
+                        },
+                        "protected": {
+                          "type": "boolean",
+                          "description": "Whether the user's tweets are protected"
+                        },
+                        "profile_image_url": {
+                          "type": "string",
+                          "description": "The URL of the user's profile image"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The user's bio"
+                        },
+                        "location": {
+                          "type": "string",
+                          "description": "The user's location"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The user's profile URL"
+                        },
+                        "verified": {
+                          "type": "boolean",
+                          "description": "Whether the user is verified"
+                        },
+                        "verified_type": {
+                          "type": "string",
+                          "description": "The type of verification the user has"
+                        },
+                        "public_metrics": {
+                          "type": "object",
+                          "properties": {
+                            "followers_count": {
+                              "type": "number",
+                              "description": "The number of followers the user has"
+                            },
+                            "following_count": {
+                              "type": "number",
+                              "description": "The number of users the user is following"
+                            },
+                            "tweet_count": {
+                              "type": "number",
+                              "description": "The number of tweets the user has posted"
+                            },
+                            "listed_count": {
+                              "type": "number",
+                              "description": "The number of lists the user is included in"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "username"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Error message"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Error message"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getByUsernames": {
+      "post": {
+        "operationId": "getByUsernames",
+        "summary": "Retrieve multiple users by their usernames",
+        "description": "This function fetches multiple users from X using their usernames. It allows for retrieving information about up to 100 users in a single request, with optional expansions for additional data. The function returns detailed user information including profile data and public metrics.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getByUsernames sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "array",
+                            "description": "An array of usernames to retrieve",
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "maxItems": 100
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the request",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier of the user"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the user"
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "The username of the user"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "The creation time of the user's account",
+                            "format": "date-time"
+                          },
+                          "protected": {
+                            "type": "boolean",
+                            "description": "Whether the user's tweets are protected"
+                          },
+                          "profile_image_url": {
+                            "type": "string",
+                            "description": "The URL of the user's profile image"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "The user's bio"
+                          },
+                          "location": {
+                            "type": "string",
+                            "description": "The user's location"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The user's profile URL"
+                          },
+                          "verified": {
+                            "type": "boolean",
+                            "description": "Whether the user is verified"
+                          },
+                          "verified_type": {
+                            "type": "string",
+                            "description": "The type of verification the user has"
+                          },
+                          "public_metrics": {
+                            "type": "object",
+                            "properties": {
+                              "followers_count": {
+                                "type": "integer",
+                                "description": "The number of followers the user has"
+                              },
+                              "following_count": {
+                                "type": "integer",
+                                "description": "The number of users the user is following"
+                              },
+                              "tweet_count": {
+                                "type": "integer",
+                                "description": "The number of tweets the user has posted"
+                              },
+                              "listed_count": {
+                                "type": "integer",
+                                "description": "The number of lists the user is included in"
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "username"
+                        ]
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "errors"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getById": {
+      "post": {
+        "operationId": "getById",
+        "summary": "Retrieves a single user by their ID from X.",
+        "description": "This function fetches a specific user from X using their unique ID. It allows for optional expansions to include additional data in the response. The function returns a promise that resolves to the user data, including various user attributes and metrics.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getById sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The ID of the user to retrieve.",
+                            "required": true
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the request.",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response."
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the user."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the user."
+                        },
+                        "username": {
+                          "type": "string",
+                          "description": "The username of the user."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "The creation time of the user's account.",
+                          "format": "date-time"
+                        },
+                        "protected": {
+                          "type": "boolean",
+                          "description": "Whether the user's tweets are protected."
+                        },
+                        "profile_image_url": {
+                          "type": "string",
+                          "description": "The URL of the user's profile image."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The user's bio."
+                        },
+                        "location": {
+                          "type": "string",
+                          "description": "The user's location."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The user's profile URL."
+                        },
+                        "verified": {
+                          "type": "boolean",
+                          "description": "Whether the user is verified."
+                        },
+                        "verified_type": {
+                          "type": "string",
+                          "description": "The type of verification the user has."
+                        },
+                        "public_metrics": {
+                          "type": "object",
+                          "properties": {
+                            "followers_count": {
+                              "type": "number",
+                              "description": "The number of followers the user has."
+                            },
+                            "following_count": {
+                              "type": "number",
+                              "description": "The number of users the user is following."
+                            },
+                            "tweet_count": {
+                              "type": "number",
+                              "description": "The number of tweets the user has posted."
+                            },
+                            "listed_count": {
+                              "type": "number",
+                              "description": "The number of lists the user is included in."
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "username"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error."
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error."
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getByIds": {
+      "post": {
+        "operationId": "getByIds",
+        "summary": "Retrieves multiple users by their IDs from X.",
+        "description": "This function fetches multiple users from X using their unique IDs. It allows for optional expansions to include additional data in the response. The function returns a promise that resolves to an object containing an array of user data and optional error information.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getByIds sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "array",
+                            "description": "An array of user IDs to retrieve",
+                            "items": {
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "maxItems": 100
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional options for the request",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier of the user"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the user"
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "The username of the user"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "description": "The creation time of the user's account"
+                          },
+                          "protected": {
+                            "type": "boolean",
+                            "description": "Whether the user's tweets are protected"
+                          },
+                          "profile_image_url": {
+                            "type": "string",
+                            "description": "The URL of the user's profile image"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "The user's bio"
+                          },
+                          "location": {
+                            "type": "string",
+                            "description": "The user's location"
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "The user's profile URL"
+                          },
+                          "verified": {
+                            "type": "boolean",
+                            "description": "Whether the user is verified"
+                          },
+                          "verified_type": {
+                            "type": "string",
+                            "description": "The type of verification the user has"
+                          },
+                          "public_metrics": {
+                            "type": "object",
+                            "properties": {
+                              "followers_count": {
+                                "type": "number",
+                                "description": "The number of followers the user has"
+                              },
+                              "following_count": {
+                                "type": "number",
+                                "description": "The number of users the user is following"
+                              },
+                              "tweet_count": {
+                                "type": "number",
+                                "description": "The number of tweets the user has posted"
+                              },
+                              "listed_count": {
+                                "type": "number",
+                                "description": "The number of lists the user is included in"
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "username"
+                        ]
+                      }
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMe": {
+      "post": {
+        "operationId": "getMe",
+        "summary": "Retrieves the currently authenticated user.",
+        "description": "This function fetches the user associated with the provided access token. It returns detailed information about the authenticated user, including their profile data and public metrics. The function also supports optional expansions for additional data retrieval.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getMe sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "Additional options for the request",
+                            "properties": {
+                              "expansions": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "An array of expansions to include in the response"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The unique identifier of the user"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the user"
+                        },
+                        "username": {
+                          "type": "string",
+                          "description": "The username of the user"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "description": "The creation time of the user's account"
+                        },
+                        "protected": {
+                          "type": "boolean",
+                          "description": "Whether the user's tweets are protected"
+                        },
+                        "profile_image_url": {
+                          "type": "string",
+                          "description": "The URL of the user's profile image"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The user's bio"
+                        },
+                        "location": {
+                          "type": "string",
+                          "description": "The user's location"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The user's profile URL"
+                        },
+                        "verified": {
+                          "type": "boolean",
+                          "description": "Whether the user is verified"
+                        },
+                        "verified_type": {
+                          "type": "string",
+                          "description": "The type of verification the user has"
+                        },
+                        "public_metrics": {
+                          "type": "object",
+                          "properties": {
+                            "followers_count": {
+                              "type": "number",
+                              "description": "The number of followers the user has"
+                            },
+                            "following_count": {
+                              "type": "number",
+                              "description": "The number of users the user is following"
+                            },
+                            "tweet_count": {
+                              "type": "number",
+                              "description": "The number of tweets the user has posted"
+                            },
+                            "listed_count": {
+                              "type": "number",
+                              "description": "The number of lists the user is included in"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "username"
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "detail": {
+                            "type": "string",
+                            "description": "A detailed description of the error"
+                          },
+                          "status": {
+                            "type": "number",
+                            "description": "The HTTP status code of the error"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the error"
+                          },
+                          "type": {
+                            "type": "string",
+                            "description": "The type of the error"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Error message"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "description": "Error message"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "operationId": "upload",
+        "summary": "Uploads media to X (formerly Twitter) for attaching to tweets.",
+        "description": "This function uploads a media file to X, which can then be attached to a tweet. It takes a Buffer object containing the media file and its MIME type as input. The function returns a promise that resolves to a MediaUploadResponse object containing details about the uploaded media.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the upload sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "object",
+                            "description": "The media file as a Buffer object",
+                            "required": true
+                          },
+                          {
+                            "type": "string",
+                            "description": "The MIME type of the media file (e.g., \"image/jpeg\", \"video/mp4\")",
+                            "required": true
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful media upload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "media_id": {
+                      "type": "number",
+                      "description": "The media ID as a number"
+                    },
+                    "media_id_string": {
+                      "type": "string",
+                      "description": "The media ID as a string"
+                    },
+                    "size": {
+                      "type": "number",
+                      "description": "The size of the media file in bytes"
+                    },
+                    "expires_after_secs": {
+                      "type": "number",
+                      "description": "The number of seconds until the uploaded media expires"
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "image_type": {
+                          "type": "string",
+                          "description": "The type of the image"
+                        },
+                        "w": {
+                          "type": "number",
+                          "description": "The width of the image"
+                        },
+                        "h": {
+                          "type": "number",
+                          "description": "The height of the image"
+                        }
+                      },
+                      "description": "Image information (if applicable)"
+                    }
+                  },
+                  "required": [
+                    "media_id_string"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generateOAuthHeader": {
+      "post": {
+        "operationId": "generateOAuthHeader",
+        "summary": "Generates an OAuth 1.0a header for authenticating requests to the X API.",
+        "description": "This function creates the Authorization header required for making authenticated requests to X. It takes the HTTP method, full URL, and optional additional parameters to generate a valid OAuth 1.0a header string.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the generateOAuthHeader sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "array",
+                        "items": [
+                          {
+                            "type": "string",
+                            "description": "The HTTP method (e.g., 'GET', 'POST')",
+                            "enum": [
+                              "GET",
+                              "POST",
+                              "PUT",
+                              "DELETE",
+                              "PATCH"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "description": "The full URL of the request",
+                            "format": "uri"
+                          },
+                          {
+                            "type": "object",
+                            "description": "Additional parameters to include in the signature",
+                            "additionalProperties": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      },
+                      "auth": {
+                        "type": "object",
+                        "description": "Authentication object",
+                        "properties": {
+                          "strategy": {
+                            "type": "string",
+                            "description": "Authentication strategy",
+                            "enum": [
+                              "apikey"
+                            ]
+                          },
+                          "variables": {
+                            "type": "array",
+                            "description": "Variables for the authentication strategy",
+                            "items": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_KEY"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_KEY"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_API_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_API_SECRET"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_TOKEN"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_TOKEN"
+                                  }
+                                }
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "description": "X_ACCESS_SECRET"
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "description": "value of X_ACCESS_SECRET"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "packageName": {
+                        "type": "string",
+                        "description": "@microfox/twitter"
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "oauthHeader": {
+                      "type": "string",
+                      "description": "The generated OAuth 1.0a header"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating a server-side issue"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

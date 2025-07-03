@@ -30,7 +30,7 @@ export const models: Record<
   googleGeminiPro: google('gemini-1.5-pro', {
     structuredOutputs: true,
   }),
-  googleGemini25Pro: google('gemini-2.5-pro-preview-05-06', {
+  googleGemini25Pro: google('gemini-2.5-pro-preview-06-05', {
     structuredOutputs: true,
   }),
   claudeDefault: anthrophobic('claude-4-sonnet-20250514', {}),

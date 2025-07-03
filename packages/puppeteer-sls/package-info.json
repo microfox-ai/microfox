@@ -1,0 +1,36 @@
+{
+  "name": "@microfox/puppeteer-sls",
+  "title": "Puppeteer SLS Provider",
+  "description": "A simple and easy to use client for running Puppeteer on serverless functions.",
+  "path": "packages/puppeteer-sls",
+  "dependencies": ["@sparticuz/chromium", "puppeteer-core"],
+  "status": "stable",
+  "authEndpoint": "",
+  "authType": "none",
+  "documentation": "https://github.com/microfox-ai/microfox/blob/main/packages/puppeteer-sls/README.md",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/puppeteer.svg",
+  "constructors": [
+    {
+      "name": "PuppeteerSLS",
+      "description": "Create a new Puppeteer SLS provider to run puppeteer on a serverless function",
+      "auth": "none",
+      "apiType": "sdk",
+      "requiredKeys": [],
+      "internalKeys": [],
+      "botConfig": [],
+      "functionalities": ["puppeteerLaunchProps"]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": ""
+  },
+  "extraInfo": [],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "platformType": "tool"
+}

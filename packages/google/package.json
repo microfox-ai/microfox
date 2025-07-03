@@ -1,6 +1,6 @@
 {
   "name": "@microfox/google",
-  "version": "1.1.2",
+  "version": "3.0.0",
   "description": "Google SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "@microfox/rest-sdk": "1.0.5",
+    "@microfox/rest-sdk": "1.2.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "typescript": "5.6.3"
   },
   "peerDependencies": {
-    "@microfox/rest-sdk": ">=1.0.5"
+    "@microfox/rest-sdk": ">=1.2.0"
   },
   "publishConfig": {
     "access": "public"
