@@ -18,5 +18,17 @@
   {
     "name": "https://www.googleapis.com/auth/calendar.events.owned",
     "description": "Read-only access to your Google Calendar events"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.events.public.readonly",
+    "description": ""
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar.settings.readonly",
+    "description": ""
+  },
+  {
+    "name": "https://www.googleapis.com/auth/calendar",
+    "description": ""
   }
 ]

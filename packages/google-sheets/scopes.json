@@ -1,6 +1,14 @@
 [
-    {
-        "name": "https://www.googleapis.com/auth/spreadsheets",
-        "description": "Read and write access to your Google Sheets data"
-    }
+  {
+    "name": "https://www.googleapis.com/auth/spreadsheets",
+    "description": "Read and write access to your Google Sheets data"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/spreadsheets.readonly",
+    "description": "Read-only access to your Google Sheets data"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/webmasters",
+    "description": "Access to Google Search Console data"
+  }
 ]

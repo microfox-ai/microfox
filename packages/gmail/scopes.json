@@ -1,5 +1,9 @@
 [
   {
+    "name": "https://www.googleapis.com/auth/gmail.readonly",
+    "description": "Read your Gmail messages"
+  },
+  {
     "name": "https://www.googleapis.com/auth/gmail.modify",
     "description": "Modify your Gmail messages"
   },
@@ -10,5 +14,17 @@
   {
     "name": "https://www.googleapis.com/auth/gmail.send",
     "description": "Send emails"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
+    "description": "Gmail add-on compose action"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/gmail.addons.current.message.action",
+    "description": "Gmail add-on message action"
+  },
+  {
+    "name": "https://www.googleapis.com/auth/gmail.labels",
+    "description": "Manage Gmail labels"
   }
 ]
