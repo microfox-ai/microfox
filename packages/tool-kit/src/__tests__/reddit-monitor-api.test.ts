@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { Toolkit, createToolkit } from '../client/Toolkit';
+import { OpenApiToolset, createOpenApiToolset } from '../client/Toolset';
 
 const REDDIT_MONITOR_API_SCHEMA = {
   docData: {
@@ -456,11 +456,11 @@ const REDDIT_MONITOR_API_SCHEMA = {
 const BASE_URL = 'https://oqhy1z9bch.execute-api.us-east-1.amazonaws.com/prod';
 
 describe('Reddit Monitor API Toolkit', () => {
-  let toolkit: Toolkit;
+  let toolkit: OpenApiToolset;
 
   beforeAll(async () => {
     // Create toolkit with the Reddit Monitor API schema
-    toolkit = await createToolkit({
+    toolkit = await createOpenApiToolset({
       schema: {
         type: 'object',
         schema: REDDIT_MONITOR_API_SCHEMA.docData,

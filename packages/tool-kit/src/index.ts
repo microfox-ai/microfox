@@ -1,4 +1,4 @@
-export * from './client/Toolkit';
+export * from './client/Toolset';
 export * from './types';
 export * from './utils';
 export * from './mixed-client';

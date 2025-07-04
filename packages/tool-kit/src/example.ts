@@ -10,7 +10,7 @@ import {
 import { openai } from '@ai-sdk/openai';
 import 'dotenv/config';
 
-import { createToolkit, Toolkit } from './client/Toolkit';
+import { createOpenApiToolset, OpenApiToolset } from './client/Toolset';
 
 // A minimal OpenAPI spec for the example
 const petstoreSpec = {
@@ -50,7 +50,7 @@ async function main() {
 
   // 1. Create the client with a `getHumanIntervention` callback.
   // This callback decides if a tool call should be paused based on its name and args.
-  const client = await createToolkit({
+  const client = await createOpenApiToolset({
     schema: petstoreSpec as any,
     getHumanIntervention: async ({ toolName, args, toolCallId }) => {
       // For this example, pause any 'delete' operation.
@@ -91,7 +91,7 @@ async function main() {
   await streamTextExample(client, tools);
 }
 
-async function generateTextExample(client: Toolkit, tools: ToolSet) {
+async function generateTextExample(client: OpenApiToolset, tools: ToolSet) {
   let messages: UIMessage[] = [
     {
       id: '1',
@@ -111,7 +111,7 @@ async function generateTextExample(client: Toolkit, tools: ToolSet) {
     model: openai('gpt-4-turbo'),
     messages: convertToModelMessages(messages),
     tools,
-    prepareStep: client.createHitlPrepareStep(),
+    stopWhen: client.createHitlStopStep(), // (s) => { return client.createHitlStopStep()(s)}
   });
 
   const finalResult = client.generate(rawResult);
@@ -142,7 +142,7 @@ async function generateTextExample(client: Toolkit, tools: ToolSet) {
   }
 }
 
-async function streamTextExample(client: Toolkit, tools: ToolSet) {
+async function streamTextExample(client: OpenApiToolset, tools: ToolSet) {
   let messages: CoreMessage[] = [
     { role: 'user', content: 'I need to remove the pet with id 12.' },
   ];
@@ -152,7 +152,7 @@ async function streamTextExample(client: Toolkit, tools: ToolSet) {
     model: openai('gpt-4-turbo'),
     messages,
     tools,
-    prepareStep: client.createHitlPrepareStep(),
+    stopWhen: client.createHitlStopStep(),
   });
 
   const stream = client.stream(result.fullStream as any);

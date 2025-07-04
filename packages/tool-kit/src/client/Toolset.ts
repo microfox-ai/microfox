@@ -10,6 +10,7 @@ import {
   UIMessageStreamWriter,
   PrepareStepFunction,
   JsonToSseTransformStream,
+  StopCondition,
 } from 'ai';
 import {
   HumanDecisionArgs,
@@ -29,7 +30,7 @@ const FAKE_HUMAN_INTERACTION_TOOL_NAME = 'FAKE_HUMAN_INTERACTION';
  * Client for interacting with APIs described by OpenAPI schemas
  * Provides methods for calling API operations and generating AI SDK-compatible tools
  */
-export class Toolkit {
+export class OpenApiToolset {
   private clients: OpenApiMCP[] = [];
   private initialized: boolean = false;
   private pendingTools = new Map<string, PendingToolContext>();
@@ -91,7 +92,7 @@ export class Toolkit {
   /**
    * Initialize all clients
    */
-  async init(): Promise<Toolkit> {
+  async init(): Promise<OpenApiToolset> {
     if (this.initialized) {
       return this;
     }
@@ -220,7 +221,8 @@ export class Toolkit {
         // Add to tools
         combinedTools.tools[namespacedKey] = {
           ...tool,
-          name: namespacedKey, // Update name to include namespace
+          clientName,
+          _id: namespacedKey, // Update name to include namespace
         };
 
         // Add to executions if it exists
@@ -442,22 +444,16 @@ export class Toolkit {
     };
   }
 
-  /**
-   * Creates a callback function for the `experimental_prepareStep` option in `generateText`.
-   * This function inspects the results of the previous step and stops the execution
-   * if a human-in-the-loop intervention has been triggered.
-   */
-  createHitlPrepareStep(): PrepareStepFunction<any> {
-    return async ({ steps }) => {
-      const lastStep = steps[steps.length - 1];
-      if (
-        lastStep &&
-        lastStep.toolResults.some(r => (r.output as any)?._humanIntervention)
-      ) {
-        // If we find a HITL marker, we tell `generateText` to stop after the current step.
-        return { activeTools: [] };
+  createHitlStopStep(): StopCondition<any> {
+    return async s => {
+      const lastStep = s.steps[s.steps.length - 1];
+      if (lastStep?.toolResults && lastStep?.toolResults?.length > 0) {
+        const allToolResults = lastStep.toolResults;
+        if (allToolResults.find(t => t.output._humanIntervention)) {
+          return true;
+        }
       }
-      return undefined;
+      return false;
     };
   }
 
@@ -604,9 +600,9 @@ export class Toolkit {
  *   - name: Custom name for the client instance
  * @returns OpenAPIToolsClient instance
  */
-export async function createToolkit(
+export async function createOpenApiToolset(
   options: OpenAPIToolsClientOptions | OpenAPIToolsClientOptions[],
-): Promise<Toolkit> {
+): Promise<OpenApiToolset> {
   try {
     // Handle single option or array of options
     const isArray = Array.isArray(options);
@@ -624,12 +620,12 @@ export async function createToolkit(
       );
 
       // Create the client with parsed schemas
-      const client = new Toolkit(parsedOptions);
+      const client = new OpenApiToolset(parsedOptions);
       return await client.init();
     } else {
       // For a single schema
       const parsedSchema = await parseSchema(options.schema);
-      const client = new Toolkit({
+      const client = new OpenApiToolset({
         ...options,
         schema: parsedSchema,
       });

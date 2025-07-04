@@ -1,8 +1,17 @@
-import { Tool as AiTool } from 'ai';
+import { Tool as AiTool, ToolSet as AiToolSet } from 'ai';
 
-export type Tool = AiTool & {
-  name: string;
+export type ToolMetaInfo = {
+  toolName?: string;
+  clientName?: string;
+  description?: string;
+  summary?: string;
+  _id?: string;
 };
+
+export type Tool = AiTool &
+  ToolMetaInfo & {
+    _id?: string;
+  };
 export type ToolSet = Record<string, Tool>;
 // Available HTTP methods
 export const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
@@ -75,6 +84,7 @@ export type OpenAPIRequestBody = {
 };
 
 export type OpenAPIOperation = {
+  name?: string;
   summary?: string;
   description?: string;
   operationId?: string;
@@ -105,6 +115,11 @@ export type OpenAPIDoc = {
     mcp_version?: string;
     description?: string;
   };
+  ['x-auth-packages']?: {
+    packageName: string;
+    packageConstructor: string;
+  }[];
+  ['x-auth-custom-secrets']?: string[];
   paths: {
     [path: string]: OpenAPIPath;
   };
@@ -134,9 +149,7 @@ export type ToolSchemas = Record<string, ToolSchema> | 'automatic';
 
 export type ToolExecuteFn = Tool['execute'];
 
-export type ToolMetadata = {
-  name: string;
-  description: string;
+export type ToolMetadata = ToolMetaInfo & {
   jsonSchema: JsonSchema & {
     type: 'object';
   };
@@ -170,7 +183,20 @@ export type SchemaConfig = {
   url?: string;
 };
 
+export type AuthOptions = {
+  packages: {
+    packageName: string;
+    packageConstructor: string;
+  }[];
+  customSecrets?: string[];
+};
+
 export type AuthObject = {
+  encryptionKey: string;
+  variables?: {
+    key: string;
+    value: string;
+  }[];
   [key: string]: any;
 };
 
@@ -280,7 +306,7 @@ export type ToolOptions = {
   disabledExecutions?: string[];
   disableAllExecutions?: boolean;
   auth?: AuthObject;
-  getAuth?: () => Promise<AuthObject>;
+  getAuth?: (options: AuthOptions) => Promise<AuthObject>;
   getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;

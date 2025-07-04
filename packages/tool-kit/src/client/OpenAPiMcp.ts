@@ -19,7 +19,10 @@ import {
   HumanInterventionDecision,
   HumanInterventionContext,
   PendingToolContext,
+  ToolMetadata,
+  AuthOptions,
 } from '../types';
+import { CryptoVault } from '@microfox/crypto-sdk';
 
 /**
  * Individual client for interacting with a single API described by an OpenAPI schema
@@ -40,18 +43,12 @@ export class OpenApiMCP {
   private mcp_version: string;
   private toolExecutions: Record<string, ToolExecuteFn> = {};
   private auth?: AuthObject;
-  private getAuth?: (
-    packageName: string,
-    providerOptions: {
-      constructor: string;
-      path: string;
-    },
-    toolOptions?: any,
-  ) => Promise<AuthObject>;
+  private getAuth?: (options: AuthOptions) => Promise<AuthObject>;
   private getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;
   private addPendingTool?: (context: PendingToolContext) => void;
+  private cryptoVault?: CryptoVault;
 
   constructor(options: {
     schema: OpenAPIDoc;
@@ -61,14 +58,7 @@ export class OpenApiMCP {
     onError?: (error: Error) => void;
     name?: string;
     auth?: AuthObject;
-    getAuth?: (
-      packageName: string,
-      providerOptions: {
-        constructor: string;
-        path: string;
-      },
-      toolOptions?: any,
-    ) => Promise<AuthObject>;
+    getAuth?: (options: AuthOptions) => Promise<AuthObject>;
     getHumanIntervention?: (
       context: HumanInterventionContext,
     ) => Promise<HumanInterventionDecision>;
@@ -86,6 +76,15 @@ export class OpenApiMCP {
     this.getAuth = options.getAuth;
     this.getHumanIntervention = options.getHumanIntervention;
     this.addPendingTool = options.addPendingTool;
+    if (options.auth?.encryptionKey) {
+      this.cryptoVault = new CryptoVault({
+        key: options.auth?.encryptionKey || '',
+        keyFormat: 'base64',
+        encryptionAlgo: 'aes-256-gcm',
+        hashAlgo: 'sha256',
+        outputEncoding: 'base64url',
+      });
+    }
   }
 
   /**
@@ -218,24 +217,42 @@ export class OpenApiMCP {
       };
       return structuredArgs;
     } else {
-      const bodyWithAuth = { ...args };
-      if (finalAuth) {
-        bodyWithAuth.auth = finalAuth;
-      }
       return {
-        body: bodyWithAuth,
+        body: args,
       };
     }
+  }
+
+  private structureHeaders(auth?: AuthObject): Record<string, string> {
+    const headers: Record<string, string> = {};
+    if (auth && this.cryptoVault) {
+      const variables = auth.variables?.reduce(
+        (
+          acc: Record<string, string>,
+          variable: { key: string; value: string },
+        ) => {
+          acc[variable.key] = variable.value;
+          return acc;
+        },
+        {},
+      );
+      headers['x-auth-secrets'] = this.cryptoVault.encrypt(
+        JSON.stringify(variables),
+      );
+    }
+    return headers;
   }
 
   private prepareRequest(
     operation: OpenAPIOperation & { path: string; method: string },
     args: Record<string, any>,
+    authHeaders: Record<string, string>,
   ) {
     let url = `${this.baseUrl}${operation.path}`;
     const headers: Record<string, string> = {
       ...this.defaultHeaders,
       'Content-Type': 'application/json',
+      ...authHeaders,
     };
 
     console.log('operation', operation);
@@ -391,6 +408,7 @@ export class OpenApiMCP {
     id: string,
     args: Record<string, any> = {},
     options?: any,
+    auth?: AuthObject,
   ) {
     if (!this.initialized) {
       throw new Error('Client not initialized. Call init() first.');
@@ -399,13 +417,18 @@ export class OpenApiMCP {
     const operation = this.operationMap.get(id);
     if (!operation) {
       throw new Error(
-        `Operation "${id}" not found. Available operations: ${Array.from(this.operationMap.keys()).join(', ')}`,
+        `Operation "${id}" not found. Available operations: ${Array.from(
+          this.operationMap.keys(),
+        ).join(', ')}`,
       );
     }
 
+    const authHeaders = this.structureHeaders(auth);
+
     const { url, headers, body } = this.prepareRequest(
       operation,
-      args.body ?? args,
+      args.body ?? args, // .body is for mcp 1.0.1 & plus
+      authHeaders,
     );
 
     return this.makeRequest({
@@ -848,7 +871,7 @@ export class OpenApiMCP {
       ) as OpenAPIOperation & { path: string; method: string };
       if (!cleanedOperation.path || !cleanedOperation.method) continue;
 
-      const toolName = this.name ? `${id}` : id;
+      const toolName = cleanedOperation.name || id;
 
       const isDisabled =
         disableAllExecutions ||
@@ -858,10 +881,19 @@ export class OpenApiMCP {
       const jsonSchema = this.convertOperationToJsonSchema(cleanedOperation);
       const zodSchema = this.convertOpenApiSchemaToZod(jsonSchema);
 
-      const description =
-        cleanedOperation.description ||
-        cleanedOperation.summary ||
-        `${cleanedOperation.method} ${cleanedOperation.path}`;
+      const toolMetaData: ToolMetadata = {
+        toolName,
+        clientName: this.name,
+        summary: cleanedOperation.summary,
+        description:
+          cleanedOperation.description ||
+          cleanedOperation.summary ||
+          `${cleanedOperation.method} ${cleanedOperation.path}`,
+        jsonSchema,
+        humanLayer: {
+          required: isDisabled,
+        },
+      };
 
       const executeFn: ToolExecuteFn = async (
         args: Record<string, any>,
@@ -890,11 +922,7 @@ export class OpenApiMCP {
               _humanIntervention: true,
               toolCallId: options?.toolCallId,
               args: decision.args,
-              metadata: {
-                name: toolName,
-                description,
-                jsonSchema,
-              },
+              metadata: toolMetaData,
             };
           }
         }
@@ -904,11 +932,7 @@ export class OpenApiMCP {
             _humanIntervention: true,
             toolCallId: options?.toolCallId,
             args: args,
-            metadata: {
-              name: toolName,
-              description,
-              jsonSchema,
-            },
+            metadata: toolMetaData,
           };
         }
 
@@ -920,20 +944,21 @@ export class OpenApiMCP {
           // ... (auth provider logic remains the same)
         }
 
+        const packages = this.schema['x-auth-packages'] || [];
+
         if (!finalAuth) {
           if (toolGetAuth) {
-            finalAuth = await toolGetAuth();
+            finalAuth = await toolGetAuth({
+              packages,
+              customSecrets: this.schema['x-auth-custom-secrets'],
+            });
           } else if (toolAuth) {
             finalAuth = toolAuth;
           } else if (this.getAuth) {
-            finalAuth = await this.getAuth(
-              this.presetBodyFields.packageName,
-              {
-                constructor: cleanedOperation.path.split('/')[1] || '',
-                path: cleanedOperation.path,
-              },
-              options,
-            );
+            finalAuth = await this.getAuth({
+              packages,
+              customSecrets: this.schema['x-auth-custom-secrets'],
+            });
           } else if (this.auth) {
             finalAuth = this.auth;
           }
@@ -947,25 +972,23 @@ export class OpenApiMCP {
         );
 
         // Call the operation
-        return this.callOperation(id, structuredArgs, options);
+        return this.callOperation(id, structuredArgs, options, finalAuth);
       };
 
       tools[toolName] = {
-        name: toolName,
-        description,
+        type: 'function',
+        toolName,
+        clientName: this.name,
         inputSchema: zodSchema,
+        summary: cleanedOperation.summary,
+        description:
+          cleanedOperation.description ||
+          cleanedOperation.summary ||
+          `${cleanedOperation.method} ${cleanedOperation.path}`,
         execute: executeFn, //isDisabled ? undefined : executeFn,
       };
       toolExecutions[toolName] = executeFn;
-
-      metadata[toolName] = {
-        name: toolName,
-        description,
-        jsonSchema,
-        humanLayer: {
-          required: isDisabled,
-        },
-      };
+      metadata[toolName] = toolMetaData;
     }
 
     return { tools, executions: toolExecutions, metadata };

@@ -16,6 +16,12 @@
       "description": "Unified wrapper endpoint"
     }
   ],
+  "x-auth-packages": [
+    {
+      "packageName": "@microfox/slack-web-tiny",
+      "packageConstructor": "OAuthWebClient"
+    }
+  ],
   "paths": {
     "/sendMessage": {
       "post": {
@@ -71,10 +77,7 @@
                                 "description": "Optional flag to broadcast reply in thread"
                               }
                             },
-                            "required": [
-                              "channel",
-                              "text"
-                            ]
+                            "required": ["channel", "text"]
                           }
                         ]
                       },
@@ -85,9 +88,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -115,9 +116,7 @@
                         "description": "@microfox/slack-web-tiny"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -150,9 +149,7 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -173,10 +170,7 @@
                       "description": "Error message describing the issue"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -197,10 +191,7 @@
                       "const": "invalid_auth"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -221,10 +212,7 @@
                       "const": "rate_limited"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -245,10 +233,7 @@
                       "description": "Error message describing the server issue"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -306,10 +291,7 @@
                                 "description": "Updated attachments (optional)"
                               }
                             },
-                            "required": [
-                              "channel",
-                              "ts"
-                            ]
+                            "required": ["channel", "ts"]
                           }
                         ]
                       },
@@ -320,9 +302,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -350,9 +330,7 @@
                         "description": "@microfox/slack-web-tiny"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -385,9 +363,7 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -408,10 +384,7 @@
                       "description": "Error message"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -432,10 +405,7 @@
                       "description": "Error message"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -456,10 +426,7 @@
                       "description": "Error message"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -529,9 +496,7 @@
                           "strategy": {
                             "type": "string",
                             "description": "Authentication strategy",
-                            "enum": [
-                              "apikey"
-                            ]
+                            "enum": ["apikey"]
                           },
                           "variables": {
                             "type": "array",
@@ -559,9 +524,7 @@
                         "description": "@microfox/slack-web-tiny"
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -591,9 +554,7 @@
                       "description": "Details of the uploaded file"
                     }
                   },
-                  "required": [
-                    "ok"
-                  ]
+                  "required": ["ok"]
                 }
               }
             }
@@ -614,10 +575,7 @@
                       "description": "Error message describing the issue with the request"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
@@ -638,10 +596,7 @@
                       "description": "Error message describing the server-side issue"
                     }
                   },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
+                  "required": ["ok", "error"]
                 }
               }
             }
