@@ -14,11 +14,32 @@
     {
       "name": "createClient",
       "description": "Create a new Microfox Suno API client through which you can interact with the API",
+      "requiredKeys": [
+        {
+          "key": "SUNO_API_KEY",
+          "displayName": "Suno API Key",
+          "description": "API key for authenticating with the Suno API."
+        },
+        {
+          "key": "SUNO_API_BASE_URL",
+          "displayName": "Suno API Base URL",
+          "description": "Optional base URL for the Suno API. Defaults to the Microfox proxy."
+        }
+      ],
+      "botConfig": [],
       "functionalities": [
-        "postApiCustomGenerate",
         "postApiGenerate",
+        "postV1ChatCompletions",
+        "postApiCustomGenerate",
+        "postApiExtendAudio",
+        "postApiGenerateStems",
+        "postApiGenerateLyrics",
         "getApiGet",
-        "getApiGetLimit"
+        "getApiGetLimit",
+        "getApiGetAlignedLyrics",
+        "getApiClip",
+        "postApiConcat",
+        "getApiPersona"
       ]
     }
   ],
