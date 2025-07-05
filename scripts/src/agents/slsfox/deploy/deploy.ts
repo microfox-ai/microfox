@@ -312,6 +312,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                   doc_text: docText,
                   embedding,
                   is_public: true,
+                  api_type: 'package-sls',
                   stage: STAGE.toUpperCase(),
                   metadata,
                 });
