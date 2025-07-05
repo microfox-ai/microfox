@@ -1,0 +1,22 @@
+{
+  "name": "@microfox/webhook-whatsapp",
+  "title": "Microfox WhatsApp Webhook",
+  "description": "A TypeScript package for handling WhatsApp webhooks.",
+  "platformType": "internal",
+  "path": "packages/webhook-whatsapp",
+  "dependencies": ["zod"],
+  "status": "webhookConnector",
+  "webhookEndpoint": "/webhook/webhook-whatsapp",
+  "documentation": "https://business.whatsapp.com/blog/how-to-use-webhooks-from-whatsapp-business-api",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/whatsapp.svg",
+  "readme_map": {
+    "path": "/README.md",
+    "description": "The full README for the Microfox WhatsApp Webhook",
+    "functionalities": []
+  },
+  "constructors": [],
+  "extraInfo": [],
+  "keyInstructions": {
+    "link": "https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components"
+  }
+} 
