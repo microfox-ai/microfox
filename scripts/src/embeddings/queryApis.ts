@@ -11,11 +11,11 @@ const TABLE = 'api_embeddings';
 /**
  * List APIs by project ID
  */
-async function listByProject(projectId: string, stage: string | null = null, limit = 10) {
+async function listByPackage(packageName: string, stage: string | null = null, limit = 10) {
   const query = supabase
     .from(TABLE)
-    .select('bot_project_id,base_url,endpoint_path,http_method,stage,is_public,updated_at')
-    .eq('bot_project_id', projectId)
+    .select('package_name,base_url,endpoint_path,http_method,stage,api_type,updated_at')
+    .eq('package_name', packageName)
     .order('updated_at', { ascending: false })
     .limit(limit);
 
@@ -26,15 +26,15 @@ async function listByProject(projectId: string, stage: string | null = null, lim
   const { data, error } = await query;
   if (error) throw error;
 
-  console.log(`\n🤖 APIs in project "${projectId}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
+  console.log(`\n📦 APIs in package "${packageName}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     data!.map((r: any) => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
     }))
   );
 }
@@ -42,11 +42,11 @@ async function listByProject(projectId: string, stage: string | null = null, lim
 /**
  * List all public APIs
  */
-async function listPublicApis(stage: string | null = null, limit = 10) {
+async function listPackageSlsApis(stage: string | null = null, limit = 10, apiType: string = 'package-sls') {
   const query = supabase
     .from(TABLE)
-    .select('bot_project_id,base_url,endpoint_path,http_method,stage,is_public,updated_at')
-    .eq('is_public', true)
+    .select('package_name,base_url,endpoint_path,http_method,stage,api_type,updated_at')
+    .eq('api_type', apiType)
     .order('updated_at', { ascending: false })
     .limit(limit);
 
@@ -57,15 +57,15 @@ async function listPublicApis(stage: string | null = null, limit = 10) {
   const { data, error } = await query;
   if (error) throw error;
 
-  console.log(`\n🌍 Public APIs${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
+  console.log(`\n🌍 APIs of type "${apiType}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     data!.map((r: any) => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
     }))
   );
 }
@@ -76,7 +76,7 @@ async function listPublicApis(stage: string | null = null, limit = 10) {
 async function listAllApis(stage: string | null = null, limit = 10) {
   const query = supabase
     .from(TABLE)
-    .select('bot_project_id,base_url,endpoint_path,http_method,stage,is_public,updated_at')
+    .select('package_name,base_url,endpoint_path,http_method,stage,api_type,updated_at')
     .order('updated_at', { ascending: false })
     .limit(limit);
 
@@ -90,12 +90,12 @@ async function listAllApis(stage: string | null = null, limit = 10) {
   console.log(`\n🌍 All APIs${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     data!.map((r: any) => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
     }))
   );
 }
@@ -103,30 +103,30 @@ async function listAllApis(stage: string | null = null, limit = 10) {
 /**
  * Perform semantic search on APIs by project
  */
-async function searchByProject(projectId: string, query: string, stage: string | null = null, limit = 10) {
+async function searchByPackage(packageName: string, query: string, stage: string | null = null, limit = 10) {
   console.log(`\n🔍 Embedding query: "${query}"…`);
   const qEmb = await embed(query);
   console.log('🧠 Query embedding obtained');
 
-  console.log(`🤖 Project API search in "${projectId}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}…`);
+  console.log(`📦 Package API search in "${packageName}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}…`);
 
-  const { data, error } = await supabase.rpc('match_apis_by_project', {
+  const { data, error } = await supabase.rpc('match_apis_by_package_name', {
     query_embedding: qEmb,
-    project_id: projectId,
+    package_name: packageName,
     k: limit,
     stage_filter: stage === '*' ? null : stage,
   });
   if (error) throw error;
 
-  console.log(`\n🎯 Top ${limit} project results for "${query}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
+  console.log(`\n🎯 Top ${limit} package results for "${query}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     (data as any[]).map(r => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
       similarity: r.similarity,
     }))
   );
@@ -135,30 +135,30 @@ async function searchByProject(projectId: string, query: string, stage: string |
 /**
  * Perform semantic search on public APIs
  */
-async function searchPublicApis(query: string, stage: string | null = null, limit = 10) {
+async function searchPackageSlsApis(query: string, stage: string | null = null, limit = 10, apiType: string = 'package-sls') {
   console.log(`\n🔍 Embedding query: "${query}"…`);
   const qEmb = await embed(query);
   console.log('🧠 Query embedding obtained');
 
-  console.log(`🌍 Public API search${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}…`);
+  console.log(`🌍 API search for type "${apiType}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}…`);
 
   const { data, error } = await supabase.rpc('match_apis', {
     query_embedding: qEmb,
     k: limit,
     stage_filter: stage === '*' ? null : stage,
-    public_only: true,
+    api_type: apiType,
   });
   if (error) throw error;
 
-  console.log(`\n🎯 Top ${limit} public results for "${query}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
+  console.log(`\n🎯 Top ${limit} package results for "${query}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     (data as any[]).map(r => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
       similarity: r.similarity,
     }))
   );
@@ -178,19 +178,19 @@ async function searchAllApis(query: string, stage: string | null = null, limit =
     query_embedding: qEmb,
     k: limit,
     stage_filter: stage === '*' ? null : stage,
-    public_only: false,
+    api_type: null,
   });
   if (error) throw error;
 
   console.log(`\n🎯 Top ${limit} global results for "${query}"${stage ? (stage === '*' ? ' (all stages)' : ` with stage "${stage}"`) : ''}:`);
   console.table(
     (data as any[]).map(r => ({
-      bot_project_id: r.bot_project_id,
+      package_name: r.package_name,
       base_url: r.base_url,
       endpoint_path: r.endpoint_path,
       http_method: r.http_method,
       stage: r.stage,
-      is_public: r.is_public,
+      api_type: r.api_type,
       similarity: r.similarity,
     }))
   );
@@ -210,11 +210,11 @@ async function main() {
   
   // The next arguments depend on the action
   switch (action) {
-    case 'project': {
-      // project <projectId> [stage] ["query"]
-      const projectId = args[1];
-      if (!projectId) {
-        console.error('❌ Missing project ID');
+    case 'package': {
+      // package <packageName> [stage] ["query"]
+      const packageName = args[1];
+      if (!packageName) {
+        console.error('❌ Missing package name');
         showUsage();
         process.exit(1);
       }
@@ -231,15 +231,15 @@ async function main() {
       }
       
       if (query) {
-        await searchByProject(projectId, query, stage);
+        await searchByPackage(packageName, query, stage);
       } else {
-        await listByProject(projectId, stage);
+        await listByPackage(packageName, stage);
       }
       break;
     }
     
-    case 'public': {
-      // public [stage] ["query"]
+    case 'type': {
+      // type [stage] ["query"]
       let stage: string | null = null;
       let query: string | null = null;
       
@@ -252,9 +252,9 @@ async function main() {
       }
       
       if (query) {
-        await searchPublicApis(query, stage);
+        await searchPackageSlsApis(query, stage);
       } else {
-        await listPublicApis(stage);
+        await listPackageSlsApis(stage);
       }
       break;
     }
@@ -292,15 +292,15 @@ async function main() {
 function showUsage() {
   console.error(
     '❌ Usage:\n' +
-    ' 1) Project APIs:         ts-node queryApis.ts project <projectId> [stage] ["query"]\n' +
-    ' 2) Public APIs:          ts-node queryApis.ts public [stage] ["query"]\n' +
+    ' 1) Package APIs:         ts-node queryApis.ts package <packageName> [stage] ["query"]\n' +
+    ' 2) Type APIs:            ts-node queryApis.ts type [stage] ["query"]\n' +
     ' 3) All APIs:             ts-node queryApis.ts all [stage] ["query"]\n' +
     '\nExamples:\n' +
-    ' - List project APIs:     ts-node queryApis.ts project my-chatbot\n' +
-    ' - All stages explicitly: ts-node queryApis.ts project my-chatbot "*"\n' +
-    ' - Search project APIs:   ts-node queryApis.ts project my-chatbot "send message"\n' +
-    ' - With specific stage:   ts-node queryApis.ts project my-chatbot PROD "send message"\n' +
-    ' - List public APIs:      ts-node queryApis.ts public\n' +
+    ' - List package APIs:     ts-node queryApis.ts package my-chatbot\n' +
+    ' - All stages explicitly: ts-node queryApis.ts package my-chatbot "*"\n' +
+    ' - Search package APIs:   ts-node queryApis.ts package my-chatbot "send message"\n' +
+    ' - With specific stage:   ts-node queryApis.ts package my-chatbot PROD "send message"\n' +
+    ' - List type APIs:         ts-node queryApis.ts type\n' +
     ' - Search all APIs:       ts-node queryApis.ts all "user authentication"'
   );
 }

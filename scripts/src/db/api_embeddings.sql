@@ -60,18 +60,18 @@ RETURNS TABLE (
 LANGUAGE SQL STABLE
 AS $$
     SELECT
-      id,
-      package_name,
-      base_url,
-      endpoint_path,
-      http_method,
-      doc_text,
-      stage,
-      1 - (embedding <#> query_embedding) AS similarity
-    FROM api_embeddings
-    WHERE package_name = package_name
-      AND (stage_filter IS NULL OR stage = stage_filter)
-    ORDER BY embedding <#> query_embedding
+      e.id,
+      e.package_name,
+      e.base_url,
+      e.endpoint_path,
+      e.http_method,
+      e.doc_text,
+      e.stage,
+      1 - (e.embedding <#> query_embedding) AS similarity
+    FROM api_embeddings AS e
+    WHERE e.package_name = package_name
+      AND (stage_filter IS NULL OR e.stage = stage_filter)
+    ORDER BY e.embedding <#> query_embedding
     LIMIT k;
 $$;
 
@@ -95,16 +95,17 @@ RETURNS TABLE (
 LANGUAGE SQL STABLE
 AS $$
     SELECT
-      id,
-      package_name,
-      base_url,
-      endpoint_path,
-      http_method,
-      doc_text,
-      stage,
-      1 - (embedding <#> query_embedding) AS similarity
-    FROM api_embeddings
-    WHERE (stage_filter IS NULL OR stage = stage_filter)
-    ORDER BY embedding <#> query_embedding
+      e.id,
+      e.package_name,
+      e.base_url,
+      e.endpoint_path,
+      e.http_method,
+      e.doc_text,
+      e.stage,
+      1 - (e.embedding <#> query_embedding) AS similarity
+    FROM api_embeddings AS e
+    WHERE (stage_filter IS NULL OR e.stage = stage_filter)
+      AND (api_type IS NULL OR e.api_type = api_type)
+    ORDER BY e.embedding <#> query_embedding
     LIMIT k;
 $$;
