@@ -3,6 +3,7 @@ service: public-slack-web-tiny-api
 plugins:
   - serverless-plugin-typescript
   - serverless-api-gateway-throttling
+  - serverless-offline
 
 provider:
   name: aws
@@ -11,7 +12,24 @@ provider:
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
 
+package:
+  exclude:
+    - node_modules/serverless-offline/**
+
 custom:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
+    noPrependStageInUrl: true
+    useChildProcesses: true
+    useWorkerThreads: true
+    noCookieValidation: true
+    allowCache: true
+    hideStackTraces: false
+    disableCookieValidation: true
+    noTimeout: true
+    environment: ${file(env.json)}
   apiGatewayThrottling:
     maxRequestsPerSecond: 50
     maxConcurrentRequests: 20

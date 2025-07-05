@@ -1,5 +1,11 @@
 # @microfox/webhook-kit
 
+## 1.1.1
+
+### Patch Changes
+
+- 57108c0: Changes from PR #493: vwjt_whatsapp_webhook_june_2025
+
 ## 1.1.0
 
 ### Minor Changes

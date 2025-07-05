@@ -55,6 +55,7 @@ jobs:
             packages/*/.turbo/**
             packages/*/.next/**
             packages/*/coverage/**
+            packages/*/sls/**
 
       - name: Debug Changed Files
         run: |
