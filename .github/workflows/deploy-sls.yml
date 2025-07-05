@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/sls/**'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
