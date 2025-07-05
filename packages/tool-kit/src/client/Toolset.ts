@@ -254,12 +254,6 @@ export class OpenApiToolset {
 
         const toolName = (part as any).type.replace('tool-', '');
 
-        console.log(
-          'toolName',
-          toolName,
-          Object.keys(thisClientTools.executions),
-        );
-
         // Only continue if we have an execute function for the tool (meaning it requires confirmation) and it's in a 'result' state
         if (!(toolName in thisClientTools.executions)) return part;
 
@@ -277,13 +271,15 @@ export class OpenApiToolset {
             result = await correspondingCall(part.input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],
+              ...((part as any).output.auth
+                ? { auth: (part as any).output.auth }
+                : {}),
             });
           } else {
             result = 'Error: User denied access to tool execution';
           }
         }
 
-        console.log('result', result);
         // Forward updated tool result to the client.
         if (dataStream && result) {
           dataStream.write({

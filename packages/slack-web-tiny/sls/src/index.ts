@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { CryptoVault } from '@microfox/crypto-sdk';
 import { sdkInit } from './sdkInit.js';
+import { APIGatewayEvent } from 'aws-lambda';
 
 dotenv.config(); // for any local vars
 
@@ -18,10 +19,17 @@ const cryptoVault = new CryptoVault({
   outputEncoding: 'base64url',
 });
 
-export const handler = async (event: any): Promise<any> => {
+export const handler = async (event: APIGatewayEvent): Promise<any> => {
   try {
     // Extract the functionName from the path: /{functionName}
-    console.log('event', event);
+    console.log(
+      'event',
+      event.pathParameters,
+      'headers',
+      event.headers,
+      'body',
+      JSON.parse(event.body),
+    );
     const segments = event.path.split('/').filter(Boolean);
     const functionName = segments[segments.length - 1]!.split('?')[0];
     console.log('functionName', functionName);
@@ -50,14 +58,7 @@ export const handler = async (event: any): Promise<any> => {
     }
     try {
       const authVariablesStri = cryptoVault.decrypt(authSecrets);
-      const authVariablesObject = JSON.parse(authVariablesStri);
-      const authVariables = authVariablesObject.variables;
-      console.log('authVariables', authVariables);
-      console.log(
-        'authVariablesObject',
-        authVariablesObject,
-        authVariablesStri,
-      );
+      const authVariables = JSON.parse(authVariablesStri);
       dotenv.populate(process.env, authVariables);
     } catch (decryptionError) {
       console.error('Error decrypting environment variables:', decryptionError);
@@ -69,8 +70,6 @@ export const handler = async (event: any): Promise<any> => {
         }),
       };
     }
-
-    console.log('process.env', Object.keys(process.env));
 
     // Map functions
     const sdkMap = sdkInit();
@@ -87,7 +86,7 @@ export const handler = async (event: any): Promise<any> => {
     // Extract function arguments
     let args: any[] = [];
     try {
-      const bodyArgs = requestBody?.body?.arguments;
+      const bodyArgs = requestBody?.body?.arguments ?? requestBody?.arguments;
       if (bodyArgs) {
         args = Array.isArray(bodyArgs) ? bodyArgs : [bodyArgs];
       }
@@ -109,7 +108,7 @@ export const handler = async (event: any): Promise<any> => {
         body: JSON.stringify(result),
       };
     } catch (functionError) {
-      console.error('Error executing SDK function:', functionError);
+      console.error('Error executing SDK function:', functionError, args);
       return {
         statusCode: 500,
         headers: { 'Content-Type': 'application/json' },

@@ -18,8 +18,7 @@
   ],
   "x-auth-packages": [
     {
-      "packageName": "@microfox/slack-web-tiny",
-      "packageConstructor": "OAuthWebClient"
+      "packageName": "@microfox/slack-web-tiny"
     }
   ],
   "paths": {

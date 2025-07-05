@@ -115,16 +115,16 @@ export type OpenAPIDoc = {
     mcp_version?: string;
     description?: string;
   };
-  ['x-auth-packages']?: {
-    packageName: string;
-    packageConstructor: string;
-  }[];
-  ['x-auth-custom-secrets']?: string[];
   paths: {
     [path: string]: OpenAPIPath;
   };
   components?: {
     schemas?: Record<string, OpenAPISchema>;
+    ['x-auth-packages']?: {
+      packageName: string;
+      packageConstructor?: string;
+    }[];
+    ['x-auth-custom-secrets']?: string[];
   };
 };
 
@@ -184,15 +184,15 @@ export type SchemaConfig = {
 };
 
 export type AuthOptions = {
-  packages: {
+  packages?: {
     packageName: string;
-    packageConstructor: string;
+    packageConstructor?: string;
   }[];
   customSecrets?: string[];
 };
 
 export type AuthObject = {
-  encryptionKey: string;
+  encryptionKey?: string;
   variables?: {
     key: string;
     value: string;
@@ -241,7 +241,7 @@ export interface OpenAPIToolsClientOptions {
   /**
    * Function to dynamically fetch authentication credentials.
    */
-  getAuth?: () => Promise<AuthObject>;
+  getAuth?: (options: AuthOptions) => Promise<AuthObject>;
 
   /**
    * Callback to determine if human intervention is required for a tool call.
@@ -256,7 +256,7 @@ export interface HumanInterventionContext {
   generatedArgs: Record<string, any>;
   mcpConfig: any;
   toolCallId: string;
-  args?: unknown;
+  auth?: AuthObject;
 }
 
 export type HumanDecisionArgs = {

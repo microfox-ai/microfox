@@ -52,12 +52,12 @@ async function main() {
   // This callback decides if a tool call should be paused based on its name and args.
   const client = await createOpenApiToolset({
     schema: petstoreSpec as any,
-    getHumanIntervention: async ({ toolName, args, toolCallId }) => {
+    getHumanIntervention: async ({ toolName, generatedArgs, toolCallId }) => {
       // For this example, pause any 'delete' operation.
       if (toolName.toLowerCase().includes('deletepet')) {
         console.log(
           `\n[HITL Check] Pausing tool call '${toolName}' with args: ${JSON.stringify(
-            args,
+            generatedArgs,
           )}`,
         );
         return {
@@ -68,7 +68,7 @@ async function main() {
               props: {
                 title: `Approval Required: ${toolName}`,
                 message: `Are you sure you want to delete pet with ID ${
-                  (args as any).petId
+                  (generatedArgs as any).petId
                 }?`,
               },
             },
