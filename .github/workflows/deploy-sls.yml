@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+      - feat/sls_deploy_and_embedding
+    paths:
+      - '**/sls/**'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
