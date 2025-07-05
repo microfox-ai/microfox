@@ -1,5 +1,11 @@
 # @microfox/google-calendar
 
+## 1.2.1
+
+### Patch Changes
+
+- fa533ea: Changes from PR #487: update-oauth-scopes-v2
+
 ## 1.2.0
 
 ### Minor Changes
