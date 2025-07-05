@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.4.1
+
+### Patch Changes
+
+- 2fb3068: Changes from PR #563: update-oauth-scopes-v2
+
 ## 1.4.0
 
 ### Minor Changes
