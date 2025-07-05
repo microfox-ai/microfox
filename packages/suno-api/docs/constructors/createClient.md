@@ -8,7 +8,14 @@ Creates a new instance of the Suno API client.
 import { createClient } from '@microfox/suno-api';
 
 const client = createClient({
-  // You can add client configurations here, like a custom fetch implementation
+  // The Suno API requires an API key for authentication.
+  // Pass it in the headers.
+  headers: {
+    'suno-api-key': 'YOUR_SUNO_API_KEY'
+  },
+  // You can optionally provide a base URL if you are self-hosting the API
+  baseUrl: 'https://your-suno-api-proxy.com'
+  // You can also add other client configurations here, like a custom fetch implementation
   // baseUrl is already configured to point to the Suno API proxy
 });
 ```
@@ -22,7 +29,7 @@ The `createClient` function accepts a configuration object with the following pr
 | `baseUrl`           | string                                    | Base URL for all requests. Defaults to the Suno API proxy.                                                                               |
 | `bodySerializer`    | `(body: unknown) => unknown`              | A function to serialize the request body.                                                                                                |
 | `fetch`             | `(request: Request) => Promise<Response>` | A custom `fetch` implementation. Defaults to the global `fetch`.                                                                         |
-| `headers`           | `HeadersInit`                             | Default headers to be sent with every request.                                                                                           |
+| `headers`           | `HeadersInit`                             | Default headers to be sent with every request. Use this to set your `suno-api-key`.                                                      |
 | `parseAs`           | 'arrayBuffer' │ 'auto' │ 'blob' │ 'formData' │ 'json' │ 'stream' │ 'text' | How to parse the response body. Defaults to `auto`, which infers from the `Content-Type` header. |
 | `querySerializer`   | `(query: Record<string, unknown>) => string` | A function to serialize query parameters.                                                                                                |
 | `responseStyle`     | 'data' │ 'fields'                         | Whether to return only the `data` field or the full response object (`data`, `error`, `response`). Defaults to `fields`.                   |

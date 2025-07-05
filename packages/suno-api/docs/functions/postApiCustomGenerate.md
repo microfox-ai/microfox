@@ -7,7 +7,15 @@ Generate Audio - Custom Mode. The custom mode enables users to provide additiona
 ```typescript
 import { createClient, postApiCustomGenerate } from '@microfox/suno-api';
 
-const client = createClient();
+const client = createClient({
+  // The Suno API requires an API key for authentication.
+  // Pass it in the headers.
+  headers: {
+    'suno-api-key': 'YOUR_SUNO_API_KEY'
+  },
+  // You can optionally provide a base URL if you are self-hosting the API
+  baseUrl: 'https://your-suno-api-proxy.com'
+});
 
 async function customGenerate() {
   try {
