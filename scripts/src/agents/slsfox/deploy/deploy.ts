@@ -256,9 +256,8 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
               .from('api_embeddings')
               .select('*')
               .match({
-                base_url: baseUrl,
+                package_name: packageName,
                 endpoint_path: path,
-                http_method: method.toUpperCase()
               })
               .maybeSingle();
 
@@ -283,6 +282,9 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                 .from('api_embeddings')
                 .update({
                   doc_text: docText,
+                  base_url: baseUrl,
+                  endpoint_path: path,
+                  http_method: method.toUpperCase(),
                   embedding,
                   metadata,
                   updated_at: new Date().toISOString()
@@ -302,17 +304,15 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
               const { error: insertError } = await supabase
                 .from('api_embeddings')
                 .insert({
-                  bot_project_id: null,
-                  origin_client_request_id: null,
-                  user_id: null,
+                  package_name: packageName,
                   base_url: baseUrl,
                   endpoint_path: path,
                   http_method: method.toUpperCase(),
+                  api_type: 'package-sls',
+                  stage: STAGE.toUpperCase(),
                   schema_path: null,
                   doc_text: docText,
                   embedding,
-                  is_public: true,
-                  stage: STAGE.toUpperCase(),
                   metadata,
                 });
 

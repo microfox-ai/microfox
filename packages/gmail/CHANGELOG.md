@@ -1,5 +1,11 @@
 # @microfox/gmail
 
+## 1.3.1
+
+### Patch Changes
+
+- fa533ea: Changes from PR #487: update-oauth-scopes-v2
+
 ## 1.3.0
 
 ### Minor Changes

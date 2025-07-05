@@ -1,0 +1,51 @@
+name: Serverless Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ['Auto SLS Update']
+    types:
+      - completed
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Only run if the workflow_run was successful or if it's a direct push
+    if: |
+      github.event_name == 'push' || 
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all history for git commands
+
+      - name: Use Node.js 23.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+
+      - name: Run CI/CD deployment script
+        env:
+          ALLOWED_IP: ${{ secrets.ALLOWED_IP }}
+          MICROFOX_API_KEY: ${{ secrets.MICROFOX_API_KEY }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Set GITHUB_BEFORE and GITHUB_AFTER based on trigger type
+          GITHUB_BEFORE: ${{ github.event_name == 'workflow_run' && 'HEAD~1' || github.event.before }}
+          GITHUB_AFTER: ${{ github.event_name == 'workflow_run' && 'HEAD' || github.event.after }}
+          # Flag to indicate this is an auto-update deployment
+          IS_AUTO_UPDATE: ${{ github.event_name == 'workflow_run' && 'true' || 'false' }}
+        run: |
+          cd scripts
+          npm install
+          npm run deploy:sls

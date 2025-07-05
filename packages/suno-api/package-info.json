@@ -1,0 +1,48 @@
+{
+  "name": "@microfox/suno-api",
+  "title": "Microfox Suno API",
+  "description": "A lightweight, type-safe SDK for interacting with the Suno API",
+  "path": "packages/suno-api",
+  "dependencies": ["zod"],
+  "status": "stable",
+  "authType": "apikey",
+  "authEndpoint": "/connect/suno",
+  "documentation": "https://www.npmjs.com/package/@microfox/suno-api",
+  "icon": "",
+  "addedDependencies": [],
+  "constructors": [
+    {
+      "name": "createClient",
+      "description": "Create a new Microfox Suno API client through which you can interact with the API",
+      "requiredKeys": [
+        {
+          "key": "SUNO_API_KEY",
+          "displayName": "Suno API Key",
+          "description": "API key for authenticating with the Suno API."
+        },
+        {
+          "key": "SUNO_API_BASE_URL",
+          "displayName": "Suno API Base URL",
+          "description": "Optional base URL for the Suno API. Defaults to the Microfox proxy."
+        }
+      ],
+      "botConfig": [],
+      "functionalities": [
+        "postApiGenerate",
+        "postV1ChatCompletions",
+        "postApiCustomGenerate",
+        "postApiExtendAudio",
+        "postApiGenerateStems",
+        "postApiGenerateLyrics",
+        "getApiGet",
+        "getApiGetLimit",
+        "getApiGetAlignedLyrics",
+        "getApiClip",
+        "postApiConcat",
+        "getApiPersona"
+      ]
+    }
+  ],
+  "extraInfo": [],
+  "platformType": "ai"
+} 

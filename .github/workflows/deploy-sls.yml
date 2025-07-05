@@ -4,19 +4,12 @@ on:
   push:
     branches:
       - main
-  workflow_run:
-    workflows: ['Auto SLS Update']
-    types:
-      - completed
-    branches:
-      - main
+    paths:
+      - '**/sls/**'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Only run if the workflow_run was successful or if it's a direct push
-    if: |
-      github.event_name == 'push' || 
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -40,11 +33,9 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # Set GITHUB_BEFORE and GITHUB_AFTER based on trigger type
-          GITHUB_BEFORE: ${{ github.event_name == 'workflow_run' && 'HEAD~1' || github.event.before }}
-          GITHUB_AFTER: ${{ github.event_name == 'workflow_run' && 'HEAD' || github.event.after }}
-          # Flag to indicate this is an auto-update deployment
-          IS_AUTO_UPDATE: ${{ github.event_name == 'workflow_run' && 'true' || 'false' }}
+          GITHUB_BEFORE: ${{ github.event.before }}
+          GITHUB_AFTER: ${{ github.event.after }}
+          IS_AUTO_UPDATE: 'false'
         run: |
           cd scripts
           npm install

@@ -17,10 +17,18 @@
     }
   ],
   "components": {
+    "x-auth-packages": [
+      {
+        "packageName": "@microfox/my-tool-kit",
+        "packageConstructor": "MyClient"
+      }
+    ],
+    "x-auth-custom-secrets": ["PROVIDER_CLIENT_SECRET"],
     "x-auth-providers": {
       "defaultProvider": {
         "path": "/auth/getToken",
         "method": "POST",
+        "description": "call this endpoint to get a token",
         "responseMapping": {
           "strategy": "'apikey'",
           "variables": [
@@ -65,11 +73,18 @@
   "paths": {
     "/MyClient/myMethod": {
       "post": {
+        "name": "My Methos",
         "operationId": "myClient.myMethod",
         "summary": "A sample method.",
-        "description": "This is a sample method that does something.",
+        "description": "This is a very long description of the method and what it does.",
         "auth": "specificProvider",
         "x-human-in-the-loop": "dataEntry",
+        "headers": {
+          "x-auth-secrets": {
+            "type": "string",
+            "description": "Encrypted authentication secrets"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -101,34 +116,11 @@
                           }
                         ]
                       },
-                      "auth": {
+                      "secrets": {
                         "type": "object",
-                        "description": "Authentication object",
+                        "description": "The secrets object",
                         "properties": {
-                          "strategy": {
-                            "type": "string",
-                            "description": "Authentication strategy",
-                            "enum": ["apikey"]
-                          },
-                          "variables": {
-                            "type": "array",
-                            "description": "Variables for the authentication strategy",
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "key": {
-                                    "type": "string",
-                                    "description": "API_KEY_NAME"
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "description": "value of API_KEY"
-                                  }
-                                }
-                              }
-                            ]
-                          }
+                          "p": { "type": "string" }
                         }
                       },
                       "constructorName": {
@@ -183,6 +175,12 @@
       "post": {
         "operationId": "myClient.anotherMethod",
         "summary": "Another sample method that uses the default auth.",
+        "headers": {
+          "x-auth-secrets": {
+            "type": "string",
+            "description": "Encrypted authentication secrets"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {

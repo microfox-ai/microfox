@@ -8,7 +8,8 @@
   "webhookConnectorPackages": [
     "packages/agent-kit",
     "packages/webhook-octokit",
-    "packages/webhook-slack"
+    "packages/webhook-slack",
+    "packages/webhook-whatsapp"
   ],
   "internalPackages": [
     "packages/ai",
@@ -53,7 +54,6 @@
     "packages/notion",
     "packages/puppeteer-linkedin",
     "packages/reddit",
-    "packages/slack",
     "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -62,7 +62,8 @@
   "unstablePackages": [
     "packages/ai-provider-vertex",
     "packages/linkedin-member-data-portability",
-    "packages/puppeteer-suno"
+    "packages/puppeteer-suno",
+    "packages/slack"
   ],
   "partialPackages": [
     "packages/core",
@@ -85,6 +86,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 68,
-  "generatedAt": "2025-07-02T11:57:32.886Z"
+  "total": 69,
+  "generatedAt": "2025-07-05T11:09:57.262Z"
 }
