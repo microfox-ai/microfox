@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS api_embeddings (
   doc_text                   TEXT             NOT NULL,             -- concatenated context sent to embedder
   embedding                  VECTOR(768)      NULL,                 -- Gemini/text-embedding-004
   is_public                  BOOLEAN          NOT NULL DEFAULT FALSE,
+  api_type                   TEXT             NOT NULL DEFAULT 'package-sls',            -- e.g. "package-sls", "micro-agent"
   stage                      deployment_stage NOT NULL DEFAULT 'STAGING',
   metadata                   JSONB            NULL,
   created_at                 TIMESTAMPTZ      NOT NULL DEFAULT now(),
