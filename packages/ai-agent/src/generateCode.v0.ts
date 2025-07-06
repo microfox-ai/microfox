@@ -5,7 +5,6 @@ import { scanDirectoryStructure, formatDirectoryStructure } from './utils/scanDi
 import { GenerateCodeV0Options } from './types';
 import { FilePlanSchema } from './schemas';
 import { generateCodeFile } from './generateCodeFile';
-import { LanguageModelV2 } from '@ai-sdk/provider';
 
 type GenerateTextOptions = Parameters<typeof generateText>[0];
 

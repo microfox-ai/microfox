@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -7,7 +7,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { generateCodeV0 } from '../generateCode.v0';
 import { generateProject } from '../generateProject';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const TEST_TIMEOUT = 600000; // 10 minutes for complex generation
 const verbose = true;
