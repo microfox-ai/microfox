@@ -1,2 +1,2 @@
 export * from './types';
-export { WhatsAppWebhookSdk } from './WhatsAppWebhookSdk'; 
+export * from './WhatsAppWebhook';

@@ -1,0 +1,16 @@
+{
+  "name": "rag-upstash",
+  "title": "Rag Upstash TypeScript SDK",
+  "description": "A TypeScript SDK for Rag Upstash.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/rag-upstash",
+  "icon": "https://via.placeholder.com/64x64.png?text=R",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
