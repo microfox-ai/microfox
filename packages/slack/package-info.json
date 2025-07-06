@@ -23,32 +23,34 @@
         }
       ],
       "internalKeys": [],
+      "botConfig": [
+        {
+          "key": "SLACK_AUTHOR_NAME",
+          "displayName": "Bot Name",
+          "description": "Name that will appear as the message sender",
+          "ui": {
+            "type": "text",
+            "label": "Bot Name",
+            "placeholder": "Enter bot name"
+          }
+        },
+        {
+          "key": "SLACK_ICON_URL",
+          "displayName": "Bot Icon",
+          "description": "Icon that will appear as the bot's avatar",
+          "ui": {
+            "type": "image",
+            "label": "Bot Icon"
+          }
+        }
+      ],
       "functionalities": [
-        "MicrofoxSlackClient",
-        "WebClient",
-        "addUserToChannel",
         "chat.postMessage",
         "chat.update",
         "conversations.history",
         "conversations.join",
         "conversations.list",
-        "createChannel",
-        "getChannelConversationInfo",
-        "getFileInfo",
-        "getUserInfo",
-        "listChannelUsers",
-        "listChannels",
-        "listUsers",
-        "messageChannel",
-        "messageUser",
-        "reactMessage",
         "reactions.add",
-        "removeUserFromChannel",
-        "replyMessage",
-        "searchChannel",
-        "searchUser",
-        "sendFile",
-        "setReminder",
         "users.info",
         "users.list",
         "users.lookupByEmail",
@@ -68,36 +70,45 @@
         }
       ],
       "internalKeys": [],
+      "botConfig": [
+        {
+          "key": "SLACK_AUTHOR_NAME",
+          "displayName": "Bot Name",
+          "description": "Name that will appear as the message sender",
+          "ui": {
+            "type": "text",
+            "label": "Bot Name",
+            "placeholder": "Enter bot name"
+          }
+        },
+        {
+          "key": "SLACK_ICON_URL",
+          "displayName": "Bot Icon",
+          "description": "Icon that will appear as the bot's avatar",
+          "ui": {
+            "type": "image",
+            "label": "Bot Icon"
+          }
+        }
+      ],
       "functionalities": [
-        "MicrofoxSlackClient",
-        "WebClient",
         "addUserToChannel",
-        "chat.postMessage",
-        "chat.update",
-        "conversations.history",
-        "conversations.join",
-        "conversations.list",
         "createChannel",
         "getChannelConversationInfo",
         "getFileInfo",
         "getUserInfo",
-        "listChannelUsers",
         "listChannels",
+        "listChannelUsers",
         "listUsers",
         "messageChannel",
         "messageUser",
         "reactMessage",
-        "reactions.add",
         "removeUserFromChannel",
         "replyMessage",
         "searchChannel",
         "searchUser",
         "sendFile",
-        "setReminder",
-        "users.info",
-        "users.list",
-        "users.lookupByEmail",
-        "views.open"
+        "setReminder"
       ]
     }
   ],
