@@ -211,12 +211,14 @@ async function main() {
     if (isNew || isStale) {
       console.log(`${isNew ? '✨ New' : '♻️ Updated'} → ${doc.githubUrl}`);
       const embedding = await embed(doc.content);
+      const docPriority = doc.content.split('\n')[0].match(/<priority: ([^,>]+)/)?.[1] || 'medium';
       upserts.push({
         package_name: doc.packageName,
         function_name: doc.functionName,
         doc_type: doc.docType,
         file_path: doc.githubUrl,
         content: doc.content,
+        doc_priority: docPriority,
         embedding,
         updated_at: new Date().toISOString(),
         linked_packages: doc.linkedPackages,
