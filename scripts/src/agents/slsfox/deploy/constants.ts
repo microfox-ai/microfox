@@ -1,4 +1,4 @@
-const STAGE = "staging";
+const STAGE = "prod";
 
 export {
     STAGE,
