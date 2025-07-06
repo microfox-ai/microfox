@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - fix/sls-deployments_and_mcps
     paths:
       - '**/sls/**'
 
