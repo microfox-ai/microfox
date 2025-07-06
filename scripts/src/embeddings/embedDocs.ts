@@ -87,54 +87,52 @@ async function walkDocs() {
       ? linkedPackagesData.map(p => p.package_name)
       : [];
 
-    if (fs.existsSync(docsDir)) {
-      // Constructors
-      const constructorsDir = path.join(docsDir, 'constructors');
-      if (fs.existsSync(constructorsDir)) {
-        const constructorFiles = fs.readdirSync(constructorsDir);
-        for (const file of constructorFiles) {
-          if (file.endsWith('.md')) {
-            const name = path.basename(file, '.md');
-            const fullPath = path.join(constructorsDir, file);
-            const mtime = getGitLastModified(fullPath);
-            const relativePath = path.relative(PACKAGES_DIR, fullPath);
-            results.push({
-              packageName: pkg,
-              functionName: name,
-              docType: 'constructor',
-              filePath: relativePath,
-              githubUrl: getGithubUrl(relativePath),
-              fullPath,
-              mtime,
-              content: fs.readFileSync(fullPath, 'utf-8'),
-              linkedPackages: [...linkedPackages, dependencyIdentifier],
-            });
-          }
+    // Constructors
+    const constructorsDir = path.join(docsDir, 'constructors');
+    if (fs.existsSync(constructorsDir)) {
+      const constructorFiles = fs.readdirSync(constructorsDir);
+      for (const file of constructorFiles) {
+        if (file.endsWith('.md')) {
+          const name = path.basename(file, '.md');
+          const fullPath = path.join(constructorsDir, file);
+          const mtime = getGitLastModified(fullPath);
+          const relativePath = path.relative(PACKAGES_DIR, fullPath);
+          results.push({
+            packageName: pkg,
+            functionName: name,
+            docType: 'constructor',
+            filePath: relativePath,
+            githubUrl: getGithubUrl(relativePath),
+            fullPath,
+            mtime,
+            content: fs.readFileSync(fullPath, 'utf-8'),
+            linkedPackages: [...linkedPackages, dependencyIdentifier],
+          });
         }
       }
+    }
 
-      // Functions
-      const functionsDir = path.join(docsDir, 'functions');
-      if (fs.existsSync(functionsDir)) {
-        const functionFiles = fs.readdirSync(functionsDir);
-        for (const file of functionFiles) {
-          if (file.endsWith('.md')) {
-            const name = path.basename(file, '.md');
-            const fullPath = path.join(functionsDir, file);
-            const mtime = getGitLastModified(fullPath);
-            const relativePath = path.relative(PACKAGES_DIR, fullPath);
-            results.push({
-              packageName: pkg,
-              functionName: name,
-              docType: 'function',
-              filePath: relativePath,
-              githubUrl: getGithubUrl(relativePath),
-              fullPath,
-              mtime,
-              content: fs.readFileSync(fullPath, 'utf-8'),
-              linkedPackages: [...linkedPackages, dependencyIdentifier],
-            });
-          }
+    // Functions
+    const functionsDir = path.join(docsDir, 'functions');
+    if (fs.existsSync(functionsDir)) {
+      const functionFiles = fs.readdirSync(functionsDir);
+      for (const file of functionFiles) {
+        if (file.endsWith('.md')) {
+          const name = path.basename(file, '.md');
+          const fullPath = path.join(functionsDir, file);
+          const mtime = getGitLastModified(fullPath);
+          const relativePath = path.relative(PACKAGES_DIR, fullPath);
+          results.push({
+            packageName: pkg,
+            functionName: name,
+            docType: 'function',
+            filePath: relativePath,
+            githubUrl: getGithubUrl(relativePath),
+            fullPath,
+            mtime,
+            content: fs.readFileSync(fullPath, 'utf-8'),
+            linkedPackages: [...linkedPackages, dependencyIdentifier],
+          });
         }
       }
 
