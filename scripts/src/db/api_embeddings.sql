@@ -92,6 +92,7 @@ RETURNS TABLE (
     stage deployment_stage,
     api_type TEXT,
     schema_path TEXT,
+    metadata JSONB,
     similarity FLOAT,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
@@ -107,6 +108,7 @@ AS $$
       e.stage,
       e.api_type,
       e.schema_path,
+      e.metadata,
       1 - (e.embedding <#> query_embedding) AS similarity,
       e.created_at,
       e.updated_at
