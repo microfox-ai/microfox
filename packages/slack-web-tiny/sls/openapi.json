@@ -16,11 +16,13 @@
       "description": "Unified wrapper endpoint"
     }
   ],
-  "x-auth-packages": [
-    {
-      "packageName": "@microfox/slack-web-tiny"
-    }
-  ],
+  "components": {
+    "x-auth-packages": [
+      {
+        "packageName": "@microfox/slack-web-tiny"
+      }
+    ]
+  },
   "paths": {
     "/sendMessage": {
       "post": {
