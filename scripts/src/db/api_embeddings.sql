@@ -76,11 +76,12 @@ AS $$
 $$;
 
 -- Function for global API search
-CREATE OR REPLACE FUNCTION match_apis(
+CREATE OR REPLACE FUNCTION match_api_embeddings(
     query_embedding VECTOR,
-    k INT DEFAULT 5,
-    stage_filter deployment_stage DEFAULT NULL,
-    api_type TEXT DEFAULT NULL
+    api_type TEXT DEFAULT NULL,
+    package_name TEXT DEFAULT NULL,
+    match_count INT DEFAULT 5,
+    match_threshold float DEFAULT 0.5
 )
 RETURNS TABLE (
     id UUID,
@@ -88,9 +89,12 @@ RETURNS TABLE (
     base_url TEXT,
     endpoint_path TEXT,
     http_method TEXT,
-    doc_text TEXT,
     stage deployment_stage,
-    similarity FLOAT
+    api_type TEXT,
+    schema_path TEXT,
+    similarity FLOAT,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
 )
 LANGUAGE SQL STABLE
 AS $$
@@ -100,12 +104,16 @@ AS $$
       e.base_url,
       e.endpoint_path,
       e.http_method,
-      e.doc_text,
       e.stage,
-      1 - (e.embedding <#> query_embedding) AS similarity
+      e.api_type,
+      e.schema_path,
+      1 - (e.embedding <#> query_embedding) AS similarity,
+      e.created_at,
+      e.updated_at
     FROM api_embeddings AS e
-    WHERE (stage_filter IS NULL OR e.stage = stage_filter)
+    WHERE (e.embedding <#> query_embedding) < match_threshold
       AND (api_type IS NULL OR e.api_type = api_type)
-    ORDER BY e.embedding <#> query_embedding
-    LIMIT k;
+      AND (package_name IS NULL OR e.package_name = package_name)
+    ORDER BY similarity DESC
+    LIMIT match_count;
 $$;
