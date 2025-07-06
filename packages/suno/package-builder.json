@@ -1,0 +1,51 @@
+{
+  "sdkMetadata": {
+    "apiName": "Suno",
+    "packageName": "@microfox/suno",
+    "title": "Suno SDK",
+    "description": "A TypeScript SDK for interacting with the Suno API.",
+    "keywords": [
+      "suno",
+      "api",
+      "sdk",
+      "typescript",
+      "microfox"
+    ],
+    "authType": "auto",
+    "inputArgs": {
+      "query": "Create a package for Suno org",
+      "url": "https://docs.sunoapi.org/suno-api/intro",
+      "isBaseUrl": true
+    }
+  },
+  "allLinks": [
+    "https://docs.sunoapi.org/",
+    "https://sunoapi.org/",
+    "https://sunoapi.org/dashboard",
+    "https://docs.sunoapi.org/suno-api/intro",
+    "https://docs.sunoapi.org/zh-CN/suno-api/intro",
+    "https://docs.sunoapi.org/authentication",
+    "https://docs.sunoapi.org/category/suno-api",
+    "https://docs.sunoapi.org/suno-api/music-generation",
+    "https://docs.sunoapi.org/suno-api/lyrics-generation",
+    "https://docs.sunoapi.org/suno-api/wav-conversion",
+    "https://docs.sunoapi.org/suno-api/vocal-removal",
+    "https://docs.sunoapi.org/suno-api/music-video-generation",
+    "https://docs.sunoapi.org/suno-api/account-management",
+    "https://docs.sunoapi.org/category/file-upload-api",
+    "https://docs.sunoapi.org/file-upload-api/file-upload-api",
+    "https://docs.sunoapi.org/file-upload-api/file-upload",
+    "https://sunoapi.org/api-key"
+  ],
+  "filteredLinks": [
+    "https://docs.sunoapi.org/suno-api/intro"
+  ],
+  "linkAnalysis": {
+    "documentationLinks": [
+      "https://docs.sunoapi.org/suno-api/intro"
+    ],
+    "reason": "This link is the introduction page to the Suno API documentation and likely contains links to relevant sections such as authentication, endpoints, SDK examples, and integration guides.",
+    "setupInstructionsLink": "https://docs.sunoapi.org/suno-api/intro"
+  },
+  "linksUpdatedAt": "2025-07-06T12:54:54.234Z"
+}

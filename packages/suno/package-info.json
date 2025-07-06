@@ -1,0 +1,50 @@
+{
+  "name": "@microfox/suno",
+  "title": "Suno SDK",
+  "description": "A TypeScript SDK providing convenient access to the Suno API for generating music and speech.",
+  "platformType": "tool",
+  "path": "packages/suno",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "semiStable",
+  "authEndpoint": "",
+  "oauth2Scopes": [],
+  "documentation": "https://www.npmjs.com/package/@microfox/suno",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/suno.svg",
+  "constructors": [
+    {
+      "name": "createSunoSDK",
+      "description": "Create a new Suno SDK client through which you can interact with the API",
+      "auth": "apikey",
+      "apiType": "api_key",
+      "requiredKeys": [
+        {
+          "key": "SUNO_API_KEY",
+          "displayName": "Suno API Key",
+          "description": "Your API key for the Suno API. To get your key, visit the Suno API Key Management Page, create an account or log in, navigate to the API section, and generate a new API key.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "functionalities": [
+        "generateMusic",
+        "generateSpeech"
+      ]
+    }
+  ],
+  "keyInstructions": {
+    "link": "",
+    "setupInfo": "To use the Suno SDK, you need to obtain an API key from Suno. Follow these steps:\n\n1. Visit the Suno API Key Management Page (URL to be confirmed with Suno).\n2. Create an account or log in to your existing account.\n3. Navigate to the API section and generate a new API key.\n4. Copy the API key and keep it secure.\n\nTo use the SDK, you can either pass the API key directly to the SDK constructor or set it as an environment variable:\n\n- Environment variable name: SUNO_API_KEY\n\nExample usage:\n\n```typescript\nimport { createSunoSDK } from '@microfox/suno';\n\n// Using environment variable\nconst sunoSDK = createSunoSDK();\n\n// Or passing the API key directly\nconst sunoSDK = createSunoSDK({ apiKey: 'your-api-key-here' });\n```\n\nMake sure to keep your API key secure and never share it publicly. If you suspect your API key has been compromised, reset it immediately through the Suno API Key Management Page.\n\nThe SDK uses the Fetch API, which is available in Node.js environments version 18 and above. If you're using an older version of Node.js, you may need to use a polyfill for Fetch."
+  },
+  "extraInfo": [
+    "To use the Suno SDK, you need to obtain an API key from Suno. Follow these steps:\n\n1. Visit the Suno API Key Management Page (URL to be confirmed with Suno).\n2. Create an account or log in to your existing account.\n3. Navigate to the API section and generate a new API key.\n4. Copy the API key and keep it secure.\n\nTo use the SDK, you can either pass the API key directly to the SDK constructor or set it as an environment variable:\n\n- Environment variable name: SUNO_API_KEY\n\nExample usage:\n\n```typescript\nimport { createSunoSDK } from '@microfox/suno';\n\n// Using environment variable\nconst sunoSDK = createSunoSDK();\n\n// Or passing the API key directly\nconst sunoSDK = createSunoSDK({ apiKey: 'your-api-key-here' });\n```\n\nMake sure to keep your API key secure and never share it publicly. If you suspect your API key has been compromised, reset it immediately through the Suno API Key Management Page.\n\nThe SDK uses the Fetch API, which is available in Node.js environments version 18 and above. If you're using an older version of Node.js, you may need to use a polyfill for Fetch."
+  ],
+  "authType": "apikey",
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ]
+}

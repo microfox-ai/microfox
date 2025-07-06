@@ -1,13 +1,3 @@
 {
-  "requests": [
-    {
-      "type": "pkg-create",
-      "query": "Create a package for Suno org",
-      "url": "https://docs.sunoapi.org/suno-api/intro",
-      "notes": "Need to support API Authentication",
-      "issueNumber": 569,
-      "logs": "",
-      "error": ""
-    }
-  ]
+  "requests": []
 }
