@@ -161,7 +161,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       console.log(`Deployed base URL: ${baseUrl}`);
       let docsData: OpenAPIDoc = JSON.parse(fs.readFileSync(path.join(slsPath, 'openapi.json'), 'utf8'));
 
-      const mainDocsPath = path.join(packagePath, 'docs', 'main.md');
+      const mainDocsPath = path.join(packagePath, 'sls', 'openapi.md');
       let mainDocsContent: string | null = null;
       let mainDocsEmbedding: number[] | null = null;
 
