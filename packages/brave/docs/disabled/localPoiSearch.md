@@ -1,3 +1,5 @@
+<!--priority:low-->
+
 ## Function: `localPoiSearch`
 
 Performs a local POI (Points of Interest) search using the Brave Search API.

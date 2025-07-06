@@ -68,8 +68,6 @@
       }
     }
   },
-  "auth": "defaultProvider",
-  "x-human-in-the-loop": "defaultApproval",
   "paths": {
     "/MyClient/myMethod": {
       "post": {

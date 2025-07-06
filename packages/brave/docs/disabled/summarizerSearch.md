@@ -1,4 +1,4 @@
-<!--used:rarely-->
+<!--priority:low-->
 
 ## Function: `summarizerSearch`
 
