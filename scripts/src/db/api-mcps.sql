@@ -54,54 +54,25 @@ BEFORE UPDATE ON api_mcps
 FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_column();
 
--- Function to search mcps by package name
-CREATE OR REPLACE FUNCTION match_mcps_by_package_name(
-    query_embedding VECTOR,
-    p_package_name TEXT,
-    k INT DEFAULT 5,
-    stage_filter deploy_stage DEFAULT NULL
-)
-RETURNS TABLE (
-    id INTEGER,
-    name TEXT,
-    package_name TEXT,
-    base_url TEXT,
-    docs TEXT,
-    stage deploy_stage,
-    similarity FLOAT
-)
-LANGUAGE SQL STABLE
-AS $$
-    SELECT
-      m.id,
-      m.name,
-      m.package_name,
-      m.base_url,
-      m.docs,
-      m.stage,
-      1 - (m.embedding <#> query_embedding) AS similarity
-    FROM api_mcps AS m
-    WHERE m.package_name = p_package_name
-      AND (stage_filter IS NULL OR m.stage = stage_filter)
-    ORDER BY m.embedding <#> query_embedding
-    LIMIT k;
-$$;
 
 -- Function for global mcp search
 CREATE OR REPLACE FUNCTION match_mcps(
     query_embedding VECTOR,
-    k INT DEFAULT 5,
-    stage_filter deploy_stage DEFAULT NULL,
-    p_api_type TEXT DEFAULT NULL
+    api_type TEXT DEFAULT NULL,
+    match_count INT DEFAULT 5,
+    match_threshold float DEFAULT 0.5
 )
 RETURNS TABLE (
     id INTEGER,
     name TEXT,
     package_name TEXT,
     base_url TEXT,
-    docs TEXT,
     stage deploy_stage,
-    similarity FLOAT
+    api_type TEXT,
+    type functiontype,
+    similarity FLOAT,
+    created_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ
 )
 LANGUAGE SQL STABLE
 AS $$
@@ -110,12 +81,15 @@ AS $$
       m.name,
       m.package_name,
       m.base_url,
-      m.docs,
       m.stage,
-      1 - (m.embedding <#> query_embedding) AS similarity
+      m.api_type,
+      m.type,
+      1 - (m.embedding <#> query_embedding) AS similarity,
+      m.created_at,
+      m.updated_at
     FROM api_mcps AS m
-    WHERE (stage_filter IS NULL OR m.stage = stage_filter)
-      AND (p_api_type IS NULL OR m.api_type = p_api_type)
-    ORDER BY m.embedding <#> query_embedding
-    LIMIT k;
+    WHERE (m.embedding <#> query_embedding) < match_threshold
+      AND (api_type IS NULL OR m.api_type = api_type)
+    ORDER BY similarity DESC
+    LIMIT match_count;
 $$;
