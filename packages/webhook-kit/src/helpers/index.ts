@@ -4,6 +4,7 @@ import {
   slackMainEventsToTrack,
 } from './slack';
 import { ConnectorConfig } from '../schemas';
+import { convertWhatsAppPayloadToWebhookEvent } from './whatsapp';
 
 export const isEventTracked = (name: string, payload?: any) => {
   switch (name) {
@@ -22,6 +23,8 @@ export const convertPayloadToWebhookEvent = (
   switch (name) {
     case 'slack':
       return convertSlackPayloadToWebhookEvent(payload, connectorConfig);
+    case 'whatsapp':
+      return convertWhatsAppPayloadToWebhookEvent(payload, connectorConfig);
     default:
       throw new Error(`Unsupported connector: ${name}`);
   }

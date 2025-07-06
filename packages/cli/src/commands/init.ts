@@ -6,65 +6,56 @@ import { PackageInfo } from '../types';
 import { getWorkingDirectory } from '../utils/getProjectRoot';
 import { checkPackageNameAndPrompt } from '../utils/npmChecker';
 
-function createPackageJson(
-  packageName: string,
-  description: string,
-): any {
+function createPackageJson(packageName: string, description: string): any {
   // Extract simple name from scoped package (e.g., @scope/name -> name)
-  const simpleName = packageName.includes('/') ? packageName.split('/')[1] : packageName;
-  
+  const simpleName = packageName.includes('/')
+    ? packageName.split('/')[1]
+    : packageName;
+
   return {
     name: packageName,
-    version: "1.0.0",
+    version: '1.0.0',
     description,
-    main: "./dist/index.js",
-    module: "./dist/index.mjs",
-    types: "./dist/index.d.ts",
-    files: [
-      "dist/**/*",
-      "CHANGELOG.md"
-    ],
+    main: './dist/index.js',
+    module: './dist/index.mjs',
+    types: './dist/index.d.ts',
+    files: ['dist/**/*', 'CHANGELOG.md'],
     scripts: {
-      build: "tsup",
-      "build:watch": "tsup --watch",
-      clean: "rm -rf dist",
-      lint: "eslint \"./**/*.ts*\"",
-      "prettier-check": "prettier --check \"./**/*.ts*\"",
-      test: "vitest run",
-      "test:watch": "vitest"
+      build: 'tsup',
+      'build:watch': 'tsup --watch',
+      clean: 'rm -rf dist',
+      lint: 'eslint "./**/*.ts*"',
+      'prettier-check': 'prettier --check "./**/*.ts*"',
+      test: 'vitest run',
+      'test:watch': 'vitest',
     },
     exports: {
-      "./package.json": "./package.json",
-      ".": {
-        import: "./dist/index.mjs",
-        require: "./dist/index.js"
-      }
+      './package.json': './package.json',
+      '.': {
+        import: './dist/index.mjs',
+        require: './dist/index.js',
+      },
     },
     dependencies: {
-      zod: "^3.24.3"
+      zod: '^3.24.3',
     },
     devDependencies: {
-      "@types/node": "^18",
-      eslint: "^8.57.0",
-      "@typescript-eslint/eslint-plugin": "^6.0.0",
-      "@typescript-eslint/parser": "^6.0.0",
-      prettier: "^3.0.0",
-      tsup: "^8",
-      typescript: "^5.6.3",
-      vitest: "^1.0.0"
+      '@types/node': '^18',
+      eslint: '^8.57.0',
+      '@typescript-eslint/eslint-plugin': '^6.0.0',
+      '@typescript-eslint/parser': '^6.0.0',
+      prettier: '^3.0.0',
+      tsup: '^8',
+      typescript: '^5.6.3',
+      vitest: '^1.0.0',
     },
     publishConfig: {
-      access: "public"
+      access: 'public',
     },
     engines: {
-      node: ">=18.0.0"
+      node: '>=18.0.0',
     },
-    keywords: [
-      simpleName,
-      "typescript",
-      "api",
-      "sdk"
-    ]
+    keywords: [simpleName, 'typescript', 'api', 'sdk'],
   };
 }
 
@@ -72,7 +63,9 @@ function createPackageInfo(
   packageName: string,
   description: string,
 ): PackageInfo {
-  const simpleName = packageName.includes('/') ? packageName.split('/')[1] : packageName;
+  const simpleName = packageName.includes('/')
+    ? packageName.split('/')[1]
+    : packageName;
   const titleName = simpleName
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -90,13 +83,18 @@ function createPackageInfo(
     icon: `https://via.placeholder.com/64x64.png?text=${simpleName.charAt(0).toUpperCase()}`,
     constructors: [],
     extraInfo: [],
-    authType: 'none'
+    authType: 'none',
   };
 }
 
-async function createConfigFiles(destDir: string, packageName: string): Promise<void> {
-  const simpleName = packageName.includes('/') ? packageName.split('/')[1] : packageName;
-  
+async function createConfigFiles(
+  destDir: string,
+  packageName: string,
+): Promise<void> {
+  const simpleName = packageName.includes('/')
+    ? packageName.split('/')[1]
+    : packageName;
+
   const tsConfigContent = `{
   "compilerOptions": {
     "target": "ES2020",
@@ -212,12 +210,18 @@ coverage/
   }
 }
 
-async function createSourceFiles(srcDir: string, packageName: string): Promise<void> {
-  const simpleName = packageName.includes('/') ? packageName.split('/')[1] : packageName;
-  const className = simpleName
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('') + 'Sdk';
+async function createSourceFiles(
+  srcDir: string,
+  packageName: string,
+): Promise<void> {
+  const simpleName = packageName.includes('/')
+    ? packageName.split('/')[1]
+    : packageName;
+  const className =
+    simpleName
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('') + 'Sdk';
 
   // Main index.ts
   const indexContent = `// Main exports for ${simpleName}
@@ -455,31 +459,35 @@ describe('${className}', () => {
   for (const [file, content] of Object.entries(filesToCreate)) {
     const destPath = path.join(srcDir, file);
     const dir = path.dirname(destPath);
-    
+
     // Create directory if it doesn't exist
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     fs.writeFileSync(destPath, content);
     console.log(chalk.green(`✅ Created src/${file}`));
   }
 }
 
 export async function kickstartCommand(): Promise<void> {
-  console.log(chalk.cyan('🚀 Let\'s kickstart your new TypeScript package!\n'));
-  
+  console.log(chalk.cyan("🚀 Let's kickstart your new TypeScript package!\n"));
+
   // Ask for package name interactively
-  const packageName = readlineSync.question(chalk.yellow('📦 Enter package name: '));
-  
+  const packageName = readlineSync.question(
+    chalk.yellow('📦 Enter package name: '),
+  );
+
   if (!packageName.trim()) {
     throw new Error('Package name cannot be empty');
   }
-  
+
   // Check npm availability and get final package name
   const finalPackageName = await checkPackageNameAndPrompt(packageName.trim());
-  
-  const simpleName = finalPackageName.includes('/') ? finalPackageName.split('/')[1] : finalPackageName;
+
+  const simpleName = finalPackageName.includes('/')
+    ? finalPackageName.split('/')[1]
+    : finalPackageName;
   const titleName = simpleName
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -490,19 +498,25 @@ export async function kickstartCommand(): Promise<void> {
   const packageDir = path.join(workingDir, simpleName);
   const srcDir = path.join(packageDir, 'src');
   const docsDir = path.join(packageDir, 'docs');
+  const docsConstructors = path.join(docsDir, 'constructors');
+  const docsFunctions = path.join(docsDir, 'functions');
 
   if (fs.existsSync(packageDir)) {
-    throw new Error(
-      `Directory already exists at ${packageDir}`
-    );
+    throw new Error(`Directory already exists at ${packageDir}`);
   }
 
-  console.log(chalk.blue(`🚀 Creating package ${chalk.bold(finalPackageName)} at ${packageDir}\n`));
+  console.log(
+    chalk.blue(
+      `🚀 Creating package ${chalk.bold(finalPackageName)} at ${packageDir}\n`,
+    ),
+  );
 
   // Create directories
   fs.mkdirSync(packageDir, { recursive: true });
   fs.mkdirSync(srcDir, { recursive: true });
   fs.mkdirSync(docsDir, { recursive: true });
+  fs.mkdirSync(docsConstructors, { recursive: true });
+  fs.mkdirSync(docsFunctions, { recursive: true });
   console.log(chalk.green('✅ Created directories'));
 
   // Create package.json
@@ -607,6 +621,8 @@ MIT
 `;
 
   fs.writeFileSync(path.join(packageDir, 'README.md'), readmeContent);
+  fs.writeFileSync(path.join(docsDir, 'main.md'), readmeContent);
+  fs.writeFileSync(path.join(docsDir, 'rules.md'), `#Rules of ${titleName}`);
   console.log(chalk.green('✅ Created README.md'));
 
   // Create CHANGELOG.md
@@ -648,7 +664,11 @@ All notable changes to this project will be documented in this file.
   // Create configuration files
   await createConfigFiles(packageDir, finalPackageName);
 
-  console.log(chalk.green(`\n🎉 Successfully created package ${chalk.bold(finalPackageName)}!`));
+  console.log(
+    chalk.green(
+      `\n🎉 Successfully created package ${chalk.bold(finalPackageName)}!`,
+    ),
+  );
   console.log(chalk.gray(`📍 Located at ${packageDir}`));
   console.log(chalk.yellow('\n💡 Next steps:'));
   console.log(chalk.yellow(`   1. cd ${simpleName}`));
@@ -656,5 +676,9 @@ All notable changes to this project will be documented in this file.
   console.log(chalk.yellow('   3. npm run build'));
   console.log(chalk.yellow('   4. npm test'));
   console.log(chalk.yellow('   5. Start developing your SDK!'));
-  console.log(chalk.gray(`\n📚 Your package is ready to be published to npm as "${finalPackageName}"`));
-} 
+  console.log(
+    chalk.gray(
+      `\n📚 Your package is ready to be published to npm as "${finalPackageName}"`,
+    ),
+  );
+}
