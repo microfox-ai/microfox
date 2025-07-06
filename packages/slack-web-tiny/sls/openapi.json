@@ -28,7 +28,7 @@
       "post": {
         "operationId": "sendMessage",
         "summary": "Sends a message to a specified Slack channel.",
-        "description": "This function posts a message to a Slack channel using the provided SlackMessage object. It supports sending simple text messages, messages with Block Kit blocks, threaded replies, and interactive elements like buttons. The function returns a promise that resolves to a SlackMessageResponse containing details about the sent message.",
+        "description": "This function posts a message to a Slack channel. It's versatile, supporting simple text, rich formatting with Block Kit, threaded replies, and interactive components. It also supports changing the bot icon or name as it appears as needed. On success, it returns details of the sent message.",
         "requestBody": {
           "required": true,
           "content": {
@@ -246,7 +246,7 @@
       "post": {
         "operationId": "updateMessage",
         "summary": "Updates an existing message in a Slack channel.",
-        "description": "This function modifies the content of a previously sent message in a Slack channel. It allows updating the message text, blocks, and attachments. The function returns a promise that resolves to the Slack API response, containing information about the updated message.",
+        "description": "This function allows you to modify a previously sent message by its timestamp. You can change its text, blocks, or attachments. The response contains information about the updated message.",
         "requestBody": {
           "required": true,
           "content": {
