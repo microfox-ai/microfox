@@ -105,7 +105,7 @@ function formatSchemaToMarkdown(schema: any, indent: number = 0): string {
  * @returns {string|null} - Base URL or null if not found
  */
 function extractBaseUrl(output: string): string | null {
-  // Extract the part before /staging
+  // Extract the part before /stage
   const urlMatch = output.match(/(https:\/\/[^\/]+\.amazonaws\.com)/);
   if (urlMatch) {
     return `${urlMatch[1]}/${STAGE}`;
