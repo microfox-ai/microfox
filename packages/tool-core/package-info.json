@@ -1,0 +1,16 @@
+{
+  "name": "tool-core",
+  "title": "Tool Core TypeScript SDK",
+  "description": "A TypeScript SDK for Tool Core.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": [
+    "zod"
+  ],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/tool-core",
+  "icon": "https://via.placeholder.com/64x64.png?text=T",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
