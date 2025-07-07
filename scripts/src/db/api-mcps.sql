@@ -71,6 +71,7 @@ RETURNS TABLE (
     api_type TEXT,
     type functiontype,
     similarity FLOAT,
+    metadata JSONB,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ
 )
@@ -85,6 +86,7 @@ AS $$
       m.api_type,
       m.type,
       1 - (m.embedding <#> query_embedding) AS similarity,
+      m.metadata,
       m.created_at,
       m.updated_at
     FROM api_mcps AS m
