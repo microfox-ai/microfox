@@ -1,7 +1,7 @@
 {
   "name": "@microfox/tool-kit",
   "version": "1.1.2",
-  "description": "A central tool kit for building integrations in Microfox",
+  "description": "A central tool kit for parsing Open Apis into MCP servers with Oauth Handling and HITL",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
