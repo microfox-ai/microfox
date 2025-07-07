@@ -65,7 +65,8 @@
     "packages/linkedin-member-data-portability",
     "packages/puppeteer-suno",
     "packages/rag-upstash",
-    "packages/slack"
+    "packages/slack",
+    "packages/tool-core"
   ],
   "partialPackages": [
     "packages/core",
@@ -88,6 +89,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 71,
-  "generatedAt": "2025-07-07T09:42:21.858Z"
+  "total": 72,
+  "generatedAt": "2025-07-07T17:30:30.005Z"
 }
