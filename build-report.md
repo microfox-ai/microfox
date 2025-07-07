@@ -2,8 +2,8 @@
 
 | Step | Status | Details | Error |
 |------|--------|---------|-------|
-| 🔍 analyze | ⏳ | currentFile: packages/apify/.foxes/packagefox-bug-build-1750627794192.json |  |
+| 🔍 analyze | ⏳ | currentFile: packages/suno/.foxes/packagefox-bug-build-1751806888266.json |  |
 | ✏️ apply | ✅ | filesFixed: 1 |  |
 
 ---
-**Total Usage:** Tokens: 171757 | Cost: $0.6785
+**Total Usage:** Tokens: 217527 | Cost: $0.9321
