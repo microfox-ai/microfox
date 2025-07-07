@@ -46,14 +46,14 @@
 }
 --- filename: package-info.json
 {
-  "name": "<%= packageName %>",
+  "name": "@microfox/<%= packageName %>",
   "title": "<%= titleName %> TypeScript SDK",
   "description": "<%= description %>",
   "platformType": "tool",
   "path": ".",
   "dependencies": ["zod"],
   "status": "unstable",
-  "documentation": "https://www.npmjs.com/package/<%= packageName %>",
+  "documentation": "https://www.npmjs.com/package/@microfox/<%= packageName %>",
   "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
   "constructors": [],
   "extraInfo": [],
@@ -163,7 +163,7 @@ export { <%= className %> } from './<%= simpleName %>Sdk';
 export * from './schemas';
 
 // Example usage:
-// import { <%= className %> } from '<%= packageName %>';
+// import { <%= className %> } from '@microfox/<%= packageName %>';
 // const sdk = new <%= className %>({ apiKey: 'your-key' });
 --- filename: src/<%= simpleName %>Sdk.ts
 import { <%= className %>ConfigSchema } from './schemas';
@@ -203,7 +203,7 @@ export interface <%= className %>Response<T = any> {
  * 
  * @example
  * \`\`\`typescript
- * import { <%= className %> } from '<%= packageName %>';
+ * import { <%= className %> } from '@microfox/<%= packageName %>';
  * 
  * const sdk = new <%= className %>({
  *   apiKey: 'your-api-key',
@@ -357,13 +357,13 @@ describe('<%= className %>', () => {
 ## Installation
 
 \`\`\`bash
-npm install <%= packageName %>
+npm install @microfox/<%= packageName %>
 \`\`\`
 
 ## Quick Start
 
 \`\`\`typescript
-import { <%= className %> } from '<%= packageName %>';
+import { <%= className %> } from '@microfox/<%= packageName %>';
 
 // Initialize the SDK
 const sdk = new <%= className %>({
