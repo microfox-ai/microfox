@@ -1,5 +1,13 @@
 # @microfox/webhook-kit
 
+## 1.1.2
+
+### Patch Changes
+
+- fdd3040: Changes from PR #572: update-oauth-scopes-v2
+- Updated dependencies [fdd3040]
+  - @microfox/webhook-octokit@1.2.1
+
 ## 1.1.1
 
 ### Patch Changes
