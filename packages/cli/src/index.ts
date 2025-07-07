@@ -1,3 +1,3 @@
 // Main exports for programmatic usage
-export { kickstartCommand } from './commands/init';
+export { kickstartCommand } from './commands/kickstart';
 export type { PackageInfo } from './types'; 
