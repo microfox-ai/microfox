@@ -5,7 +5,7 @@ interface SDKConfig {
   [key: string]: any;
 }
 
-export const sdkInit = (config: SDKConfig) => {
+export const sdkInit = (config: SDKConfig): Record<string, Function> => {
   const { constructorName, BRAVE_API_KEY, ...options } = config;
 
   if (!BRAVE_API_KEY) {
@@ -14,10 +14,15 @@ export const sdkInit = (config: SDKConfig) => {
 
   switch (constructorName) {
     case 'createBraveSDK':
-      return createBraveSDK({
+      const sdk = createBraveSDK({
         apiKey: BRAVE_API_KEY,
         ...options,
       });
+      const sdkMap: Record<string, Function> = {};
+      Object.keys(sdk).forEach(key => {
+        sdkMap[key] = sdk[key].bind(sdk);
+      });
+      return sdkMap;
     default:
       throw new Error(`Constructor "${constructorName}" is not supported.`);
   }
