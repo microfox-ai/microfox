@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.4.2
+
+### Patch Changes
+
+- 1a94690: release: streamline handler logic in slack-web-tiny by extracting environment variable population and function execution into separate utilities; enhance error handling and response creation for improved clarity and maintainability
+
 ## 1.4.1
 
 ### Patch Changes

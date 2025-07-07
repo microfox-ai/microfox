@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 064dab6: release: update package descriptions and README for @microfox/ai-router and @microfox/tool-kit to better reflect functionality; enhance tool-kit documentation with detailed features and Human-in-the-Loop (HITL) guidelines
+
 ## 1.0.1
 
 ### Patch Changes
