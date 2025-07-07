@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { kickstartCommand } from './commands/init';
+import { kickstartCommand } from './commands/kickstart';
 import { version } from '../package.json';
 
 const program = new Command();
