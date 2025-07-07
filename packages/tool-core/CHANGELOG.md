@@ -1,10 +1,17 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- 1a94690: release: streamline handler logic in slack-web-tiny by extracting environment variable population and function execution into separate utilities; enhance error handling and response creation for improved clarity and maintainability
+
 All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - 2025-07-07
 
 ### Added
+
 - Initial release
 - Basic SDK structure
 - TypeScript support
