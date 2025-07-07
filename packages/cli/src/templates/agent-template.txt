@@ -1,0 +1,437 @@
+--- filename: package.json
+{
+  "name": "<%= agentName %>",
+  "version": "1.0.0",
+  "description": "A Microbizz agent.",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "npm run build && serverless deploy --stage dev",
+    "deploy:preview": "npm run build && serverless deploy --stage preview",
+    "deploy:prod": "npm run build && serverless deploy --stage prod",
+    "remove": "serverless remove",
+    "remove:preview": "serverless remove --stage preview",
+    "remove:prod": "serverless remove --stage prod",
+    "start": "serverless offline start",
+    "dev": "npm run build && serverless offline start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.504.0",
+    "@upstash/redis": "^1.28.4",
+    "ai": "latest",
+    "aws-lambda": "*",
+    "dotenv": "^16.4.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.138",
+    "@types/node": "^20.11.19",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^8.57.0",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.3",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.3.3"
+  }
+}
+--- filename: serverless.yml
+service: <%= agentName %>
+
+package:
+  exclude:
+    - venv/**
+    - .idea/**
+    - .vscode/**
+    - src/**
+    - node_modules/serverless-offline/**
+
+custom:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
+    useChildProcesses: true
+    useWorkerThreads: true
+    noCookieValidation: true
+    allowCache: true
+    hideStackTraces: false
+    disableCookieValidation: true
+    noTimeout: true
+    environment: ${file(env.json)}
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${env:ENVIRONMENT, 'dev'}
+  environment: ${file(env.json)}
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+functions:
+  # Example HTTP Function
+  handleApiRequest:
+    handler: dist/functions/api-handler.handler
+    events:
+      - http:
+          path: /items/{itemId}
+          method: GET
+          cors: true
+  
+  # Example Cron Job
+  handleScheduledTask:
+    handler: dist/functions/cron-handler.handler
+    events:
+      - schedule: rate(1 day)
+
+  # Example SQS Handler
+  handleQueueMessage:
+    handler: dist/functions/sqs-handler.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - MessageQueue
+              - Arn
+  
+  # Documentation
+  getDocs:
+    handler: dist/index.getDocs
+    events:
+      - http:
+          path: /docs.json
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    MessageQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-message-queue-${opt:stage,env:ENVIRONMENT, 'dev'}
+        VisibilityTimeout: 300
+  Outputs:
+    ApiEndpoints:
+      Description: 'API Endpoints'
+      Value:
+        Fn::Join:
+          - ''
+          - - 'API: https://'
+            - Ref: 'ApiGatewayRestApi'
+            - '.execute-api.'
+            - Ref: 'AWS::Region'
+            - ".amazonaws.com/${env:ENVIRONMENT, 'dev'}"
+--- filename: tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["ES2020"],
+    "allowJs": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "noCheck": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "module": "ESNext",
+      "moduleResolution": "Node"
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist/**", ".serverless/**"]
+}
+--- filename: eslint.config.js
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
+import importPlugin from 'eslint-plugin-import'
+
+export default tseslint.config(
+  {
+    ignores: ['node_modules/', '.build/', 'dist/', '.serverless/', '**/*.d.ts'],
+  },
+  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    plugins: {
+      import: importPlugin,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: true,
+        node: true,
+      },
+    },
+    rules: {
+      'import/no-unresolved': 'error',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'prefer-const': 'off',
+    },
+  }
+)
+--- filename: env.json
+{
+    "ENVIRONMENT": "dev",
+    "UPSTASH_REDIS_REST_URL": "your_redis_url",
+    "UPSTASH_REDIS_REST_TOKEN": "your_redis_token"
+}
+--- filename: README.md
+# <%= agentName %> Agent
+
+This is a Microbizz agent for <%= agentName %>.
+
+## Getting Started
+
+### Prerequisites
+- Node.js >= 20.x
+- Serverless Framework
+- AWS Account
+
+### Installation
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure your environment variables in `env.json`.
+
+### Running locally
+```bash
+npm run dev
+```
+
+### Deployment
+```bash
+# Deploy to development
+npm run deploy
+
+# Deploy to production
+npm run deploy:prod
+```
+--- filename: .gitignore
+# Dependencies
+node_modules/
+dist/
+.serverless/
+.env
+env.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Logs
+logs
+*.log
+--- filename: src/index.ts
+import { handleApiRequestDocs } from './functions/api-handler.js'
+import { handleScheduledTaskDocs } from './functions/cron-handler.js'
+import { handleQueueMessageDocs } from './functions/sqs-handler.js'
+
+/**
+ * Complete API documentation
+ * This is an OpenAPI 3.0.1 definition for the agent's API.
+ */
+const apiDocs = {
+  openapi: '3.0.1',
+  info: {
+    title: '<%= agentName %> API',
+    version: '1.0.0',
+    description: 'API for the <%= agentName %> agent.',
+    contact: {
+      name: 'API Support',
+      email: 'support@microfox.app',
+    },
+  },
+  servers: [
+    {
+      url: 'https://api.microfox.com/c/some-hash',
+      description: 'Production server',
+    },
+  ],
+  paths: {
+    '/items/{itemId}': {
+      get: handleApiRequestDocs,
+    },
+  },
+  components: {
+    schemas: {
+        //...handleApiRequestDocs.components.schemas
+    }
+  }
+}
+
+/**
+ * GET endpoint to serve API documentation.
+ * This function returns the OpenAPI specification in JSON format.
+ */
+export const getDocs = async () => {
+  try {
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify(apiDocs, null, 2),
+    }
+  } catch (error) {
+    console.error('Error serving docs:', error)
+    return {
+      statusCode: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify({
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }),
+    }
+  }
+}
+--- filename: src/helpers/redis.ts
+import { Redis } from '@upstash/redis'
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || '',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
+})
+
+export default redis;
+
+// You can add your helper functions for redis here
+--- filename: src/functions/api-handler.ts
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import redis from '../helpers/redis.js';
+
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    const itemId = event.pathParameters?.itemId;
+    if (!itemId) {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ message: 'Missing itemId in path' }),
+        };
+    }
+
+    try {
+        const item = await redis.get(`item:${itemId}`);
+        if (!item) {
+            return {
+                statusCode: 404,
+                body: JSON.stringify({ message: 'Item not found' }),
+            };
+        }
+        return {
+            statusCode: 200,
+            body: JSON.stringify(item),
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ message: 'Internal server error' }),
+        };
+    }
+};
+
+export const handleApiRequestDocs = {
+  summary: 'Get an item by ID',
+  description: 'Retrieves a specific item from the database.',
+  tags: ['Items'],
+  parameters: [{
+    name: 'itemId',
+    in: 'path',
+    required: true,
+    description: 'ID of the item to retrieve',
+    schema: { type: 'string' }
+  }],
+  responses: {
+    '200': { 
+        description: 'Successful response with the item.',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string' },
+                        data: { type: 'string' }
+                    }
+                }
+            }
+        }
+    },
+    '400': { description: 'Bad Request: Missing itemId.' },
+    '404': { description: 'Item not found.' },
+    '500': { description: 'Internal server error.' },
+  },
+};
+--- filename: src/functions/cron-handler.ts
+export const handler = async () => {
+    console.log('Running scheduled task...');
+    // Add your logic for the scheduled task here.
+    // For example, processing data, generating reports, etc.
+    console.log('Scheduled task finished.');
+};
+
+export const handleScheduledTaskDocs = {
+    summary: 'Scheduled Task',
+    description: 'This function runs on a schedule to perform routine tasks.',
+    tags: ['Cron Jobs'],
+};
+--- filename: src/functions/sqs-handler.ts
+import { SQSHandler, SQSEvent } from 'aws-lambda';
+
+export const handler: SQSHandler = async (event: SQSEvent) => {
+    for (const record of event.Records) {
+        try {
+            const body = JSON.parse(record.body);
+            console.log('Processing message:', body);
+            // Add your SQS message processing logic here
+        } catch (error) {
+            console.error('Error processing message:', error);
+            // Decide if you want to re-queue the message, or send to a DLQ
+        }
+    }
+};
+
+export const handleQueueMessageDocs = {
+    summary: 'Process SQS Queue',
+    description: 'This function processes messages from an SQS queue.',
+    tags: ['SQS Handlers'],
+}; 
