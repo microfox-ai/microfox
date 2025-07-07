@@ -33,6 +33,7 @@
     "packages/linkedin-share",
     "packages/puppeteer-sls",
     "packages/slack-web-tiny",
+    "packages/suno-api",
     "packages/whatsapp-business"
   ],
   "semiStablePackages": [
@@ -63,6 +64,7 @@
     "packages/ai-provider-vertex",
     "packages/linkedin-member-data-portability",
     "packages/puppeteer-suno",
+    "packages/rag-upstash",
     "packages/slack"
   ],
   "partialPackages": [
@@ -86,6 +88,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 69,
-  "generatedAt": "2025-07-05T11:09:57.262Z"
+  "total": 71,
+  "generatedAt": "2025-07-07T09:42:21.858Z"
 }
