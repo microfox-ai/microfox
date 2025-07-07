@@ -20,7 +20,10 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
     toolHandler.populateEnvVars(event);
 
     // Map functions
-    const sdkMap = sdkInit(process.env);
+    const sdkMap = sdkInit({
+      constructorName: 'createBraveSDK',
+      ...process.env,
+    });
 
     // Extract function arguments
     const args = toolHandler.extractArguments(event);
