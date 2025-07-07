@@ -1,6 +1,6 @@
 --- filename: package.json
 {
-  "name": "<%= packageName %>",
+  "name": "@microfox/<%= packageName %>",
   "version": "1.0.0",
   "description": "<%= description %>",
   "main": "./dist/index.js",

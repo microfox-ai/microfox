@@ -1,5 +1,5 @@
 {
-  "name": "rag-upstash",
+  "name": "@microfox/rag-upstash",
   "version": "1.0.0",
   "description": "A TypeScript SDK for Rag Upstash.",
   "main": "./dist/index.js",
