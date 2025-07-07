@@ -44,6 +44,7 @@ export class OpenApiMCP {
   private toolExecutions: Record<string, ToolExecuteFn> = {};
   private auth?: AuthObject;
   private getAuth?: (options: AuthOptions) => Promise<AuthObject>;
+  private cleanAuth?: (auth: AuthObject) => Promise<AuthObject>;
   private getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;
@@ -59,6 +60,7 @@ export class OpenApiMCP {
     name?: string;
     auth?: AuthObject;
     getAuth?: (options: AuthOptions) => Promise<AuthObject>;
+    cleanAuth?: (auth: AuthObject) => Promise<AuthObject>;
     getHumanIntervention?: (
       context: HumanInterventionContext,
     ) => Promise<HumanInterventionDecision>;
@@ -74,6 +76,7 @@ export class OpenApiMCP {
     this.mcp_version = options?.schema?.info?.mcp_version || '1.0.0';
     this.auth = options.auth;
     this.getAuth = options.getAuth;
+    this.cleanAuth = options.cleanAuth;
     this.getHumanIntervention = options.getHumanIntervention;
     this.addPendingTool = options.addPendingTool;
     if (options.auth?.encryptionKey) {
@@ -841,6 +844,7 @@ export class OpenApiMCP {
     disableAllExecutions = false,
     auth: toolAuth,
     getAuth: toolGetAuth,
+    cleanAuth: toolCleanAuth,
     getHumanIntervention,
   }: ToolOptions = {}): Promise<ToolResult> {
     if (!this.initialized) {
@@ -899,6 +903,8 @@ export class OpenApiMCP {
         args: Record<string, any>,
         toolOptions?: ToolOptions & { toolCallId: string; auth?: AuthObject },
       ) => {
+        // 1st decidee if this is a first execution  where HITL might stop it or second execution where its Hitted for obvious reasons.
+
         // If not paused, proceed with normal execution.
         let finalAuth: AuthObject | undefined;
 
@@ -927,51 +933,56 @@ export class OpenApiMCP {
           }
         }
 
+        const cleanAuthFn = toolCleanAuth || this.cleanAuth;
         const { encryptionKey, ...cleanedAuth } = finalAuth || {};
+        console.log('finalAuth', finalAuth?.encryptionKey);
+        console.log('toolOptions?.auth', toolOptions?.auth?.encryptionKey);
+        if (toolOptions?.auth) {
+          finalAuth = {
+            ...toolOptions?.auth,
+            encryptionKey:
+              toolOptions?.auth?.encryptionKey || finalAuth?.encryptionKey,
+          };
+        }
         // Human in the Loop Check at the point of execution
         if (getHumanIntervention) {
+          // Clean the auth before passing to frontend for human intervention
+          const authForHuman =
+            cleanAuthFn && finalAuth
+              ? await cleanAuthFn(finalAuth)
+              : cleanedAuth;
           const decision = await getHumanIntervention({
             toolName,
             generatedArgs: args,
             mcpConfig: cleanedOperation,
             toolCallId: toolOptions?.toolCallId || '',
-            auth: cleanedAuth,
+            auth: authForHuman,
           });
 
           if (decision?.shouldPause) {
-            if (this.addPendingTool) {
-              this.addPendingTool({
-                originalToolCallId: toolOptions?.toolCallId || '',
-                toolName,
-                originalArgs: args,
-              });
-            }
             // Return the special marker object for the orchestrator
             return {
               _humanIntervention: true,
               toolCallId: toolOptions?.toolCallId,
               args: decision.args,
               metadata: toolMetaData,
-              auth: cleanedAuth,
+              auth: authForHuman,
             };
           }
         }
 
         if (disableAllExecutions) {
+          // Clean the auth before passing to frontend for human intervention
+          const authForHuman =
+            cleanAuthFn && finalAuth
+              ? await cleanAuthFn(finalAuth)
+              : cleanedAuth;
           return {
             _humanIntervention: true,
             toolCallId: toolOptions?.toolCallId,
             args: args,
             metadata: toolMetaData,
-            auth: cleanedAuth,
-          };
-        }
-
-        if (toolOptions?.auth) {
-          finalAuth = {
-            ...toolOptions?.auth,
-            encryptionKey:
-              toolOptions?.auth?.encryptionKey || finalAuth?.encryptionKey,
+            auth: authForHuman,
           };
         }
 
@@ -982,7 +993,7 @@ export class OpenApiMCP {
           finalAuth,
         );
 
-        // Call the operation
+        // Call the operation (do not clean auth here)
         return this.callOperation(id, structuredArgs, toolOptions, finalAuth);
       };
 

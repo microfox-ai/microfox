@@ -111,7 +111,7 @@ async function generateTextExample(client: OpenApiToolset, tools: ToolSet) {
     model: openai('gpt-4-turbo'),
     messages: convertToModelMessages(messages),
     tools,
-    stopWhen: client.createHitlStopStep(), // (s) => { return client.createHitlStopStep()(s)}
+    stopWhen: client.isHitlStep(), // (s) => { return client.createHitlStopStep()(s)}
   });
 
   const finalResult = client.generate(rawResult);
@@ -127,7 +127,7 @@ async function generateTextExample(client: OpenApiToolset, tools: ToolSet) {
     );
     console.log('[SIMULATION] User clicks "Approve"');
 
-    const parsedMessages = await client.parse(messages);
+    const parsedMessages = await client.parseHitl(messages);
 
     const finalResponse = await generateText({
       model: openai('gpt-4-turbo'),
@@ -152,7 +152,7 @@ async function streamTextExample(client: OpenApiToolset, tools: ToolSet) {
     model: openai('gpt-4-turbo'),
     messages,
     tools,
-    stopWhen: client.createHitlStopStep(),
+    stopWhen: client.isHitlStep(),
   });
 
   const stream = client.stream(result.fullStream as any);
@@ -187,7 +187,7 @@ async function streamTextExample(client: OpenApiToolset, tools: ToolSet) {
   if (humanInterventionCall) {
     console.log('[SIMULATION] User clicks "Approve"');
 
-    const parsedMessages = await client.parse([assistantMessage]);
+    const parsedMessages = await client.parseHitl([assistantMessage]);
 
     result = await streamText({
       model: openai('gpt-4-turbo'),

@@ -13,6 +13,7 @@ import {
   StopCondition,
 } from 'ai';
 import {
+  AuthObject,
   HumanDecisionArgs,
   OpenAPIDoc,
   OpenAPIToolsClientOptions,
@@ -236,9 +237,16 @@ export class OpenApiToolset {
     return combinedTools;
   }
 
-  async processToolResult(
+  /**
+   * Parses incoming messages for HITL responses, resumes the original tool,
+   * and returns a cleaned message history.
+   * @param messages The full message history.
+   * @returns A promise that resolves to the processed message history.
+   */
+  async parseHitl(
     messages: Message[],
     dataStream?: UIMessageStreamWriter,
+    inserAuthVariables?: (auth: AuthObject) => Promise<AuthObject>,
   ): Promise<Message[]> {
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage) return messages;
@@ -268,12 +276,14 @@ export class OpenApiToolset {
           if (!correspondingCall) {
             result = 'Error: No execute function found on tool';
           } else if ((part as any).output.approved) {
+            let _auth = (part as any).output.auth;
+            if (inserAuthVariables && _auth) {
+              _auth = await inserAuthVariables(_auth);
+            }
             result = await correspondingCall(part.input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],
-              ...((part as any).output.auth
-                ? { auth: (part as any).output.auth }
-                : {}),
+              ...(_auth ? { auth: _auth } : {}),
             });
           } else {
             result = 'Error: User denied access to tool execution';
@@ -306,124 +316,6 @@ export class OpenApiToolset {
     ];
   }
 
-  /**
-   * Parses incoming messages for HITL responses, resumes the original tool,
-   * and returns a cleaned message history.
-   * @param messages The full message history.
-   * @returns A promise that resolves to the processed message history.
-   */
-  async parse(
-    messages: Message[],
-    dataStream?: UIMessageStreamWriter,
-  ): Promise<Message[]> {
-    const lastMessage = messages[messages.length - 1];
-    if ((lastMessage as any)?.role !== 'tool') {
-      return messages;
-    }
-
-    const assistantMessageIndex = messages.length - 2;
-    const assistantMessage = messages[assistantMessageIndex];
-
-    if (assistantMessage?.role !== 'assistant') {
-      return messages; // Should not happen in a valid HITL flow
-    }
-
-    const toolResultsFromHuman: ToolResultPart[] = [];
-    const fakeToolCallIds = new Set<string>();
-
-    for (const part of lastMessage?.parts ?? []) {
-      if ((part as any).type === 'tool-result') {
-        const correspondingCall = (assistantMessage?.parts ?? []).find(
-          (p: any) =>
-            p.type === 'tool-call' && p.toolCallId === (part as any).toolCallId,
-        ) as ToolCallPart | undefined;
-
-        if (
-          correspondingCall &&
-          correspondingCall.toolName === FAKE_HUMAN_INTERACTION_TOOL_NAME
-        ) {
-          toolResultsFromHuman.push(part as any);
-          fakeToolCallIds.add((part as any).toolCallId);
-        }
-      }
-    }
-
-    if (toolResultsFromHuman.length === 0) {
-      return messages;
-    }
-
-    const realToolResults: ToolResultPart[] = [];
-    for (const fakeResult of toolResultsFromHuman) {
-      const fakeCall = (assistantMessage.parts ?? []).find(
-        (p: any) => p.toolCallId === fakeResult.toolCallId,
-      ) as unknown as ToolCallPart;
-
-      const { originalToolCallId } = fakeCall.input as any;
-      const humanInput = fakeResult.output;
-
-      /// TODO: remove dependency on this.consumePendingTool
-      const pendingContext = this.consumePendingTool(originalToolCallId);
-      if (!pendingContext) {
-        throw new Error(
-          `Could not find pending tool with ID: ${originalToolCallId}`,
-        );
-      }
-      if (!humanInput) {
-        throw new Error(
-          `No human input found for tool call ID: ${originalToolCallId}`,
-        );
-      }
-
-      const [clientName, ...operationIdParts] =
-        pendingContext.toolName.split(':');
-      const operationId = operationIdParts.join(':');
-
-      const client = this.clients.find(c => c.getName() === clientName);
-      if (!client) {
-        throw new Error(
-          `Client "${clientName}" not found for resumed execution.`,
-        );
-      }
-
-      const finalArgs = { ...pendingContext.originalArgs, ...humanInput };
-      const finalResult = await client.callOperation(operationId, finalArgs);
-
-      realToolResults.push({
-        type: 'tool-result',
-        toolCallId: pendingContext.originalToolCallId,
-        toolName: pendingContext.toolName,
-        output: finalResult,
-      });
-
-      this.consumePendingTool(pendingContext.originalToolCallId);
-
-      if (dataStream) {
-        dataStream.write({
-          type: 'tool-output-available',
-          toolCallId: pendingContext.originalToolCallId,
-          output: finalResult,
-          providerMetadata: {},
-        });
-      }
-    }
-
-    const newMessages = [...messages];
-    const cleanedAssistantParts = (assistantMessage.parts ?? []).filter(
-      (p: any) =>
-        !(p.type === 'tool-call' && fakeToolCallIds.has(p.toolCallId)),
-    );
-    newMessages[assistantMessageIndex] = {
-      ...assistantMessage,
-      parts: cleanedAssistantParts,
-    };
-    newMessages[messages.length - 1] = {
-      ...lastMessage,
-      parts: realToolResults as any[],
-    };
-
-    return newMessages;
-  }
-
   private createFakeToolCall(
     originalToolCall: ToolCall<any, any>,
     interventionArgs: any,
@@ -440,7 +332,7 @@ export class OpenApiToolset {
     };
   }
 
-  createHitlStopStep(): StopCondition<any> {
+  isHitlStep(): StopCondition<any> {
     return async s => {
       const lastStep = s.steps[s.steps.length - 1];
       if (lastStep?.toolResults && lastStep?.toolResults?.length > 0) {

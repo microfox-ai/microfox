@@ -1,4 +1,4 @@
-import { BraveSDK, createBraveSDK } from '@microfox/brave';
+import { createBraveSDK } from '@microfox/brave';
 
 interface SDKConfig {
   constructorName: string;
@@ -7,8 +7,13 @@ interface SDKConfig {
   [key: string]: any;
 }
 
-export const sdkInit = (config: SDKConfig): BraveSDK => {
-  const { constructorName, BRAVE_API_KEY, BRAVE_SECRET_TEMPLATE_TYPE, ...options } = config;
+export const sdkInit = (config: SDKConfig) => {
+  const {
+    constructorName,
+    BRAVE_API_KEY,
+    BRAVE_SECRET_TEMPLATE_TYPE,
+    ...options
+  } = config;
 
   if (!BRAVE_API_KEY) {
     throw new Error('BRAVE_API_KEY is required');
@@ -22,11 +27,11 @@ export const sdkInit = (config: SDKConfig): BraveSDK => {
     case 'createBraveSDK':
       return createBraveSDK({
         apiKey: BRAVE_API_KEY,
-        ...options
+        ...options,
       });
     default:
       throw new Error(`Constructor "${constructorName}" is not supported.`);
   }
 };
 
-export { BraveSDK, createBraveSDK };
+export { createBraveSDK };
