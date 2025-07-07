@@ -1,5 +1,12 @@
 # @microfox/cli
 
+## 1.0.3
+
+### Patch Changes
+
+- fdd3040: Changes from PR #572: update-oauth-scopes-v2
+- b239a68: Changes from PR #573: cli-agent-script
+
 ## 1.0.2
 
 ### Patch Changes

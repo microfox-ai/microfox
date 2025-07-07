@@ -1,5 +1,11 @@
 # @microfox/notion
 
+## 1.1.1
+
+### Patch Changes
+
+- fdd3040: Changes from PR #572: update-oauth-scopes-v2
+
 ## 1.1.0
 
 ### Minor Changes
