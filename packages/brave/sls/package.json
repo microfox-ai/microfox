@@ -13,7 +13,7 @@
     "remove:preview": "serverless remove --stage preview",
     "remove:prod": "serverless remove --stage prod",
     "start": "serverless offline start",
-    "lint": "eslint  --ignore-path .gitignore ."
+    "lint": "eslint  --ignore-pattern 'dist/**'"
   },
   "dependencies": {
     "@microfox/brave": "^1.0.7",

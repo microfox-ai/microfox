@@ -6,7 +6,7 @@ interface SDKConfig {
 }
 
 export const sdkInit = (config: SDKConfig) => {
-  const { constructorName, ...options } = config;
+  const { constructorName, BRAVE_API_KEY, ...options } = config;
 
   if (!BRAVE_API_KEY) {
     throw new Error('BRAVE_API_KEY is required');
