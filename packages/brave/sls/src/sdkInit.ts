@@ -19,9 +19,9 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         ...options,
       });
       const sdkMap: Record<string, Function> = {};
-      Object.keys(sdk).forEach(key => {
-        sdkMap[key] = sdk[key].bind(sdk);
-      });
+      sdkMap.webSearch = sdk.webSearch.bind(sdk);
+      sdkMap.imageSearch = sdk.imageSearch.bind(sdk);
+      sdkMap.newsSearch = sdk.newsSearch.bind(sdk);
       return sdkMap;
     default:
       throw new Error(`Constructor "${constructorName}" is not supported.`);
