@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/db-upstash",
+  "title": "Db Upstash TypeScript SDK",
+  "description": "A TypeScript SDK for Db Upstash.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "documentation": "https://www.npmjs.com/package/@microfox/db-upstash",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
