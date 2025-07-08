@@ -27,10 +27,11 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@eslint/js": "latest",
     "@types/node": "^18",
-    "eslint": "^8.57.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^9.1.0",
     "prettier": "^3.0.0",
     "tsup": "^8",
     "typescript": "^5.6.3",
@@ -89,23 +90,55 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
 });
---- filename: .eslintrc.js
-module.exports = {
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
-  root: true,
-  env: {
-    node: true,
+--- filename: eslint.config.js
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      'no-console': 'warn',
+      'react/prop-types': 'off',
+      'no-case-declarations': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+    },
   },
-  rules: {
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-unused-vars': 'error',
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '.turbo/**',
+      'coverage/**',
+      '**/*.js',
+      '**/*.test.ts',
+    ],
   },
-};
+];
 --- filename: .prettierrc
 {
   "semi": true,
