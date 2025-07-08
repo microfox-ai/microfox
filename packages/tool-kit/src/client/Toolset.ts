@@ -451,7 +451,7 @@ export class OpenApiToolset {
           }
         }
       } catch (error) {
-        console.error('Error processing stream for HITL:', error);
+        // console.error('Error processing stream for HITL:', error);
       }
     })();
 
@@ -522,7 +522,7 @@ export async function createOpenApiToolset(
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error';
-    console.error(`Failed to create OpenAPI client: ${errorMessage}`);
+    // console.error(`Failed to create OpenAPI client: ${errorMessage}`);
     throw new Error(`Failed to create OpenAPI client: ${errorMessage}`);
   }
 }
