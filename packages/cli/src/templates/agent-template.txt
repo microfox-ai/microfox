@@ -70,6 +70,14 @@ provider:
   region: us-east-1
   stage: ${env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:SendMessage'
+          Resource:
+            - Fn::GetAtt: [MessageQueue, Arn]
 
 plugins:
   - serverless-plugin-typescript
