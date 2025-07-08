@@ -138,7 +138,8 @@ export class OpenApiMCP {
   }
 
   private cleanUpMethodSchema(methodSchema: OpenAPIOperation) {
-    const cleanedMethodSchema = methodSchema;
+    const cleanedMethodSchema = JSON.parse(JSON.stringify(methodSchema)); // Deep copy
+
     if (this?.mcp_version === '1.0.1' || this?.mcp_version === '1.0.2') {
       const jsonContent =
         cleanedMethodSchema.requestBody?.content?.['application/json'];
@@ -160,10 +161,17 @@ export class OpenApiMCP {
         Array.isArray(argumentsSchema.items)
       ) {
         const items = argumentsSchema.items;
-        newProperties = items.reduce((acc, arg, index) => {
-          acc[`arg_${index}`] = arg;
-          return acc;
-        }, {});
+        newProperties = items.reduce(
+          (
+            acc: Record<string, OpenAPISchema>,
+            arg: OpenAPISchema,
+            index: number,
+          ) => {
+            acc[`arg_${index}`] = arg;
+            return acc;
+          },
+          {},
+        );
       }
 
       if (newProperties) {
@@ -210,43 +218,36 @@ export class OpenApiMCP {
     return `${method.toLowerCase()}_${pathPart}`;
   }
 
-  private structureArguments(
-    args: Record<string, any>,
+  private structureBodyForRequest(
+    body: Record<string, any>,
     operation: OpenAPIOperation,
     finalAuth?: AuthObject,
-  ) {
+  ): Record<string, any> {
     if (this?.mcp_version === '1.0.1') {
-      const structuredArgs = {
+      return {
         body: {
-          body: {
-            arguments: Array.isArray(args) ? Object.values(args) : args,
-            auth: { ...(this.presetBodyFields.auth || {}), ...finalAuth },
-            packageName: this.presetBodyFields.packageName,
-          },
+          arguments: Array.isArray(body) ? Object.values(body) : body,
+          auth: { ...(this.presetBodyFields.auth || {}), ...finalAuth },
+          packageName: this.presetBodyFields.packageName,
         },
       };
-      return structuredArgs;
     } else if (this?.mcp_version === '1.0.2') {
       return {
         body: {
-          body: {
-            arguments: Array.isArray(args) ? Object.values(args) : args,
-            packageName: this.presetBodyFields.packageName,
-          },
+          arguments: Array.isArray(body) ? Object.values(body) : body,
+          packageName: this.presetBodyFields.packageName,
         },
       };
-    } else {
-      return {
-        body: args,
-      };
     }
+    // For other versions, the body is passed as is.
+    // The prepareRequest function will JSON.stringify it.
+    return body;
   }
 
   private structureHeaders(auth?: AuthObject): Record<string, string> {
     const headers: Record<string, string> = {};
     let _cryptoVault = this.cryptoVault;
     if (!auth?.encryptionKey) {
-      console.warn('No encryption key provided', auth?.encryptionKey);
       return headers;
     }
     if (!_cryptoVault || auth?.encryptionKey) {
@@ -259,7 +260,7 @@ export class OpenApiMCP {
           outputEncoding: 'base64url',
         });
       } catch (error) {
-        console.error('Error creating crypto vault', error);
+        // console.error('Error creating crypto vault', error);
       }
     }
     if (auth && _cryptoVault) {
@@ -273,18 +274,25 @@ export class OpenApiMCP {
         },
         {},
       );
-      headers['x-auth-secrets'] = _cryptoVault.encrypt(
-        JSON.stringify(variables),
-      );
+      if (variables && Object.keys(variables).length > 0) {
+        headers['x-auth-secrets'] = _cryptoVault.encrypt(
+          JSON.stringify(variables),
+        );
+      }
     } else {
-      console.warn('No auth provided');
+      // console.warn('No auth provided');
     }
     return headers;
   }
 
   private prepareRequest(
     operation: OpenAPIOperation & { path: string; method: string },
-    args: Record<string, any>,
+    args: {
+      path?: Record<string, any>;
+      query?: Record<string, any>;
+      headers?: Record<string, any>;
+      body?: any;
+    },
     authHeaders: Record<string, string>,
   ) {
     let url = `${this.baseUrl}${operation.path}`;
@@ -295,49 +303,36 @@ export class OpenApiMCP {
     };
 
     // Process path parameters
-    if (operation.parameters) {
-      const pathParams = operation.parameters.filter(
-        param => param.in === 'path',
-      );
-      pathParams.forEach(param => {
-        const paramValue = args[param.name];
-        if (paramValue !== undefined) {
-          url = url.replace(
-            `{${param.name}}`,
-            encodeURIComponent(String(paramValue)),
-          );
+    if (args.path) {
+      Object.entries(args.path).forEach(([name, value]) => {
+        if (value !== undefined) {
+          url = url.replace(`{${name}}`, encodeURIComponent(String(value)));
         }
       });
+    }
 
-      // Process query parameters
-      const queryParams = operation.parameters.filter(
-        param => param.in === 'query',
-      );
-      if (queryParams.length > 0) {
-        const queryString = queryParams
-          .map(param => {
-            const paramValue = args[param.name];
-            if (paramValue !== undefined) {
-              return `${encodeURIComponent(param.name)}=${encodeURIComponent(String(paramValue))}`;
-            }
-            return null;
-          })
-          .filter(Boolean)
-          .join('&');
+    // Process query parameters
+    if (args.query) {
+      const queryString = Object.entries(args.query)
+        .map(([name, value]) => {
+          if (value !== undefined) {
+            return `${encodeURIComponent(name)}=${encodeURIComponent(String(value))}`;
+          }
+          return null;
+        })
+        .filter(Boolean)
+        .join('&');
 
-        if (queryString) {
-          url += `?${queryString}`;
-        }
+      if (queryString) {
+        url += `?${queryString}`;
       }
+    }
 
-      // Process header parameters
-      const headerParams = operation.parameters.filter(
-        param => param.in === 'header',
-      );
-      headerParams.forEach(param => {
-        const paramValue = args[param.name];
-        if (paramValue !== undefined) {
-          headers[param.name] = String(paramValue);
+    // Process header parameters
+    if (args.headers) {
+      Object.entries(args.headers).forEach(([name, value]) => {
+        if (value !== undefined) {
+          headers[name] = String(value);
         }
       });
     }
@@ -451,11 +446,42 @@ export class OpenApiMCP {
       );
     }
 
+    // The AI will provide args in a structure that matches the JSON schema.
+    // e.g., { path: { userId: '...' }, body: { ... } }
+    const pathArgs = args.path || {};
+    const queryArgs = args.query || {};
+    const headerArgs = args.headers || {};
+    let bodyArgs = args.body || {};
+
+    // For operations without a defined requestBody, the AI might pass body
+    // parameters at the top level. We should collect them.
+    const knownParams = new Set(['path', 'query', 'headers', 'body']);
+    const extraArgs = Object.fromEntries(
+      Object.entries(args).filter(([key]) => !knownParams.has(key)),
+    );
+    if (Object.keys(extraArgs).length > 0) {
+      bodyArgs = { ...bodyArgs, ...extraArgs };
+    }
+
+    // Apply the special mcp_version body structuring.
+    const structuredBody = this.structureBodyForRequest(
+      bodyArgs,
+      operation,
+      auth,
+    );
+
+    const requestArgs = {
+      path: pathArgs,
+      query: queryArgs,
+      headers: headerArgs,
+      body: structuredBody,
+    };
+
     const authHeaders = this.structureHeaders(auth);
 
     const { url, headers, body } = this.prepareRequest(
       operation,
-      args,
+      requestArgs,
       authHeaders,
     );
 
@@ -474,65 +500,87 @@ export class OpenApiMCP {
   private convertOperationToJsonSchema(
     operation: OpenAPIOperation & { path: string; method: string },
   ): JsonSchema & { type: 'object' } {
-    const schema: JsonSchema & { type: 'object' } = {
+    const rootSchema: JsonSchema & { type: 'object' } = {
       type: 'object',
       properties: {},
       required: [],
       $defs: this.convertComponentsToJsonSchema(),
     };
 
-    // Handle parameters (query, path, header params)
+    const paramGroups: {
+      [key in 'path' | 'query' | 'header']: {
+        schema: JsonSchema & {
+          type: 'object';
+          properties: Record<string, any>;
+          required: string[];
+        };
+        params: OpenAPIParameter[];
+      };
+    } = {
+      path: {
+        schema: { type: 'object', properties: {}, required: [] },
+        params: [],
+      },
+      query: {
+        schema: { type: 'object', properties: {}, required: [] },
+        params: [],
+      },
+      header: {
+        schema: { type: 'object', properties: {}, required: [] },
+        params: [],
+      },
+    };
+
+    // Group parameters by 'in'
     if (operation.parameters) {
       for (const param of operation.parameters) {
-        if (param.schema) {
-          const paramSchema = this.convertOpenApiSchemaToJsonSchema(
-            param.schema,
-            new Set(),
-          );
-          if (param.description) {
-            paramSchema.description = param.description;
-          }
-          schema.properties![param.name] = paramSchema;
-          if (param.required) {
-            schema.required!.push(param.name);
-          }
+        const group = paramGroups[param.in as keyof typeof paramGroups];
+        if (group) {
+          group.params.push(param);
         }
       }
     }
 
-    // Handle request body - preserve the nested structure
-    if (operation.requestBody?.content) {
-      if (operation.requestBody.content['application/json']?.schema) {
-        const bodySchema = this.convertOpenApiSchemaToJsonSchema(
-          operation.requestBody.content['application/json'].schema,
-          new Set(),
-        );
-
-        // Add the entire body schema as a single property
-        if (bodySchema.type === 'object') {
-          // If the body schema has properties, add them as individual top-level properties
-          // This allows the tool to accept the request body structure directly
-          if (bodySchema.properties) {
-            for (const [name, propSchema] of Object.entries(
-              bodySchema.properties,
-            )) {
-              schema.properties![name] = propSchema;
+    // Process each parameter group
+    for (const groupName of ['path', 'query', 'header'] as const) {
+      const group = paramGroups[groupName];
+      if (group.params.length > 0) {
+        for (const param of group.params) {
+          if (param.schema) {
+            const paramSchema = this.convertOpenApiSchemaToJsonSchema(
+              param.schema,
+              new Set(),
+            );
+            if (param.description) {
+              paramSchema.description = param.description;
             }
-            if (bodySchema.required) {
-              schema.required!.push(...bodySchema.required);
+            group.schema.properties[param.name] = paramSchema;
+            if (param.required) {
+              group.schema.required.push(param.name);
             }
           }
-        } else {
-          // For non-object body schemas (arrays, primitives), add as 'body' parameter
-          schema.properties!['body'] = bodySchema;
-          if (operation.requestBody.required) {
-            schema.required!.push('body');
-          }
+        }
+        rootSchema.properties![groupName] = group.schema;
+        // Path parameter group is required if it has any params
+        if (groupName === 'path' && group.params.length > 0) {
+          rootSchema.required!.push('path');
         }
       }
     }
 
-    return schema;
+    // Handle request body
+    if (operation.requestBody?.content?.['application/json']?.schema) {
+      const bodySchema = this.convertOpenApiSchemaToJsonSchema(
+        operation.requestBody.content['application/json'].schema,
+        new Set(),
+      );
+      rootSchema.properties!.body = bodySchema;
+      if (operation.requestBody.required) {
+        rootSchema.required!.push('body');
+      }
+    }
+
+    return rootSchema;
   }
 
   /**
@@ -935,8 +983,6 @@ export class OpenApiMCP {
 
         const cleanAuthFn = toolCleanAuth || this.cleanAuth;
         const { encryptionKey, ...cleanedAuth } = finalAuth || {};
-        console.log('finalAuth', finalAuth?.encryptionKey);
-        console.log('toolOptions?.auth', toolOptions?.auth?.encryptionKey);
         if (toolOptions?.auth) {
           finalAuth = {
             ...toolOptions?.auth,
@@ -986,15 +1032,8 @@ export class OpenApiMCP {
           };
         }
 
-        // Structure arguments and inject auth
-        const structuredArgs = this.structureArguments(
-          args,
-          cleanedOperation,
-          finalAuth,
-        );
-
         // Call the operation (do not clean auth here)
-        return this.callOperation(id, structuredArgs, toolOptions, finalAuth);
+        return this.callOperation(id, args, toolOptions, finalAuth);
       };
 
       tools[toolName] = {
