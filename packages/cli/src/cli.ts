@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { kickstartCommand } from './commands/kickstart';
 import { pushCommand } from './commands/push';
+import { statusCommand, logsCommand, metricsCommand } from './commands/status';
 import { version } from '../package.json';
 
 const program = new Command();
@@ -30,6 +31,42 @@ program
   .action(async () => {
     try {
       await pushCommand();
+    } catch (error) {
+      console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('status [runId]')
+  .description('Check the deployment status of your agent')
+  .action(async (runId) => {
+    try {
+      await statusCommand(runId);
+    } catch (error) {
+      console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('logs [runId]')
+  .description('View the deployment logs for your agent')
+  .action(async (runId) => {
+    try {
+      await logsCommand(runId);
+    } catch (error) {
+      console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('metrics [runId]')
+  .description('View the deployment metrics for your agent')
+  .action(async (runId) => {
+    try {
+      await metricsCommand(runId);
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);

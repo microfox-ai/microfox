@@ -70,6 +70,14 @@ provider:
   region: us-east-1
   stage: ${env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:SendMessage'
+          Resource:
+            - Fn::GetAtt: [MessageQueue, Arn]
 
 plugins:
   - serverless-plugin-typescript
@@ -81,8 +89,8 @@ functions:
     handler: dist/functions/api-handler.handler
     events:
       - http:
-          path: /items/{itemId}
-          method: GET
+          path: /items
+          method: POST
           cors: true
   
   # Example Cron Job
@@ -302,8 +310,8 @@ const apiDocs = {
     },
   ],
   paths: {
-    '/items/{itemId}': {
-      get: handleApiRequestDocs,
+    '/items': {
+      post: handleApiRequestDocs,
     },
   },
   components: {
@@ -359,15 +367,22 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import redis from '../helpers/redis.js';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const itemId = event.pathParameters?.itemId;
-    if (!itemId) {
+    if (!event.body) {
         return {
             statusCode: 400,
-            body: JSON.stringify({ message: 'Missing itemId in path' }),
+            body: JSON.stringify({ message: 'Missing request body' }),
         };
     }
 
     try {
+        const { itemId } = JSON.parse(event.body);
+        if (!itemId) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: 'Missing itemId in request body' }),
+            };
+        }
+        
         const item = await redis.get(`item:${itemId}`);
         if (!item) {
             return {
@@ -381,6 +396,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         };
     } catch (error) {
         console.error(error);
+        if (error instanceof SyntaxError) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: 'Invalid JSON in request body' }),
+            };
+        }
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'Internal server error' }),
@@ -389,16 +410,26 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 };
 
 export const handleApiRequestDocs = {
-  summary: 'Get an item by ID',
-  description: 'Retrieves a specific item from the database.',
+  summary: 'Retrieve an item by ID',
+  description: 'Retrieves a specific item from the database using its ID.',
   tags: ['Items'],
-  parameters: [{
-    name: 'itemId',
-    in: 'path',
+  requestBody: {
     required: true,
-    description: 'ID of the item to retrieve',
-    schema: { type: 'string' }
-  }],
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            itemId: {
+              type: 'string',
+              description: 'The ID of the item to retrieve.'
+            }
+          },
+          required: ['itemId']
+        }
+      }
+    }
+  },
   responses: {
     '200': { 
         description: 'Successful response with the item.',
@@ -414,7 +445,7 @@ export const handleApiRequestDocs = {
             }
         }
     },
-    '400': { description: 'Bad Request: Missing itemId.' },
+    '400': { description: 'Bad Request: Missing or invalid request body.' },
     '404': { description: 'Item not found.' },
     '500': { description: 'Internal server error.' },
   },
