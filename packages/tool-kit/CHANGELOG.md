@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.4
+
+### Patch Changes
+
+- 6e10384: release: comment out error logging in OpenApiToolset for cleaner output
+
 ## 1.1.3
 
 ### Patch Changes

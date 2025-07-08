@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.5
+
+### Patch Changes
+
+- 4a73559: Changes from PR #580: microfox-cli-push-script
+
 ## 1.0.4
 
 ### Patch Changes
