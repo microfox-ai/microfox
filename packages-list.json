@@ -16,6 +16,7 @@
     "packages/ai-router",
     "packages/cli",
     "packages/crypto-sdk",
+    "packages/db-upstash",
     "packages/oauth-kit",
     "packages/rest-sdk",
     "packages/serverless-yml",
@@ -89,6 +90,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 72,
-  "generatedAt": "2025-07-07T17:30:30.005Z"
+  "total": 73,
+  "generatedAt": "2025-07-08T18:56:14.953Z"
 }
