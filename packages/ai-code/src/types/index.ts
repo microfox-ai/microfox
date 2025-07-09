@@ -1,4 +1,4 @@
-// Type definitions for ai-agent SDK
+// Type definitions for ai-code SDK
 
 import { LanguageModelV2 } from '@ai-sdk/provider';
 import { z } from 'zod';

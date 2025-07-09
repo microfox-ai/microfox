@@ -1,5 +1,5 @@
 {
-  "name": "@microfox/ai-agent",
+  "name": "@microfox/ai-code",
   "title": "Ai Agent TypeScript SDK",
   "description": "A TypeScript SDK for Ai Agent.",
   "platformType": "tool",
@@ -8,7 +8,7 @@
     "zod"
   ],
   "status": "unstable",
-  "documentation": "https://www.npmjs.com/package/@microfox/ai-agent",
+  "documentation": "https://www.npmjs.com/package/@microfox/ai-code",
   "icon": "https://via.placeholder.com/64x64.png?text=A",
   "constructors": [],
   "extraInfo": [],

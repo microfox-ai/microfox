@@ -1,18 +1,18 @@
 # Ai Agent
 
 <!-- Add your project description here -->
-A TypeScript SDK for Ai Agent.
+A TypeScript SDK for Ai Code.
 
 ## Installation
 
 ```bash
-npm install @microfox/ai-agent
+npm install @microfox/ai-code
 ```
 
 ## Quick Start
 
 ```typescript
-import { ${className} } from '@microfox/ai-agent';
+import { ${className} } from '@microfox/ai-code';
 
 // Initialize the SDK
 const sdk = new ${className}({

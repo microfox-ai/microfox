@@ -1,4 +1,4 @@
-// Main exports for ai-agent
+// Main exports for ai-code
 export * from './types';
 export * from './schemas';
 export * from './utils/scanDirectoryStructure';
