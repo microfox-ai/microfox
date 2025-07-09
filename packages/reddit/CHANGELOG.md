@@ -1,5 +1,11 @@
 # @microfox/reddit
 
+## 1.5.2
+
+### Patch Changes
+
+- 897d926: Changes from PR #582: subhakar
+
 ## 1.5.1
 
 ### Patch Changes

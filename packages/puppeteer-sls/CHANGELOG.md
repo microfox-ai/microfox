@@ -1,5 +1,13 @@
 # @microfox/puppeteer-sls
 
+## 1.1.2
+
+### Patch Changes
+
+- 897d926: Changes from PR #582: subhakar
+- Updated dependencies [897d926]
+  - @microfox/s3-space@1.0.1
+
 ## 1.1.1
 
 ### Patch Changes
