@@ -1062,7 +1062,7 @@ export class AiRouter<
             requestId: requestId,
             logger: self._createLogger(requestId, path, 0),
             response: {
-              ...writer,
+              ...streamWriter.writer,
               writeMessageMetadata: streamWriter.writeMessageMetadata,
               writeCustomTool: streamWriter.writeCustomTool,
               writeObjectAsTool: streamWriter.writeObjectAsTool,

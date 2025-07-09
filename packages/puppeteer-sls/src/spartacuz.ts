@@ -17,7 +17,7 @@ export const puppeteerLaunchProps = async (
 ) => {
   let executablePath: string | undefined;
 
-  console.log('isLocal', isLocal);
+  console.log('isLocal', isLocal, process.env.CHROME_EXECUTABLE_PATH);
   const CHROME_PATHS = {
     darwin: [
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',

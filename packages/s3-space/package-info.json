@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/s3-space",
+  "title": "S3 Space TypeScript SDK",
+  "description": "A TypeScript SDK for S3 Space.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/@microfox/s3-space",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
