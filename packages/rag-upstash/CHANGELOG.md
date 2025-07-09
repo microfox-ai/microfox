@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- a029184: release: remove unnecessary comment from RagUpstashSdk class
+
 ## 1.1.0
 
 ### Minor Changes
