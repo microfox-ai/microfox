@@ -103,6 +103,54 @@ export class ToolParse {
     }
   }
 
+  async fetchEnvVars(options: {
+    packageName: string;
+    templateType: string;
+    templateId?: string;
+    stage?: string;
+    apiKey?: string;
+  }): Promise<void> {
+    const url = `https://${options.stage}.microfox.app/api/client-secrets/get-template`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          MicrofoxTemplateApiKey:
+            options.apiKey ?? process.env.MICROFOX_TEMPLATE_API_KEY ?? '',
+        },
+        body: JSON.stringify({
+          packageName: options.packageName,
+          templateType: options.templateType,
+          templateId: options.templateId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new ApiError(
+          `Failed to fetch template: ${response.statusText} - ${errorText}`,
+          response.status
+        );
+      }
+
+      const templateVariables = await response.json();
+      dotenv.populate(process.env as any, templateVariables);
+    } catch (error) {
+      console.error(
+        'Error fetching/populating environment variables from template:',
+        error
+      );
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new InternalServerError(
+        'Failed to fetch and populate environment variables from template'
+      );
+    }
+  }
+
   extractArguments(event: APIGatewayEvent): any[] {
     // Parse the request body
     let requestBody: any;

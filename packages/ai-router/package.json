@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-router",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Router-based Framework built on top of ai-sdk to support Multi-Agentic Workflows.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

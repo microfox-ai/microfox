@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- fd91148: patch fixes
+
 ## 1.0.1
 
 ### Patch Changes
