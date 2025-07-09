@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 444dc51: release: publish latest tool-core
+
 ## 1.0.1
 
 ### Patch Changes
