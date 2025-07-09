@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 23c4c30: release: export additional classes for CRUD and rate limiting functionality
+
 ## 1.1.0
 
 ### Minor Changes
