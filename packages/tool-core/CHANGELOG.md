@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- b1d2ce3: release: enhance populateEnvVars and fetch logic in ToolParse class
+
 ## 1.0.2
 
 ### Patch Changes
