@@ -26,10 +26,10 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^2.0.0-beta",
-    "@ai-sdk/provider": "^2.0.0-beta",
+    "@ai-sdk/anthropic": "2.0.0-alpha.15",
+    "@ai-sdk/provider": "2.0.0-alpha.15",
     "@microfox/usage-tracker": "*",
-    "ai": "^5.0.0-beta",
+    "ai": "5.0.0-alpha.15",
     "zod": "^3.24.2"
   },
   "devDependencies": {
