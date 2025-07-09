@@ -33,7 +33,11 @@ else
 fi
 
 echo "Building packages with filter: $FILTER"
-npx turbo run build --filter="$FILTER"
+# The '--continue' flag allows turbo to build as many packages as possible,
+# even if some of them fail. The '|| true' part ensures that the script
+# doesn't exit if there are build failures, allowing us to proceed with
+# publishing the successfully built packages.
+npx turbo run build --continue --filter="$FILTER" || true
 
 # Publish packages to npm.
 echo "Publishing packages to npm..."
