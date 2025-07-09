@@ -1,5 +1,15 @@
 # @microfox/ai-provider-openai
 
+## 1.3.0
+
+### Minor Changes
+
+- 7e0ae1f: upgraded ai to 15
+
+### Patch Changes
+
+- e650ce6: Changes from PR #587: build-fix-09-july-2025
+
 ## 1.2.1
 
 ### Patch Changes
