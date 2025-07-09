@@ -1,4 +1,5 @@
 import { Redis } from '@upstash/redis';
+import { safeJsonParse, safeJsonStringify } from '../helper/json';
 
 export interface IPaginationStatus<T> {
   status: 'running' | 'completed' | 'idle' | 'paused' | 'failed';
@@ -38,7 +39,7 @@ export class Paginator<T extends Record<string, any>> {
 
     await this.redis.hset(this.key, {
       ...newStatus,
-      progress: JSON.stringify(newStatus.progress),
+      progress: safeJsonStringify(newStatus.progress),
     });
     return newStatus;
   }
@@ -61,7 +62,7 @@ export class Paginator<T extends Record<string, any>> {
     };
 
     await this.redis.hset(this.key, {
-      progress: JSON.stringify(newStatus.progress),
+      progress: safeJsonStringify(newStatus.progress),
       lastUpdatedAt: newStatus.lastUpdatedAt,
     });
 
@@ -116,7 +117,7 @@ export class Paginator<T extends Record<string, any>> {
     await this.redis.hset(this.key, {
       status: newStatus.status,
       lastUpdatedAt: newStatus.lastUpdatedAt,
-      error: JSON.stringify(newStatus.error),
+      error: safeJsonStringify(newStatus.error),
     });
 
     return { ...currentStatus, ...newStatus };
@@ -130,10 +131,10 @@ export class Paginator<T extends Record<string, any>> {
 
     const parsedStatus: any = { ...status };
     if (status.progress) {
-      parsedStatus.progress = JSON.parse(status.progress as string);
+      parsedStatus.progress = safeJsonParse(status.progress as string);
     }
     if (status.error) {
-      parsedStatus.error = JSON.parse(status.error as string);
+      parsedStatus.error = safeJsonParse(status.error as string);
     }
     parsedStatus.lastUpdatedAt = Number(status.lastUpdatedAt);
     parsedStatus.startedAt = Number(status.startedAt);

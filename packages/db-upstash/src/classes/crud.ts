@@ -1,4 +1,5 @@
 import { Redis } from '@upstash/redis';
+import { safeJsonParse, safeJsonStringify } from '../helper/json';
 
 /**
  * A generic CRUD helper class for Upstash Redis.
@@ -33,7 +34,7 @@ export class Crud<T extends { id: string } & Record<string, any>> {
     const serialized: Record<string, string> = {};
     for (const key in obj) {
       if (obj[key] !== undefined) {
-        serialized[key] = JSON.stringify(obj[key]);
+        serialized[key] = safeJsonStringify(obj[key]);
       }
     }
     return serialized;
@@ -43,7 +44,7 @@ export class Crud<T extends { id: string } & Record<string, any>> {
     if (!obj) return null;
     const deserialized: Record<string, any> = {};
     for (const key in obj) {
-      deserialized[key] = JSON.parse(obj[key] as string);
+      deserialized[key] = safeJsonParse(obj[key] as string);
     }
     return deserialized as U;
   }
