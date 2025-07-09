@@ -1,12 +1,46 @@
 # @microfox/tool-kit
 
-This package provides a way to create a tool set from an OpenAPI schema that can be used with AI models.
+This package provides a powerful way to convert OpenAPI schemas into Model Context Protocol (MCP) servers that can be used with AI models. It automatically generates tools from your API specification while providing built-in support for OAuth authentication and Human-in-the-Loop (HITL) execution control.
+
+## Key Features
+
+- **OpenAPI to MCP Conversion**: Seamlessly convert any OpenAPI 3.0 schema into executable MCP tools
+- **OAuth Authentication**: Built-in support for OAuth flows with automatic token management
+- **Human-in-the-Loop (HITL)**: Configurable execution control that requires user approval before API calls
+- **Flexible Authentication**: Multiple authentication strategies including API keys, Bearer tokens, and custom providers
+- **Dynamic Credential Management**: Runtime credential fetching and token refresh capabilities
+- **Specification-Driven**: Define authentication providers directly in your MCP specification for maximum portability
 
 ## Installation
 
 ```bash
 npm install @microfox/tool-kit
 ```
+
+## MCP Server Capabilities
+
+The `@microfox/tool-kit` transforms your OpenAPI schemas into fully functional MCP servers that can:
+
+### OAuth Integration
+
+- **Automatic OAuth Flow Handling**: Built-in support for OAuth 2.0 authorization flows
+- **Token Management**: Automatic token refresh and storage
+- **Multiple OAuth Providers**: Support for various OAuth providers (Google, GitHub, Slack, etc.)
+- **Secure Credential Storage**: Safe handling of access tokens and refresh tokens
+
+### Human-in-the-Loop (HITL) Control
+
+- **Execution Approval**: Require user confirmation before executing API calls
+- **Granular Control**: Configure HITL at the client, toolset, or individual tool level
+- **Contextual Information**: Provide users with context about why a tool needs to be called
+- **Audit Trail**: Track all tool executions and user approvals
+
+### MCP Compliance
+
+- **Standard Protocol**: Full compliance with Model Context Protocol specifications
+- **Tool Discovery**: Automatic tool registration and discovery
+- **Schema Validation**: Built-in validation of API schemas and responses
+- **Error Handling**: Comprehensive error handling and reporting
 
 ## Usage
 
@@ -67,14 +101,24 @@ const docData = {
 const baseUrl = 'https://api.example.com';
 ```
 
-Now, create the client and the tool set. The `disableAllExecutions: true` option configures the tools to require user approval before execution.
+Now, create the client and the tool set. The `disableAllExecutions: true` option enables Human-in-the-Loop (HITL) control, requiring user approval before any API execution.
 
 ```javascript
 const thisClient = await createOpenAPIToolsClient({
   schema: docData,
   baseUrl: baseUrl,
+  // Optional: Configure OAuth authentication at client level
+  getAuth: async (packageName, providerOptions, toolOptions) => {
+    // Your OAuth token fetching logic here
+    const token = await getOAuthToken();
+    return {
+      strategy: 'bearer',
+      token: token,
+    };
+  },
 });
 
+// Enable HITL for this toolset - requires user approval before execution
 const toolSet = await thisClient.tools({ disableAllExecutions: true });
 ```
 
@@ -134,9 +178,12 @@ async function main() {
       Call the tools as needed in order to answer the users query or perform user requested actions.
       Available tools: ${Object.keys(toolSet.tools).join(', ')}
 
-      Before calling the above tools, make sure you give some contextual text info to the user, on why you need to use this tool, as all the above tools require user permissions. after outputting the hint message, you can directly execute the tool you need to call.
+      IMPORTANT: All tools require Human-in-the-Loop (HITL) approval. Before calling any tool:
+      1. Explain to the user why you need to use the tool and what action you're about to perform
+      2. Provide context about the API endpoint and expected outcome
+      3. Wait for user approval before proceeding with the tool execution
 
-      If the tool has a lot of information, output into a neat markdown format.
+      If the tool returns a lot of information, format it into a neat markdown structure for better readability.
     `,
     messages: processedMessages,
     tools: toolSet.tools,
@@ -158,6 +205,51 @@ async function main() {
 }
 
 main().catch(console.error);
+```
+
+## Human-in-the-Loop (HITL) Configuration
+
+The `@microfox/tool-kit` provides flexible Human-in-the-Loop control to ensure user oversight of AI-driven API calls.
+
+### Enabling HITL
+
+```javascript
+// Enable HITL for all tools in a toolset
+const toolSet = await thisClient.tools({ disableAllExecutions: true });
+
+// Enable HITL for specific operations only
+const toolSet = await thisClient.tools({
+  disableAllExecutions: false,
+  disableExecutions: ['sensitiveOperation', 'writeOperation'],
+});
+```
+
+### HITL Best Practices
+
+1. **Provide Context**: Always explain why a tool needs to be called
+2. **Show Expected Outcomes**: Describe what the API call will accomplish
+3. **Handle Rejections**: Gracefully handle when users reject tool executions
+4. **Audit Trail**: Log all HITL decisions for compliance and debugging
+
+### Custom HITL Handlers
+
+```javascript
+const toolSet = await thisClient.tools({
+  disableAllExecutions: true,
+  onToolExecution: async (toolName, parameters, context) => {
+    // Custom logic before tool execution
+    console.log(`Requesting approval for: ${toolName}`);
+
+    // Your custom approval logic here
+    const approved = await requestUserApproval(toolName, parameters);
+
+    if (!approved) {
+      throw new Error('User rejected tool execution');
+    }
+
+    return true; // Proceed with execution
+  },
+});
 ```
 
 ## Authentication

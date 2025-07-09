@@ -37,7 +37,7 @@ async function removePackageSls(packagePath: string): Promise<boolean> {
     );
 
     const { data, error } = await supabase
-      .from('public_deployments')
+      .from('api_mcps')
       .delete()
       .eq('package_name', packageName);
 

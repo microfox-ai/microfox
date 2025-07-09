@@ -1,0 +1,494 @@
+--- filename: package.json
+{
+  "name": "@microfox/<%= packageName %>",
+  "version": "1.0.0",
+  "description": "<%= description %>",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": ["dist/**", "CHANGELOG.md"],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@types/node": "^18",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^9.1.0",
+    "prettier": "^3.0.0",
+    "tsup": "^8",
+    "typescript": "^5.6.3",
+    "vitest": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["<%= simpleName %>", "typescript", "api", "sdk"]
+}
+--- filename: package-info.json
+{
+  "name": "@microfox/<%= packageName %>",
+  "title": "<%= titleName %> TypeScript SDK",
+  "description": "<%= description %>",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/@microfox/<%= packageName %>",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
+--- filename: tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}
+--- filename: tsup.config.ts
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['cjs', 'esm'],
+  dts: true,
+  sourcemap: true,
+  clean: true,
+});
+--- filename: eslint.config.js
+import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      'no-console': 'warn',
+      'react/prop-types': 'off',
+      'no-case-declarations': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+    },
+  },
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '.turbo/**',
+      'coverage/**',
+      '**/*.js',
+      '**/*.test.ts',
+    ],
+  },
+];
+--- filename: .prettierrc
+{
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5"
+}
+--- filename: vitest.config.ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    environment: 'node',
+  },
+});
+--- filename: .gitignore
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Coverage
+coverage/
+.nyc_output
+
+# Runtime
+.cache/
+--- filename: src/index.ts
+// Main exports for <%= simpleName %>
+export { <%= className %> } from './<%= simpleName %>Sdk';
+export * from './schemas';
+
+// Example usage:
+// import { <%= className %> } from '@microfox/<%= packageName %>';
+// const sdk = new <%= className %>({ apiKey: 'your-key' });
+--- filename: src/<%= simpleName %>Sdk.ts
+import { <%= className %>ConfigSchema } from './schemas';
+
+/**
+ * Configuration options for the <%= className %>
+ */
+export interface <%= className %>Config {
+  /** API key for authentication */
+  apiKey: string;
+  /** Base URL for the API (optional) */
+  baseUrl?: string;
+  /** SDK name identifier (optional) */
+  name?: string;
+  /** API version to use (optional) */
+  version?: string;
+}
+
+/**
+ * Standard response format for all SDK methods
+ */
+export interface <%= className %>Response<T = any> {
+  /** The response data */
+  data: T;
+  /** Whether the request was successful */
+  success: boolean;
+  /** HTTP status code */
+  status: number;
+  /** Response message */
+  message: string;
+  /** Error object if the request failed */
+  error?: Error;
+}
+
+/**
+ * <%= className %> - A TypeScript SDK template
+ * 
+ * @example
+ * \`\`\`typescript
+ * import { <%= className %> } from '@microfox/<%= packageName %>';
+ * 
+ * const sdk = new <%= className %>({
+ *   apiKey: 'your-api-key',
+ *   baseUrl: 'https://api.example.com'
+ * });
+ * 
+ * const result = await sdk.hello('World');
+ * console.log(result.data);
+ * \`\`\`
+ */
+export class <%= className %> {
+  private config: <%= className %>Config;
+
+  /**
+   * Create a new <%= className %> instance
+   * 
+   * @param config - Configuration for the SDK
+   */
+  constructor(config: <%= className %>Config) {
+    // Validate configuration using Zod schema
+    this.config = <%= className %>ConfigSchema.parse(config);
+  }
+
+  /**
+   * Get current configuration
+   * 
+   * @returns Copy of the current config
+   */
+  getConfig(): <%= className %>Config {
+    return { ...this.config };
+  }
+
+  /**
+   * Example hello method - replace with your own methods
+   * 
+   * @param name - Name to greet
+   * @returns Promise with greeting response
+   */
+  async hello(name: string): Promise<<%= className %>Response<string>> {
+    return {
+      data: `Hello, ${name}! Welcome to ${this.config.name || '<%= simpleName %>'} SDK.`,
+      success: true,
+      status: 200,
+      message: 'Success'
+    };
+  }
+
+  // TODO: Add your SDK methods here
+  // Example:
+  // async getData(id: string): Promise<<%= className %>Response<any>> {
+  //   // Your implementation
+  // }
+  
+  // async createItem(data: any): Promise<<%= className %>Response<any>> {
+  //   // Your implementation  
+  // }
+}
+--- filename: src/schemas/index.ts
+import { z } from 'zod';
+
+// Zod schemas for <%= simpleName %> SDK validation
+
+/**
+ * Schema for <%= className %> configuration validation
+ */
+export const <%= className %>ConfigSchema = z.object({
+  apiKey: z.string().min(1, 'API key is required'),
+  baseUrl: z.string().url().optional(),
+  name: z.string().optional(),
+  version: z.string().optional(),
+});
+
+/**
+ * Schema for API response validation
+ */
+export const <%= className %>ResponseSchema = z.object({
+  data: z.any(),
+  success: z.boolean(),
+  status: z.number(),
+  message: z.string(),
+  error: z.instanceof(Error).optional(),
+});
+
+// TODO: Add your validation schemas here
+// Example:
+// export const UserSchema = z.object({
+//   id: z.string(),
+//   name: z.string().min(1, 'Name is required'),
+//   email: z.string().email('Invalid email format')
+// });
+
+// export const CreateUserSchema = z.object({
+//   name: z.string().min(1, 'Name is required'),
+//   email: z.string().email('Invalid email format')
+// });
+--- filename: src/__tests__/<%= simpleName %>.test.ts
+import { describe, it, expect, beforeEach } from 'vitest';
+import { <%= className %>, type <%= className %>Config } from '../<%= simpleName %>Sdk';
+
+describe('<%= className %>', () => {
+  let config: <%= className %>Config;
+
+  beforeEach(() => {
+    config = {
+      apiKey: 'test-api-key',
+      baseUrl: 'https://api.test.com',
+      name: '<%= simpleName %>',
+      version: '1.0.0',
+    };
+  });
+
+  describe('Constructor', () => {
+    it('should create an instance with valid config', () => {
+      const sdk = new <%= className %>(config);
+      expect(sdk).toBeInstanceOf(<%= className %>);
+    });
+
+    it('should throw error with invalid config', () => {
+      const invalidConfig = { ...config, apiKey: '' };
+      expect(() => new <%= className %>(invalidConfig)).toThrow();
+    });
+  });
+
+  describe('Hello Method', () => {
+    it('should return a successful greeting response', async () => {
+      const sdk = new <%= className %>(config);
+      const result = await sdk.hello('World');
+      
+      expect(result.success).toBe(true);
+      expect(result.status).toBe(200);
+      expect(result.data).toContain('Hello, World!');
+      expect(result.message).toBe('Success');
+    });
+  });
+
+  // TODO: Add your own tests here
+  // Example:
+  // describe('Your API Method', () => {
+  //   it('should do something', async () => {
+  //     const sdk = new <%= className %>(config);
+  //     // Your test implementation
+  //   });
+  // });
+});
+--- filename: README.md
+# <%= titleName %>
+
+<!-- Add your project description here -->
+<%= description %>
+
+## Installation
+
+\`\`\`bash
+npm install @microfox/<%= packageName %>
+\`\`\`
+
+## Quick Start
+
+\`\`\`typescript
+import { <%= className %> } from '@microfox/<%= packageName %>';
+
+// Initialize the SDK
+const sdk = new <%= className %>({
+  apiKey: 'your-api-key',
+  // Add other config options
+});
+
+// Example usage
+const result = await sdk.hello('World');
+console.log(result.data);
+\`\`\`
+
+## Configuration
+
+\`\`\`typescript
+interface <%= className %>Config {
+  apiKey: string;        // Required: Your API key
+  baseUrl?: string;      // Optional: Custom base URL
+  name?: string;         // Optional: SDK instance name
+  version?: string;      // Optional: API version
+}
+\`\`\`
+
+## Methods
+
+### hello(name: string)
+
+Example method - replace with your own API methods.
+
+\`\`\`typescript
+const result = await sdk.hello('World');
+// Returns: { data: "Hello, World!", success: true, status: 200, message: "Success" }
+\`\`\`
+
+<!-- 
+## TODO: Add your API documentation here
+
+### getData(id: string)
+\`\`\`typescript
+const data = await sdk.getData('123');
+\`\`\`
+
+### createItem(item: object)
+\`\`\`typescript
+const result = await sdk.createItem({ name: 'Example' });
+\`\`\`
+-->
+
+## Development
+
+\`\`\`bash
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Run tests
+npm test
+
+# Lint code
+npm run lint
+\`\`\`
+
+## License
+
+MIT
+--- filename: CHANGELOG.md
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.0.0] - <%= new Date().toISOString().split('T')[0] %>
+
+### Added
+- Initial release
+- Basic SDK structure
+- TypeScript support
+
+<!-- Add your changes here using this format:
+
+## [1.1.0] - YYYY-MM-DD
+
+### Added
+- New feature
+
+### Changed
+- Updated feature
+
+### Fixed
+- Bug fix
+
+### Removed
+- Deprecated feature
+--> 

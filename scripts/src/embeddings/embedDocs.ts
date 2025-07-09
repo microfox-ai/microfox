@@ -87,54 +87,52 @@ async function walkDocs() {
       ? linkedPackagesData.map(p => p.package_name)
       : [];
 
-    if (fs.existsSync(docsDir)) {
-      // Constructors
-      const constructorsDir = path.join(docsDir, 'constructors');
-      if (fs.existsSync(constructorsDir)) {
-        const constructorFiles = fs.readdirSync(constructorsDir);
-        for (const file of constructorFiles) {
-          if (file.endsWith('.md')) {
-            const name = path.basename(file, '.md');
-            const fullPath = path.join(constructorsDir, file);
-            const mtime = getGitLastModified(fullPath);
-            const relativePath = path.relative(PACKAGES_DIR, fullPath);
-            results.push({
-              packageName: pkg,
-              functionName: name,
-              docType: 'constructor',
-              filePath: relativePath,
-              githubUrl: getGithubUrl(relativePath),
-              fullPath,
-              mtime,
-              content: fs.readFileSync(fullPath, 'utf-8'),
-              linkedPackages: [...linkedPackages, dependencyIdentifier],
-            });
-          }
+    // Constructors
+    const constructorsDir = path.join(docsDir, 'constructors');
+    if (fs.existsSync(constructorsDir)) {
+      const constructorFiles = fs.readdirSync(constructorsDir);
+      for (const file of constructorFiles) {
+        if (file.endsWith('.md')) {
+          const name = path.basename(file, '.md');
+          const fullPath = path.join(constructorsDir, file);
+          const mtime = getGitLastModified(fullPath);
+          const relativePath = path.relative(PACKAGES_DIR, fullPath);
+          results.push({
+            packageName: pkg,
+            functionName: name,
+            docType: 'constructor',
+            filePath: relativePath,
+            githubUrl: getGithubUrl(relativePath),
+            fullPath,
+            mtime,
+            content: fs.readFileSync(fullPath, 'utf-8'),
+            linkedPackages: [...linkedPackages, dependencyIdentifier],
+          });
         }
       }
+    }
 
-      // Functions
-      const functionsDir = path.join(docsDir, 'functions');
-      if (fs.existsSync(functionsDir)) {
-        const functionFiles = fs.readdirSync(functionsDir);
-        for (const file of functionFiles) {
-          if (file.endsWith('.md')) {
-            const name = path.basename(file, '.md');
-            const fullPath = path.join(functionsDir, file);
-            const mtime = getGitLastModified(fullPath);
-            const relativePath = path.relative(PACKAGES_DIR, fullPath);
-            results.push({
-              packageName: pkg,
-              functionName: name,
-              docType: 'function',
-              filePath: relativePath,
-              githubUrl: getGithubUrl(relativePath),
-              fullPath,
-              mtime,
-              content: fs.readFileSync(fullPath, 'utf-8'),
-              linkedPackages: [...linkedPackages, dependencyIdentifier],
-            });
-          }
+    // Functions
+    const functionsDir = path.join(docsDir, 'functions');
+    if (fs.existsSync(functionsDir)) {
+      const functionFiles = fs.readdirSync(functionsDir);
+      for (const file of functionFiles) {
+        if (file.endsWith('.md')) {
+          const name = path.basename(file, '.md');
+          const fullPath = path.join(functionsDir, file);
+          const mtime = getGitLastModified(fullPath);
+          const relativePath = path.relative(PACKAGES_DIR, fullPath);
+          results.push({
+            packageName: pkg,
+            functionName: name,
+            docType: 'function',
+            filePath: relativePath,
+            githubUrl: getGithubUrl(relativePath),
+            fullPath,
+            mtime,
+            content: fs.readFileSync(fullPath, 'utf-8'),
+            linkedPackages: [...linkedPackages, dependencyIdentifier],
+          });
         }
       }
 
@@ -213,12 +211,14 @@ async function main() {
     if (isNew || isStale) {
       console.log(`${isNew ? '✨ New' : '♻️ Updated'} → ${doc.githubUrl}`);
       const embedding = await embed(doc.content);
+      const docPriority = doc.content.split('\n')[0].match(/<priority: ([^,>]+)/)?.[1] || 'medium';
       upserts.push({
         package_name: doc.packageName,
         function_name: doc.functionName,
         doc_type: doc.docType,
         file_path: doc.githubUrl,
         content: doc.content,
+        doc_priority: docPriority,
         embedding,
         updated_at: new Date().toISOString(),
         linked_packages: doc.linkedPackages,

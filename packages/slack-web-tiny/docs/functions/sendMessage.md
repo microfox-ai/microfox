@@ -1,3 +1,5 @@
+<!-- <priority: high> -->
+
 ## Function: `sendMessage`
 
 Sends a message to a Slack channel.

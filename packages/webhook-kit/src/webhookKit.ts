@@ -5,6 +5,7 @@ import {
 } from '@microfox/webhook-core';
 import { SlackWebhook } from '@microfox/webhook-slack';
 import { OctokitWebhook } from '@microfox/webhook-octokit';
+import { WhatsAppWebhook } from '@microfox/webhook-whatsapp';
 import { convertPayloadToWebhookEvent, isEventTracked } from './helpers';
 import { ConnectorConfig } from './schemas';
 
@@ -43,6 +44,11 @@ export class WebhookKit {
         case 'octokit':
           this.webhooks[connector] = new OctokitWebhook({
             secret: secret.secret || process.env.OCTOKIT_SIGNING_SECRET || '',
+          });
+          break;
+        case 'whatsapp':
+          this.webhooks[connector] = new WhatsAppWebhook({
+            secret: secret.secret || process.env.WHATSAPP_SIGNING_SECRET || '',
           });
           break;
         default:

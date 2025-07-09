@@ -1,5 +1,11 @@
 # @microfox/webhook-whatsapp
 
+## 1.0.2
+
+### Patch Changes
+
+- fdd3040: Changes from PR #572: update-oauth-scopes-v2
+
 ## 1.0.1
 
 ### Patch Changes

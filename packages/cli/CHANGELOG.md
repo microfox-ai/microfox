@@ -1,5 +1,24 @@
 # @microfox/cli
 
+## 1.0.5
+
+### Patch Changes
+
+- 4a73559: Changes from PR #580: microfox-cli-push-script
+
+## 1.0.4
+
+### Patch Changes
+
+- bbbb3e2: Changes from PR #576: microfox-cli-push-script
+
+## 1.0.3
+
+### Patch Changes
+
+- fdd3040: Changes from PR #572: update-oauth-scopes-v2
+- b239a68: Changes from PR #573: cli-agent-script
+
 ## 1.0.2
 
 ### Patch Changes

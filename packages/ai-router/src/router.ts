@@ -340,7 +340,7 @@ export class AiRouter<
     MW_TOOLS extends UITools,
     MW_STATE extends Record<string, any>,
   >(
-    path:
+    agentPath:
       | string
       | RegExp
       | AiMiddleware<MW_METADATA, PARTS, MW_TOOLS, ContextState & MW_STATE>,
@@ -355,10 +355,10 @@ export class AiRouter<
     ContextState & MW_STATE
   > {
     let prefix: string | RegExp = '/';
-    if (typeof path === 'string' || path instanceof RegExp) {
-      prefix = path;
+    if (typeof agentPath === 'string' || agentPath instanceof RegExp) {
+      prefix = agentPath;
     } else {
-      agents.unshift(path);
+      agents.unshift(agentPath);
     }
 
     for (const handler of agents) {
@@ -370,6 +370,16 @@ export class AiRouter<
           this.logger.log(
             `Router mounted: path=${prefix}, layers=${stackToMount.length}`
           );
+          // Also mount actAsTool definitions from the sub-router
+          const mountPath = prefix.toString();
+          handler.actAsToolDefinitions.forEach((value, key) => {
+            const keyPath = key.toString();
+            const relativeKeyPath = keyPath.startsWith('/')
+              ? keyPath.substring(1)
+              : keyPath;
+            const newKey = path.posix.join(mountPath, relativeKeyPath);
+            this.actAsToolDefinitions.set(newKey, value);
+          });
         }
         continue;
       }
@@ -407,7 +417,6 @@ export class AiRouter<
     if (handler instanceof AiRouter) {
       const router = handler;
       const mountPath = mountPathArg.toString().replace(/\/$/, ''); // remove trailing slash
-
       // Mount routes from the sub-router
       router.stack.forEach((layer) => {
         const layerPath = layer.path.toString();
@@ -418,7 +427,6 @@ export class AiRouter<
         const newPath = path.posix.join(mountPath, relativeLayerPath);
         this.stack.push({ ...layer, path: newPath });
       });
-
       // Mount tool definitions from the sub-router
       router.actAsToolDefinitions.forEach((value, key) => {
         const keyPath = key.toString();
@@ -454,6 +462,12 @@ export class AiRouter<
     }
   ) {
     this.actAsToolDefinitions.set(path, options);
+    this.logger.log(
+      `[actAsTool] Added definition: ${path} -> ${JSON.stringify(options)}`
+    );
+    this.logger.log(
+      `[actAsTool] Router now has ${this.actAsToolDefinitions.size} definitions`
+    );
     return this;
   }
 
@@ -1278,25 +1292,33 @@ class NextHandler<
       parentPath,
       agentPath
     );
-    this.ctx.logger.log(
-      `Wrapping agent as tool: resolvedPath='${resolvedPath}'`
-    );
-
-    // Find a definition where the key (a path pattern) matches the resolved path.
     let preDefined;
-    for (const [key, value] of (this.router as any).actAsToolDefinitions) {
-      if (
-        typeof key === 'string' &&
-        extractPathParams(key, resolvedPath) !== null
-      ) {
-        preDefined = value;
-        break;
+    const pathsToTry = [resolvedPath];
+    // If the agentPath starts with '/', it's an absolute path from root, so also try it directly
+    if (agentPath.startsWith('/')) {
+      pathsToTry.unshift(agentPath);
+    }
+    for (const pathToTry of pathsToTry) {
+      for (const [key, value] of (this.router as any).actAsToolDefinitions) {
+        if (typeof key === 'string') {
+          // Check for exact match first
+          if (key === pathToTry) {
+            preDefined = value;
+            break;
+          }
+          // Then check for dynamic path parameters
+          if (extractPathParams(key, pathToTry) !== null) {
+            preDefined = value;
+            break;
+          }
+        }
+        // Basic RegExp match
+        if (key instanceof RegExp && key.test(pathToTry)) {
+          preDefined = value;
+          break;
+        }
       }
-      // Basic RegExp match
-      if (key instanceof RegExp && key.test(resolvedPath)) {
-        preDefined = value;
-        break;
-      }
+      if (preDefined) break;
     }
 
     const definition = toolDefinition || preDefined;

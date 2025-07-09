@@ -307,6 +307,7 @@ export type ToolOptions = {
   disableAllExecutions?: boolean;
   auth?: AuthObject;
   getAuth?: (options: AuthOptions) => Promise<AuthObject>;
+  cleanAuth?: (auth: AuthObject) => Promise<AuthObject>;
   getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;

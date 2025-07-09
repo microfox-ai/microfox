@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS docs_embeddings (
     doc_type TEXT NOT NULL,
     file_path TEXT NOT NULL UNIQUE,
     linked_packages TEXT[],
+    doc_priority TEXT DEFAULT 'medium', -- low, medium, high
     content TEXT NOT NULL,
     embedding vector(768),
     updated_at TIMESTAMPTZ DEFAULT now()
@@ -34,13 +35,15 @@ CREATE OR REPLACE FUNCTION match_docs_in_package(
     query_embedding vector,
     pkg_name TEXT,
     k INT DEFAULT 5,
-    doc_type_filter TEXT DEFAULT NULL
+    doc_type_filter TEXT DEFAULT NULL,
+    doc_priority TEXT DEFAULT NULL
 )
 RETURNS TABLE (
     id UUID,
     package_name TEXT,
     function_name TEXT,
     doc_type TEXT,
+    doc_priority TEXT,
     file_path TEXT,
     linked_packages TEXT[],
     content TEXT,
@@ -53,6 +56,7 @@ AS $$
       package_name,
       function_name,
       doc_type,
+      doc_priority,
       file_path,
       linked_packages,
       content,
@@ -60,6 +64,7 @@ AS $$
     FROM docs_embeddings
     WHERE package_name = pkg_name
       AND (doc_type_filter IS NULL OR doc_type = doc_type_filter)
+      AND (doc_priority IS NULL OR doc_priority = doc_priority)
     ORDER BY embedding <#> query_embedding
     LIMIT k;
 $$;
@@ -69,13 +74,15 @@ CREATE OR REPLACE FUNCTION match_docs_in_packages(
     query_embedding vector,
     pkg_names TEXT[],
     k INT DEFAULT 5,
-    doc_type_filter TEXT DEFAULT NULL
+    doc_type_filter TEXT DEFAULT NULL,
+    doc_priority TEXT DEFAULT NULL
 )
 RETURNS TABLE (
     id UUID,
     package_name TEXT,
     function_name TEXT,
     doc_type TEXT,
+    doc_priority TEXT,
     file_path TEXT,
     linked_packages TEXT[],
     content TEXT,
@@ -88,6 +95,7 @@ AS $$
       package_name,
       function_name,
       doc_type,
+      doc_priority,
       file_path,
       linked_packages,
       content,
@@ -95,6 +103,7 @@ AS $$
     FROM docs_embeddings
     WHERE package_name = ANY(pkg_names)
       AND (doc_type_filter IS NULL OR doc_type = doc_type_filter)
+      AND (doc_priority IS NULL OR doc_priority = doc_priority)
     ORDER BY embedding <#> query_embedding
     LIMIT k;
 $$;
@@ -103,13 +112,15 @@ $$;
 CREATE OR REPLACE FUNCTION match_docs(
     query_embedding vector,
     k INT DEFAULT 5,
-    doc_type_filter TEXT DEFAULT NULL
+    doc_type_filter TEXT DEFAULT NULL,
+    doc_priority TEXT DEFAULT NULL
 )
 RETURNS TABLE (
     id UUID,
     package_name TEXT,
     function_name TEXT,
     doc_type TEXT,
+    doc_priority TEXT,
     file_path TEXT,
     linked_packages TEXT[],
     content TEXT,
@@ -122,12 +133,14 @@ AS $$
       package_name,
       function_name,
       doc_type,
+      doc_priority,
       file_path,
       linked_packages,
       content,
       1 - (embedding <#> query_embedding) AS similarity
     FROM docs_embeddings
     WHERE (doc_type_filter IS NULL OR doc_type = doc_type_filter)
+      AND (doc_priority IS NULL OR doc_priority = doc_priority)
     ORDER BY embedding <#> query_embedding
     LIMIT k;
 $$;

@@ -44,4 +44,13 @@ export * from '@notionhq/client/build/src/helpers.js';
 export * from '@tryfabric/martian/build/src/notion/blocks.js';
 export * from '@tryfabric/martian/build/src/notion/common.js';
 export * from '@tryfabric/martian/build/src/notion/index.js';
+
+// Export page content utilities
+export {
+  getFullPageContent,
+  getPageTextContent,
+  getPageImages,
+  type FullPageContent,
+  type ProcessedContent,
+} from './page-content.js';
 // testing re-release

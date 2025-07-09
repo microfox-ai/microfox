@@ -12,7 +12,9 @@ interface FunctionMetadata {
   base_url: string;
   stage: string;
   type: string;
-  endpoints: any[];
+  docs: string | null;
+  embedding: number[] | null;
+  api_type: string;
   metadata: {
     description?: string;
     version?: string;
@@ -105,7 +107,7 @@ function formatSchemaToMarkdown(schema: any, indent: number = 0): string {
  * @returns {string|null} - Base URL or null if not found
  */
 function extractBaseUrl(output: string): string | null {
-  // Extract the part before /staging
+  // Extract the part before /stage
   const urlMatch = output.match(/(https:\/\/[^\/]+\.amazonaws\.com)/);
   if (urlMatch) {
     return `${urlMatch[1]}/${STAGE}`;
@@ -159,13 +161,37 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       console.log(`Deployed base URL: ${baseUrl}`);
       let docsData: OpenAPIDoc = JSON.parse(fs.readFileSync(path.join(slsPath, 'openapi.json'), 'utf8'));
 
+      const mainDocsPath = path.join(packagePath, 'sls', 'openapi.md');
+      let mainDocsContent: string | null = null;
+      let mainDocsEmbedding: number[] | null = null;
+
+      if (fs.existsSync(mainDocsPath)) {
+        console.log(`Found main.md for ${packageName}, processing...`);
+        mainDocsContent = fs.readFileSync(mainDocsPath, 'utf8');
+        if (mainDocsContent) {
+          try {
+            const embedding = await embed(mainDocsContent);
+            if (embedding) {
+              mainDocsEmbedding = embedding;
+              console.log(`Successfully generated embedding for main.md`);
+            } else {
+              console.error(`Failed to generate embedding for ${mainDocsPath}`);
+            }
+          } catch (embedError) {
+            console.error(`Embedding error for ${mainDocsPath}:`, embedError);
+          }
+        }
+      }
+
       const functionMetadata: FunctionMetadata = {
-        name: `public-${packageName}-${STAGE}-api`,
+        name: `public-${packageName}-api`,
         package_name: packageName,
         base_url: baseUrl,
         stage: STAGE.toUpperCase(),
         type: 'MIXED',
-        endpoints: [],
+        docs: mainDocsContent,
+        embedding: mainDocsEmbedding,
+        api_type: 'package-sls',
         metadata: {
           description: docsData?.info?.description,
           version: docsData?.info?.version,
@@ -185,7 +211,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
 
       // Upsert on unique name
       const { data, error } = await supabase
-        .from('public_deployments')
+        .from('api_mcps')
         .upsert(functionMetadata, { onConflict: 'name' });
 
       if (error) {
