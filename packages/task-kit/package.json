@@ -28,7 +28,7 @@
     "@microfox/usage-tracker": "*",
     "@microfox/webhook-core": "*",
     "@supabase/supabase-js": "^2.50.0",
-    "ai": "^5.0.0-beta",
+    "ai": "5.0.0-alpha.15",
     "zod": "^3.25.67"
   },
   "devDependencies": {

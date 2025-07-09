@@ -1,10 +1,15 @@
 import { generateObject, generateText } from 'ai';
 import { z } from 'zod';
 import * as path from 'path';
-import { scanDirectoryStructure, formatDirectoryStructure } from './utils/scanDirectoryStructure';
-import { GenerateCodeV0Options } from './types';
+import {
+  scanDirectoryStructure,
+  formatDirectoryStructure,
+} from './utils/scanDirectoryStructure';
+import { FilePlan, GenerateCodeV0Options } from './types';
 import { FilePlanSchema } from './schemas';
 import { generateCodeFile } from './generateCodeFile';
+import { LanguageModelV2 } from '@ai-sdk/provider';
+import { google } from '@ai-sdk/google';
 
 type GenerateTextOptions = Parameters<typeof generateText>[0];
 
@@ -29,37 +34,73 @@ export async function generateCodeV0<TParams = any>(
     onFileSubmit,
   } = options;
 
-  const log = (message: string, data?: any) => verbose && console.log(`[generateCodeV0] ${message}`, data || '');
+  const log = (message: string, data?: any) =>
+    verbose && console.log(`[generateCodeV0] ${message}`, data || '');
 
   // Phase 1: Planning
   log('Phase 1: Planning...');
   const planningModel = submodel || model;
   const dirStructure = dir ? scanDirectoryStructure(dir) : undefined;
 
-  const planningSystemPrompt = subsystemPrompt || `You are a master software architect. Your job is to analyze a user's request and create a detailed plan for a single file. You must also extract any parameters from the request.`;
-  const planningUserPrompt = subuserPrompt || `<user_instruction>\n${userPrompt}\n</user_instruction>\n\n${dirStructure ? `<directory_structure>\n${formatDirectoryStructure(dirStructure)}\n</directory_structure>` : ''}\n\nCreate a file plan and extract parameters.`;
+  const planningSystemPrompt =
+    subsystemPrompt ||
+    `You are a master software architect. Your job is to analyze a user's request and create a detailed plan for a single file. You must also extract any parameters from the request.`;
+  const planningUserPrompt =
+    subuserPrompt ||
+    `<user_instruction>\n${userPrompt}\n</user_instruction>\n\n${dirStructure ? `<directory_structure>\n${formatDirectoryStructure(dirStructure)}\n</directory_structure>` : ''}\n\nCreate a file plan and extract parameters.`;
 
-  const PlanWithParamsSchema = z.object({
-    plan: FilePlanSchema,
-    params: paramsSchema || z.any().optional(),
+  const PlanWithParamsSchema = paramsSchema
+    ? z.object({
+        plan: FilePlanSchema,
+        params: paramsSchema,
+      })
+    : z.object({
+        plan: FilePlanSchema,
+      });
+
+  const { object } = await generateObject({
+    model: google('gemini-2.0-flash-001'),
+    system: planningSystemPrompt,
+    prompt: planningUserPrompt,
+    schema: PlanWithParamsSchema,
   });
-  
-  const { object } = await generateObject({ model: planningModel, system: planningSystemPrompt, prompt: planningUserPrompt, schema: PlanWithParamsSchema });
-  const { plan, params } = object;
-  log('Planning successful.', { plan, params });
+  const { plan, params } = object as { plan: FilePlan; params?: TParams };
+  log('Planning successful.', { plan });
 
   // Phase 2: Generation
   log('Phase 2: Generating File...');
   const fullFileName = `${plan.fileName}.${plan.fileExtension}`;
 
-  const generationSystemPrompt = prepareSystemPrompt ? await prepareSystemPrompt({ filePlan: plan, planParams: params, systemPrompt, userPrompt, dirStructure: dirStructure || undefined }) : systemPrompt;
-  const generationUserPrompt = preparePrompt ? await preparePrompt({ filePlan: plan, planParams: params, systemPrompt, userPrompt, dirStructure: dirStructure || undefined }) : `Generate the code for the file "${fullFileName}".
+  const generationSystemPrompt = params
+    ? prepareSystemPrompt
+      ? await prepareSystemPrompt({
+          filePlan: plan,
+          planParams: params,
+          systemPrompt,
+          userPrompt,
+          dirStructure: dirStructure || undefined,
+        })
+      : systemPrompt
+    : systemPrompt;
+
+  const defaultUserPrompt = `Generate the code for the file "${fullFileName}".
     **User Instructions:**
     ${userPrompt}
 
     **Code Brief:**
     ${plan.codeBrief}
 `;
+  const generationUserPrompt = params
+    ? preparePrompt
+      ? await preparePrompt({
+          filePlan: plan,
+          planParams: params,
+          systemPrompt,
+          userPrompt,
+          dirStructure: dirStructure || undefined,
+        })
+      : defaultUserPrompt
+    : defaultUserPrompt;
 
   const code = await generateCodeFile({
     ...options,
@@ -71,4 +112,4 @@ export async function generateCodeV0<TParams = any>(
   const finalPath = path.join(dir || '', plan.path, fullFileName);
   await onFileSubmit(finalPath, code);
   log(`File "${finalPath}" submitted successfully.`);
-} 
+}

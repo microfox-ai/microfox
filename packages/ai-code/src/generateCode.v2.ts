@@ -47,21 +47,30 @@ export async function generateCodeV2<TParams = any>(
     ...args
   } = options;
 
-  const log = (message: string, data?: any) => verbose && console.log(`[generateCodeV2] ${message}`, data || '');
+  const log = (message: string, data?: any) =>
+    verbose && console.log(`[generateCodeV2] ${message}`, data || '');
 
   // Phase 1: Planning
   log('Phase 1: Planning...');
   const planningModel = submodel || model;
   const dirStructure = dir ? scanDirectoryStructure(dir) : undefined;
 
-  const planningSystemPrompt = subsystemPrompt || `You are a master software architect. Your job is to analyze a user's request and create a detailed plan for a single file. You must also extract any parameters from the request.`;
-  const planningUserPrompt = subuserPrompt || `<user_instruction>\n${userPrompt}\n</user_instruction>\n\n${dirStructure ? `<directory_structure>\n${formatDirectoryStructure(dirStructure)}\n</directory_structure>` : ''}\n\nCreate a plan for a single file and extract parameters. The plan should include fileName, fileExtension, path, and a detailed codeBrief. The 'path' should be relative to the root of the directory, e.g., 'utils' or '.' for the root.`;
+  const planningSystemPrompt =
+    subsystemPrompt ||
+    `You are a master software architect. Your job is to analyze a user's request and create a detailed plan for a single file. You must also extract any parameters from the request.`;
+  const planningUserPrompt =
+    subuserPrompt ||
+    `<user_instruction>\n${userPrompt}\n</user_instruction>\n\n${dirStructure ? `<directory_structure>\n${formatDirectoryStructure(dirStructure)}\n</directory_structure>` : ''}\n\nCreate a plan for a single file and extract parameters. The plan should include fileName, fileExtension, path, and a detailed codeBrief. The 'path' should be relative to the root of the directory, e.g., 'utils' or '.' for the root.`;
 
-  const PlanWithParamsSchema = z.object({
-    plan: FilePlanSchema,
-    params: paramsSchema || z.any().optional(),
-  });
-  
+  const PlanWithParamsSchema = paramsSchema
+    ? z.object({
+        plan: FilePlanSchema,
+        params: paramsSchema,
+      })
+    : z.object({
+        plan: FilePlanSchema,
+      });
+
   const { object } = await generateObject({
     model: planningModel,
     system: planningSystemPrompt,
@@ -74,7 +83,15 @@ export async function generateCodeV2<TParams = any>(
   // Phase 2: Generation
   log('Phase 2: Generating File in Chunks...');
   const fullFileName = `${plan.fileName}.${plan.fileExtension}`;
-  const generationSystemPrompt = prepareSystemPrompt ? await prepareSystemPrompt({ filePlan: plan, planParams: params, systemPrompt, userPrompt, dirStructure: dirStructure || undefined }) : systemPrompt;
+  const generationSystemPrompt = prepareSystemPrompt
+    ? await prepareSystemPrompt({
+        filePlan: plan,
+        planParams: params,
+        systemPrompt,
+        userPrompt,
+        dirStructure: dirStructure || undefined,
+      })
+    : systemPrompt;
 
   let codeSoFar = '';
   let currentChunk = 1;
@@ -87,8 +104,16 @@ export async function generateCodeV2<TParams = any>(
   while (currentChunk <= maxChunks && !isDone && !stopGeneration) {
     log(`Generating chunk ${currentChunk} of ${maxChunks}...`);
 
-    const chunkPrompt = prepareChunkPrompt 
-      ? await prepareChunkPrompt({ filePlan: plan, planParams: params, systemPrompt, userPrompt, dirStructure: dirStructure || undefined, codeSoFar, stop })
+    const chunkPrompt = prepareChunkPrompt
+      ? await prepareChunkPrompt({
+          filePlan: plan,
+          planParams: params,
+          systemPrompt,
+          userPrompt,
+          dirStructure: dirStructure || undefined,
+          codeSoFar,
+          stop,
+        })
       : `You are an AI programmer augmenting a code file.
         **File Details:**
         - **Name:** ${fullFileName}
@@ -106,7 +131,7 @@ export async function generateCodeV2<TParams = any>(
         If you believe the file is now complete according to the plan, end your response with "[DONE]".
         Otherwise, end your response with "[CONTINUE]".
       `;
-    
+
     if (stopGeneration) {
       log('Generation stopped by prepareChunkPrompt.');
       break;
@@ -122,9 +147,12 @@ export async function generateCodeV2<TParams = any>(
     let processedChunk = chunk;
 
     // Strip markdown fences
-    processedChunk = processedChunk.replace(/^\s*```(?:typescript|javascript|ts|js)?\s*\n/i, '');
+    processedChunk = processedChunk.replace(
+      /^\s*```(?:typescript|javascript|ts|js)?\s*\n/i,
+      ''
+    );
     processedChunk = processedChunk.replace(/```\s*$/, '');
-    
+
     const doneMatch = /\[DONE\]\s*$/.exec(processedChunk);
     const continueMatch = /\[CONTINUE\]\s*$/.exec(processedChunk);
 
@@ -134,7 +162,7 @@ export async function generateCodeV2<TParams = any>(
     } else if (continueMatch) {
       processedChunk = processedChunk.substring(0, continueMatch.index);
     }
-    
+
     if (onChunkSubmit) {
       await onChunkSubmit({
         chunk: processedChunk,
@@ -150,7 +178,7 @@ export async function generateCodeV2<TParams = any>(
       log('Generation stopped by onChunkSubmit or prepareChunkPrompt.');
       break;
     }
-    
+
     currentChunk++;
   }
 
@@ -161,4 +189,4 @@ export async function generateCodeV2<TParams = any>(
   const finalPath = path.join(dir || '', plan.path, fullFileName);
   await onFileSubmit(finalPath, codeSoFar);
   log(`File "${finalPath}" submitted successfully.`);
-} 
+}
