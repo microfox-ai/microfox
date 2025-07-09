@@ -1,4 +1,4 @@
-// Type definitions for ai-agent SDK
+// Type definitions for ai-code SDK
 
 import { LanguageModelV2 } from '@ai-sdk/provider';
 import { z } from 'zod';
@@ -60,6 +60,62 @@ export interface GenerateCodeV0Options<TParams = any> {
   paramsSchema?: z.ZodSchema<TParams>;
   onFileSubmit: (fileName: string, content: string) => Promise<void> | void;
   maxRetries?: number;
+}
+
+
+/**
+ * Context passed to chunk preparation functions.
+ */
+export interface PrepareChunkContext<TParams = any> {
+  filePlan: FilePlan;
+  planParams: TParams;
+  systemPrompt: string;
+  userPrompt: string;
+  dirStructure?: DirectoryStructure;
+  codeSoFar: string;
+  stop: () => void;
+}
+
+export type PrepareChunk<TParams = any> = (
+  context: PrepareChunkContext<TParams>
+) => Promise<string> | string;
+
+/**
+ * Context for the onChunkSubmit callback.
+ */
+export interface OnChunkSubmitContext<TParams = any> {
+  chunk: string;
+  filePlan: FilePlan;
+  planParams: TParams;
+  stop: () => void;
+}
+
+export type OnChunkSubmit<TParams = any> = (
+  context: OnChunkSubmitContext<TParams>
+) => Promise<void> | void;
+
+
+/**
+ * Options for the chunk-based single-file generation function (`generateCodeV2`).
+ */
+export interface GenerateCodeV2Options<TParams = any> {
+  model: LanguageModelV2;
+  submodel?: LanguageModelV2;
+  systemPrompt: string;
+  subsystemPrompt?: string;
+  userPrompt: string;
+  subuserPrompt?: string;
+  planParams?: TParams;
+  preparePrompt?: PreparePrompt<TParams>;
+  prepareSystemPrompt?: PrepareSystemPrompt<TParams>;
+  prepareChunkPrompt?: PrepareChunk<TParams>;
+  onChunkSubmit?: OnChunkSubmit<TParams>;
+  dir?: string;
+  verbose?: boolean;
+  paramsSchema?: z.ZodSchema<TParams>;
+  onFileSubmit: (fileName: string, content: string) => Promise<void> | void;
+  maxRetries?: number;
+  maxChunks?: number;
 }
 
 /**

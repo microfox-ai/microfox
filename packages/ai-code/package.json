@@ -1,7 +1,7 @@
 {
-  "name": "@microfox/ai-agent",
+  "name": "@microfox/ai-code",
   "version": "1.0.0",
-  "description": "A TypeScript SDK for Ai Agent.",
+  "description": "A TypeScript SDK for Ai Code.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -49,7 +49,7 @@
     "node": ">=18.0.0"
   },
   "keywords": [
-    "ai-agent",
+    "ai-code",
     "typescript",
     "api",
     "sdk"
