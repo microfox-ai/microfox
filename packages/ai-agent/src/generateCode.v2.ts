@@ -39,12 +39,12 @@ export async function generateCodeV2<TParams = any>(
     dir,
     verbose = false,
     paramsSchema,
-    preparePrompt,
     prepareSystemPrompt,
     prepareChunkPrompt,
     onFileSubmit,
     onChunkSubmit,
-    maxChunks = 20,
+    maxChunks = 10,
+    ...args
   } = options;
 
   const log = (message: string, data?: any) => verbose && console.log(`[generateCodeV2] ${message}`, data || '');
@@ -116,6 +116,7 @@ export async function generateCodeV2<TParams = any>(
       model,
       system: generationSystemPrompt,
       prompt: chunkPrompt,
+      ...args,
     });
 
     let processedChunk = chunk;
