@@ -81,7 +81,9 @@ export class ToolParse {
     }
   }
 
-  populateEnvVars(event: APIGatewayEvent): void {
+  populateEnvVars(
+    event: APIGatewayEvent | { headers: { 'x-auth-secrets': string } }
+  ): void {
     const authSecrets = event.headers['x-auth-secrets'];
     if (!authSecrets) {
       throw new BadRequestError('Missing x-auth-secrets in headers');
@@ -110,9 +112,15 @@ export class ToolParse {
     stage?: string;
     apiKey?: string;
   }): Promise<void> {
-    const url = `https://${options.stage}.microfox.app/api/client-secrets/get-template`;
+    const url = `https://${
+      options.stage ?? 'staging'
+    }.microfox.app/api/client-secrets/get-template`;
 
     try {
+      console.log(
+        'Fetching env vars from',
+        process.env.MICROFOX_TEMPLATE_API_KEY
+      );
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -135,8 +143,19 @@ export class ToolParse {
         );
       }
 
-      const templateVariables = await response.json();
-      dotenv.populate(process.env as any, templateVariables);
+      const templateSecrets = await response.json();
+      const variables: Record<string, string> = {};
+
+      templateSecrets.forEach((secret: any) => {
+        const _variables = secret.variables;
+        if (Array.isArray(_variables)) {
+          for (const variable of _variables) {
+            variables[variable.key] = variable.value;
+          }
+        }
+      });
+
+      dotenv.populate(process.env as any, variables);
     } catch (error) {
       console.error(
         'Error fetching/populating environment variables from template:',
