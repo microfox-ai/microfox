@@ -1,5 +1,16 @@
 # @microfox/puppeteer-sls
 
+## 1.2.0
+
+### Minor Changes
+
+- 7e0ae1f: upgraded ai to 15
+
+### Patch Changes
+
+- Updated dependencies [7e0ae1f]
+  - @microfox/s3-space@1.1.0
+
 ## 1.1.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- 7e0ae1f: upgraded ai to 15
+
 ## 1.0.2
 
 ### Patch Changes
