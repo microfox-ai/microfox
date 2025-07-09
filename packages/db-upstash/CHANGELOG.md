@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+### Patch Changes
+
+- 4091625: release: integrate safe JSON parsing and stringifying in CRUD and Paginator classes
+
 ## 1.1.1
 
 ### Patch Changes
