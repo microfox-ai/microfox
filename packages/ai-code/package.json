@@ -1,6 +1,6 @@
 {
   "name": "@microfox/ai-code",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TypeScript SDK for Ai Code.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
