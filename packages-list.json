@@ -25,6 +25,16 @@
     "packages/usage-tracker",
     "packages/webhook-kit"
   ],
+  "unstablePackages": [
+    "packages/ai-code",
+    "packages/ai-provider-vertex",
+    "packages/linkedin-member-data-portability",
+    "packages/puppeteer-suno",
+    "packages/rag-upstash",
+    "packages/s3-space",
+    "packages/slack",
+    "packages/tool-core"
+  ],
   "stablePackages": [
     "packages/ai-provider-anthropic",
     "packages/ai-provider-google",
@@ -61,14 +71,6 @@
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
   ],
-  "unstablePackages": [
-    "packages/ai-provider-vertex",
-    "packages/linkedin-member-data-portability",
-    "packages/puppeteer-suno",
-    "packages/rag-upstash",
-    "packages/slack",
-    "packages/tool-core"
-  ],
   "partialPackages": [
     "packages/core",
     "packages/gravatar",
@@ -90,6 +92,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 73,
-  "generatedAt": "2025-07-08T18:56:14.953Z"
+  "total": 75,
+  "generatedAt": "2025-07-09T13:10:46.363Z"
 }
