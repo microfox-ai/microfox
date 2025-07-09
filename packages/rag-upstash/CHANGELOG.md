@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 44c43d3: release: added config
+
 ## 1.0.1
 
 ### Patch Changes
