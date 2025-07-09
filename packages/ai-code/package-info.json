@@ -1,7 +1,7 @@
 {
   "name": "@microfox/ai-code",
-  "title": "Ai Agent TypeScript SDK",
-  "description": "A TypeScript SDK for Ai Agent.",
+  "title": "Ai Code TypeScript SDK",
+  "description": "A TypeScript SDK for Ai Code.",
   "platformType": "tool",
   "path": ".",
   "dependencies": [
