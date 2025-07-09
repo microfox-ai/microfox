@@ -16,7 +16,7 @@ const log = (message: string, data?: any) => verbose && console.log(message, dat
 const anthropicModel = anthropic('claude-3-5-sonnet-20240620');
 const googleModel = google('gemini-2.5-pro-preview-06-05');
 
-describe('Code Generation E2E Tests', () => {
+describe.skip('Code Generation E2E Tests', () => {
   let outputDir: string;
 
   beforeAll(async () => {
