@@ -43,7 +43,7 @@ export async function generateCodeV0<TParams = any>(
     plan: FilePlanSchema,
     params: paramsSchema || z.any().optional(),
   });
-
+  
   const { object } = await generateObject({ model: planningModel, system: planningSystemPrompt, prompt: planningUserPrompt, schema: PlanWithParamsSchema });
   const { plan, params } = object;
   log('Planning successful.', { plan, params });
