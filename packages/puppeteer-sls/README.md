@@ -25,3 +25,12 @@ import puppeteer from 'puppeteer-core';
   await browser.close();
 })();
 ```
+
+# todo.
+
+1. save screenshot to s3 bucket & expose URL (in sls, create a cron that cleansup old screenshots.)
+2. extractFormElements
+3. fillInFormELements
+4. extractButtons (with x,y position)
+5. clickButton
+6. tracking puppet usage
