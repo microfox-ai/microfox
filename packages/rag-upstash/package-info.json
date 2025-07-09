@@ -4,13 +4,35 @@
   "description": "A TypeScript SDK for Rag Upstash.",
   "platformType": "tool",
   "path": ".",
-  "dependencies": [
-    "zod"
-  ],
+  "dependencies": ["zod"],
   "status": "unstable",
   "documentation": "https://www.npmjs.com/package/rag-upstash",
   "icon": "https://via.placeholder.com/64x64.png?text=R",
-  "constructors": [],
+  "constructors": [
+    {
+      "name": "RagUpstashSdk",
+      "description": "Create a new Notion provider through which you can interact with the Notion API",
+      "auth": "apikey",
+      "apiType": "apikey",
+      "requiredKeys": [
+        {
+          "key": "UPSTASH_VECTOR_REST_URL",
+          "displayName": "Upstash Vector REST URL",
+          "description": "Upstash Vector REST URL. Obtain from your Upstash integration settings.",
+          "required": true
+        },
+        {
+          "key": "UPSTASH_VECTOR_REST_TOKEN",
+          "displayName": "Upstash Vector REST Token",
+          "description": "Upstash Vector REST Token. Obtain from your Upstash integration settings.",
+          "required": true
+        }
+      ],
+      "internalKeys": [],
+      "botConfig": [],
+      "functionalities": ["feedDocsToRAG", "queryDocsFromRAG"]
+    }
+  ],
   "extraInfo": [],
   "authType": "none"
 }
