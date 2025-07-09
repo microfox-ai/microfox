@@ -9,7 +9,6 @@ import {
 
 /**
  * RagUpstashSdk - A TypeScript SDK template
- *
  */
 export class RagUpstashSdk<TMetadata extends Record<string, any>> {
   private config: RagUpstashSdkConfig;
