@@ -1,5 +1,13 @@
 # @microfox/puppeteer-sls
 
+## 1.1.3
+
+### Patch Changes
+
+- fd91148: patch fixes
+- Updated dependencies [fd91148]
+  - @microfox/s3-space@1.0.2
+
 ## 1.1.2
 
 ### Patch Changes
