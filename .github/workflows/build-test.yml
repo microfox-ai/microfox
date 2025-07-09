@@ -1,0 +1,16 @@
+name: Temp Build Test
+on:
+  push:
+    branches:
+      - fix/build-fix-09-july-2025
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
