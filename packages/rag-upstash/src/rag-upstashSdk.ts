@@ -40,6 +40,7 @@ export class RagUpstashSdk<TMetadata extends Record<string, any>> {
 
   async feedDocsToRAG<TIMetadata extends Record<string, any> = TMetadata>(
     docs: {
+      id?: string;
       metadata: TIMetadata;
       doc: string;
     }[],
@@ -49,7 +50,7 @@ export class RagUpstashSdk<TMetadata extends Record<string, any>> {
       const ns_index = this.index.namespace(namespace);
       const vectors = await ns_index.upsert<Record<string, any>>(
         docs.map((doc) => ({
-          id: crypto.randomUUID(),
+          id: doc.id ?? crypto.randomUUID(),
           data: doc.doc,
           metadata: doc.metadata,
         }))
@@ -58,7 +59,7 @@ export class RagUpstashSdk<TMetadata extends Record<string, any>> {
     }
     const vectors = await this.index.upsert<Record<string, any>>(
       docs.map((doc) => ({
-        id: crypto.randomUUID(),
+        id: doc.id ?? crypto.randomUUID(),
         data: doc.doc,
         metadata: doc.metadata,
       }))
@@ -86,6 +87,28 @@ export class RagUpstashSdk<TMetadata extends Record<string, any>> {
     }
     const vectors = await this.index.query<TQueryMetadata>(query);
     return vectors;
+  }
+
+  async getDocFromRAG<TQueryMetadata extends Record<string, any> = TMetadata>(
+    id: string,
+    namespace?: string
+  ) {
+    if (namespace) {
+      return this.index.fetch<TQueryMetadata>(
+        {
+          ids: [id],
+        },
+        { namespace }
+      );
+    }
+    return this.index.fetch<TQueryMetadata>({ ids: [id] });
+  }
+
+  async deleteDocFromRAG(id: string, namespace?: string) {
+    if (namespace) {
+      return this.index.delete({ ids: [id] }, { namespace });
+    }
+    return this.index.delete({ ids: [id] });
   }
 
   // Direct mapping of all Index methods
