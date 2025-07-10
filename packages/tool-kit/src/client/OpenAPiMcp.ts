@@ -916,8 +916,19 @@ export class OpenApiMCP {
       ) as OpenAPIOperation & { path: string; method: string };
       if (!cleanedOperation.path || !cleanedOperation.method) continue;
 
-      const toolName =
+      let toolName =
         cleanedOperation.name || cleanedOperation.operationId || id;
+      /** toolName should match pattern - String should match pattern '^[a-zA-Z0-9_-]{1,128}$'] */
+      toolName = toolName.replace(/[^a-zA-Z0-9_-]/g, '');
+      if (toolName.length > 128) {
+        toolName = toolName.substring(0, 128);
+      }
+      if (!toolName) {
+        toolName = id.replace(/[^a-zA-Z0-9_-]/g, '');
+        if (toolName.length > 128) {
+          toolName = toolName.substring(0, 128);
+        }
+      }
 
       const isDisabled =
         disableAllExecutions ||
