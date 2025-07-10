@@ -2,8 +2,8 @@ import { AiRouter } from '@microfox/ai-router';
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getPackageInfo } from '../tools/getPackageInfo';
-import { getPackageDocs } from '../tools/getPackageDocs';
+import { getPackageInfo } from '../middlewares/getPackageInfo';
+import { getPackageDocs } from '../middlewares/getPackageDocs';
 import { copyDirectory, updateTemplateFiles } from './utils';
 import { genOpenApiAgent } from './genOpenApi';
 import { genOpenApiMdAgent } from './genOpenApiMd';
@@ -37,10 +37,8 @@ slsfoxAgent
 
     if (specificFunctions && specificFunctions.length > 0) {
       for (const func of specificFunctions) {
-        await ctx.next.callAgent('/slsfox/genOpenApi/genPathSpec', {
-          packageName,
-          functionName: func,
-        });
+        ctx.request.functionName = func;
+        await ctx.next.callAgent('/genOpenApi/genPathSpec');
       }
       ctx.response.write({ type: 'text', text: `Successfully generated openapi.json for ${packageName}'s functions ${specificFunctions.join(', ')}.` });
       return;

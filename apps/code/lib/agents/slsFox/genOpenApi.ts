@@ -82,7 +82,6 @@ genOpenApiAgent
           }
           console.log('genOpenApiAgent', packageName, funcName);
           ctx.request.functionName = funcName;
-          ctx.request.packageName = packageName;
           await ctx.next.callAgent('/genPathSpec');
         }
       }
