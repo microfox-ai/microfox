@@ -1,5 +1,11 @@
 # @microfox/ai-code
 
+## 1.1.1
+
+### Patch Changes
+
+- 8f05462: Changes from PR #590: vwjt_code_router_july_2025
+
 ## 1.1.0
 
 ### Minor Changes
