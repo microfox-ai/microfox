@@ -11,6 +11,7 @@ import {
   PrepareStepFunction,
   JsonToSseTransformStream,
   StopCondition,
+  ToolUIPart,
 } from 'ai';
 import {
   AuthObject,
@@ -248,7 +249,10 @@ export class OpenApiToolset {
     options: {
       dataStream?: UIMessageStreamWriter;
       inserAuthVariables?: (auth: AuthObject) => Promise<AuthObject>;
-      mutateOutput?: (output: any) => Promise<any>;
+      mutateOutput?: (
+        output: any,
+        { part }: { part: ToolUIPart },
+      ) => Promise<any>;
     },
   ): Promise<Message[]> {
     const lastMessage = messages[messages.length - 1];
@@ -289,7 +293,9 @@ export class OpenApiToolset {
               ...(_auth ? { auth: _auth } : {}),
             });
             if (options.mutateOutput) {
-              result = await options.mutateOutput(result);
+              result = await options.mutateOutput(result, {
+                part,
+              });
             }
           } else {
             result = 'Error: User denied access to tool execution';

@@ -961,13 +961,16 @@ export class OpenApiMCP {
           // ... (auth provider logic remains the same)
         }
 
-        const authPreset =
-          cleanedOperation.auth ||
-          this.schema.components?.['x-auth-packages'] ||
-          [];
+        let authConfig: any = cleanedOperation.auth;
+        if (typeof authConfig === 'string' && authConfig.startsWith('#/')) {
+          authConfig = this.internalResolveRef(authConfig, new Set());
+        }
 
-        const packages = authPreset.filter(a => a.packageName);
-        const customSecrets = authPreset.filter(a => a.variables);
+        const authPreset =
+          authConfig || this.schema.components?.['x-auth-packages'] || [];
+
+        const packages = authPreset.filter((a: any) => a.packageName);
+        const customSecrets = authPreset.filter((a: any) => a.variables);
         if (!finalAuth) {
           if (toolGetAuth) {
             finalAuth = await toolGetAuth({
