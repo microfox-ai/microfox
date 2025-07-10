@@ -1,5 +1,16 @@
 # @microfox/reddit
 
+## 1.6.0
+
+### Minor Changes
+
+- b655de2: dist folder issue
+
+### Patch Changes
+
+- Updated dependencies [b655de2]
+  - @microfox/reddit-oauth@1.4.0
+
 ## 1.5.2
 
 ### Patch Changes
