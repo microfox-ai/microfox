@@ -1,5 +1,11 @@
 # @microfox/reddit-oauth
 
+## 1.4.0
+
+### Minor Changes
+
+- b655de2: dist folder issue
+
 ## 1.3.0
 
 ### Minor Changes
