@@ -1,4 +1,8 @@
-service: public-sdk-api
+service: microfox-sls-service
+
+package:
+  include:
+    - 'openapi.json'
 
 plugins:
   - serverless-plugin-typescript
@@ -13,6 +17,9 @@ provider:
 
 custom:
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 20
   serverless-offline:
     printOutput: true
     httpPort: 4000
@@ -24,7 +31,7 @@ functions:
     handler: dist/index.handler
     events:
       - http:
-          path: /{proxy+}
+          path: /{functionName}
           method: any
           cors: true
 
