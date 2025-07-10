@@ -1,5 +1,11 @@
 # @microfox/slack
 
+## 1.1.2
+
+### Patch Changes
+
+- b645496: Changes from PR #597: vwjt_code_router_july_2025
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.6
+
+### Patch Changes
+
+- b645496: Changes from PR #597: vwjt_code_router_july_2025
+
 ## 1.0.5
 
 ### Patch Changes
