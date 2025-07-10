@@ -1,0 +1,128 @@
+{
+  "post": {
+    "operationId": "listChannelUsers",
+    "summary": "Lists all users in a specific Slack channel.",
+    "description": "The listChannelUsers function retrieves an array of user IDs for all members in a specified Slack channel. It requires a valid channel ID as input and returns a list of user IDs. This function is useful for obtaining a comprehensive list of participants in a particular Slack channel.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the listChannelUsers sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for listing channel users",
+                    "properties": {
+                      "channelId": {
+                        "type": "string",
+                        "description": "The ID of the channel to get the members of."
+                      }
+                    },
+                    "required": [
+                      "channelId"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with an array of user IDs",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "User ID"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Invalid channel ID format",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Bot does not have permission to access the channel",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Channel does not exist",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

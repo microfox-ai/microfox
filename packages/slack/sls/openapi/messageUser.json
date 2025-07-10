@@ -1,0 +1,206 @@
+{
+  "post": {
+    "operationId": "messageUser",
+    "summary": "Send a direct message to a user on Slack.",
+    "description": "This function allows sending a direct message to a specified user on Slack using their user ID. It provides a simple way to programmatically send messages to individual users. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the messageUser sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for sending a direct message to a user",
+                    "properties": {
+                      "userId": {
+                        "type": "string",
+                        "description": "The ID of the user to send the message to"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The text content of the message to be sent"
+                      }
+                    },
+                    "required": [
+                      "userId",
+                      "text"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "Indicates if the request was successful"
+                },
+                "channel": {
+                  "type": "string",
+                  "description": "The ID of the channel where the message was posted"
+                },
+                "ts": {
+                  "type": "string",
+                  "description": "The timestamp of the message"
+                },
+                "message": {
+                  "type": "object",
+                  "description": "Details of the sent message",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "The type of message"
+                    },
+                    "subtype": {
+                      "type": "string",
+                      "description": "The subtype of the message"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The text of the message"
+                    },
+                    "ts": {
+                      "type": "string",
+                      "description": "The timestamp of the message"
+                    },
+                    "bot_id": {
+                      "type": "string",
+                      "description": "The ID of the bot that sent the message"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "The username of the bot that sent the message"
+                    },
+                    "attachments": {
+                      "type": "array",
+                      "description": "An array of attachments",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              },
+              "required": [
+                "ok",
+                "channel",
+                "ts",
+                "message"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - The request was invalid or cannot be served",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized - Authentication failed or user doesn't have permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Too Many Requests - Application has exceeded its rate limit",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server has encountered an error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

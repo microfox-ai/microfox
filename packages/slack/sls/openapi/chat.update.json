@@ -1,0 +1,263 @@
+{
+  "post": {
+    "operationId": "chat.update",
+    "summary": "Update an existing message in a Slack channel.",
+    "description": "The chat.update method allows you to modify an existing message in a Slack channel. This is particularly useful for updating the status of long-running tasks or providing progressive information to users. The method supports updating text, attachments, and blocks, offering flexibility in message formatting.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the chat.update sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for updating a Slack message",
+                    "properties": {
+                      "channel": {
+                        "type": "string",
+                        "description": "The ID of the conversation to update the message in"
+                      },
+                      "ts": {
+                        "type": "string",
+                        "description": "The timestamp of the message to be updated"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The new text for the message. Required if blocks and attachments are not provided"
+                      },
+                      "attachments": {
+                        "type": "string",
+                        "description": "A JSON-based array of structured attachments"
+                      },
+                      "blocks": {
+                        "type": "array",
+                        "description": "An array of structured blocks",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "as_user": {
+                        "type": "boolean",
+                        "description": "Pass true to update the message as the authed user. Bot users are considered authed users"
+                      },
+                      "link_names": {
+                        "type": "boolean",
+                        "description": "Find and link channel names and usernames"
+                      },
+                      "parse": {
+                        "type": "string",
+                        "description": "Change how messages are treated. Defaults to 'client'. Can be 'none' or 'full'",
+                        "enum": [
+                          "none",
+                          "full",
+                          "client"
+                        ]
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "description": "A JSON object with event_type and event_payload fields",
+                        "properties": {
+                          "event_type": {
+                            "type": "string"
+                          },
+                          "event_payload": {
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "event_type",
+                          "event_payload"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "channel",
+                      "ts"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "WebClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "true if the request was successful"
+                },
+                "channel": {
+                  "type": "string",
+                  "description": "The ID of the channel where the message was posted"
+                },
+                "ts": {
+                  "type": "string",
+                  "description": "The timestamp of the message"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "The new text of the message"
+                },
+                "message": {
+                  "type": "object",
+                  "description": "An object containing the details of the sent message"
+                }
+              },
+              "required": [
+                "ok",
+                "channel",
+                "ts"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "cant_update_message",
+                    "channel_not_found",
+                    "message_not_found",
+                    "edit_window_closed",
+                    "msg_too_long",
+                    "no_text",
+                    "as_user_not_supported",
+                    "invalid_blocks",
+                    "not_in_channel",
+                    "is_archived",
+                    "missing_scope",
+                    "not_authed",
+                    "invalid_auth",
+                    "account_inactive",
+                    "token_revoked",
+                    "no_permission",
+                    "invalid_arg_name",
+                    "invalid_array_arg",
+                    "invalid_charset",
+                    "invalid_form_data",
+                    "invalid_post_type",
+                    "missing_post_type",
+                    "request_timeout"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Rate limited",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "const": "ratelimited"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "fatal_error",
+                    "internal_error"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "const": "service_unavailable"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

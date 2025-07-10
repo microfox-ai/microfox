@@ -1,0 +1,276 @@
+{
+  "post": {
+    "operationId": "chat.postMessage",
+    "summary": "Send a message to a Slack channel.",
+    "description": "The chat.postMessage function allows you to send a message to a specified Slack channel, private group, or IM channel. It supports various customization options including text formatting, attachments, blocks, and metadata. This function is essential for programmatically interacting with Slack channels and users.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the chat.postMessage sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for sending a message to a Slack channel",
+                    "properties": {
+                      "channel": {
+                        "type": "string",
+                        "description": "Channel, private group, or IM channel ID to send message to. Can be an encoded ID, or a channel name."
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The formatted text of the message to be published. If blocks are included, this will be used as fallback text for notifications."
+                      },
+                      "attachments": {
+                        "type": "string",
+                        "description": "A JSON-based array of structured attachments, presented as a URL-encoded string."
+                      },
+                      "blocks": {
+                        "type": "string",
+                        "description": "A JSON-based array of structured blocks, presented as a URL-encoded string."
+                      },
+                      "as_user": {
+                        "type": "boolean",
+                        "description": "Pass true to post the message as the authed user, instead of as a bot. Defaults to false."
+                      },
+                      "icon_emoji": {
+                        "type": "string",
+                        "description": "Emoji to use as the icon for this message. Overrides icon_url."
+                      },
+                      "icon_url": {
+                        "type": "string",
+                        "description": "URL to an image to use as the icon for this message."
+                      },
+                      "link_names": {
+                        "type": "boolean",
+                        "description": "Find and link user groups."
+                      },
+                      "mrkdwn": {
+                        "type": "boolean",
+                        "description": "Disable Slack markup parsing by setting to false. Enabled by default."
+                      },
+                      "metadata": {
+                        "type": "string",
+                        "description": "JSON object with event_type and event_payload fields, presented as a URL-encoded string."
+                      },
+                      "parse": {
+                        "type": "string",
+                        "description": "Change how messages are treated. Defaults to none."
+                      },
+                      "reply_broadcast": {
+                        "type": "boolean",
+                        "description": "Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel or conversation. Defaults to false."
+                      },
+                      "thread_ts": {
+                        "type": "string",
+                        "description": "The ts value of another message to reply to."
+                      },
+                      "unfurl_links": {
+                        "type": "boolean",
+                        "description": "Pass true to enable unfurling of primarily text-based content."
+                      },
+                      "unfurl_media": {
+                        "type": "boolean",
+                        "description": "Pass false to disable unfurling of media content."
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "Set your bot's user name."
+                      }
+                    },
+                    "required": [
+                      "channel"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "WebClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "Indicates if the request was successful"
+                },
+                "channel": {
+                  "type": "string",
+                  "description": "The ID of the channel where the message was posted"
+                },
+                "ts": {
+                  "type": "string",
+                  "description": "The timestamp of the message"
+                },
+                "message": {
+                  "type": "object",
+                  "description": "An object containing the details of the sent message"
+                }
+              },
+              "required": [
+                "ok",
+                "channel",
+                "ts",
+                "message"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Error code indicating the specific issue"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "not_authed",
+                    "invalid_auth",
+                    "token_expired",
+                    "token_revoked"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "access_denied",
+                    "no_permission",
+                    "missing_scope"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Rate limited",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "const": "rate_limited"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "fatal_error",
+                    "internal_error"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
