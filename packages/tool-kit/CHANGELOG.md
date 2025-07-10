@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.6
+
+### Patch Changes
+
+- 1b74742: Changes from PR #598: openai-mcp
+
 ## 1.1.5
 
 ### Patch Changes

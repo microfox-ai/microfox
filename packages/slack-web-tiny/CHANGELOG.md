@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.4.3
+
+### Patch Changes
+
+- 1b74742: Changes from PR #598: openai-mcp
+
 ## 1.4.2
 
 ### Patch Changes
