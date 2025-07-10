@@ -175,6 +175,19 @@ export class ToolParse {
     return args;
   }
 
+  extractConstructor(event: APIGatewayEvent): string {
+    // Parse the request body
+    let requestBody: any;
+    try {
+      requestBody = event.body ? JSON.parse(event.body) : {};
+    } catch (parseError) {
+      console.error('Error parsing request body:', parseError);
+      throw new BadRequestError('Invalid JSON in request body');
+    }
+
+    return requestBody?.body?.constructor ?? requestBody?.constructor;
+  }
+
   extractFunction(
     sdkMap: Record<string, any>,
     event: APIGatewayEvent,
