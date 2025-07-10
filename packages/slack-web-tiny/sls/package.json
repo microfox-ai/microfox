@@ -19,7 +19,7 @@
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
     "@microfox/slack-web-tiny": "^1.2.4",
-    "@microfox/tool-core": "^1.0.1",
+    "@microfox/tool-core": "latest",
     "aws-lambda": "^1.0.7",
     "dotenv": "^16.4.5"
   },
