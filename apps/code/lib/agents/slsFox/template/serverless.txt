@@ -1,0 +1,49 @@
+service: microfox-sls-service
+
+package:
+  include:
+    - 'openapi.json'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-api-gateway-throttling
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
+  environment: ${file(env.json)}
+
+custom:
+  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 20
+  serverless-offline:
+    printOutput: true
+    httpPort: 4000
+    lambdaPort: 4002
+    environment: ${file(env.json)}
+
+functions:
+  unifiedHandler:
+    handler: dist/index.handler
+    events:
+      - http:
+          path: /{functionName}
+          method: any
+          cors: true
+
+resources:
+  Outputs:
+    ApiEndpoints:
+      Description: 'API Endpoints'
+      Value:
+        Fn::Join:
+          - ''
+          - - 'API: https://'
+            - Ref: 'ApiGatewayRestApi'
+            - '.execute-api.'
+            - Ref: 'AWS::Region'
+            - "/${env:ENVIRONMENT, 'dev'}"

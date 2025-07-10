@@ -1,0 +1,26 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "[packageName] SDK API",
+    "version": "1.0.0",
+    "mcp_version": "1.0.1",
+    "description": "Single entry-point API for all [packageName] SDK functions via a wrapper Lambda",
+    "contact": {
+      "name": "Microfox Dev Support",
+      "email": "support@microfox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.microfox.com/c/[packageName]",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "components": {
+    "x-auth-packages": [
+      {
+        "packageName": "@microfox/[packageName]"
+      }
+    ]
+  }
+}

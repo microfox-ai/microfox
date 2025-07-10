@@ -1,0 +1,39 @@
+{
+  "name": "microfox-sls-service",
+  "version": "1.0.0",
+  "description": "A serverless API for a Microfox package.",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "npm run build && serverless deploy --stage dev",
+    "deploy:preview": "npm run build && serverless deploy --stage preview",
+    "deploy:prod": "npm run build && serverless deploy --stage prod",
+    "remove": "serverless remove",
+    "remove:preview": "serverless remove --stage preview",
+    "remove:prod": "serverless remove --stage prod",
+    "start": "serverless offline start",
+    "lint": "eslint  --ignore-pattern 'dist/**'"
+  },
+  "dependencies": {
+    "@microfox/crypto-sdk": "^1.0.3",
+    "@microfox/tool-core": "^1.0.1",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "serverless": "^3.38.0",
+    "serverless-api-gateway-throttling": "^2.0.3",
+    "serverless-plugin-typescript": "^2.1.5",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@serverless/eslint-config/node",
+    "root": true
+  }
+}
