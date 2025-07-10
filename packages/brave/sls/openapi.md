@@ -1,78 +1,31 @@
 # Microfox Brave SDK API
 
-This agent provides a comprehensive interface for interacting with the Brave Search API. It's a single entry-point API for all Microfox Brave SDK functions, exposed via a wrapper Lambda. This allows you to perform various search operations including web search, image search, video search, and news search with powerful filtering and customization options.
+This agent provides a comprehensive interface for interacting with the Brave SDK API. It's a single entry-point API for all Microfox Brave SDK functions, exposed via a wrapper Lambda. This allows you to perform various operations such as image search, news search, video search, and web search with powerful filtering and customization options.
 
 ## Functionality
 
 The API provides the following functionalities:
 
-### 1. Web Search (`/webSearch`)
+### 1. Image Search (`/imageSearch`)
 
-**Summary:** Performs a web search using the Brave Search API.
+**Summary:** The imageSearch function performs image searches using the Brave Search API, allowing users to find and retrieve images based on specified search queries and optional parameters.
 
-**Description:** This function allows users to perform web searches and retrieve results from the Brave Search API. It supports a wide range of search parameters including query, country, language, result count, and various filters. The function returns comprehensive search results including web pages, news, videos, discussions, FAQs, and more.
+**Description:** The imageSearch function enables users to search for images using the Brave Search API with customizable parameters. It supports various search criteria including query text, country, language, result count, and content filtering options. The function returns a Promise that resolves to an ImageSearchApiResponse object containing detailed information about the search results and query metadata.
 
-**Key Features:**
+### 2. News Search (`/newsSearch`)
 
-- Advanced filtering with result_filter parameter
-- Custom date ranges for freshness
-- Safe search controls
-- Spell checking and text decorations
-- Support for custom goggles for re-ranking
-- Summary generation capabilities
+**Summary:** Perform a news search using the Brave Search API.
 
-### 2. Image Search (`/imageSearch`)
-
-**Summary:** The imageSearch function enables image search capabilities through the Brave Search API, allowing users to find and retrieve images based on search queries.
-
-**Description:** The imageSearch function provides a powerful interface to search for images using the Brave Search API. It accepts a wide range of parameters to customize the search, including query, language, country, content filtering, and result limits. The function returns a Promise that resolves to an object containing detailed image search results and metadata.
-
-**Key Features:**
-
-- Image-specific search parameters
-- Thumbnail and size information
-- Family-friendly content filtering
-- Support for up to 20 results per search
-- Pagination with offset support
+**Description:** This function allows users to search for news articles using the Brave Search API. It provides a wide range of parameters to customize the search, including query, country, language, and result filtering options. The function returns a promise that resolves to a detailed news search response containing article information and metadata.
 
 ### 3. Video Search (`/videoSearch`)
 
-**Summary:** Execute videoSearch function
+**Summary:** Performs a video search using the Brave Search API, retrieving video results with detailed metadata and thumbnails.
 
-**Description:** Executes the videoSearch function with provided parameters to search for video content through the Brave Search API.
+**Description:** The videoSearch function allows users to search for videos using the Brave Search API. It provides a wide range of customizable search parameters, including query, country, language, result count, and various filters. The function returns detailed video results including metadata, thumbnails, and related information.
 
-### 4. News Search (`/newsSearch`)
+### 4. Web Search (`/webSearch`)
 
-**Summary:** The newsSearch function performs a news search using the Brave Search API.
+**Summary:** Performs a web search using the Brave Search API and returns comprehensive search results.
 
-**Description:** This function allows users to search for news articles using various parameters through the Brave Search API. It provides flexibility in specifying search criteria such as query, country, language, and result filtering. The function returns a promise that resolves to a comprehensive news search response containing detailed information about each article.
-
-**Key Features:**
-
-- Breaking news detection
-- Article age and page age information
-- Thumbnail support for news articles
-- Extra snippets for enhanced content
-- Source and domain metadata
-- Support for custom date ranges
-
-## Authentication
-
-All API endpoints require authentication using an API key strategy. The `BRAVE_API_KEY` must be provided in the authentication variables for each request.
-
-## Common Parameters
-
-Most search functions support these common parameters:
-
-- **q**: The search query (max 400 characters, 50 words)
-- **country**: Two-letter country code (e.g., 'US', 'GB')
-- **search_lang**: Language for search results
-- **ui_lang**: Language for user interface elements
-- **count**: Number of results to return (1-20)
-- **offset**: Pagination offset (0-9)
-- **safesearch**: Content filtering level ('off', 'moderate', 'strict')
-- **freshness**: Result freshness filter (preset values or custom date ranges)
-- **text_decorations**: Include text decoration markers in results
-- **spellcheck**: Enable automatic spell checking
-- **goggles**: Array of goggle definitions for custom re-ranking
-- **units**: Measurement units ('metric', 'imperial')
+**Description:** This function allows users to conduct web searches using the Brave Search API, providing access to a wide range of content including web pages, news, videos, discussions, and FAQs. It offers extensive customization options for refining search parameters and supports both single and batch search operations with optional progress tracking.

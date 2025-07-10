@@ -16,10 +16,10 @@
     "lint": "eslint  --ignore-pattern 'dist/**'"
   },
   "dependencies": {
-    "@microfox/brave": "^1.0.7",
     "@microfox/crypto-sdk": "^1.0.3",
     "@microfox/tool-core": "^1.0.1",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "@microfox/brave": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
