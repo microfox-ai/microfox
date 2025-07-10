@@ -916,8 +916,19 @@ export class OpenApiMCP {
       ) as OpenAPIOperation & { path: string; method: string };
       if (!cleanedOperation.path || !cleanedOperation.method) continue;
 
-      const toolName =
+      let toolName =
         cleanedOperation.name || cleanedOperation.operationId || id;
+      /** toolName should match pattern - String should match pattern '^[a-zA-Z0-9_-]{1,128}$'] */
+      toolName = toolName.replace(/[^a-zA-Z0-9_-]/g, '');
+      if (toolName.length > 128) {
+        toolName = toolName.substring(0, 128);
+      }
+      if (!toolName) {
+        toolName = id.replace(/[^a-zA-Z0-9_-]/g, '');
+        if (toolName.length > 128) {
+          toolName = toolName.substring(0, 128);
+        }
+      }
 
       const isDisabled =
         disableAllExecutions ||
@@ -961,13 +972,16 @@ export class OpenApiMCP {
           // ... (auth provider logic remains the same)
         }
 
-        const authPreset =
-          cleanedOperation.auth ||
-          this.schema.components?.['x-auth-packages'] ||
-          [];
+        let authConfig: any = cleanedOperation.auth;
+        if (typeof authConfig === 'string' && authConfig.startsWith('#/')) {
+          authConfig = this.internalResolveRef(authConfig, new Set());
+        }
 
-        const packages = authPreset.filter(a => a.packageName);
-        const customSecrets = authPreset.filter(a => a.variables);
+        const authPreset =
+          authConfig || this.schema.components?.['x-auth-packages'] || [];
+
+        const packages = authPreset.filter((a: any) => a.packageName);
+        const customSecrets = authPreset.filter((a: any) => a.variables);
         if (!finalAuth) {
           if (toolGetAuth) {
             finalAuth = await toolGetAuth({

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/slack-web-tiny",
-  "title": "Microfox Slack Web Tiny",
+  "title": "Slack ( Minimalistic )",
   "description": "A lightweight, type-safe SDK for interacting with the Slack Web API",
   "path": "packages/slack-web-tiny",
   "dependencies": ["zod"],
