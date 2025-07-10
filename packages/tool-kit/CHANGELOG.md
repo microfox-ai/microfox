@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.5
+
+### Patch Changes
+
+- c61db79: release: enhance authentication structure in OpenAPI types and client logic
+
 ## 1.1.4
 
 ### Patch Changes
