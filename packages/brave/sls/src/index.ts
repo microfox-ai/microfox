@@ -24,7 +24,9 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
       return createApiResponse(200, JSON.parse(openapiSpec));
     } catch (error) {
       console.error('Error reading openapi.json:', error);
-      const internalError = new InternalServerError('Could not load API specification.');
+      const internalError = new InternalServerError(
+        'Could not load API specification.',
+      );
       return createApiResponse(internalError.statusCode, {
         error: internalError.message,
       });
@@ -35,7 +37,8 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
     // Extract environment variables from the new structure
     toolHandler.populateEnvVars(event);
 
-    const constructorName = toolHandler.extractConstructor(event);
+    const constructorName =
+      toolHandler.extractConstructor(event) || 'createBraveSDK';
 
     // Map functions
     const sdkMap = sdkInit({
