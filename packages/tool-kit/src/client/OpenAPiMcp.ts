@@ -961,20 +961,25 @@ export class OpenApiMCP {
           // ... (auth provider logic remains the same)
         }
 
-        const packages = this.schema.components?.['x-auth-packages'] || [];
+        const authPreset =
+          cleanedOperation.auth ||
+          this.schema.components?.['x-auth-packages'] ||
+          [];
 
+        const packages = authPreset.filter(a => a.packageName);
+        const customSecrets = authPreset.filter(a => a.variables);
         if (!finalAuth) {
           if (toolGetAuth) {
             finalAuth = await toolGetAuth({
-              packages,
-              customSecrets: this.schema.components?.['x-auth-custom-secrets'],
+              packages: packages as any,
+              customSecrets: customSecrets as any,
             });
           } else if (toolAuth) {
             finalAuth = toolAuth;
           } else if (this.getAuth) {
             finalAuth = await this.getAuth({
-              packages,
-              customSecrets: this.schema.components?.['x-auth-custom-secrets'],
+              packages: packages as any,
+              customSecrets: customSecrets as any,
             });
           } else if (this.auth) {
             finalAuth = this.auth;

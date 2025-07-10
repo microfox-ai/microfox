@@ -245,8 +245,11 @@ export class OpenApiToolset {
    */
   async parseHitl(
     messages: Message[],
-    dataStream?: UIMessageStreamWriter,
-    inserAuthVariables?: (auth: AuthObject) => Promise<AuthObject>,
+    options: {
+      dataStream?: UIMessageStreamWriter;
+      inserAuthVariables?: (auth: AuthObject) => Promise<AuthObject>;
+      mutateOutput?: (output: any) => Promise<any>;
+    },
   ): Promise<Message[]> {
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage) return messages;
@@ -277,22 +280,25 @@ export class OpenApiToolset {
             result = 'Error: No execute function found on tool';
           } else if ((part as any).output.approved) {
             let _auth = (part as any).output.auth;
-            if (inserAuthVariables && _auth) {
-              _auth = await inserAuthVariables(_auth);
+            if (options.inserAuthVariables && _auth) {
+              _auth = await options.inserAuthVariables(_auth);
             }
             result = await correspondingCall(part.input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],
               ...(_auth ? { auth: _auth } : {}),
             });
+            if (options.mutateOutput) {
+              result = await options.mutateOutput(result);
+            }
           } else {
             result = 'Error: User denied access to tool execution';
           }
         }
 
         // Forward updated tool result to the client.
-        if (dataStream && result) {
-          dataStream.write({
+        if (options.dataStream && result) {
+          options.dataStream.write({
             type: 'tool-output-available',
             toolCallId: (part as any).toolCallId,
             output: result as any,
@@ -316,22 +322,6 @@ export class OpenApiToolset {
     ];
   }
 
-  private createFakeToolCall(
-    originalToolCall: ToolCall<any, any>,
-    interventionArgs: any,
-  ): ToolCallPart {
-    return {
-      type: 'tool-call',
-      toolCallId: `${originalToolCall.toolCallId}-human-intervention`,
-      toolName: FAKE_HUMAN_INTERACTION_TOOL_NAME,
-      input: {
-        originalToolCallId: originalToolCall.toolCallId,
-        originalToolName: originalToolCall.toolName,
-        ...interventionArgs,
-      },
-    };
-  }
-
   isHitlStep(): StopCondition<any> {
     return async s => {
       const lastStep = s.steps[s.steps.length - 1];
@@ -343,65 +333,6 @@ export class OpenApiToolset {
       }
       return false;
     };
-  }
-
-  /**
-   * Processes the final result from `generateText` to handle HITL markers.
-   * It transforms the internal `_humanIntervention` markers into
-   * `FAKE_HUMAN_INTERACTION` tool calls for the client-side UI.
-   * @param response The raw result from a `generateText` call.
-   */
-  generate(
-    response: GenerateTextResult<any, any>,
-  ): GenerateTextResult<any, any> {
-    const finalToolCalls: ToolCall<any, any>[] = [];
-    const finalToolResults: ToolResultPart[] = [];
-    const assistantMessageParts: (ToolCallPart | ToolResultPart)[] = [];
-
-    const originalToolCalls = new Map(
-      response.toolCalls.map(tc => [tc.toolCallId, tc]),
-    );
-
-    for (const result of response.toolResults) {
-      if ((result.output as any)?._humanIntervention === true) {
-        // This is a HITL-paused tool. Create a fake tool call for the UI.
-        const originalToolCall = originalToolCalls.get(result.toolCallId);
-        if (originalToolCall) {
-          const fakeToolCall = this.createFakeToolCall(
-            originalToolCall,
-            (result.output as any).args as HumanDecisionArgs,
-          );
-          finalToolCalls.push(fakeToolCall);
-          assistantMessageParts.push(fakeToolCall);
-        }
-      } else {
-        // This is a normal, executed tool result. Keep it and its original call.
-        const originalToolCall = originalToolCalls.get(result.toolCallId);
-        if (originalToolCall) {
-          finalToolCalls.push(originalToolCall);
-        }
-        finalToolResults.push(result);
-      }
-    }
-
-    // Reconstruct the assistant's message, replacing the original tool calls with our new set.
-    const originalTextParts =
-      (response as any).message?.parts?.filter(
-        (p: any) => p.type !== 'tool-call',
-      ) ?? [];
-
-    const newResponseMessage = {
-      ...(response as any).message,
-      parts: [...originalTextParts, ...assistantMessageParts],
-    };
-
-    // Return the final, processed result object.
-    return {
-      ...response,
-      message: newResponseMessage,
-      toolCalls: finalToolCalls,
-      toolResults: finalToolResults,
-    } as any;
   }
 
   /**

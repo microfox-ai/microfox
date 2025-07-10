@@ -97,6 +97,15 @@ export type OpenAPIOperation = {
   instructions?: string;
   method?: string;
   path?: string;
+  auth?: {
+    packageName?: string;
+    packageConstructor?: string;
+    variables?: {
+      key: string;
+      description?: string;
+      why?: string;
+    }[];
+  }[];
 };
 
 export type OpenAPIPath = {
@@ -121,10 +130,14 @@ export type OpenAPIDoc = {
   components?: {
     schemas?: Record<string, OpenAPISchema>;
     ['x-auth-packages']?: {
-      packageName: string;
+      packageName?: string;
       packageConstructor?: string;
+      variables?: {
+        key: string;
+        description?: string;
+        why?: string;
+      }[];
     }[];
-    ['x-auth-custom-secrets']?: string[];
   };
 };
 
@@ -188,7 +201,11 @@ export type AuthOptions = {
     packageName: string;
     packageConstructor?: string;
   }[];
-  customSecrets?: string[];
+  customSecrets?: {
+    key: string;
+    description?: string;
+    why?: string;
+  }[];
 };
 
 export type AuthObject = {

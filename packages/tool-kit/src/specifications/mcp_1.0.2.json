@@ -16,14 +16,31 @@
       "description": "Unified wrapper endpoint"
     }
   ],
+  "auth": "x-auth-packages",
   "components": {
+    "schemas": {
+      "x-auth-singleset": [
+        {
+          "packageName": "@microfox/my-tool-kit",
+          "packageConstructor": "MyClient"
+        },
+        {
+          "variables": [
+            {
+              "key": "PROVIDER_CLIENT_SECRET",
+              "description": "The client secret for the provider.",
+              "why": "This is the client secret for the provider."
+            }
+          ]
+        }
+      ]
+    },
     "x-auth-packages": [
       {
         "packageName": "@microfox/my-tool-kit",
         "packageConstructor": "MyClient"
       }
     ],
-    "x-auth-custom-secrets": ["PROVIDER_CLIENT_SECRET"],
     "x-auth-providers": {
       "defaultProvider": {
         "path": "/auth/getToken",
@@ -75,7 +92,7 @@
         "operationId": "myClient.myMethod",
         "summary": "A sample method.",
         "description": "This is a very long description of the method and what it does.",
-        "auth": "specificProvider",
+        "auth": "$components.x-auth-singleset",
         "x-human-in-the-loop": "dataEntry",
         "headers": {
           "x-auth-secrets": {
@@ -179,6 +196,7 @@
             "description": "Encrypted authentication secrets"
           }
         },
+        "auth": "$components.x-auth-packages",
         "requestBody": {
           "required": true,
           "content": {
