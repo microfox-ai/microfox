@@ -1,0 +1,239 @@
+{
+  "post": {
+    "operationId": "createChannel",
+    "summary": "Create a new public or private channel in Slack.",
+    "description": "This function creates a new channel in a Slack workspace. It allows for the creation of either public or private channels, with the option to set the channel's privacy status. The function returns a detailed conversation object for the newly created channel, including various properties such as ID, name, privacy settings, and other relevant metadata.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the createChannel sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for creating a new Slack channel",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the channel to create"
+                      },
+                      "isPrivate": {
+                        "type": "boolean",
+                        "description": "Whether the channel should be private",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "channel": {
+                  "type": "object",
+                  "description": "Conversation object for the newly created channel",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the conversation"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the channel-like thing"
+                    },
+                    "is_channel": {
+                      "type": "boolean",
+                      "description": "Indicates whether a conversation is a channel"
+                    },
+                    "is_group": {
+                      "type": "boolean",
+                      "description": "Means the channel is a private channel created before March 2021"
+                    },
+                    "is_im": {
+                      "type": "boolean",
+                      "description": "Means the conversation is a direct message between two distinguished individuals or a user and a bot"
+                    },
+                    "is_mpim": {
+                      "type": "boolean",
+                      "description": "Represents an unnamed private conversation between multiple users"
+                    },
+                    "is_private": {
+                      "type": "boolean",
+                      "description": "Means the conversation is privileged between two or more members"
+                    },
+                    "created": {
+                      "type": "integer",
+                      "description": "Timestamp of when the conversation was created"
+                    },
+                    "creator": {
+                      "type": "string",
+                      "description": "The ID of the member that created this conversation"
+                    },
+                    "is_archived": {
+                      "type": "boolean",
+                      "description": "Indicates a conversation is archived"
+                    },
+                    "is_general": {
+                      "type": "boolean",
+                      "description": "Means the channel is the workspace's \"general\" discussion channel"
+                    },
+                    "unlinked": {
+                      "type": "integer",
+                      "description": "The number of members that have been removed from the channel"
+                    },
+                    "name_normalized": {
+                      "type": "string",
+                      "description": "The channel name, but with any special characters replaced"
+                    },
+                    "is_shared": {
+                      "type": "boolean",
+                      "description": "Indicates whether a conversation is part of a Shared Channel"
+                    },
+                    "is_ext_shared": {
+                      "type": "boolean",
+                      "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization"
+                    },
+                    "is_org_shared": {
+                      "type": "boolean",
+                      "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization"
+                    },
+                    "pending_shared": {
+                      "type": "array",
+                      "description": "A list of team IDs that have been invited to the channel but have not yet joined",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "is_pending_ext_shared": {
+                      "type": "boolean",
+                      "description": "Means the conversation is ready to become an is_ext_shared channel, but needs some kind of approval or sign off first"
+                    },
+                    "is_member": {
+                      "type": "boolean",
+                      "description": "Indicates whether the user, bot user or Slack app is a member of the conversation"
+                    },
+                    "topic": {
+                      "type": "object",
+                      "description": "Provides information about the channel topic"
+                    },
+                    "purpose": {
+                      "type": "object",
+                      "description": "Provides information about the channel purpose"
+                    },
+                    "previous_names": {
+                      "type": "array",
+                      "description": "A list of previous names for the channel",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "num_members": {
+                      "type": "integer",
+                      "description": "The number of members in the conversation"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "is_channel",
+                    "is_private",
+                    "created",
+                    "creator"
+                  ]
+                }
+              },
+              "required": [
+                "channel"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Invalid parameters provided",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue with the request"
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Not authorized to create channels",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating lack of permissions"
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating a server-side issue"
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

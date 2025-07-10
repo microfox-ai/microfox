@@ -1,0 +1,212 @@
+{
+  "post": {
+    "operationId": "reactions.add",
+    "summary": "Add a reaction (emoji) to a message in a Slack channel.",
+    "description": "This function adds a reaction emoji to a specific message in a Slack channel. It requires the channel ID, the timestamp of the message, and the name of the reaction (emoji) to be added. The function interacts with Slack's API to perform this action.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the reactions.add sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for adding a reaction to a message",
+                    "properties": {
+                      "channel": {
+                        "type": "string",
+                        "description": "Channel ID where the message to add reaction to was posted"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Reaction (emoji) name to be added"
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "description": "Timestamp of the message to add reaction to"
+                      }
+                    },
+                    "required": [
+                      "channel",
+                      "name",
+                      "timestamp"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "WebClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "Indicates if the operation was successful",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "description": "Error code",
+                  "enum": [
+                    "already_reacted",
+                    "bad_timestamp",
+                    "channel_not_found",
+                    "invalid_name",
+                    "is_archived",
+                    "message_not_found",
+                    "no_item_specified",
+                    "not_reactable",
+                    "thread_locked",
+                    "too_many_emoji",
+                    "too_many_reactions",
+                    "missing_scope",
+                    "invalid_arg_name",
+                    "invalid_array_arg",
+                    "invalid_charset",
+                    "invalid_form_data",
+                    "invalid_post_type",
+                    "missing_post_type"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "not_authed",
+                    "invalid_auth",
+                    "account_inactive",
+                    "token_revoked",
+                    "no_permission"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "429": {
+        "description": "Rate limited",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "ratelimited",
+                    "accesslimited"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "fatal_error",
+                    "internal_error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "service_unavailable",
+                    "team_added_to_org"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

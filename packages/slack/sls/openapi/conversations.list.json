@@ -1,0 +1,347 @@
+{
+  "post": {
+    "operationId": "conversations.list",
+    "summary": "Lists conversations (channels, private channels, DMs, and MPDMs) in a Slack workspace.",
+    "description": "The conversations.list method retrieves a list of conversations in a Slack workspace. It supports pagination, filtering by conversation types, and exclusion of archived channels. The method returns detailed information about each conversation, including its properties and member count.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the conversations.list sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for listing conversations",
+                    "properties": {
+                      "cursor": {
+                        "type": "string",
+                        "description": "Paginate through collections of data by setting the cursor parameter to a next_cursor attribute returned by a previous request."
+                      },
+                      "exclude_archived": {
+                        "type": "boolean",
+                        "description": "Set to true to exclude archived channels from the list. Default is false."
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "description": "The maximum number of items to return. Must be an integer under 1000. Default is 100.",
+                        "minimum": 1,
+                        "maximum": 999
+                      },
+                      "team_id": {
+                        "type": "string",
+                        "description": "Required for org-wide apps."
+                      },
+                      "types": {
+                        "type": "string",
+                        "description": "A comma-separated list of conversation types to include. Types can be public_channel, private_channel, mpim, and im. Default is public_channel."
+                      }
+                    }
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "WebClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "Indicates if the request was successful"
+                },
+                "channels": {
+                  "type": "array",
+                  "description": "An array of conversation objects",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the conversation"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the channel-like thing"
+                      },
+                      "is_channel": {
+                        "type": "boolean",
+                        "description": "Indicates whether a conversation is a channel"
+                      },
+                      "is_group": {
+                        "type": "boolean",
+                        "description": "Means the channel is a private channel created before March 2021"
+                      },
+                      "is_im": {
+                        "type": "boolean",
+                        "description": "Means the conversation is a direct message between two distinguished individuals or a user and a bot"
+                      },
+                      "is_mpim": {
+                        "type": "boolean",
+                        "description": "Represents an unnamed private conversation between multiple users"
+                      },
+                      "is_private": {
+                        "type": "boolean",
+                        "description": "Means the conversation is privileged between two or more members"
+                      },
+                      "created": {
+                        "type": "integer",
+                        "description": "Timestamp of when the conversation was created"
+                      },
+                      "creator": {
+                        "type": "string",
+                        "description": "The ID of the member that created this conversation"
+                      },
+                      "is_archived": {
+                        "type": "boolean",
+                        "description": "Indicates a conversation is archived"
+                      },
+                      "is_general": {
+                        "type": "boolean",
+                        "description": "Means the channel is the workspace's \"general\" discussion channel"
+                      },
+                      "unlinked": {
+                        "type": "integer",
+                        "description": "The number of members that have been removed from the channel"
+                      },
+                      "name_normalized": {
+                        "type": "string",
+                        "description": "The channel name, but with any special characters replaced"
+                      },
+                      "is_shared": {
+                        "type": "boolean",
+                        "description": "Indicates whether a conversation is part of a Shared Channel"
+                      },
+                      "is_ext_shared": {
+                        "type": "boolean",
+                        "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization"
+                      },
+                      "is_org_shared": {
+                        "type": "boolean",
+                        "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization"
+                      },
+                      "pending_shared": {
+                        "type": "array",
+                        "description": "A list of team IDs that have been invited to the channel but have not yet joined",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "is_pending_ext_shared": {
+                        "type": "boolean",
+                        "description": "Means the conversation is ready to become an is_ext_shared channel, but needs some kind of approval or sign off first"
+                      },
+                      "is_member": {
+                        "type": "boolean",
+                        "description": "Indicates whether the user, bot user or Slack app is a member of the conversation"
+                      },
+                      "topic": {
+                        "type": "object",
+                        "description": "Provides information about the channel topic"
+                      },
+                      "purpose": {
+                        "type": "object",
+                        "description": "Provides information about the channel purpose"
+                      },
+                      "previous_names": {
+                        "type": "array",
+                        "description": "A list of previous names for the channel",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "num_members": {
+                        "type": "integer",
+                        "description": "The number of members in the conversation"
+                      }
+                    }
+                  }
+                },
+                "response_metadata": {
+                  "type": "object",
+                  "description": "An object containing pagination information"
+                }
+              },
+              "required": [
+                "ok",
+                "channels"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "invalid_cursor",
+                    "invalid_limit",
+                    "invalid_types",
+                    "method_not_supported_for_channel_type",
+                    "invalid_arguments",
+                    "invalid_arg_name"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "invalid_auth",
+                    "not_authed",
+                    "token_revoked"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "missing_scope",
+                    "team_access_not_granted",
+                    "access_denied",
+                    "no_permission"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "fatal_error",
+                    "internal_error"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service Unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string",
+                  "enum": [
+                    "service_unavailable"
+                  ]
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

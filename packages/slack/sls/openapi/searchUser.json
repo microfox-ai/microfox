@@ -1,0 +1,317 @@
+{
+  "post": {
+    "operationId": "searchUser",
+    "summary": "Searches for a user in a Slack workspace by their email address.",
+    "description": "The searchUser function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the user, including their profile data, permissions, and various attributes related to their account and status within the workspace.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the searchUser sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "The parameters for the searchUser function",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "description": "The email address of the user to find.",
+                        "format": "email"
+                      }
+                    },
+                    "required": [
+                      "email"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with user information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the workspace user"
+                },
+                "team_id": {
+                  "type": "string",
+                  "description": "The ID of the team the user belongs to"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The username of the user"
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "description": "Indicates if the user has been deactivated"
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Used in some clients to display a special username color"
+                },
+                "real_name": {
+                  "type": "string",
+                  "description": "The user's first and last name"
+                },
+                "tz": {
+                  "type": "string",
+                  "description": "A human-readable string for the geographic timezone-related region"
+                },
+                "tz_label": {
+                  "type": "string",
+                  "description": "Describes the commonly used name of the tz timezone"
+                },
+                "tz_offset": {
+                  "type": "integer",
+                  "description": "Number of seconds to offset UTC time by for this user's tz"
+                },
+                "profile": {
+                  "type": "object",
+                  "description": "The profile object contains the default fields of a user's workspace profile",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "The user's title"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "The user's phone number, in any format"
+                    },
+                    "skype": {
+                      "type": "string",
+                      "description": "The user's Skype handle"
+                    },
+                    "real_name": {
+                      "type": "string",
+                      "description": "The user's first and last name"
+                    },
+                    "real_name_normalized": {
+                      "type": "string",
+                      "description": "The real_name field, but with any non-Latin characters filtered out"
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "description": "The display name the user has chosen to identify themselves by in their workspace profile"
+                    },
+                    "display_name_normalized": {
+                      "type": "string",
+                      "description": "The display_name field, but with any non-Latin characters filtered out"
+                    },
+                    "fields": {
+                      "type": "object",
+                      "description": "All the custom profile fields for the user"
+                    },
+                    "status_text": {
+                      "type": "string",
+                      "description": "The displayed text of up to 100 characters"
+                    },
+                    "status_emoji": {
+                      "type": "string",
+                      "description": "The displayed emoji that is enabled for the Slack team"
+                    },
+                    "status_expiration": {
+                      "type": "integer",
+                      "description": "The Unix timestamp of when the status will expire"
+                    },
+                    "avatar_hash": {
+                      "type": "string",
+                      "description": "A hash of the user's avatar"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "description": "The date the person joined the organization"
+                    },
+                    "image_original": {
+                      "type": "string",
+                      "description": "URL to the original size of the user's profile picture"
+                    },
+                    "is_custom_image": {
+                      "type": "boolean",
+                      "description": "Indicates if the user has a custom profile picture"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "A valid email address. Requires users:read.email scope"
+                    },
+                    "pronouns": {
+                      "type": "string",
+                      "description": "The pronouns the user prefers to be addressed by"
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "description": "The user's first name"
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "description": "The user's last name"
+                    },
+                    "image_24": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 24x24 pixel version of the user's profile picture"
+                    },
+                    "image_32": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 32x32 pixel version of the user's profile picture"
+                    },
+                    "image_48": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 48x48 pixel version of the user's profile picture"
+                    },
+                    "image_72": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 72x72 pixel version of the user's profile picture"
+                    },
+                    "image_192": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 192x192 pixel version of the user's profile picture"
+                    },
+                    "image_512": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 512x512 pixel version of the user's profile picture"
+                    },
+                    "image_1024": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "URL to a 1024x1024 pixel version of the user's profile picture"
+                    },
+                    "status_text_canonical": {
+                      "type": "string"
+                    },
+                    "team": {
+                      "type": "string",
+                      "description": "The ID of the team the user is on"
+                    }
+                  }
+                },
+                "is_admin": {
+                  "type": "boolean",
+                  "description": "Indicates whether the user is an Admin of the current workspace"
+                },
+                "is_owner": {
+                  "type": "boolean",
+                  "description": "Indicates whether the user is an Owner of the current workspace"
+                },
+                "is_primary_owner": {
+                  "type": "boolean",
+                  "description": "Indicates whether the user is the Primary Owner of the current workspace"
+                },
+                "is_restricted": {
+                  "type": "boolean",
+                  "description": "Indicates whether or not the user is a guest user"
+                },
+                "is_ultra_restricted": {
+                  "type": "boolean",
+                  "description": "Indicates whether or not the user is a single-channel guest"
+                },
+                "is_bot": {
+                  "type": "boolean",
+                  "description": "Indicates whether the user is a bot user"
+                },
+                "is_app_user": {
+                  "type": "boolean",
+                  "description": "Indicates whether the user is an authorized user of the calling app"
+                },
+                "updated": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "A Unix timestamp indicating when the user object was last updated"
+                },
+                "is_email_confirmed": {
+                  "type": "boolean",
+                  "description": "Indicates if the user's email address has been confirmed"
+                },
+                "who_can_share_contact_card": {
+                  "type": "string",
+                  "description": "Who can share the user's contact card"
+                },
+                "enterprise_user": {
+                  "type": "object",
+                  "description": "An object containing info related to an Enterprise Grid user"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - The server cannot process the request due to a client error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - The specified user could not be found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating the user was not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "post": {
+    "operationId": "sendFile",
+    "summary": "Upload a file to a Slack channel.",
+    "description": "The sendFile function allows users to upload a file to a specified Slack channel. It takes the channel ID, file content, filename, and an optional title as input. The function returns details about the uploaded file, including its ID, type, size, and sharing information.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the sendFile sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for sending a file to a Slack channel",
+                    "properties": {
+                      "channelId": {
+                        "type": "string",
+                        "description": "The ID of the channel to upload the file to. Can be a comma-separated list."
+                      },
+                      "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The content of the file to be uploaded."
+                      },
+                      "filename": {
+                        "type": "string",
+                        "description": "The name of the file."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "A title for the file."
+                      }
+                    },
+                    "required": [
+                      "channelId",
+                      "file",
+                      "filename"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "created": {
+                      "type": "integer"
+                    },
+                    "timestamp": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "filetype": {
+                      "type": "string"
+                    },
+                    "pretty_type": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "editable": {
+                      "type": "boolean"
+                    },
+                    "size": {
+                      "type": "integer"
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "hosted",
+                        "external",
+                        "snippet",
+                        "post"
+                      ]
+                    },
+                    "is_external": {
+                      "type": "boolean"
+                    },
+                    "external_type": {
+                      "type": "string"
+                    },
+                    "is_public": {
+                      "type": "boolean"
+                    },
+                    "public_url_shared": {
+                      "type": "boolean"
+                    },
+                    "url_private": {
+                      "type": "string"
+                    },
+                    "permalink": {
+                      "type": "string"
+                    },
+                    "channels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "ims": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "comments_count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "created",
+                    "timestamp",
+                    "title",
+                    "mimetype",
+                    "filetype",
+                    "pretty_type",
+                    "user",
+                    "editable",
+                    "size",
+                    "mode",
+                    "is_external",
+                    "is_public",
+                    "public_url_shared",
+                    "url_private",
+                    "permalink",
+                    "channels",
+                    "groups",
+                    "ims",
+                    "comments_count"
+                  ]
+                }
+              },
+              "required": [
+                "file"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - The request was invalid or cannot be served.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized - The request requires user authentication.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - The server understood the request but refuses to authorize it.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "413": {
+        "description": "Payload Too Large - The file size exceeds the maximum allowed size.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server has encountered a situation it does not know how to handle.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

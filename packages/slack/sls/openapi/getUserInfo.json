@@ -1,0 +1,257 @@
+{
+  "post": {
+    "operationId": "getUserInfo",
+    "summary": "Retrieves detailed information about a specific Slack user.",
+    "description": "The getUserInfo function fetches comprehensive details about a Slack user using their unique user ID. It returns a rich user object containing various attributes including personal information, team association, permissions, and profile details. This function is essential for applications that need to access or display user-specific data within a Slack workspace.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the getUserInfo sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for the getUserInfo function",
+                    "properties": {
+                      "userId": {
+                        "type": "string",
+                        "description": "The ID of the user to get information for."
+                      }
+                    },
+                    "required": [
+                      "userId"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with user information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The user's ID."
+                },
+                "team_id": {
+                  "type": "string",
+                  "description": "The ID of the team the user belongs to."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The user's username."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "description": "True if the user has been deleted."
+                },
+                "color": {
+                  "type": "string",
+                  "description": "A hexadecimal color code that is used to color the user's name in Slack clients."
+                },
+                "real_name": {
+                  "type": "string",
+                  "description": "The user's real name."
+                },
+                "tz": {
+                  "type": "string",
+                  "description": "The user's timezone (e.g., America/Los_Angeles)."
+                },
+                "tz_label": {
+                  "type": "string",
+                  "description": "A human-readable string for the user's timezone."
+                },
+                "tz_offset": {
+                  "type": "integer",
+                  "description": "The user's timezone offset in seconds."
+                },
+                "profile": {
+                  "type": "object",
+                  "description": "A profile object containing more details about the user.",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "The user's title."
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "The user's phone number."
+                    },
+                    "skype": {
+                      "type": "string",
+                      "description": "The user's Skype username."
+                    },
+                    "real_name": {
+                      "type": "string",
+                      "description": "The user's real name."
+                    },
+                    "real_name_normalized": {
+                      "type": "string",
+                      "description": "The user's real name, normalized."
+                    },
+                    "display_name": {
+                      "type": "string",
+                      "description": "The user's display name."
+                    },
+                    "display_name_normalized": {
+                      "type": "string",
+                      "description": "The user's display name, normalized."
+                    },
+                    "status_text": {
+                      "type": "string",
+                      "description": "The user's status text."
+                    },
+                    "status_emoji": {
+                      "type": "string",
+                      "description": "The user's status emoji."
+                    },
+                    "avatar_hash": {
+                      "type": "string",
+                      "description": "A hash of the user's avatar image."
+                    },
+                    "image_original": {
+                      "type": "string",
+                      "description": "The URL of the user's original-sized profile image."
+                    },
+                    "image_24": {
+                      "type": "string",
+                      "description": "The URL of the user's 24x24 profile image."
+                    },
+                    "image_32": {
+                      "type": "string",
+                      "description": "The URL of the user's 32x32 profile image."
+                    },
+                    "image_48": {
+                      "type": "string",
+                      "description": "The URL of the user's 48x48 profile image."
+                    },
+                    "image_72": {
+                      "type": "string",
+                      "description": "The URL of the user's 72x72 profile image."
+                    },
+                    "image_192": {
+                      "type": "string",
+                      "description": "The URL of the user's 192x192 profile image."
+                    },
+                    "image_512": {
+                      "type": "string",
+                      "description": "The URL of the user's 512x512 profile image."
+                    },
+                    "team": {
+                      "type": "string",
+                      "description": "The ID of the team the user belongs to."
+                    }
+                  }
+                },
+                "is_admin": {
+                  "type": "boolean",
+                  "description": "True if the user is an admin."
+                },
+                "is_owner": {
+                  "type": "boolean",
+                  "description": "True if the user is an owner."
+                },
+                "is_primary_owner": {
+                  "type": "boolean",
+                  "description": "True if the user is the primary owner."
+                },
+                "is_restricted": {
+                  "type": "boolean",
+                  "description": "True if the user is a restricted user (single-channel guest)."
+                },
+                "is_ultra_restricted": {
+                  "type": "boolean",
+                  "description": "True if the user is an ultra-restricted user (multi-channel guest)."
+                },
+                "is_bot": {
+                  "type": "boolean",
+                  "description": "True if the user is a bot."
+                },
+                "updated": {
+                  "type": "integer",
+                  "description": "A timestamp of when the user's profile was last updated."
+                },
+                "is_app_user": {
+                  "type": "boolean",
+                  "description": "True if the user is an app user."
+                },
+                "has_2fa": {
+                  "type": "boolean",
+                  "description": "True if the user has two-factor authentication enabled."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request. This could occur if the userId is invalid or not provided.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "User not found. This could occur if the provided userId does not correspond to any existing user.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error. This could occur due to issues with the Slack API or server-side problems.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

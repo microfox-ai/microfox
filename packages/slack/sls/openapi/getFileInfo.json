@@ -1,0 +1,220 @@
+{
+  "post": {
+    "operationId": "getFileInfo",
+    "summary": "Get information about a specified file in Slack.",
+    "description": "The getFileInfo function retrieves detailed information about a file in Slack using its file ID. It returns a comprehensive file object containing various attributes such as file metadata, sharing details, and related channel information. This function is useful for obtaining in-depth details about a specific file within a Slack workspace.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the getFileInfo sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Parameters for the getFileInfo function",
+                    "properties": {
+                      "fileId": {
+                        "type": "string",
+                        "description": "The ID of the file to get information for."
+                      }
+                    },
+                    "required": [
+                      "fileId"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "MicrofoxSlackClient"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with file information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The ID of the file object."
+                },
+                "created": {
+                  "type": "integer",
+                  "description": "A Unix timestamp representing when the file was created."
+                },
+                "timestamp": {
+                  "type": "integer",
+                  "description": "A deprecated property that is provided only for backwards compatibility with older clients."
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "Name of the file; may be null for unnamed files."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title of the file."
+                },
+                "mimetype": {
+                  "type": "string",
+                  "description": "The file's mimetype."
+                },
+                "filetype": {
+                  "type": "string",
+                  "description": "The file's type."
+                },
+                "pretty_type": {
+                  "type": "string",
+                  "description": "A human-readable version of the type."
+                },
+                "user": {
+                  "type": "string",
+                  "description": "The ID of the user who created the object."
+                },
+                "editable": {
+                  "type": "boolean",
+                  "description": "Indicates that files are stored in editable mode."
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "The filesize in bytes."
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "hosted",
+                    "external",
+                    "snippet",
+                    "post"
+                  ],
+                  "description": "The mode of the file."
+                },
+                "is_external": {
+                  "type": "boolean",
+                  "description": "Indicates whether the master copy of a file is stored within the system or not."
+                },
+                "external_type": {
+                  "type": "string",
+                  "description": "Indicates what kind of external file it is, e.g. 'dropbox' or 'gdoc'."
+                },
+                "is_public": {
+                  "type": "boolean",
+                  "description": "true if the file is public."
+                },
+                "public_url_shared": {
+                  "type": "boolean",
+                  "description": "true if the file's public URL has been shared."
+                },
+                "url_private": {
+                  "type": "string",
+                  "description": "A URL to the file contents. This requires an authorization header to access."
+                },
+                "permalink": {
+                  "type": "string",
+                  "description": "A URL to a page for the file containing details, comments and a download link."
+                },
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Contains the IDs of any channels into which the file is currently shared."
+                },
+                "groups": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Contains the IDs of any private groups into which the file is currently shared."
+                },
+                "ims": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Contains the IDs of any IM channels into which the file is currently shared."
+                },
+                "comments_count": {
+                  "type": "integer",
+                  "description": "The number of comments on the file."
+                }
+              },
+              "required": [
+                "id",
+                "created",
+                "user",
+                "size"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - The server cannot process the request due to a client error (e.g., malformed request syntax, invalid file ID).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue with the request."
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - The specified file could not be found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating that the file was not found."
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
