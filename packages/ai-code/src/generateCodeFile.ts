@@ -1,3 +1,4 @@
+// @ts-ignore
 import { generateText } from 'ai';
 import { LanguageModelV2 } from '@ai-sdk/provider';
 

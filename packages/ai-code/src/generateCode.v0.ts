@@ -1,3 +1,4 @@
+// @ts-ignore
 import { generateObject, generateText } from 'ai';
 import { z } from 'zod';
 import * as path from 'path';

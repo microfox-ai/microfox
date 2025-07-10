@@ -68,6 +68,7 @@ function getProperExtension(baseName: string): string {
   const extensionMap: { [key: string]: string } = {
     package: 'package.json',
     tsconfig: 'tsconfig.json',
+    eslint: 'eslint.config.js',
     serverless: 'serverless.yml',
     openapi: 'openapi.json',
     sdkInit: 'sdkInit.ts',
@@ -87,15 +88,23 @@ function getProperExtension(baseName: string): string {
 async function generateOpenAPIPath(
   functionName: string,
   docContent: string,
-  constructor: any,
+  constructors: any[],
   packageName: string,
 ): Promise<any> {
   // Get all keys from constructor
-  const allKeys = [
+  const allKeys = constructors.flatMap(constructor => [
     ...(constructor.requiredKeys || []),
     ...(constructor.internalKeys || []),
-    ...(constructor.botConfig || []),
-  ];
+    // ...(constructor.botConfig || []),
+  ]);
+
+  const keyMap = new Map();
+  allKeys.forEach(key => {
+    if (!keyMap.has(key.key)) {
+      keyMap.set(key.key, key);
+    }
+  });
+  const uniqueKeys = Array.from(keyMap.values());
 
   const schema = z
     .object({
@@ -107,10 +116,12 @@ async function generateOpenAPIPath(
         .describe('2-3 sentences explaining the function purpose and behavior'),
       parameters: z
         .object({
-          type: z.literal('array').describe('Type must be array'),
-          items: z.array(z.any()).describe('Array of parameter schemas'),
+          type: z.literal('object').describe('Type must be object'),
+          description: z.string().describe('Description of the parameters object'),
+          properties: z.record(z.any()).describe('Properties of the object'),
+          required: z.array(z.string()).optional().describe('Required properties'),
         })
-        .describe('Parameters object with type array and items'),
+        .describe('Parameters object schema for the function arguments'),
       responses: z
         .record(
           z.object({
@@ -147,65 +158,33 @@ async function generateOpenAPIPath(
 Your task is to analyze function documentation and generate OpenAPI path for the function:
 1. Generate a clear summary (one sentence)
 2. Generate a detailed description (2-3 sentences)
-3. Generate parameters with type "array" and items array representing function parameters
+3. Generate a single 'parameters' JSON schema object that represents all of the function's arguments.
 4. Generate a complete OpenAPI responses schema
 
 ## CRITICAL ANALYSIS RULES:
 
-### Parameter Pattern Recognition:
-- **SINGLE OBJECT Parameter**: If you see ONE main parameter with nested sub-items (indented), generate ONE object in parameters.items
-- **MULTIPLE INDIVIDUAL Parameters**: If you see MULTIPLE main parameters at the same level, generate MULTIPLE items in parameters.items
-
 ### Parameters Structure:
-The parameters object should always have:
-- type: "array"
-- items: Array where each item represents one function parameter in the exact order they appear
+The 'parameters' property you generate should be a single JSON Schema object representing the function's arguments. Typically, this will be an object with properties for each argument.
+- If the function takes a single object as an argument, model that object's properties.
+- If the function takes multiple arguments, model them as properties of a single object.
 
-**Single Object Parameter Example:**
+**Example:**
 \`\`\`json
-{
-  "type": "array",
-  "items": [
     {
       "type": "object",
-      "description": "Configuration object containing all function parameters",
+  "description": "Configuration object containing all function parameters.",
       "properties": {
-        "param1": { "type": "string", "description": "First parameter description" },
-        "param2": { "type": "number", "description": "Second parameter description" },
-        "param3": { "type": "boolean", "description": "Third parameter description" }
+    "param1": { "type": "string", "description": "First parameter description." },
+    "param2": { "type": "number", "description": "Second parameter description." },
+    "param3": { 
+      "type": "object", 
+      "properties": { "nested": { "type": "boolean" } }
+    }
       },
       "required": ["param1"]
-    }
-  ]
 }
 \`\`\`
 
-**Multiple Individual Parameters Example:**
-\`\`\`json
-{
-  "type": "array",
-  "items": [
-    {
-      "type": "object",
-      "description": "First parameter - configuration object",
-      "properties": {
-        "field1": { "type": "string", "description": "Field description" },
-        "field2": { "type": "array", "items": { "type": "object" }, "description": "Array field description" }
-      },
-      "required": ["field1"]
-    },
-    {
-      "type": "string", 
-      "description": "Second parameter - identifier"
-    },
-    {
-      "type": "array",
-      "description": "Third parameter - optional array",
-      "items": { "type": "object" }
-    }
-  ]
-}
-\`\`\`
 
 ### Responses Schema:
 Generate complete OpenAPI responses with:
@@ -227,10 +206,10 @@ ${docContent}
 Please analyze the Parameters section carefully and generate:
 1. summary: One clear sentence describing what this function does
 2. description: 2-3 sentences explaining the function's purpose and behavior
-3. parameters: Object with type "array" and items array where each item represents one function parameter (analyze if it's single object or multiple parameters)
+3. parameters: A single JSON schema object representing the function's arguments, with type "object" and properties for each argument.
 4. responses: Complete OpenAPI responses schema with 200, 400, 500 status codes and any other status codes that are relevant to the function
 
-Focus on the parameter structure - look for indentation patterns to determine if it's a single configuration object or multiple individual parameters.`;
+Focus on the parameter structure - create a single object that encapsulates all parameters.`;
 
   try {
     const result = await generateObject({
@@ -245,37 +224,6 @@ Focus on the parameter structure - look for indentation patterns to determine if
 
     // Build the complete OpenAPI path from AI-generated content + package info
     let aiContent = result.object;
-
-    // Handle unknown parameter item types by converting them to 'any'
-    // if (aiContent.parameters && aiContent.parameters.items) {
-    //     aiContent.parameters.items = aiContent.parameters.items.map((item: any) => {
-    //         if (!item || typeof item !== 'object') {
-    //             return { type: 'any', description: 'Parameter' };
-    //         }
-    //         return item;
-    //     });
-    // } else {
-    //     // Fallback if parameters structure is missing or invalid
-    //     aiContent.parameters = {
-    //         type: 'array',
-    //         items: [{ type: 'any', description: 'Function parameters' }]
-    //     };
-    // }
-
-    // Build auth variables array - specific objects for each required key
-    const authVariables = allKeys.map(key => ({
-      type: 'object',
-      properties: {
-        key: {
-          type: 'string',
-          description: key.key,
-        },
-        value: {
-          type: 'string',
-          description: `value of ${key.key}`,
-        },
-      },
-    }));
 
     return {
       post: {
@@ -294,27 +242,10 @@ Focus on the parameter structure - look for indentation patterns to determine if
                     description: `Body of the ${functionName} sls call`,
                     properties: {
                       arguments: aiContent.parameters,
-                      auth: {
-                        type: 'object',
-                        description: 'Authentication object',
-                        properties: {
-                          strategy: {
-                            type: 'string',
-                            description: 'Authentication strategy',
-                            enum: [constructor.auth],
-                          },
-                          variables: {
-                            type: 'array',
-                            description:
-                              'Variables for the authentication strategy',
-                            items: authVariables,
-                          },
-                        },
-                      },
-                      constructorName: {
+                      constructor: {
                         type: 'string',
                         description: 'Name of the constructor to use.',
-                        default: constructor.name,
+                        enum: constructors.map(c => c.name),
                       },
                     },
                     required: ['arguments'],
@@ -333,180 +264,74 @@ Focus on the parameter structure - look for indentation patterns to determine if
       error,
     );
     throw `Error generating OpenAPI path for ${functionName}: ${error}`;
-
-    // Create a fallback OpenAPI path with basic structure
-    // console.log(`🔄 Creating fallback OpenAPI path for ${functionName}...`);
-    // const authVariables = keysInfo.map(key => ({
-    //     type: 'object',
-    //     properties: {
-    //         key: {
-    //             type: 'string',
-    //             description: key.key,
-    //         },
-    //         value: {
-    //             type: 'string',
-    //             description: `value of ${key.key}`,
-    //         },
-    //     },
-    // }));
-
-    // return {
-    //     post: {
-    //         operationId: functionName,
-    //         summary: `Execute ${functionName} function`,
-    //         description: `Executes the ${functionName} function with provided parameters`,
-    //         requestBody: {
-    //             required: true,
-    //             content: {
-    //                 'application/json': {
-    //                     schema: {
-    //                         type: 'object',
-    //                         properties: {
-    //                             body: {
-    //                                 type: 'object',
-    //                                 description: `Body of the ${functionName} sls call`,
-    //                                 properties: {
-    //                                     arguments: {
-    //                                         type: 'array',
-    //                                         items: [{ type: 'any', description: 'Function parameters' }]
-    //                                     },
-    //                                     auth: {
-    //                                         type: 'object',
-    //                                         description: 'Authentication object',
-    //                                         properties: {
-    //                                             strategy: {
-    //                                                 type: 'string',
-    //                                                 description: 'Authentication strategy',
-    //                                                 enum: [constructor.auth],
-    //                                             },
-    //                                             variables: {
-    //                                                 type: 'array',
-    //                                                 description: 'Variables for the authentication strategy',
-    //                                                 items: authVariables,
-    //                                             },
-    //                                         },
-    //                                     },
-    //                                     packageName: {
-    //                                         type: 'string',
-    //                                         description: `@microfox/${packageName}`,
-    //                                     },
-    //                                 },
-    //                                 required: ['arguments'],
-    //                             },
-    //                         },
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //         responses: {
-    //             '200': {
-    //                 description: 'Successful response',
-    //                 content: {
-    //                     'application/json': {
-    //                         schema: {
-    //                             type: 'object',
-    //                             properties: {
-    //                                 success: { type: 'boolean' },
-    //                                 data: { type: 'any' }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             },
-    //             '400': {
-    //                 description: 'Bad request'
-    //             },
-    //             '500': {
-    //                 description: 'Internal server error'
-    //             }
-    //         },
-    //     },
-    // };
   }
 }
 
 /**
- * Generate OpenAPI JSON for a package using AI (sequential generation)
+ * Generate individual OpenAPI JSON files for each function
  */
-async function generateOpenAPI(
+async function generateIndividualOpenAPIFiles(
   packageInfo: PackageInfo,
   functionDocs: FunctionDoc[],
   packageName: string,
   docContents: Map<string, string>,
-): Promise<any> {
-  const openapi = {
-    openapi: '3.0.1',
-    info: {
-      title: `${packageInfo.title} API`,
-      version: '1.0.0',
-      description: `Single entry-point API for all ${packageInfo.title} functions via a wrapper Lambda`,
-      packageName: packageInfo.name,
-      contact: {
-        name: 'Microfox Dev Support',
-        email: 'support@microfox.com',
-      },
-    },
-    servers: [
-      {
-        url: `https://api.microfox.com/c/${packageName}`,
-        description: 'Unified wrapper endpoint',
-      },
-    ],
-    paths: {} as any,
-  };
-
-  // Generate paths for each function using AI sequentially
-  const totalFunctions = packageInfo.constructors.reduce(
-    (acc, c) => acc + (c.functionalities?.length || 0),
-    0,
-  );
+  slsDir: string,
+): Promise<{ successCount: number; failureCount: number }> {
+  const totalFunctions = functionDocs.length;
   console.log(
-    `🤖 Generating OpenAPI paths using AI for ${totalFunctions} functions across ${packageInfo.constructors.length} constructors sequentially...`,
+    `🤖 Generating OpenAPI paths using AI for ${totalFunctions} functions sequentially...`,
   );
 
   let successCount = 0;
   let failureCount = 0;
 
-  for (const constructor of packageInfo.constructors) {
-    const constructorFunctionalities = constructor.functionalities || [];
-    for (const funcName of constructorFunctionalities) {
-      const funcDoc = functionDocs.find(f => f.name === funcName);
-      if (!funcDoc) {
-        console.warn(`⚠️ funcDoc not found for function: ${funcName}, skipping.`);
-        failureCount++;
-        continue;
-      }
+  for (const funcDoc of functionDocs) {
+    const funcName = funcDoc.name;
+    const constructorsForFunc = packageInfo.constructors.filter(c =>
+      c.functionalities?.includes(funcName),
+    );
 
-      const docContent = docContents.get(funcName) || '';
-      if (!docContent) {
-        console.warn(
-          `⚠️ Documentation content not found for function: ${funcName}, skipping.`,
-        );
-        failureCount++;
-        continue;
-      }
-
-      const constructorNameForPath = constructor.name.replace(/\./g, '-');
-      const functionSlug = funcDoc.name.replace(/\./g, '-');
-      const pathKey = `/${constructorNameForPath}/${functionSlug}`;
-      console.log(
-        `🔧 Generating path for: ${pathKey} (${successCount + failureCount + 1}/${totalFunctions})`,
+    if (constructorsForFunc.length === 0) {
+      console.warn(
+        `⚠️ No constructor found for function: ${funcName}, skipping.`,
       );
+      failureCount++;
+      continue;
+    }
 
-      try {
-        const pathSpec = await generateOpenAPIPath(
-          funcDoc.name,
-          docContent,
-          constructor,
-          packageName,
-        );
-        openapi.paths[pathKey] = pathSpec;
-        successCount++;
-        console.log(`✅ Generated AI path for: ${pathKey}`);
-      } catch (error) {
-        console.error(`❌ Failed to generate path for ${pathKey}:`, error);
-        failureCount++;
+    const docContent = docContents.get(funcName) || '';
+    if (!docContent) {
+      console.warn(
+        `⚠️ Documentation content not found for function: ${funcName}, skipping.`,
+      );
+      failureCount++;
+      continue;
+    }
+
+    const functionSlug = funcDoc.name.replace(/\./g, '-');
+    const pathKey = `/${functionSlug}`;
+    console.log(
+      `🔧 Generating path for: ${pathKey} (${successCount + failureCount + 1}/${totalFunctions})`,
+    );
+
+    try {
+      const pathSpec = await generateOpenAPIPath(
+        funcDoc.name,
+        docContent,
+        constructorsForFunc,
+        packageName,
+      );
+      const openapiDir = path.join(slsDir, 'openapi');
+      if (!fs.existsSync(openapiDir)) {
+        fs.mkdirSync(openapiDir, { recursive: true });
       }
+      const openapiFuncPath = path.join(openapiDir, `${funcDoc.name}.json`);
+      fs.writeFileSync(openapiFuncPath, JSON.stringify(pathSpec, null, 2));
+
+      successCount++;
+    } catch (error) {
+      console.error(`❌ Failed to generate path for ${pathKey}:`, error);
+      failureCount++;
     }
   }
 
@@ -519,8 +344,216 @@ async function generateOpenAPI(
       `⚠️ ${failureCount} functions failed to generate. OpenAPI will be incomplete.`,
     );
   }
+  return { successCount, failureCount };
+}
 
-  return openapi;
+/**
+ * Generate OpenAPI JSON for a package by combining individual function files
+ */
+function combineOpenAPIFiles(
+  slsDir: string,
+  packageInfo: PackageInfo,
+  packageName: string,
+): void {
+  const openapiPath = path.join(slsDir, 'openapi.json');
+  const openapiDir = path.join(slsDir, 'openapi');
+  const sdkPackageJsonPath = path.join(slsDir, '..', 'package.json');
+  const sdkPackageJson = fs.existsSync(sdkPackageJsonPath)
+    ? JSON.parse(fs.readFileSync(sdkPackageJsonPath, 'utf8'))
+    : { version: '1.0.0' };
+
+  let openapi: any;
+
+  // Use existing openapi.json as a base, or create a new one
+  if (fs.existsSync(openapiPath)) {
+    try {
+      openapi = JSON.parse(fs.readFileSync(openapiPath, 'utf8'));
+    } catch (e) {
+      console.warn(
+        `⚠️ Could not parse existing openapi.json, creating a new one.`,
+      );
+      openapi = {};
+    }
+  } else {
+    openapi = {};
+  }
+
+  openapi.openapi = '3.0.1';
+  openapi.info = {
+    title: `${packageInfo.title} API`,
+    version: sdkPackageJson.version,
+    mcp_version: "1.0.1",
+    description:
+      packageInfo.description ||
+      `Single entry-point API for all ${packageInfo.title} functions via a wrapper Lambda`,
+    contact: {
+      name: 'Microfox Dev Support',
+      email: 'support@microfox.com',
+    },
+  };
+  openapi.servers = [
+    {
+      url: `https://api.microfox.com/c/${packageName}`,
+      description: 'Unified wrapper endpoint',
+    },
+  ];
+  openapi.components = {
+    'x-auth-packages': [
+      {
+        packageName: packageInfo.name,
+      },
+    ],
+  };
+
+  // Overwrite paths with latest from individual files
+  openapi.paths = {};
+
+  if (fs.existsSync(openapiDir)) {
+    const functionFiles = fs
+      .readdirSync(openapiDir)
+      .filter(f => f.endsWith('.json'));
+    console.log(
+      `Combining ${functionFiles.length} function paths into openapi.json...`,
+    );
+
+    for (const file of functionFiles) {
+      const funcName = file.replace('.json', '');
+      const functionSlug = funcName.replace(/\./g, '-');
+      const pathKey = `/${functionSlug}`;
+
+      const filePath = path.join(openapiDir, file);
+      try {
+        const pathSpec = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        openapi.paths[pathKey] = pathSpec;
+      } catch (e) {
+        console.error(`❌ Error parsing ${filePath}, skipping...`, e);
+      }
+    }
+  } else {
+    console.log(`No 'openapi' directory found to combine files from.`);
+  }
+
+  fs.writeFileSync(openapiPath, JSON.stringify(openapi, null, 2));
+  console.log(`✅ Updated/created openapi.json at: ${openapiPath}`);
+}
+
+/**
+ * Generate openapi.md file using AI
+ */
+async function generateOpenAPIMarkdown(
+  packageInfo: PackageInfo,
+  slsDir: string,
+): Promise<void> {
+  const openapiPath = path.join(slsDir, 'openapi.json');
+  if (!fs.existsSync(openapiPath)) {
+    console.warn(`⚠️ openapi.json not found, skipping markdown generation.`);
+    return;
+  }
+  const openapi = JSON.parse(fs.readFileSync(openapiPath, 'utf8'));
+
+  const schema = z.object({
+    markdownContent: z
+      .string()
+      .describe('The full content of the openapi.md file.'),
+  });
+
+  const exampleMd = `# Microfox Brave SDK API
+
+This agent provides a comprehensive interface for interacting with the Brave Search API. It's a single entry-point API for all Microfox Brave SDK functions, exposed via a wrapper Lambda. This allows you to perform various search operations including web search, image search, video search, and news search with powerful filtering and customization options.
+
+## Functionality
+
+The API provides the following functionalities:
+
+### 1. Web Search (\`/webSearch\`)
+
+**Summary:** Performs a web search using the Brave Search API.
+
+**Description:** This function allows users to perform web searches and retrieve results from the Brave Search API. It supports a wide range of search parameters including query, country, language, result count, and various filters. The function returns comprehensive search results including web pages, news, videos, discussions, FAQs, and more.
+
+**Key Features:**
+
+- Advanced filtering with result_filter parameter
+- Custom date ranges for freshness
+- Safe search controls
+- Spell checking and text decorations
+- Support for custom goggles for re-ranking
+- Summary generation capabilities
+
+## Authentication
+
+All API endpoints require authentication using an API key strategy. The \`BRAVE_API_KEY\` must be provided in the authentication variables for each request.
+
+## Common Parameters
+
+Most search functions support these common parameters:
+
+- **q**: The search query (max 400 characters, 50 words)
+- **country**: Two-letter country code (e.g., 'US', 'GB')
+- **search_lang**: Language for search results
+- **ui_lang**: Language for user interface elements
+`;
+
+  const systemPrompt = dedent`You are an expert technical writer specializing in creating clear, user-friendly API documentation in Markdown.
+
+Your task is to generate an \`openapi.md\` file based on the provided \`package-info.json\` and \`openapi.json\` contents.
+
+Follow this structure precisely:
+
+1.  **Main Title**: Use the format: \`# Microfox [Package Title] SDK API\`
+2.  **Introduction**: Write a concise, one-paragraph introduction to the API, explaining its purpose. You can use the description from the package info as a starting point.
+3.  **Functionality Section**:
+    *   Add a section titled \`## Functionality\`.
+    *   For each endpoint in the \`openapi.json\` paths, create a subsection: \`### [Number]. [Function Name] (\`/[path-slug]\`)\`.
+    *   Under each subsection, include:
+        *   \`**Summary:**\` followed by the summary from the OpenAPI spec.
+        *   \`**Description:**\` followed by the description from the OpenAPI spec.
+        *   \`**Key Features:**\` (Optional but recommended) - analyze the function's parameters and description to create a bulleted list of 3-5 key features or capabilities.
+4.  **Authentication Section**:
+    *   Add a section titled \`## Authentication\`.
+    *   Analyze the \`requiredKeys\` from all constructors in the package info.
+    *   Write a clear sentence explaining the authentication method (e.g., API key).
+    *   List all unique required keys, indicating that they must be provided. For example: "The \`API_KEY_NAME\` must be provided..."
+5.  **Common Parameters Section**:
+    *   Add a section titled \`## Common Parameters\`.
+    *   Analyze the arguments for all functions in the OpenAPI spec.
+    *   Identify parameters that appear in most of the functions.
+    *   Create a bulleted list of these common parameters, including their name and description. For example: \`- **parameter_name**: The parameter description.\`
+
+Here is an example of a well-structured \`openapi.md\` file:
+\`\`\`markdown
+${exampleMd}
+\`\`\`
+`;
+
+  const userPrompt = dedent`Please generate the \`openapi.md\` file for the following package.
+
+**Package Info (\`package-info.json\`):**
+\`\`\`json
+${JSON.stringify(packageInfo, null, 2)}
+\`\`\`
+
+**OpenAPI Specification (\`openapi.json\`):**
+\`\`\`json
+${JSON.stringify(openapi, null, 2)}
+\`\`\`
+`;
+
+  try {
+    const { object: result, usage } = await generateObject({
+      model: models.claude35Sonnet,
+      system: systemPrompt,
+      prompt: userPrompt,
+      schema,
+    });
+
+    logUsage(models.claude35Sonnet.modelId, usage);
+    const markdownPath = path.join(slsDir, 'openapi.md');
+    fs.writeFileSync(markdownPath, result.markdownContent);
+    console.log(`✅ Generated openapi.md at: ${markdownPath}`);
+  } catch (error) {
+    console.error(`❌ Error generating openapi.md:`, error);
+  }
 }
 
 /**
@@ -528,93 +561,103 @@ async function generateOpenAPI(
  */
 async function generateSDKInitContent(
   packageInfo: PackageInfo,
-  constructorDocContents: Map<string, string>,
-  templatePath: string,
 ): Promise<string> {
-  // Read the template file
-  const template = fs.readFileSync(templatePath, 'utf8');
-
   const schema = z.object({
     sdkInitCode: z
       .string()
       .describe('Complete TypeScript code for the sdkInit.ts file'),
   });
 
-  const systemPrompt = `You are an expert TypeScript developer. Your task is to generate a complete \`sdkInit.ts\` file for a micro-service. This file will export a factory function called \`sdkInit\` that creates and returns an SDK client instance based on a provided constructor name.
+  const systemPrompt = `You are an expert TypeScript developer. Your task is to generate a complete \`sdkInit.ts\` file. This file exports a function \`sdkInit\` that takes a configuration object and returns a \`Record<string, Function>\` which maps function names to their bound SDK method implementations.
 
-You will be given information about the package, its constructors, and their documentation.
-
-Here is an example of a good \`sdkInit.ts\` file:
+Here is an example of the expected output file:
 \`\`\`typescript
-import { WebClient, MicrofoxSlackClient } from '@microfox/slack';
+import { createBraveSDK } from '@microfox/brave';
 
 interface SDKConfig {
   constructorName: string;
-  SLACK_BOT_TOKEN: string;
   [key: string]: any;
 }
 
-export const sdkInit = (config: SDKConfig): WebClient | MicrofoxSlackClient => {
-  const { constructorName, SLACK_BOT_TOKEN, ...options } = config;
+export const sdkInit = (config: SDKConfig): Record<string, Function> => {
+  const { constructorName, BRAVE_API_KEY, ...options } = config;
 
-  if (!SLACK_BOT_TOKEN) {
-    throw new Error('SLACK_BOT_TOKEN is required');
+  if (!BRAVE_API_KEY) {
+    throw new Error('BRAVE_API_KEY is required');
   }
 
   switch (constructorName) {
-    case 'WebClient':
-      return new WebClient(SLACK_BOT_TOKEN, options);
-    case 'MicrofoxSlackClient':
-      return new MicrofoxSlackClient(SLACK_BOT_TOKEN, options);
+    case 'createBraveSDK':
+      const sdk = createBraveSDK({
+        apiKey: BRAVE_API_KEY,
+        ...options,
+      });
+      const sdkMap: Record<string, Function> = {};
+      sdkMap.webSearch = sdk.webSearch.bind(sdk);
+      sdkMap.imageSearch = sdk.imageSearch.bind(sdk);
+      sdkMap.newsSearch = sdk.newsSearch.bind(sdk);
+      return sdkMap;
     default:
-      throw new Error(\`Constructor "\\\${constructorName}" is not supported.\`);
+      // Fallback or handle default case appropriately
+      const defaultSdk = createBraveSDK({
+        apiKey: BRAVE_API_KEY,
+        ...options,
+      });
+      const defaultSdkMap: Record<string, Function> = {};
+      defaultSdkMap.webSearch = defaultSdk.webSearch.bind(defaultSdk);
+      defaultSdkMap.imageSearch = defaultSdk.imageSearch.bind(defaultSdk);
+      defaultSdkMap.newsSearch = defaultSdk.newsSearch.bind(defaultSdk);
+      return defaultSdkMap;
   }
 };
 
-export { WebClient, MicrofoxSlackClient };
+export { createBraveSDK };
 \`\`\`
 
 ## Your Task:
 Generate the \`sdkInit.ts\` file by following these rules:
-1.  **Imports**: Import all constructor classes from the package \`${packageInfo.name}\`.
-2.  **SDKConfig Interface**: Create an interface named \`SDKConfig\`. It must include \`constructorName: string\` and all possible credential keys from ALL constructors. Use \`[key: string]: any;\` for additional options.
+
+1.  **Imports**: Import all necessary constructor functions from the package \`${packageInfo.name}\`.
+2.  **SDKConfig Interface**: Create an interface named \`SDKConfig\`. It should include \`constructorName: string\` and use \`[key: string]: any;\` to allow for other properties.
 3.  **sdkInit Function**:
     *   It must accept one argument, \`config: SDKConfig\`.
-    *   The return type must be a union of all possible constructor class types (e.g., \`WebClient | MicrofoxSlackClient\`).
-    *   Inside the function, destructure \`constructorName\` and all credential keys from the \`config\` object.
+    *   The return type must be \`Record<string, Function>\`.
+    *   Inside the function, destructure \`constructorName\` and all required credential keys from the \`config\` object.
     *   Implement a \`switch\` statement on \`constructorName\`.
-    *   Each \`case\` should correspond to a constructor name. Inside the case, validate the required credentials for that specific constructor, and then create and return a \`new\` instance of it, passing the appropriate credentials.
-    *   Include a \`default\` case that throws an error for an unsupported constructor.
-4.  **Exports**: After the \`sdkInit\` function, re-export all the imported constructor classes.`;
+    *   For each \`case\`, instantiate the corresponding SDK client.
+    *   After instantiation, create a \`sdkMap: Record<string, Function> = {}\`.
+    *   For **every** function listed in that constructor's functionalities, populate the \`sdkMap\`. For a function named \`exampleFunc\`, the entry should be \`sdkMap.exampleFunc = sdk.exampleFunc.bind(sdk);\`.
+    *   Return the populated \`sdkMap\`.
+    *   Include a \`default\` case that uses the first constructor as a fallback, performs the same mapping, and returns the map.
+4.  **Exports**: After the \`sdkInit\` function, re-export all the imported constructor functions.`;
 
-  const userPrompt = `Now, generate the complete \`sdkInit.ts\` file for the following package:
-
-**Package Information:**
-- Name: ${packageInfo.name}
-- Title: ${packageInfo.title}
-- Description: ${packageInfo.description}
-
-**Constructors:**
-${packageInfo.constructors
-  .map(
-    c =>
-      `- Name: ${c.name}, Auth Type: ${c.auth}, Required Keys: ${[
+  // Create a more detailed representation of constructors for the prompt
+  const constructorDetails = packageInfo.constructors
+    .map(c => {
+      const requiredKeys = [
         ...(c.requiredKeys || []),
         ...(c.internalKeys || []),
-        ...(c.botConfig || []),
+        // ...(c.botConfig || []),
       ]
         .map(k => k.key)
-        .join(', ')}
-  - Functions: ${(c.functionalities || []).join(', ')}`,
-  )
-  .join('\n')}
+        .join(', ');
 
-**Constructor Documentations:**
-${Array.from(constructorDocContents.entries())
-  .map(([name, content]) => `\n**${name}**:\n\`\`\`\n${content}\n\`\`\``)
-  .join('')}
+      const functionalities = (c.functionalities || []).join(', ');
 
-Please generate the complete \`sdkInit.ts\` file as instructed. Do not use the template, generate from scratch based on the rules and the example.`;
+      return `- Constructor Name: ${c.name}
+  - Required Keys: ${requiredKeys || 'None'}
+  - Functionalities: ${functionalities || 'None'}`;
+    })
+    .join('\n');
+
+  const userPrompt = `Generate the complete \`sdkInit.ts\` file for the following package:
+
+**Package Name:** \`${packageInfo.name}\`
+
+**Constructors and their functions:**
+${constructorDetails}
+
+Please generate the complete \`sdkInit.ts\` file as per the instructions and example provided in the system prompt. Ensure all functionalities for each constructor are mapped correctly.`;
 
   try {
     const { object: result, usage } = await generateObject({
@@ -644,12 +687,18 @@ function updateTemplateFiles(
 ): void {
   // Update package.json
   const packageJsonPath = path.join(slsDir, 'package.json');
+  const parentPackageJsonPath = path.join(slsDir, '..', 'package.json');
+  const parentPackageJson = JSON.parse(
+    fs.readFileSync(parentPackageJsonPath, 'utf8'),
+  );
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     packageJson.name = `public-${packageName}-api`;
     packageJson.description = description;
+    packageJson.dependencies[parentPackageJson.name] =
+      `^${parentPackageJson.version}`;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    console.log(`✅ Updated package.json name to: ${packageJson.name}`);
+    console.log(`✅ Updated package.json for ${packageJson.name}`);
   }
 
   // Update serverless.yml
@@ -661,44 +710,12 @@ function updateTemplateFiles(
       /^service:\s+.+$/m,
       `service: public-${packageName}-api`,
     );
+
     fs.writeFileSync(serverlessPath, serverlessContent);
     console.log(
-      `✅ Updated serverless.yml service to: public-${packageName}-api`,
+      `✅ Updated serverless.yml for public-${packageName}-api`,
     );
   }
-}
-
-/**
- * Update package.json to include the package dependency
- */
-function updatePackageJson(slsDir: string, packageInfo: PackageInfo): void {
-  const packageJsonPath = path.join(slsDir, 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  const sdkPackageJson = JSON.parse(
-    fs.readFileSync(path.join(slsDir, '..', 'package.json'), 'utf8'),
-  );
-
-  // Update name and description
-  packageJson.name =
-    'public-' + packageInfo.name.replace('@microfox/', '') + '-api';
-  packageJson.description = packageInfo.description;
-
-  // Add the package as a dependency
-  if (!packageJson.dependencies) {
-    packageJson.dependencies = {};
-  }
-  packageJson.dependencies[packageInfo.name] = `^${sdkPackageJson.version}`;
-
-  const serverlessPath = path.join(slsDir, 'serverless.yml');
-  let serverlessContent = fs.readFileSync(serverlessPath, 'utf8');
-  serverlessContent = serverlessContent.replace(
-    /^service:\s+.+$/m,
-    `service: public-${packageInfo.name.replace('@microfox/', '')}-api`,
-  );
-  fs.writeFileSync(serverlessPath, serverlessContent);
-
-  // Write updated package.json
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 }
 
 /**
@@ -720,80 +737,45 @@ async function updateFunctionsInOpenAPI(
       return false;
     }
 
-    // Read existing OpenAPI JSON
-    const openapi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
+    const functionDocs: FunctionDoc[] = [];
+    const docContents = new Map<string, string>();
 
-    // Get constructor name for validation
-    const constructorNames = packageInfo.constructors.map(c => c.name);
-
-    let successCount = 0;
-    let failureCount = 0;
-    let skippedCount = 0;
-
-    // Update each specified function
-    for (const functionName of functionNames) {
-      // Skip constructor functions
-      if (constructorNames.includes(functionName)) {
-        console.log(
-          `⏭️ Skipping constructor function: ${functionName} (constructors don't need OpenAPI endpoints)`,
-        );
-        skippedCount++;
-        continue;
-      }
-
-      const constructorsForFunction = packageInfo.constructors.filter(c =>
-        c.functionalities?.includes(functionName),
-      );
-
-      if (constructorsForFunction.length === 0) {
-        console.warn(
-          `⚠️ Function ${functionName} not found in any constructor's functionalities. Skipping.`,
-        );
-        continue;
-      }
-
-      const docPath = path.join(docsDir, `${functionName}.md`);
-      if (!fs.existsSync(docPath)) {
-        console.error(
-          `❌ Documentation not found for function: ${functionName}`,
-        );
-        failureCount++;
-        continue;
-      }
-
-      const docContent = fs.readFileSync(docPath, 'utf8');
-      console.log(`🔧 Updating OpenAPI path for function: ${functionName}`);
-
-      try {
-        for (const constructor of constructorsForFunction) {
-          const constructorNameForPath = constructor.name.replace(/\./g, '-');
-          const functionSlug = functionName.replace(/\./g, '-');
-          const pathKey = `/${constructorNameForPath}/${functionSlug}`;
-          const pathSpec = await generateOpenAPIPath(
-            functionName,
-            docContent,
-            constructor,
-            packageName,
-          );
-          openapi.paths[pathKey] = pathSpec;
-          console.log(
-            `✅ Generated AI path for: ${functionName} with constructor ${constructor.name}`,
-          );
-        }
-        successCount++;
-      } catch (error) {
-        console.error(`❌ Error updating function ${functionName}:`, error);
-        failureCount++;
+    for (const funcName of functionNames) {
+      const docPath = path.join(docsDir, 'functions', `${funcName}.md`);
+      if (fs.existsSync(docPath)) {
+        const docContent = fs.readFileSync(docPath, 'utf8');
+        docContents.set(funcName, docContent);
+        const funcDoc: FunctionDoc = {
+          name: funcName,
+          description: `${funcName} function`,
+          parameters: [],
+          returnType: 'Promise<any>',
+        };
+        functionDocs.push(funcDoc);
+      } else {
+        console.warn(`⚠️ Documentation not found for function: ${funcName}`);
       }
     }
 
-    // Write updated OpenAPI JSON
-    fs.writeFileSync(openApiPath, JSON.stringify(openapi, null, 2));
-    console.log(
-      `✅ Updated OpenAPI for ${successCount} functions (${failureCount} failed, ${skippedCount} skipped)`,
+    await generateIndividualOpenAPIFiles(
+      packageInfo,
+      functionDocs,
+      packageName,
+      docContents,
+      slsDir,
     );
 
-    return failureCount === 0;
+    combineOpenAPIFiles(slsDir, packageInfo, packageName);
+
+    // Generate openapi.md
+    console.log(`✍️ Generating OpenAPI markdown documentation...`);
+    await generateOpenAPIMarkdown(packageInfo, slsDir);
+
+    console.log(
+      `✅ Updated OpenAPI for ${functionNames.length} functions successfully`,
+    );
+
+    return true;
   } catch (error) {
     console.error(`❌ Error updating functions in OpenAPI:`, error);
     return false;
@@ -926,11 +908,8 @@ export async function generateSLSStructure(
         );
       }
 
-      const sdkInitTemplatePath = path.join(templateDir, 'src', 'sdkInit.txt');
       const sdkInitContent = await generateSDKInitContent(
         packageInfo,
-        constructorDocContents,
-        sdkInitTemplatePath,
       );
       const sdkInitPath = path.join(slsDir, 'src', 'sdkInit.ts');
       fs.writeFileSync(sdkInitPath, sdkInitContent);
@@ -965,13 +944,96 @@ export async function generateSLSStructure(
     copyDirectory(templateDir, slsDir);
     console.log(`✅ Template copied successfully`);
 
+    // Overwrite index.ts with the new standardized template
+    const newIndexTsContent = `import dotenv from 'dotenv';
+import { sdkInit } from './sdkInit.js';
+import { APIGatewayEvent } from 'aws-lambda';
+import {
+  ToolParse,
+  createApiResponse,
+  ApiError,
+  InternalServerError,
+} from '@microfox/tool-core';
+import * as fs from 'fs';
+import * as path from 'path';
+
+dotenv.config(); // for any local vars
+
+const toolHandler = new ToolParse({
+  encryptionKey: process.env.ENCRYPTION_KEY,
+});
+
+export const handler = async (event: APIGatewayEvent): Promise<any> => {
+  if (event.path === '/docs.json' && event.httpMethod === 'GET') {
+    try {
+      const openapiPath = path.resolve(__dirname, 'openapi.json');
+      const openapiSpec = fs.readFileSync(openapiPath, 'utf-8');
+      return createApiResponse(200, JSON.parse(openapiSpec));
+    } catch (error) {
+      console.error('Error reading openapi.json:', error);
+      const internalError = new InternalServerError('Could not load API specification.');
+      return createApiResponse(internalError.statusCode, {
+        error: internalError.message,
+      });
+    }
+  }
+
+  try {
+    // Extract environment variables from the new structure
+    toolHandler.populateEnvVars(event);
+
+    const constructorName = toolHandler.extractConstructor(event);
+
+    // Map functions
+    const sdkMap = sdkInit({
+      constructorName,
+      ...process.env,
+    });
+
+    // Extract function arguments
+    const args = toolHandler.extractArguments(event);
+
+    // Extract function from the SDK map
+    const fn = toolHandler.extractFunction(sdkMap, event);
+
+    // Invoke the function
+    const result = await toolHandler.executeFunction(fn, args);
+
+    // Return successful response
+    return createApiResponse(200, result);
+  } catch (error) {
+    console.error('Error in handler:', error);
+
+    // Handle custom API errors
+    if (error instanceof ApiError) {
+      return createApiResponse(error.statusCode, { error: error.message });
+    }
+
+    // Handle unexpected errors
+    const internalError = new InternalServerError(
+      error instanceof Error ? error.message : String(error),
+    );
+    return createApiResponse(internalError.statusCode, {
+      error: internalError.message,
+      details: process.env.NODE_ENV === 'development' ? error : undefined,
+    });
+  }
+};`;
+    const indexPath = path.join(slsDir, 'src', 'index.ts');
+    fs.writeFileSync(indexPath, newIndexTsContent);
+    console.log(`✅ Overwrote src/index.ts with new template.`);
+
     // Update template files with package-specific information
     updateTemplateFiles(slsDir, packageName, packageInfo.description);
 
     // Read constructor documentation (for SDK generation)
     const constructorDocContents = new Map<string, string>();
     for (const constructor of constructors) {
-      const constructorDocPath = path.join(docsDir, 'constructors', `${constructor.name}.md`);
+      const constructorDocPath = path.join(
+        docsDir,
+        'constructors',
+        `${constructor.name}.md`,
+      );
       if (!fs.existsSync(constructorDocPath)) {
         console.error(
           `❌ Constructor documentation not found: ${constructorDocPath}`,
@@ -983,6 +1045,14 @@ export async function generateSLSStructure(
         fs.readFileSync(constructorDocPath, 'utf8'),
       );
     }
+
+    // Generate SDK Init file first
+    console.log(`🔧 Generating SDK initialization file...`);
+    const sdkInitContent = await generateSDKInitContent(packageInfo);
+    const sdkInitPath = path.join(slsDir, 'src', 'sdkInit.ts');
+    fs.writeFileSync(sdkInitPath, sdkInitContent);
+    console.log(`✅ Generated SDK Init at: ${sdkInitPath}`);
+
     // Create a simple constructor doc object for SDK generation
     // Read function documentation (for AI generation)
     const functionDocs: FunctionDoc[] = [];
@@ -1022,37 +1092,33 @@ export async function generateSLSStructure(
     }
 
     // Generate OpenAPI JSON
-    console.log(`🔧 Generating OpenAPI specification...`);
-    const openapi = await generateOpenAPI(
+    console.log(`🔧 Generating individual OpenAPI function files...`);
+    await generateIndividualOpenAPIFiles(
       packageInfo,
       functionDocs,
       packageName,
       docContents,
+      slsDir,
     );
-    const openApiPath = path.join(slsDir, 'openapi.json');
-    fs.writeFileSync(openApiPath, JSON.stringify(openapi, null, 2));
-    console.log(`✅ Generated OpenAPI at: ${openApiPath}`);
 
-    // Generate SDK Init file
-    console.log(`🔧 Generating SDK initialization file...`);
-    const sdkInitTemplatePath = path.join(templateDir, 'src', 'sdkInit.txt');
-    const sdkInitContent = await generateSDKInitContent(
-      packageInfo,
-      constructorDocContents,
-      sdkInitTemplatePath,
-    );
-    const sdkInitPath = path.join(slsDir, 'src', 'sdkInit.ts');
-    fs.writeFileSync(sdkInitPath, sdkInitContent);
-    console.log(`✅ Generated SDK Init at: ${sdkInitPath}`);
+    // Combine individual files into the main openapi.json
+    console.log(`🔧 Combining OpenAPI files...`);
+    combineOpenAPIFiles(slsDir, packageInfo, packageName);
+    const openApiPath = path.join(slsDir, 'openapi.json');
+    console.log(`✅ Generated and combined OpenAPI at: ${openApiPath}`);
+
+    // Generate openapi.md
+    console.log(`✍️ Generating OpenAPI markdown documentation...`);
+    await generateOpenAPIMarkdown(packageInfo, slsDir);
 
     // Update package.json
     console.log(`📦 Updating package.json...`);
-    updatePackageJson(slsDir, packageInfo);
     console.log(`✅ Updated package.json with dependency: ${packageInfo.name}`);
 
     console.log(`\n✅ Successfully generated SLS structure for ${packageName}`);
     console.log(`📁 SLS directory: ${slsDir}`);
     console.log(`🔗 OpenAPI: ${path.join(slsDir, 'openapi.json')}`);
+    console.log(`🔗 OpenAPI MD: ${path.join(slsDir, 'openapi.md')}`);
     console.log(`🔗 SDK Init: ${path.join(slsDir, 'src', 'sdkInit.ts')}`);
 
     return true;
@@ -1086,9 +1152,9 @@ if (require.main === module) {
   // Parse specific functions from comma-separated string
   const specificFunctions = specificFunctionsArg
     ? specificFunctionsArg
-        .split(',')
-        .map(f => f.trim())
-        .filter(f => f.length > 0)
+      .split(',')
+      .map(f => f.trim())
+      .filter(f => f.length > 0)
     : undefined;
 
   (async () => {

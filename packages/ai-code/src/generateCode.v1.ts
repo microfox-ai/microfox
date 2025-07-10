@@ -1,3 +1,4 @@
+// @ts-ignore
 import { generateObject, generateText, Tool } from 'ai';
 import { LanguageModelV2 } from '@ai-sdk/provider';
 import { z } from 'zod';

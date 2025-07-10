@@ -37,17 +37,10 @@
         }
       ],
       "functionalities": [
-        "request",
-        "webSearch",
-        "localPoiSearch",
-        "localDescriptionsSearch",
-        "summarizerSearch",
         "imageSearch",
-        "videoSearch",
         "newsSearch",
-        "suggestSearch",
-        "spellcheckSearch",
-        "createBraveSDK"
+        "videoSearch",
+        "webSearch"
       ]
     }
   ],

@@ -19,12 +19,23 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         ...options,
       });
       const sdkMap: Record<string, Function> = {};
-      sdkMap.webSearch = sdk.webSearch.bind(sdk);
       sdkMap.imageSearch = sdk.imageSearch.bind(sdk);
       sdkMap.newsSearch = sdk.newsSearch.bind(sdk);
+      sdkMap.videoSearch = sdk.videoSearch.bind(sdk);
+      sdkMap.webSearch = sdk.webSearch.bind(sdk);
       return sdkMap;
     default:
-      throw new Error(`Constructor "${constructorName}" is not supported.`);
+      // Fallback to createBraveSDK as default
+      const defaultSdk = createBraveSDK({
+        apiKey: BRAVE_API_KEY,
+        ...options,
+      });
+      const defaultSdkMap: Record<string, Function> = {};
+      defaultSdkMap.imageSearch = defaultSdk.imageSearch.bind(defaultSdk);
+      defaultSdkMap.newsSearch = defaultSdk.newsSearch.bind(defaultSdk);
+      defaultSdkMap.videoSearch = defaultSdk.videoSearch.bind(defaultSdk);
+      defaultSdkMap.webSearch = defaultSdk.webSearch.bind(defaultSdk);
+      return defaultSdkMap;
   }
 };
 
