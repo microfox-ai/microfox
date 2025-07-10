@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "lib": ["ES2020"],
     "allowJs": true,
     "strict": true,
@@ -12,12 +12,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
-    "noImplicitAny": false,
-    "noCheck": true,
+    "noImplicitAny": true,
+    "noCheck": false,
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
-    "resolveJsonModule": true,
     "paths": {
       "@/*": ["*"]
     }
@@ -25,8 +24,8 @@
   "ts-node": {
     "esm": true,
     "compilerOptions": {
-      "module": "ESNext",
-      "moduleResolution": "Node"
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext"
     }
   },
   "include": ["src/**/*"],
