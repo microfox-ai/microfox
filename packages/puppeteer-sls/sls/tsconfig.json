@@ -17,8 +17,16 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["*"]
+    }
+  },
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "module": "ESNext",
+      "moduleResolution": "Node"
     }
   },
   "include": ["src/**/*"],

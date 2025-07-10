@@ -1,0 +1,140 @@
+{
+  "post": {
+    "operationId": "openPage",
+    "summary": "Opens a new browser page and navigates to a specified URL.",
+    "description": "This function is the entry point for most web scraping tasks. It initializes a new browser instance, creates a page, and navigates to the provided URL. The function allows customization of viewport dimensions, headless mode, and local execution settings.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the openPage sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Configuration options for opening a new page",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL to navigate to"
+                      },
+                      "defaultViewport": {
+                        "type": "object",
+                        "description": "Viewport dimensions",
+                        "properties": {
+                          "width": {
+                            "type": "integer",
+                            "description": "The width of the viewport in pixels"
+                          },
+                          "height": {
+                            "type": "integer",
+                            "description": "The height of the viewport in pixels"
+                          }
+                        },
+                        "required": [
+                          "width",
+                          "height"
+                        ]
+                      },
+                      "headless": {
+                        "type": "boolean",
+                        "description": "Whether to run in headless mode",
+                        "default": false
+                      },
+                      "isLocal": {
+                        "type": "boolean",
+                        "description": "Set to true when running on your local machine",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "PuppeteerSLS"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successfully opened page and navigated to URL",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "browser": {
+                  "type": "object",
+                  "description": "Puppeteer Browser instance"
+                },
+                "page": {
+                  "type": "object",
+                  "description": "Puppeteer Page instance"
+                }
+              },
+              "required": [
+                "browser",
+                "page"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request - invalid input parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue with the input parameters"
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the internal server error"
+                }
+              },
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "post": {
+    "operationId": "extractImagesFromURL",
+    "summary": "Extracts image data from a specified URL using Puppeteer.",
+    "description": "The extractImagesFromURL function is a convenience wrapper that opens a URL, extracts images, and closes the browser. It's designed for single-use scraping tasks, returning detailed information about images found on the webpage. This function utilizes Puppeteer to render the page and extract image data including src, srcset, responsive images, and alt text.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the extractImagesFromURL sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Configuration object containing all function parameters.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL of the webpage to extract images from."
+                      },
+                      "isLocal": {
+                        "type": "boolean",
+                        "description": "Indicates whether the URL is a local file or a remote web address."
+                      },
+                      "headless": {
+                        "type": "boolean",
+                        "description": "Determines whether to run the browser in headless mode."
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "PuppeteerSLS"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with extracted image data",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "src": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The source URL of the image"
+                  },
+                  "srcset": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The srcset attribute of the image"
+                  },
+                  "responsiveImages": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "URL of the responsive image"
+                        },
+                        "size": {
+                          "type": "string",
+                          "description": "Size descriptor of the responsive image"
+                        }
+                      }
+                    },
+                    "description": "Array of responsive image objects"
+                  },
+                  "alt": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "The alt text of the image"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request - invalid input parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue with the request"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found - the specified URL could not be accessed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating that the URL was not found or could not be accessed"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

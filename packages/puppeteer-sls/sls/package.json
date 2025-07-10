@@ -1,8 +1,8 @@
 {
   "name": "public-puppeteer-sls-api",
   "version": "1.0.0",
-  "description": "A serverless application for running puppeteer scripts using AWS Step Functions.",
-  "main": "dist/handler.js",
+  "description": "A simple and easy to use client for running Puppeteer on serverless functions.",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -12,23 +12,30 @@
     "remove": "serverless remove",
     "remove:preview": "serverless remove --stage preview",
     "remove:prod": "serverless remove --stage prod",
-    "start": "serverless offline start"
+    "start": "serverless offline start",
+    "lint": "eslint  --ignore-pattern 'dist/**'"
   },
   "dependencies": {
-    "@aws-sdk/client-sfn": "^3.504.0",
-    "@microfox/puppeteer-sls": "1.0.3",
-    "@upstash/redis": "^1.28.4",
+    "@microfox/crypto-sdk": "^1.0.3",
+    "@microfox/tool-core": "^1.0.1",
     "dotenv": "^16.4.5",
-    "puppeteer-core": "24.10.2"
+    "@microfox/puppeteer-sls": "^1.2.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.131",
     "@types/node": "^20.11.19",
-    "@types/puppeteer-core": "^7.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.31.0",
     "serverless": "^3.38.0",
+    "serverless-api-gateway-throttling": "^2.0.3",
     "serverless-offline": "^13.3.3",
     "serverless-plugin-typescript": "^2.1.5",
-    "serverless-step-functions": "^3.23.1",
     "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@serverless/eslint-config/node",
+    "root": true
   }
 }

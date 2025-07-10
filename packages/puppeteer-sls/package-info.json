@@ -18,7 +18,13 @@
       "requiredKeys": [],
       "internalKeys": [],
       "botConfig": [],
-      "functionalities": ["puppeteerLaunchProps"]
+      "functionalities": [
+        "extractImagesFromURL",
+        "extractLinksFromUrl",
+        "extractWebpage",
+        "openPage",
+        "takeSnapShot"
+      ]
     }
   ],
   "keyInstructions": {

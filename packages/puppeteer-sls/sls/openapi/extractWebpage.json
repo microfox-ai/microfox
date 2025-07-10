@@ -1,0 +1,141 @@
+{
+  "post": {
+    "operationId": "extractWebpage",
+    "summary": "Extracts content from a webpage in various formats.",
+    "description": "This function opens a URL and extracts text content, with options to also extract Markdown and HTML content. It provides a convenient wrapper for web scraping tasks, opening its own browser instance and handling page navigation.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the extractWebpage sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Configuration object containing all function parameters.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL of the webpage to extract content from."
+                      },
+                      "toMarkdown": {
+                        "type": "boolean",
+                        "description": "If true, returns Markdown content."
+                      },
+                      "toHTML": {
+                        "type": "boolean",
+                        "description": "If true, returns full HTML content."
+                      },
+                      "isLocal": {
+                        "type": "boolean",
+                        "description": "Indicates if the URL is a local file."
+                      },
+                      "headless": {
+                        "type": "boolean",
+                        "description": "Determines if the browser should run in headless mode."
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "PuppeteerSLS"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "Extracted text content from the webpage."
+                },
+                "markdown": {
+                  "type": "string",
+                  "description": "Markdown representation of the webpage content (if toMarkdown is true)."
+                },
+                "html": {
+                  "type": "string",
+                  "description": "Full HTML content of the webpage (if toHTML is true)."
+                }
+              },
+              "required": [
+                "content"
+              ]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the bad request."
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Webpage not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating the webpage was not found."
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the internal server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

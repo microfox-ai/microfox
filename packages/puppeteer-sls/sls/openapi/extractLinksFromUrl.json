@@ -1,0 +1,155 @@
+{
+  "post": {
+    "operationId": "extractLinksFromUrl",
+    "summary": "Extracts hyperlink data from a specified URL",
+    "description": "The extractLinksFromUrl function is a convenience wrapper that opens a given URL, extracts all hyperlinks from the webpage, and then closes the browser. It returns detailed information about each extracted link, including its href, display name, type, and various boolean flags indicating the link's characteristics.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the extractLinksFromUrl sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Configuration object containing all function parameters.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL of the webpage from which to extract links."
+                      },
+                      "isLocal": {
+                        "type": "boolean",
+                        "description": "Indicates whether the URL is a local resource."
+                      },
+                      "headless": {
+                        "type": "boolean",
+                        "description": "Determines if the browser should run in headless mode."
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "PuppeteerSLS"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response with extracted links",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string",
+                    "description": "The URL of the extracted link"
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "The visible text of the link"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "statix",
+                      "webpage"
+                    ],
+                    "description": "The type of the link"
+                  },
+                  "inPageLink": {
+                    "type": "boolean",
+                    "description": "Indicates if the link is within the same page"
+                  },
+                  "externalLink": {
+                    "type": "boolean",
+                    "description": "Indicates if the link points to an external resource"
+                  },
+                  "internalLink": {
+                    "type": "boolean",
+                    "description": "Indicates if the link points to an internal resource"
+                  },
+                  "staticType": {
+                    "type": "string",
+                    "enum": [
+                      "video",
+                      "image",
+                      "file",
+                      "other"
+                    ],
+                    "description": "The type of static content, if applicable"
+                  },
+                  "fileExtension": {
+                    "type": "string",
+                    "description": "The file extension, if applicable"
+                  }
+                },
+                "required": [
+                  "href",
+                  "displayName",
+                  "type",
+                  "inPageLink",
+                  "externalLink",
+                  "internalLink"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request - invalid input parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the issue with the request"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

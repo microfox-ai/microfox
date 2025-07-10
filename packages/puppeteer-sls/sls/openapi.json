@@ -1,0 +1,803 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Puppeteer SLS Provider API",
+    "version": "1.2.0",
+    "mcp_version": "1.0.1",
+    "description": "A simple and easy to use client for running Puppeteer on serverless functions.",
+    "contact": {
+      "name": "Microfox Dev Support",
+      "email": "support@microfox.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.microfox.com/c/puppeteer-sls",
+      "description": "Unified wrapper endpoint"
+    }
+  ],
+  "components": {
+    "x-auth-packages": [
+      {
+        "packageName": "@microfox/puppeteer-sls"
+      }
+    ]
+  },
+  "paths": {
+    "/extractImagesFromURL": {
+      "post": {
+        "operationId": "extractImagesFromURL",
+        "summary": "Extracts image data from a specified URL using Puppeteer.",
+        "description": "The extractImagesFromURL function is a convenience wrapper that opens a URL, extracts images, and closes the browser. It's designed for single-use scraping tasks, returning detailed information about images found on the webpage. This function utilizes Puppeteer to render the page and extract image data including src, srcset, responsive images, and alt text.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the extractImagesFromURL sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Configuration object containing all function parameters.",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "The URL of the webpage to extract images from."
+                          },
+                          "isLocal": {
+                            "type": "boolean",
+                            "description": "Indicates whether the URL is a local file or a remote web address."
+                          },
+                          "headless": {
+                            "type": "boolean",
+                            "description": "Determines whether to run the browser in headless mode."
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ]
+                      },
+                      "constructor": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "enum": [
+                          "PuppeteerSLS"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with extracted image data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "src": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The source URL of the image"
+                      },
+                      "srcset": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The srcset attribute of the image"
+                      },
+                      "responsiveImages": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "description": "URL of the responsive image"
+                            },
+                            "size": {
+                              "type": "string",
+                              "description": "Size descriptor of the responsive image"
+                            }
+                          }
+                        },
+                        "description": "Array of responsive image objects"
+                      },
+                      "alt": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The alt text of the image"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found - the specified URL could not be accessed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the URL was not found or could not be accessed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extractLinksFromUrl": {
+      "post": {
+        "operationId": "extractLinksFromUrl",
+        "summary": "Extracts hyperlink data from a specified URL",
+        "description": "The extractLinksFromUrl function is a convenience wrapper that opens a given URL, extracts all hyperlinks from the webpage, and then closes the browser. It returns detailed information about each extracted link, including its href, display name, type, and various boolean flags indicating the link's characteristics.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the extractLinksFromUrl sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Configuration object containing all function parameters.",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "The URL of the webpage from which to extract links."
+                          },
+                          "isLocal": {
+                            "type": "boolean",
+                            "description": "Indicates whether the URL is a local resource."
+                          },
+                          "headless": {
+                            "type": "boolean",
+                            "description": "Determines if the browser should run in headless mode."
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ]
+                      },
+                      "constructor": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "enum": [
+                          "PuppeteerSLS"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with extracted links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "description": "The URL of the extracted link"
+                      },
+                      "displayName": {
+                        "type": "string",
+                        "description": "The visible text of the link"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "statix",
+                          "webpage"
+                        ],
+                        "description": "The type of the link"
+                      },
+                      "inPageLink": {
+                        "type": "boolean",
+                        "description": "Indicates if the link is within the same page"
+                      },
+                      "externalLink": {
+                        "type": "boolean",
+                        "description": "Indicates if the link points to an external resource"
+                      },
+                      "internalLink": {
+                        "type": "boolean",
+                        "description": "Indicates if the link points to an internal resource"
+                      },
+                      "staticType": {
+                        "type": "string",
+                        "enum": [
+                          "video",
+                          "image",
+                          "file",
+                          "other"
+                        ],
+                        "description": "The type of static content, if applicable"
+                      },
+                      "fileExtension": {
+                        "type": "string",
+                        "description": "The file extension, if applicable"
+                      }
+                    },
+                    "required": [
+                      "href",
+                      "displayName",
+                      "type",
+                      "inPageLink",
+                      "externalLink",
+                      "internalLink"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extractWebpage": {
+      "post": {
+        "operationId": "extractWebpage",
+        "summary": "Extracts content from a webpage in various formats.",
+        "description": "This function opens a URL and extracts text content, with options to also extract Markdown and HTML content. It provides a convenient wrapper for web scraping tasks, opening its own browser instance and handling page navigation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the extractWebpage sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Configuration object containing all function parameters.",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "The URL of the webpage to extract content from."
+                          },
+                          "toMarkdown": {
+                            "type": "boolean",
+                            "description": "If true, returns Markdown content."
+                          },
+                          "toHTML": {
+                            "type": "boolean",
+                            "description": "If true, returns full HTML content."
+                          },
+                          "isLocal": {
+                            "type": "boolean",
+                            "description": "Indicates if the URL is a local file."
+                          },
+                          "headless": {
+                            "type": "boolean",
+                            "description": "Determines if the browser should run in headless mode."
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ]
+                      },
+                      "constructor": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "enum": [
+                          "PuppeteerSLS"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "string",
+                      "description": "Extracted text content from the webpage."
+                    },
+                    "markdown": {
+                      "type": "string",
+                      "description": "Markdown representation of the webpage content (if toMarkdown is true)."
+                    },
+                    "html": {
+                      "type": "string",
+                      "description": "Full HTML content of the webpage (if toHTML is true)."
+                    }
+                  },
+                  "required": [
+                    "content"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webpage not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating the webpage was not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openPage": {
+      "post": {
+        "operationId": "openPage",
+        "summary": "Opens a new browser page and navigates to a specified URL.",
+        "description": "This function is the entry point for most web scraping tasks. It initializes a new browser instance, creates a page, and navigates to the provided URL. The function allows customization of viewport dimensions, headless mode, and local execution settings.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the openPage sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Configuration options for opening a new page",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "The URL to navigate to"
+                          },
+                          "defaultViewport": {
+                            "type": "object",
+                            "description": "Viewport dimensions",
+                            "properties": {
+                              "width": {
+                                "type": "integer",
+                                "description": "The width of the viewport in pixels"
+                              },
+                              "height": {
+                                "type": "integer",
+                                "description": "The height of the viewport in pixels"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "height"
+                            ]
+                          },
+                          "headless": {
+                            "type": "boolean",
+                            "description": "Whether to run in headless mode",
+                            "default": false
+                          },
+                          "isLocal": {
+                            "type": "boolean",
+                            "description": "Set to true when running on your local machine",
+                            "default": false
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ]
+                      },
+                      "constructor": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "enum": [
+                          "PuppeteerSLS"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully opened page and navigated to URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "browser": {
+                      "type": "object",
+                      "description": "Puppeteer Browser instance"
+                    },
+                    "page": {
+                      "type": "object",
+                      "description": "Puppeteer Page instance"
+                    }
+                  },
+                  "required": [
+                    "browser",
+                    "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - invalid input parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the issue with the input parameters"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/takeSnapShot": {
+      "post": {
+        "operationId": "takeSnapShot",
+        "summary": "Takes a screenshot of a web page and uploads it to S3-compatible storage.",
+        "description": "This function opens a specified web page, captures a screenshot, and uploads it to an S3-compatible storage space. It returns the public URL of the uploaded image. The function is designed for single-use operations, opening and closing its own browser instance for each invocation.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the takeSnapShot sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "description": "Configuration object containing all function parameters.",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "description": "The URL of the web page to screenshot."
+                          },
+                          "fileName": {
+                            "type": "string",
+                            "description": "The file name for the screenshot in S3."
+                          },
+                          "quality": {
+                            "type": "number",
+                            "description": "For JPEG screenshots, image quality from 0-100.",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "encoding": {
+                            "type": "string",
+                            "enum": [
+                              "base64",
+                              "binary"
+                            ],
+                            "default": "binary",
+                            "description": "The encoding type for the screenshot."
+                          },
+                          "s3Config": {
+                            "type": "object",
+                            "description": "Configuration for your S3-compatible storage.",
+                            "properties": {
+                              "bucket": {
+                                "type": "string",
+                                "description": "The name of the S3 bucket."
+                              },
+                              "region": {
+                                "type": "string",
+                                "description": "The region of the S3 bucket."
+                              },
+                              "endpoint": {
+                                "type": "string",
+                                "description": "The endpoint URL for the S3-compatible storage."
+                              },
+                              "credentials": {
+                                "type": "object",
+                                "description": "AWS credentials for accessing the S3 bucket.",
+                                "properties": {
+                                  "accessKeyId": {
+                                    "type": "string",
+                                    "description": "The access key ID for the AWS account."
+                                  },
+                                  "secretAccessKey": {
+                                    "type": "string",
+                                    "description": "The secret access key for the AWS account."
+                                  }
+                                },
+                                "required": [
+                                  "accessKeyId",
+                                  "secretAccessKey"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "bucket",
+                              "region",
+                              "endpoint",
+                              "credentials"
+                            ]
+                          },
+                          "isLocal": {
+                            "type": "boolean",
+                            "description": "Indicates if the operation is being run locally."
+                          },
+                          "headless": {
+                            "type": "boolean",
+                            "description": "Determines if the browser should run in headless mode."
+                          }
+                        },
+                        "required": [
+                          "url",
+                          "fileName",
+                          "s3Config"
+                        ]
+                      },
+                      "constructor": {
+                        "type": "string",
+                        "description": "Name of the constructor to use.",
+                        "enum": [
+                          "PuppeteerSLS"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "description": "The public URL of the uploaded screenshot."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the bad request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message describing the internal server error."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Error message indicating that the service is temporarily unavailable."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

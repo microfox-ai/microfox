@@ -1,0 +1,185 @@
+{
+  "post": {
+    "operationId": "takeSnapShot",
+    "summary": "Takes a screenshot of a web page and uploads it to S3-compatible storage.",
+    "description": "This function opens a specified web page, captures a screenshot, and uploads it to an S3-compatible storage space. It returns the public URL of the uploaded image. The function is designed for single-use operations, opening and closing its own browser instance for each invocation.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the takeSnapShot sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Configuration object containing all function parameters.",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "description": "The URL of the web page to screenshot."
+                      },
+                      "fileName": {
+                        "type": "string",
+                        "description": "The file name for the screenshot in S3."
+                      },
+                      "quality": {
+                        "type": "number",
+                        "description": "For JPEG screenshots, image quality from 0-100.",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      "encoding": {
+                        "type": "string",
+                        "enum": [
+                          "base64",
+                          "binary"
+                        ],
+                        "default": "binary",
+                        "description": "The encoding type for the screenshot."
+                      },
+                      "s3Config": {
+                        "type": "object",
+                        "description": "Configuration for your S3-compatible storage.",
+                        "properties": {
+                          "bucket": {
+                            "type": "string",
+                            "description": "The name of the S3 bucket."
+                          },
+                          "region": {
+                            "type": "string",
+                            "description": "The region of the S3 bucket."
+                          },
+                          "endpoint": {
+                            "type": "string",
+                            "description": "The endpoint URL for the S3-compatible storage."
+                          },
+                          "credentials": {
+                            "type": "object",
+                            "description": "AWS credentials for accessing the S3 bucket.",
+                            "properties": {
+                              "accessKeyId": {
+                                "type": "string",
+                                "description": "The access key ID for the AWS account."
+                              },
+                              "secretAccessKey": {
+                                "type": "string",
+                                "description": "The secret access key for the AWS account."
+                              }
+                            },
+                            "required": [
+                              "accessKeyId",
+                              "secretAccessKey"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "bucket",
+                          "region",
+                          "endpoint",
+                          "credentials"
+                        ]
+                      },
+                      "isLocal": {
+                        "type": "boolean",
+                        "description": "Indicates if the operation is being run locally."
+                      },
+                      "headless": {
+                        "type": "boolean",
+                        "description": "Determines if the browser should run in headless mode."
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "fileName",
+                      "s3Config"
+                    ]
+                  },
+                  "constructor": {
+                    "type": "string",
+                    "description": "Name of the constructor to use.",
+                    "enum": [
+                      "PuppeteerSLS"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "imageUrl": {
+                  "type": "string",
+                  "description": "The public URL of the uploaded screenshot."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the bad request."
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message describing the internal server error."
+                }
+              }
+            }
+          }
+        }
+      },
+      "503": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message indicating that the service is temporarily unavailable."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
