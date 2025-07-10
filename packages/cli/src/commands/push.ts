@@ -54,7 +54,7 @@ export async function pushCommand(): Promise<void> {
   const stage = microfoxConfig.stage || 'prod';
   const ignored: string[] = microfoxConfig.ignored || [];
 
-  const defaultIgnore = ['node_modules/**', '.git/**', 'dist/**', '.serverless/**', '.DS_Store'];
+  const defaultIgnore = ['node_modules/**', '.git/**', 'dist/**', '.build/**', '.serverless/**', '.DS_Store', 'package-lock.json', 'pnpm-lock.yaml'];
   const allIgnored = [...defaultIgnore, ...ignored];
 
   const files: FileDirectory[] = getDirectoryFiles(cwd, '', allIgnored);
