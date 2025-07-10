@@ -29,6 +29,7 @@
     "eslint-plugin-import": "^2.31.0",
     "serverless": "^3.38.0",
     "serverless-api-gateway-throttling": "^2.0.3",
+    "serverless-offline": "^13.3.3",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.3.3"
   },
