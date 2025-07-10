@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.1
+
+### Patch Changes
+
+- d0ed904: release: enhance Puppeteer SLS functionality with new extraction methods and refactor serverless configuration
+
 ## 1.2.0
 
 ### Minor Changes

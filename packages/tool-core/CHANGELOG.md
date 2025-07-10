@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4
+
+### Patch Changes
+
+- 8f05462: Changes from PR #590: vwjt_code_router_july_2025
+
 ## 1.0.3
 
 ### Patch Changes
