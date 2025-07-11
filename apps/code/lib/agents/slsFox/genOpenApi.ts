@@ -91,6 +91,6 @@ genOpenApiAgent
     } catch (error: any) {
       ctx.response.write({ type: 'text', text: `Error generating OpenAPI spec: ${error.message}` });
     }
-  }); 
+  });
 
-  genOpenApiAgent.agent('/genPathSpec', genPathSpecAgent)
+genOpenApiAgent.agent('/genPathSpec', genPathSpecAgent)

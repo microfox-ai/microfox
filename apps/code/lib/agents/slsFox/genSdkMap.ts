@@ -4,7 +4,7 @@ import { generateObject } from 'ai';
 import path from 'path';
 import * as fs from 'fs';
 import { anthropic } from '@ai-sdk/anthropic';
-import { PackageInfo } from '@/types/PackageInfo';
+import { PackageInfo } from '@/lib/types/PackageInfo';
 
 export const genSdkMapAgent = new AiRouter();
 

@@ -2,9 +2,9 @@ import { AiRouter } from '@microfox/ai-router';
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getPackageInfo } from '../middlewares/getPackageInfo';
-import { getPackageDocs } from '../middlewares/getPackageDocs';
-import { copyDirectory, updateTemplateFiles } from './utils';
+import { getPackageInfo } from '../../middlewares/getPackageInfo';
+import { getPackageDocs } from '../../middlewares/getPackageDocs';
+import { copyDirectory, updateTemplateFiles } from './template';
 import { genOpenApiAgent } from './genOpenApi';
 import { genOpenApiMdAgent } from './genOpenApiMd';
 import { genSdkMapAgent } from './genSdkMap';
@@ -75,8 +75,8 @@ slsfoxAgent
     } catch (error: any) {
       ctx.response.write({ type: 'text', text: `Error generating serverless structure: ${error.message}` });
     }
-  }); 
+  });
 
-  slsfoxAgent.agent('/genOpenApi', genOpenApiAgent)
-  slsfoxAgent.agent('/genOpenApiMd', genOpenApiMdAgent)
-  slsfoxAgent.agent('/genSdkMap', genSdkMapAgent)
+slsfoxAgent.agent('/genOpenApi', genOpenApiAgent)
+slsfoxAgent.agent('/genOpenApiMd', genOpenApiMdAgent)
+slsfoxAgent.agent('/genSdkMap', genSdkMapAgent)

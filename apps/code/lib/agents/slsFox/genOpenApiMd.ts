@@ -65,7 +65,7 @@ async function generateOpenAPIMarkdown(
   **API Functionality:**
   ${functionalityMarkdown}
   `;
-  
+
   const { object: result } = await generateObject({
     model: google('gemini-1.5-pro-latest'),
     system: systemPrompt,
