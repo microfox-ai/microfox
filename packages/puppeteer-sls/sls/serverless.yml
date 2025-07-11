@@ -53,8 +53,8 @@ functions:
           path: /{functionName}
           method: any
           cors: true
-    layers:
-      - arn:aws:lambda:us-east-1:035837222000:layer:chromium-x86-135:1
+    # layers:
+    #   - arn:aws:lambda:us-east-1:035837222000:layer:chromium-x86-135:1
 
 resources:
   Outputs:
