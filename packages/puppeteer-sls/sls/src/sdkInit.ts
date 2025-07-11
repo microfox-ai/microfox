@@ -15,6 +15,7 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
 
   switch (constructorName) {
     case 'PuppeteerSLS':
+      console.log('PuppeteerSLS');
       const sdk = PuppeteerSLS;
       const sdkMap: Record<string, Function> = {};
       sdkMap.extractImagesFromURL = sdk.extractImagesFromURL.bind(sdk);
