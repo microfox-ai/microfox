@@ -57,26 +57,31 @@ export async function openPage({
       isLocal,
     })}`,
   );
-  const launchProps = await puppeteerLaunchProps(
-    defaultViewport,
-    isLocal ?? false,
-    headless,
-  );
-  console.log('Got puppeteer launch properties.');
-  const browser = await puppeteer.launch(
-    !headless
-      ? {
-          ...launchProps,
-          slowMo: 100,
-        }
-      : launchProps,
-  );
-  console.log('Browser launched.');
-  const page = await browser.newPage();
-  console.log('New page created.');
-  const pageLoad = await page.goto(url, {
-    waitUntil: waitUntil ?? 'networkidle2',
-  });
-  console.log(`Navigated to URL: ${pageLoad?.url()}`);
-  return { browser, page };
+  try {
+    const launchProps = await puppeteerLaunchProps(
+      defaultViewport,
+      isLocal ?? false,
+      headless,
+    );
+    console.log('Got puppeteer launch properties.');
+    const browser = await puppeteer.launch(
+      !headless
+        ? {
+            ...launchProps,
+            slowMo: 100,
+          }
+        : launchProps,
+    );
+    console.log('Browser launched.');
+    const page = await browser.newPage();
+    console.log('New page created.');
+    const pageLoad = await page.goto(url, {
+      waitUntil: waitUntil ?? 'networkidle2',
+    });
+    console.log(`Navigated to URL: ${pageLoad?.url()}`);
+    return { browser, page };
+  } catch (error) {
+    console.error('Error opening page:', error);
+    throw error;
+  }
 }

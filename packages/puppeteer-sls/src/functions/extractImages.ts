@@ -145,53 +145,58 @@ export async function extractImagesFromURL(
     deepExtract?: boolean;
   },
 ) {
-  console.log(`Starting image extraction from URL: ${options.url}`);
-  const { browser, page } = await openPage(options);
-  console.log('Page has been opened.');
+  try {
+    console.log(`Starting image extraction from URL: ${options.url}`);
+    const { browser, page } = await openPage(options);
+    console.log('Page has been opened.');
 
-  if (options.deepExtract) {
-    console.log('Scrolling page to trigger lazy loading...');
-    await page.evaluate(async () => {
-      const scrollableElement =
-        document.getElementById('pageScroll') || document.body;
-      await new Promise<void>(resolve => {
-        let lastHeight = -1;
-        let steadyCount = 0;
-        let totalScrolls = 0;
-        const maxSteadyCount = 3;
-        const maxScrolls = 30; // limit to avoid infinite scroll
-        const timer = setInterval(() => {
-          totalScrolls++;
-          const newHeight = scrollableElement.scrollHeight;
-          if (newHeight === lastHeight) {
-            steadyCount++;
-          } else {
-            steadyCount = 0; // reset if new content loaded
-          }
+    if (options.deepExtract) {
+      console.log('Scrolling page to trigger lazy loading...');
+      await page.evaluate(async () => {
+        const scrollableElement =
+          document.getElementById('pageScroll') || document.body;
+        await new Promise<void>(resolve => {
+          let lastHeight = -1;
+          let steadyCount = 0;
+          let totalScrolls = 0;
+          const maxSteadyCount = 3;
+          const maxScrolls = 30; // limit to avoid infinite scroll
+          const timer = setInterval(() => {
+            totalScrolls++;
+            const newHeight = scrollableElement.scrollHeight;
+            if (newHeight === lastHeight) {
+              steadyCount++;
+            } else {
+              steadyCount = 0; // reset if new content loaded
+            }
 
-          if (steadyCount >= maxSteadyCount || totalScrolls >= maxScrolls) {
-            clearInterval(timer);
-            resolve();
-            return;
-          }
+            if (steadyCount >= maxSteadyCount || totalScrolls >= maxScrolls) {
+              clearInterval(timer);
+              resolve();
+              return;
+            }
 
-          scrollableElement.scrollTo(0, newHeight);
-          lastHeight = newHeight;
-        }, 500);
+            scrollableElement.scrollTo(0, newHeight);
+            lastHeight = newHeight;
+          }, 500);
+        });
       });
-    });
-    console.log(
-      'Finished scrolling. Waiting for 5 seconds for content to load...',
-    );
-    await new Promise(resolve => setTimeout(resolve, 5000));
+      console.log(
+        'Finished scrolling. Waiting for 5 seconds for content to load...',
+      );
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+    let images = await extractImages(page);
+    if (options.deepExtract) {
+      const backgroundImages = await extractBackgroundImages(page);
+      images = images.concat(backgroundImages);
+    }
+    console.log('Closing browser session.');
+    await browser.close();
+    console.log('Browser has been closed.');
+    return images;
+  } catch (error) {
+    console.error('Error extracting images:', error);
+    throw error;
   }
-  let images = await extractImages(page);
-  if (options.deepExtract) {
-    const backgroundImages = await extractBackgroundImages(page);
-    images = images.concat(backgroundImages);
-  }
-  console.log('Closing browser session.');
-  await browser.close();
-  console.log('Browser has been closed.');
-  return images;
 }

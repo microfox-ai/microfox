@@ -56,11 +56,6 @@
                             "type": "boolean",
                             "description": "Determines whether to run the browser in headless mode."
                           },
-                          "deepExtract": {
-                            "type": "boolean",
-                            "description": "When true, the function will attempt to scroll through the page to trigger lazy-loaded images and extract background images from CSS.",
-                            "default": false
-                          },
                           "waitUntil": {
                             "type": "string",
                             "description": "Defines when to consider navigation successful.",
