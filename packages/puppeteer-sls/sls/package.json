@@ -1,7 +1,8 @@
 {
   "name": "public-puppeteer-sls-api",
+  "title": "Chrome Browser (Puppeteer)",
   "version": "1.0.0",
-  "description": "A simple and easy to use client for running Puppeteer on serverless functions.",
+  "description": "A simple and easy to use client for running chrome browser headless via Puppeteer on serverless functions.",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -16,11 +17,9 @@
     "lint": "eslint  --ignore-pattern 'dist/**'"
   },
   "dependencies": {
-    "@microfox/crypto-sdk": "^1.0.3",
     "@microfox/puppeteer-sls": "^1.2.2",
     "@microfox/tool-core": "latest",
     "@types/aws-lambda": "^8.10.150",
-    "aws-lambda": "^1.0.7",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
