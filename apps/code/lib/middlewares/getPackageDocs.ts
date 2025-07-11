@@ -4,7 +4,10 @@ import * as path from 'path';
 import { getProjectRoot } from '@/lib/helpers/utils';
 
 export const getPackageDocs: AiMiddleware<any> = async (ctx, next) => {
-    let { packageName } = ctx.request;
+    let { packageName } = ctx.request.params;
+    if (!packageName) {
+        return next();
+    }
     const taskContext = ctx.state;
     packageName = packageName.replace('@microfox/', '');
     if (taskContext[packageName] && taskContext[packageName].docs) {
