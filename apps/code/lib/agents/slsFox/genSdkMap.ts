@@ -132,7 +132,7 @@ genSdkMapAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName } = ctx.request
+    const packageName = ctx.request.params?.packageName as string
 
     try {
       const sdkInitContent = await generateSDKInitContent(ctx.state[packageName].packageInfo);

@@ -21,11 +21,14 @@ slsfoxAgent
   .use('/', getPackageInfo)
   .use('/', getPackageDocs)
   .actAsTool('/', {
-    description: 'Generates the complete serverless structure for a package.',
+    description: 'Generates the complete sls structure for a package.',
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName, specificFunctions } = ctx.request
+    console.log("sdgdfhgjktjdhdnjdxngxdg", ctx.request)
+    console.log("sdgdhfchfcjgj", ctx)
+    const packageName = ctx.request.params?.packageName as string
+    const specificFunctions = ctx.request.params?.specificFunctions as string[] | undefined
 
     console.log("packageName", packageName)
     console.log("specificFunctions", specificFunctions)
@@ -38,7 +41,10 @@ slsfoxAgent
     if (specificFunctions && specificFunctions.length > 0) {
       for (const func of specificFunctions) {
         ctx.request.functionName = func;
-        await ctx.next.callAgent('/genOpenApi/genPathSpec');
+        await ctx.next.callAgent('/genOpenApi/genPathSpec', {
+          packageName,
+          functionName: func,
+        });
       }
       ctx.response.write({ type: 'text', text: `Successfully generated openapi.json for ${packageName}'s functions ${specificFunctions.join(', ')}.` });
       return;
@@ -58,7 +64,9 @@ slsfoxAgent
       updateTemplateFiles(ctx.state[packageName].slsDir, packageName, ctx.state[packageName].packageInfo.description);
 
       // Generate sdkInit.ts
-      await ctx.next.callAgent('/genSdkMap', { packageName });
+      await ctx.next.callAgent('/genSdkMap', {
+        packageName,
+      });
 
       // Generate openapi.json
       await ctx.next.callAgent('/genOpenApi', {
