@@ -1,6 +1,7 @@
 service: microfox-sls-service
 
 package:
+  excludeDevDependencies: true
   include:
     - 'openapi.json'
 
