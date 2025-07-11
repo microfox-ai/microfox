@@ -1,7 +1,7 @@
 {
   "name": "@microfox/puppeteer-sls",
   "title": "Chrome Browser (Puppeteer)",
-  "description": "A simple and easy to use client for running chrome browser headless via puppeteer on serverless functions.",
+  "description": "A simple and easy to use client for running chrome browser headless via Puppeteer on serverless functions.",
   "path": "packages/puppeteer-sls",
   "dependencies": ["@sparticuz/chromium", "puppeteer-core"],
   "status": "stable",
