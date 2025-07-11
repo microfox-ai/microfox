@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.4
+
+### Patch Changes
+
+- 31860bd: release: enhance image extraction functionality in puppeteer-sls with deep extraction and background image support
+
 ## 1.2.3
 
 ### Patch Changes
