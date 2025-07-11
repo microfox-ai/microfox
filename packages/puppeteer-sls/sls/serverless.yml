@@ -8,12 +8,9 @@ package:
     - node_modules/@sparticuz/chromium/**
     - ./node_modules/@sparticuz/chromium/**
     - node_modules/@microfox/puppeteer-sls/node_modules/@sparticuz/chromium/**
-  include:
-    - 'openapi.json'
 
 plugins:
   - serverless-plugin-typescript
-  - serverless-api-gateway-throttling
 
 provider:
   name: aws
@@ -37,9 +34,6 @@ custom:
     disableCookieValidation: true
     noTimeout: true
     environment: ${file(env.json)}
-  apiGatewayThrottling:
-    maxRequestsPerSecond: 50
-    maxConcurrentRequests: 20
 
 functions:
   unifiedHandler:
