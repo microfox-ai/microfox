@@ -1,5 +1,12 @@
 # @microfox/puppeteer-linkedin
 
+## 1.1.8
+
+### Patch Changes
+
+- Updated dependencies [31860bd]
+  - @microfox/puppeteer-sls@1.2.4
+
 ## 1.1.7
 
 ### Patch Changes
