@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.2
+
+### Patch Changes
+
+- 7c61a0f: release: add JSDoc comments to PuppeteerSLS class for better documentation
+
 ## 1.2.1
 
 ### Patch Changes
