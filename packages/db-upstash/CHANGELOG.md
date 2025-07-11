@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3
+
+### Patch Changes
+
+- e1fe597: release: improve isStale method logic in Paginator class to handle status checks more clearly
+
 ## 1.1.2
 
 ### Patch Changes
