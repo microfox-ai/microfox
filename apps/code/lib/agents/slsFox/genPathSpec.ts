@@ -6,7 +6,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import path from 'path';
 import * as fs from 'fs';
 
-export const genPathSpecAgent = new AiRouter();
+export const genPathSpecAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   functionName: z

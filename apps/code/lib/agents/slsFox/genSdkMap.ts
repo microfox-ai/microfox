@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import { anthropic } from '@ai-sdk/anthropic';
 import { PackageInfo } from '@/lib/types/PackageInfo';
 
-export const genSdkMapAgent = new AiRouter();
+export const genSdkMapAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),

@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { google } from '@ai-sdk/google';
 
-export const genOpenApiMdAgent = new AiRouter();
+export const genOpenApiMdAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),
