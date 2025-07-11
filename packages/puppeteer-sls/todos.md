@@ -1,5 +1,5 @@
 remove s3 config in take snapshot
-
+video extraction not working
 // add deep extract to sls openapi.json
 
                           "deepExtract": {

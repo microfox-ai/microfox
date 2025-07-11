@@ -6,33 +6,53 @@ export interface ExtractedImage {
   srcset: string | null;
   responsiveImages: { url: string; size: string }[] | null;
   alt: string | null;
+  imgPermalink: string | null;
+  pagePermalink: string;
+  width: number | null;
+  height: number | null;
 }
 
 export async function extractImages(page: Page): Promise<ExtractedImage[]> {
   console.log('Extracting images from page...');
-  const images = await page.$$eval('img', (imgs: HTMLImageElement[]) =>
-    imgs.map((img: HTMLImageElement) => {
-      return {
-        src: img.getAttribute('src'),
-        srcset: img.getAttribute('srcset'),
-        responsiveImages:
-          img
-            .getAttribute('srcset')
-            ?.split(',')
-            ?.map(src => {
-              const [url, size] = src.split(' ');
-              if (!url) {
-                return null;
-              }
-              return {
-                url: url.trim(),
-                size: size ? size.trim() : '',
-              };
-            })
-            .filter(item => item !== null) || null,
-        alt: img.getAttribute('alt'),
-      };
-    }),
+  const pageUrl = page.url();
+  const images = await page.$$eval(
+    'img',
+    (imgs: HTMLImageElement[], pageUrl: string) =>
+      imgs.map((img: HTMLImageElement) => {
+        const parentAnchor = img.closest('a');
+        const imgPermalink = parentAnchor ? parentAnchor.href : pageUrl;
+
+        return {
+          src: img.getAttribute('src'),
+          srcset: img.getAttribute('srcset'),
+          responsiveImages:
+            img
+              .getAttribute('srcset')
+              ?.split(',')
+              .map(src => {
+                const trimmedSrc = src.trim();
+                if (!trimmedSrc) {
+                  return null;
+                }
+                const parts = trimmedSrc.split(/\s+/);
+                const url = parts[0];
+                const size = parts.length > 1 ? parts[1] : '';
+                if (!url) {
+                  return null;
+                }
+                return { url, size };
+              })
+              .filter(
+                (item): item is { url: string; size: string } => item !== null,
+              ) || null,
+          alt: img.getAttribute('alt'),
+          imgPermalink: imgPermalink,
+          pagePermalink: pageUrl,
+          width: img.width || null,
+          height: img.height || null,
+        };
+      }),
+    pageUrl,
   );
   console.log(`Extracted ${images.length} images.`);
   return images;
@@ -42,13 +62,9 @@ export async function extractBackgroundImages(
   page: Page,
 ): Promise<ExtractedImage[]> {
   console.log('Deep extracting background images from page...');
-  const images = await page.evaluate(() => {
-    const allImages: {
-      src: string | null;
-      srcset: string | null;
-      responsiveImages: { url: string; size: string }[] | null;
-      alt: string | null;
-    }[] = [];
+  const pageUrl = page.url();
+  const images = await page.evaluate(pageUrl => {
+    const allImages: ExtractedImage[] = [];
     const elements = document.querySelectorAll('a[href^="/jobs/"]');
     console.log(
       `Found ${elements.length} elements to scan for background images.`,
@@ -64,6 +80,10 @@ export async function extractBackgroundImages(
       }
 
       if (backgroundImage && backgroundImage !== 'none') {
+        const anchor = (element as HTMLElement).closest('a');
+        const imgPermalink = anchor ? anchor.href : pageUrl;
+        const width = (element as HTMLElement).clientWidth;
+        const height = (element as HTMLElement).clientHeight;
         console.log(
           `Processing element ${element.tagName} with background-image: ${backgroundImage}`,
         );
@@ -100,6 +120,10 @@ export async function extractBackgroundImages(
                   .join(', '),
                 responsiveImages: responsiveImages,
                 alt: `Background image from ${element.tagName.toLowerCase()}`,
+                imgPermalink: imgPermalink,
+                pagePermalink: pageUrl,
+                width,
+                height,
               });
             }
           }
@@ -127,6 +151,10 @@ export async function extractBackgroundImages(
                 srcset: null,
                 responsiveImages: null,
                 alt: `Background image from ${element.tagName.toLowerCase()}`,
+                imgPermalink: imgPermalink,
+                pagePermalink: pageUrl,
+                width,
+                height,
               });
             }
           }
@@ -134,7 +162,7 @@ export async function extractBackgroundImages(
       }
     }
     return allImages;
-  });
+  }, pageUrl);
 
   console.log(`Deep extracted ${images.length} background images.`);
   return images;

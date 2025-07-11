@@ -1,5 +1,6 @@
 import { extractImagesFromURL } from './functions/extractImages';
-import { extractLinks, extractLinksFromUrl } from './functions/extractLinks';
+import { extractLinksFromUrl } from './functions/extractLinks';
+import { extractVideosFromURL } from './functions/extractVideos';
 import { extractWebpage } from './functions/extractWebpage';
 import { openPage } from './functions/openPage';
 import { takeSnapShot } from './functions/takeSnapShot';
