@@ -150,10 +150,10 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       echo "--- Root files ---"
       ls -l
       
-      echo "--- Recursively finding directories larger than 40MB ---"
+      echo "--- Recursively finding directories larger than 20MB ---"
       find . -type d -mindepth 1 | while IFS= read -r dir; do
         size_mb=$(du -sm "$dir" | cut -f1)
-        if [ "$size_mb" -gt 40 ]; then
+        if [ "$size_mb" -gt 20 ]; then
           echo "$dir (size: \${size_mb}MB)"
         fi
       done
