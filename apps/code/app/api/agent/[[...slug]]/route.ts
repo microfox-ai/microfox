@@ -1,6 +1,6 @@
 import { AiRouter } from '@microfox/ai-router';
 import { tracingMiddleware } from '@/lib/middlewares/tracingAgents';
-import { receptionistAgent } from '@/lib/agents/receptionist';
+import { receptionistAgent } from '@/lib/agents';
 
 const agentRouter = new AiRouter();
 
