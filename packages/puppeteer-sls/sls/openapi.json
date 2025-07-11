@@ -207,10 +207,6 @@
                             "type": "string",
                             "description": "The URL of the webpage from which to extract links."
                           },
-                          "isLocal": {
-                            "type": "boolean",
-                            "description": "Indicates whether the URL is a local resource."
-                          },
                           "headless": {
                             "type": "boolean",
                             "description": "Determines if the browser should run in headless mode."
@@ -356,10 +352,6 @@
                             "type": "boolean",
                             "description": "If true, returns full HTML content."
                           },
-                          "isLocal": {
-                            "type": "boolean",
-                            "description": "Indicates if the URL is a local file."
-                          },
                           "headless": {
                             "type": "boolean",
                             "description": "Determines if the browser should run in headless mode."
@@ -499,11 +491,6 @@
                           "headless": {
                             "type": "boolean",
                             "description": "Whether to run in headless mode",
-                            "default": false
-                          },
-                          "isLocal": {
-                            "type": "boolean",
-                            "description": "Set to true when running on your local machine",
                             "default": false
                           }
                         },
@@ -659,10 +646,6 @@
                               "endpoint",
                               "credentials"
                             ]
-                          },
-                          "isLocal": {
-                            "type": "boolean",
-                            "description": "Indicates if the operation is being run locally."
                           },
                           "headless": {
                             "type": "boolean",

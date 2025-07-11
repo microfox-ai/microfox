@@ -17,7 +17,7 @@
     "lint": "eslint  --ignore-pattern 'dist/**'"
   },
   "dependencies": {
-    "@microfox/puppeteer-sls": "^1.2.4",
+    "@microfox/puppeteer-sls": "^1.2.6",
     "@microfox/tool-core": "latest",
     "@types/aws-lambda": "^8.10.150",
     "dotenv": "^16.4.5",
