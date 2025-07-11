@@ -6,7 +6,6 @@ package:
     - src/**
     - node_modules/serverless-offline/**
     - node_modules/@sparticuz/chromium/**
-    - ./node_modules/@sparticuz/chromium/**
     - node_modules/@microfox/puppeteer-sls/node_modules/@sparticuz/chromium/**
 
 plugins:
