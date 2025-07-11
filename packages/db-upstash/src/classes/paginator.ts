@@ -144,11 +144,12 @@ export class Paginator<T extends Record<string, any>> {
 
   public async isStale(timeoutSeconds: number): Promise<boolean> {
     const status = await this.getCurrentStatus();
-    if (
-      !status ||
-      status.status === 'completed' ||
-      status.status === 'failed'
-    ) {
+
+    if (!status) {
+      return true;
+    }
+
+    if (status.status === 'completed' || status.status === 'failed') {
       return false;
     }
 
