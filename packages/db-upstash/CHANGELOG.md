@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.4
+
+### Patch Changes
+
+- e2430a8: release: enhance safeJsonParse and safeJsonStringify functions to handle edge cases and improve error handling
+
 ## 1.1.3
 
 ### Patch Changes
