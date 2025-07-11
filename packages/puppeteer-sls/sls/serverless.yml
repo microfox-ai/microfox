@@ -1,6 +1,11 @@
 service: public-puppeteer-sls-api
 
 package:
+  exclude:
+    - venv/**
+    - src/**
+    - node_modules/serverless-offline/**
+    - node_modules/@sparticuz/chromium/**
   include:
     - 'openapi.json'
 
@@ -14,17 +19,25 @@ provider:
   region: us-east-1
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
+  timeout: 300 # 5 minutes
 
 custom:
-  stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
-  apiGatewayThrottling:
-    maxRequestsPerSecond: 50
-    maxConcurrentRequests: 20
+  stage: ${env:ENVIRONMENT, 'dev'}
   serverless-offline:
     printOutput: true
     httpPort: 4000
     lambdaPort: 4002
+    useChildProcesses: true
+    useWorkerThreads: true
+    noCookieValidation: true
+    allowCache: true
+    hideStackTraces: false
+    disableCookieValidation: true
+    noTimeout: true
     environment: ${file(env.json)}
+  apiGatewayThrottling:
+    maxRequestsPerSecond: 50
+    maxConcurrentRequests: 20
 
 functions:
   unifiedHandler:
@@ -34,6 +47,8 @@ functions:
           path: /{functionName}
           method: any
           cors: true
+    layers:
+      - arn:aws:lambda:us-east-1:035837222000:layer:chromium-x86-135:1
 
 resources:
   Outputs:
