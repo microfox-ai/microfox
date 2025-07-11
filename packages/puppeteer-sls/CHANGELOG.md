@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.6
+
+### Patch Changes
+
+- 5013998: release: update image extraction functions to include video extraction and enhance image data structure
+
 ## 1.2.5
 
 ### Patch Changes
