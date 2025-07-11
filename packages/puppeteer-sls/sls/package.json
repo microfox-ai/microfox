@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
+    "@microfox/puppeteer-sls": "^1.2.2",
     "@microfox/tool-core": "latest",
-    "dotenv": "^16.4.5",
-    "@microfox/puppeteer-sls": "^1.2.0"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",

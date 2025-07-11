@@ -10,7 +10,8 @@ export const sdkInit = (): Record<string, Function> => {
 
   // Initialize SDK with bot token
   const sdk = createSlackSDK({
-    botToken: process.env.SLACK_BOT_TOKEN || process.env.SLACK_ACCESS_TOKEN,
+    botToken:
+      process.env.SLACK_BOT_TOKEN || process.env.SLACK_ACCESS_TOKEN || '',
     authType: 'header', // Default to header authentication
   });
 
