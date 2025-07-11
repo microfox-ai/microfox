@@ -13,9 +13,9 @@ export const tracingMiddleware = async (ctx: any, next: () => Promise<void>) => 
 
   // Get the path of the agent being called from the internal execution context.
   const path = ctx.executionContext?.currentPath || 'unknown_path';
-  
+
   console.log(`[Trace] ==> Entering: ${path}`);
-  
+
   // Add the current path to our trace log on the state object.
   if (ctx.state.executionTrace) {
     ctx.state.executionTrace.push(path);
