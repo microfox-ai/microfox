@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.3
+
+### Patch Changes
+
+- 5f0fd04: release: enhance logging in Puppeteer functions for better debugging and traceability
+
 ## 1.2.2
 
 ### Patch Changes

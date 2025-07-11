@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [5f0fd04]
+  - @microfox/puppeteer-sls@1.2.3
+
 ## 1.0.7
 
 ### Patch Changes
