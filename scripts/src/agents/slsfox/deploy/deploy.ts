@@ -142,8 +142,34 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       execSync('npm install', { stdio: 'inherit' });
     }
 
-    console.log(`[Debug] Listing files in ${slsPath}`);
-    execSync('ls -laR', { stdio: 'inherit' });
+    const debugCommand = `
+      set -e
+      echo "--- Debug: Checking directory sizes and contents in $(pwd) ---"
+      echo "--- Total size of slsPath ---"
+      du -sh .
+      echo "--- Root files ---"
+      ls -l
+      
+      for d in */; do
+          if [ ! -d "$d" ]; then continue; fi
+          dir_name="\${d%/}"
+          
+          is_node_modules=false
+          if [ "$dir_name" = "node_modules" ]; then
+            is_node_modules=true
+          fi
+
+          size_mb=$(du -sm "$d" | cut -f1)
+          
+          if [ "$is_node_modules" = true ] || [ "$size_mb" -gt 40 ]; then
+            echo "--- Listing contents of '$dir_name' (size: \${size_mb}MB) ---"
+          else
+            echo ""
+          fi
+      done
+    `;
+    console.log(`[Debug] Conditionally listing files in ${slsPath}`);
+    execSync(debugCommand, { stdio: 'inherit', shell: '/bin/bash' });
 
     // Build the function
     console.log('Building function...');
