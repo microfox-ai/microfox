@@ -5,6 +5,11 @@ interface SDKConfig {
   [key: string]: any;
 }
 
+/**
+ * @description Initialize the SDK for the PuppeteerSLS class
+ * @param config - The configuration for the SDK
+ * @returns A map of functions for the SDK
+ */
 export const sdkInit = (config: SDKConfig): Record<string, Function> => {
   const { constructorName, ...options } = config;
 
