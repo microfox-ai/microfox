@@ -6,20 +6,19 @@ import { z } from 'zod';
 export const summarizeAgent = new AiRouter();
 
 const summarizeSchema = z.object({
-  // The input for this agent now comes from the context, so the schema is empty.
+  textToSummarize: z.string().describe('The text that needs to be summarized.'),
 });
 
 summarizeAgent
-  .actAsTool('/summarize', {
-    description: 'Summarizes the initial prompt or other content found in the task context.',
+  .actAsTool('/', {
+    description: 'Summarizes a piece of text.',
     inputSchema: summarizeSchema as any,
   })
-  .agent('/summarize', async ({ state, response }: any) => {
-    const taskContext = state;
-    const textToSummarize = taskContext.initialPrompt;
+  .agent('/', async (ctx) => {
+    const textToSummarize = ctx.request.params?.textToSummarize as string
 
     if (!textToSummarize) {
-      response.write({ type: 'text', text: 'Error: No text to summarize found in the context.' });
+      ctx.response.write({ type: 'text', text: 'Error: No text to summarize provided.' });
       return;
     }
 
@@ -28,7 +27,6 @@ summarizeAgent
       prompt: `Please provide a concise summary of the following text: ${textToSummarize}`,
     });
 
-    // Write the final summary back to the shared context and the response.
-    taskContext.summary = summary;
-    response.write({ type: 'text', text: summary });
+    ctx.response.write({ type: 'text', text: summary });
   }); 
+  
