@@ -7,6 +7,16 @@ package:
     - node_modules/serverless-offline/**
     - node_modules/@sparticuz/chromium/**
     - node_modules/@microfox/puppeteer-sls/node_modules/@sparticuz/chromium/**
+    - node_modules/@types/node/**
+    - node_modules/@typescript-eslint/eslint-plugin/**
+    - node_modules/@typescript-eslint/parser/**
+    - node_modules/eslint/**
+    - node_modules/eslint-import-resolver-alias/**
+    - node_modules/eslint-plugin-import/**
+    - node_modules/serverless/**
+    - node_modules/serverless-offline/**
+    - node_modules/serverless-plugin-typescript/**
+    - node_modules/typescript/**
 
 plugins:
   - serverless-plugin-typescript

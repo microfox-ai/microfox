@@ -139,7 +139,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
     // Install dependencies if needed
     if (!fs.existsSync(path.join(slsPath, 'node_modules'))) {
       console.log('Installing dependencies...');
-      execSync('npm install --production', { stdio: 'inherit' });
+      execSync('npm install', { stdio: 'inherit' });
     }
 
     const debugCommand = `
