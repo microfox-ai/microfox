@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { google } from '@ai-sdk/google';
 
-export const genOpenApiMdAgent = new AiRouter();
+export const genOpenApiMdAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),
@@ -65,7 +65,7 @@ async function generateOpenAPIMarkdown(
   **API Functionality:**
   ${functionalityMarkdown}
   `;
-  
+
   const { object: result } = await generateObject({
     model: google('gemini-1.5-pro-latest'),
     system: systemPrompt,
@@ -94,7 +94,7 @@ genOpenApiMdAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName } = ctx.request;
+    const packageName = ctx.request.params?.packageName as string
 
     try {
       const markdownContent = await generateOpenAPIMarkdown(ctx.state[packageName].packageInfo, ctx.state[packageName].slsDir);

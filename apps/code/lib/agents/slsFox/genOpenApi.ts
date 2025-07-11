@@ -2,9 +2,8 @@ import { AiRouter } from '@microfox/ai-router';
 import { z } from 'zod';
 import * as fs from 'fs';
 import * as path from 'path';
-import { genPathSpecAgent } from './genPathSpec';
 
-export const genOpenApiAgent = new AiRouter();
+export const genOpenApiAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),
@@ -64,7 +63,7 @@ genOpenApiAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName } = ctx.request;
+    const packageName = ctx.request.params?.packageName as string
 
     try {
       const openapiDir = path.join(ctx.state[packageName].slsDir, 'openapi');
@@ -82,7 +81,10 @@ genOpenApiAgent
           }
           console.log('genOpenApiAgent', packageName, funcName);
           ctx.request.functionName = funcName;
-          await ctx.next.callAgent('/genPathSpec');
+          await ctx.next.callAgent('@/slsfox/genPathSpec', {
+            packageName,
+            functionName: funcName,
+          });
         }
       }
 
@@ -91,6 +93,4 @@ genOpenApiAgent
     } catch (error: any) {
       ctx.response.write({ type: 'text', text: `Error generating OpenAPI spec: ${error.message}` });
     }
-  }); 
-
-  genOpenApiAgent.agent('/genPathSpec', genPathSpecAgent)
+  });

@@ -1,82 +1,64 @@
 import { AiRouter } from '@microfox/ai-router';
 import { z } from 'zod';
-import * as fs from 'fs';
-import * as path from 'path';
-import { getPackageInfo } from '../middlewares/getPackageInfo';
-import { getPackageDocs } from '../middlewares/getPackageDocs';
-import { copyDirectory, updateTemplateFiles } from './utils';
+import { generateText } from 'ai';
+import { google } from '@ai-sdk/google';
+import { getPackageInfo } from '../../middlewares/getPackageInfo';
+import { getPackageDocs } from '../../middlewares/getPackageDocs';
+import { genFullSlsAgent } from './genFullSls';
 import { genOpenApiAgent } from './genOpenApi';
 import { genOpenApiMdAgent } from './genOpenApiMd';
 import { genSdkMapAgent } from './genSdkMap';
+import { genPathSpecAgent } from './genPathSpec';
 
-export const slsfoxAgent = new AiRouter();
+export const slsfoxAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
-  packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),
-  specificFunctions: z.array(z.string()).optional().describe('Optional list of specific functions to update.'),
+  packageName: z.string().optional().describe('The name of the package (e.g., "google-sheets").'),
+  query: z.string().optional().describe('A natural language prompt for what to build or update.'),
 });
-
 
 slsfoxAgent
   .use('/', getPackageInfo)
   .use('/', getPackageDocs)
   .actAsTool('/', {
-    description: 'Generates the complete serverless structure for a package.',
+    description: 'Generates or updates the serverless structure for a package based on a prompt.',
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName, specificFunctions } = ctx.request
+    const { query, packageName: initialPackageName } = ctx.request.params as z.infer<typeof schema>;
 
-    console.log("packageName", packageName)
-    console.log("specificFunctions", specificFunctions)
-
-    if (!packageName) {
-      ctx.response.write({ type: 'text', text: `packageName is required` });
+    if (!query && !initialPackageName) {
+      ctx.response.write({ type: 'text', text: `Either a query or a package name is required.` });
       return;
     }
 
-    if (specificFunctions && specificFunctions.length > 0) {
-      for (const func of specificFunctions) {
-        ctx.request.functionName = func;
-        await ctx.next.callAgent('/genOpenApi/genPathSpec');
-      }
-      ctx.response.write({ type: 'text', text: `Successfully generated openapi.json for ${packageName}'s functions ${specificFunctions.join(', ')}.` });
+    if (!query){
+      await ctx.next.callAgent('/genFullSls', { packageName: initialPackageName });
       return;
     }
 
-    try {
-      // Copy template directory
-      const templateDir = path.join(process.cwd(), 'lib', 'agents', 'slsFox', 'template');
-      if (fs.existsSync(ctx.state[packageName].slsDir)) {
-        console.log(`⚠️ SLS directory already exists, removing it first...`);
-        fs.rmSync(ctx.state[packageName].slsDir, { recursive: true, force: true });
+    ctx.response.write({ type: 'text', text: 'Deciding which tool to use...\n' });
+
+    const { toolCalls } = await generateText({
+      model: google('gemini-2.5-pro-preview-06-05'),
+      prompt: `You are an expert system for managing serverless package structures. Based on the user's request, decide which tool to call. Extract the packageName and any other relevant parameters from the request.
+
+User Request: ${query || `Generate full structure for ${initialPackageName}`}`,
+      tools: {
+        generateFullSls: ctx.next.agentAsTool('/genFullSls'),
+        generateOpenApi: ctx.next.agentAsTool('/genOpenApi'),
+        generateOpenApiMd: ctx.next.agentAsTool('/genOpenApiMd'),
+        generateSdkMap: ctx.next.agentAsTool('/genSdkMap'),
+        generatePathSpec: ctx.next.agentAsTool('/genPathSpec'),
       }
-      copyDirectory(templateDir, ctx.state[packageName].slsDir);
-      console.log(`✅ Template copied successfully`);
+    });
 
-      // Update template files
-      updateTemplateFiles(ctx.state[packageName].slsDir, packageName, ctx.state[packageName].packageInfo.description);
+    ctx.response.write({ type: 'text', text: `\nExecution complete. Tool Calls:\n${JSON.stringify(toolCalls)}` });
+  });
 
-      // Generate sdkInit.ts
-      await ctx.next.callAgent('/genSdkMap', { packageName });
 
-      // Generate openapi.json
-      await ctx.next.callAgent('/genOpenApi', {
-        packageName,
-      });
-
-      // Generate openapi.md
-      await ctx.next.callAgent('/genOpenApiMd', {
-        packageName,
-      });
-
-      ctx.response.write({ type: 'text', text: `Successfully generated serverless structure for ${packageName}.` });
-
-    } catch (error: any) {
-      ctx.response.write({ type: 'text', text: `Error generating serverless structure: ${error.message}` });
-    }
-  }); 
-
-  slsfoxAgent.agent('/genOpenApi', genOpenApiAgent)
-  slsfoxAgent.agent('/genOpenApiMd', genOpenApiMdAgent)
-  slsfoxAgent.agent('/genSdkMap', genSdkMapAgent)
+slsfoxAgent.agent('/genFullSls', genFullSlsAgent)
+slsfoxAgent.agent('/genOpenApi', genOpenApiAgent)
+slsfoxAgent.agent('/genOpenApiMd', genOpenApiMdAgent)
+slsfoxAgent.agent('/genSdkMap', genSdkMapAgent)
+slsfoxAgent.agent('/genPathSpec', genPathSpecAgent)

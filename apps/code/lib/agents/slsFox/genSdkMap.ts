@@ -4,9 +4,9 @@ import { generateObject } from 'ai';
 import path from 'path';
 import * as fs from 'fs';
 import { anthropic } from '@ai-sdk/anthropic';
-import { PackageInfo } from '@/types/PackageInfo';
+import { PackageInfo } from '@/lib/types/PackageInfo';
 
-export const genSdkMapAgent = new AiRouter();
+export const genSdkMapAgent = new AiRouter<any, any, any>();
 
 const schema = z.object({
   packageName: z.string().describe('The name of the package (e.g., "google-sheets").'),
@@ -132,7 +132,7 @@ genSdkMapAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName } = ctx.request
+    const packageName = ctx.request.params?.packageName as string
 
     try {
       const sdkInitContent = await generateSDKInitContent(ctx.state[packageName].packageInfo);
