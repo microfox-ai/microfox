@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.5
+
+### Patch Changes
+
+- b6e3b03: release: implement deep extraction option in image extraction process and update OpenAPI schema
+
 ## 1.2.4
 
 ### Patch Changes
