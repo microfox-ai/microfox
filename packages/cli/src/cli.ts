@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { kickstartCommand } from './commands/kickstart';
 import { pushCommand } from './commands/push';
 import { statusCommand, logsCommand, metricsCommand } from './commands/status';
+import { codeCommand } from './commands/code';
 import { version } from '../package.json';
 
 const program = new Command();
@@ -67,6 +68,18 @@ program
   .action(async (runId) => {
     try {
       await metricsCommand(runId);
+    } catch (error) {
+      console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('code')
+  .description('Run the code agent for your project')
+  .action(async () => {
+    try {
+      await codeCommand();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);
