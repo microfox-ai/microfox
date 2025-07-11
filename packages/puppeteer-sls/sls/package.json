@@ -22,7 +22,8 @@
     "@sparticuz/chromium": "^138.0.0",
     "@types/aws-lambda": "^8.10.150",
     "dotenv": "^16.4.5",
-    "puppeteer-core": "^24.12.1"
+    "puppeteer-core": "^24.12.1",
+    "serverless": "^3.38.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.19",
@@ -31,7 +32,6 @@
     "eslint": "^9.23.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.31.0",
-    "serverless": "^3.38.0",
     "serverless-offline": "^13.3.3",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.3.3"
