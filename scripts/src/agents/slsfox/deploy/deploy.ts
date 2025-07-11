@@ -48,7 +48,9 @@ function formatSchemaToMarkdown(schema: any, indent: number = 0): string {
     }
 
     for (const [propName, propSchema] of Object.entries(schema.properties)) {
-      const isRequired = schema.required?.includes(propName) ? ' *(required)*' : ' *(optional)*';
+      const isRequired = schema.required?.includes(propName)
+        ? ' *(required)*'
+        : ' *(optional)*';
       result += `${spaces}- \`${propName}\`${isRequired}:\n`;
 
       if (typeof propSchema === 'object' && propSchema !== null) {
@@ -140,6 +142,9 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       execSync('npm install', { stdio: 'inherit' });
     }
 
+    console.log(`[Debug] Listing files in ${slsPath}`);
+    execSync('ls -laR', { stdio: 'inherit' });
+
     // Build the function
     console.log('Building function...');
     execSync('npm run build', { stdio: 'inherit' });
@@ -159,7 +164,9 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
 
     if (baseUrl) {
       console.log(`Deployed base URL: ${baseUrl}`);
-      let docsData: OpenAPIDoc = JSON.parse(fs.readFileSync(path.join(slsPath, 'openapi.json'), 'utf8'));
+      let docsData: OpenAPIDoc = JSON.parse(
+        fs.readFileSync(path.join(slsPath, 'openapi.json'), 'utf8'),
+      );
 
       const mainDocsPath = path.join(packagePath, 'sls', 'openapi.md');
       let mainDocsContent: string | null = null;
@@ -206,7 +213,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
 
       const supabase = createClient(
         process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
       );
 
       // Upsert on unique name
@@ -215,14 +222,14 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         .upsert(functionMetadata, { onConflict: 'name' });
 
       if (error) {
-        console.error("error", error);
+        console.error('error', error);
         return false;
       }
 
       const results = {
         success: 0,
         failed: 0,
-        errors: [] as { path: string, method: string, error: any }[]
+        errors: [] as { path: string; method: string; error: any }[],
       };
 
       for (const [path, methods] of Object.entries(docsData.paths)) {
@@ -266,13 +273,22 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
             try {
               embedding = await embed(docText);
               if (!embedding) {
-                console.error(`Failed to generate embedding for ${method.toUpperCase()} ${path}`);
+                console.error(
+                  `Failed to generate embedding for ${method.toUpperCase()} ${path}`,
+                );
                 results.failed++;
-                results.errors.push({ path, method, error: 'Failed to generate embedding' });
+                results.errors.push({
+                  path,
+                  method,
+                  error: 'Failed to generate embedding',
+                });
                 continue;
               }
             } catch (embedError) {
-              console.error(`Embedding error for ${method.toUpperCase()} ${path}:`, embedError);
+              console.error(
+                `Embedding error for ${method.toUpperCase()} ${path}:`,
+                embedError,
+              );
               results.failed++;
               results.errors.push({ path, method, error: embedError });
               continue;
@@ -299,7 +315,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
               openApiSchema: docsData,
               endpointSchema: op,
               package_name: packageName,
-              function_type: "lambda",
+              function_type: 'lambda',
             };
 
             if (existing) {
@@ -313,12 +329,15 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                   http_method: method.toUpperCase(),
                   embedding,
                   metadata,
-                  updated_at: new Date().toISOString()
+                  updated_at: new Date().toISOString(),
                 })
                 .eq('id', existing.id);
 
               if (updateError) {
-                console.error(`Update error for ${method} ${path}:`, updateError);
+                console.error(
+                  `Update error for ${method} ${path}:`,
+                  updateError,
+                );
                 results.failed++;
                 results.errors.push({ path, method, error: updateError });
               } else {
@@ -343,7 +362,10 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                 });
 
               if (insertError) {
-                console.error(`Insert error for ${method} ${path}:`, insertError);
+                console.error(
+                  `Insert error for ${method} ${path}:`,
+                  insertError,
+                );
                 results.failed++;
                 results.errors.push({ path, method, error: insertError });
               } else {
@@ -353,7 +375,10 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
             }
             console.log('results after', method, path, results);
           } catch (error) {
-            console.error(`Error processing endpoint ${method.toUpperCase()} ${path}:`, error);
+            console.error(
+              `Error processing endpoint ${method.toUpperCase()} ${path}:`,
+              error,
+            );
             console.log('results after', method, path, results);
             results.failed++;
             results.errors.push({ path, method, error });
@@ -362,21 +387,28 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         console.log('results after', path, results);
       }
       console.log('results', results);
-      
+
       // Return based on overall results
       if (results.failed > 0) {
-        console.log(`Deployment completed with errors: ${results.success} succeeded, ${results.failed} failed`);
+        console.log(
+          `Deployment completed with errors: ${results.success} succeeded, ${results.failed} failed`,
+        );
         return false;
       } else {
-        console.log(`All endpoints processed successfully: ${results.success} succeeded`);
+        console.log(
+          `All endpoints processed successfully: ${results.success} succeeded`,
+        );
         return true;
       }
     }
     return true;
   } catch (error) {
-    console.error(`Error deploying sls function for package ${path.basename(packagePath)}:`, error);
+    console.error(
+      `Error deploying sls function for package ${path.basename(packagePath)}:`,
+      error,
+    );
     return false;
   }
 }
 
-export default deployPackageSls; 
+export default deployPackageSls;

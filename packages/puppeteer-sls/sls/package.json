@@ -19,6 +19,7 @@
   "dependencies": {
     "@microfox/puppeteer-sls": "^1.2.2",
     "@microfox/tool-core": "latest",
+    "@sparticuz/chromium": "^138.0.0",
     "@types/aws-lambda": "^8.10.150",
     "dotenv": "^16.4.5",
     "puppeteer-core": "^24.12.1"
