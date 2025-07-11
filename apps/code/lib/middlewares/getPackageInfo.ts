@@ -17,7 +17,7 @@ export const getPackageInfo: AiMiddleware<any> = async (ctx, next) => {
 
   try {
     // 1. Initialize Paths
-    taskContext.projectRoot = getProjectRoot();
+    taskContext.projectRoot = await getProjectRoot();
     taskContext[packageName] = {
       ...taskContext[packageName],
       packageDir: path.join(taskContext.projectRoot, 'packages', packageName),

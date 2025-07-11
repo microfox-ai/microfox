@@ -1,10 +1,20 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-export function getProjectRoot(): string {
-  let currentDir = __dirname;
-  while (!fs.existsSync(path.join(currentDir, 'package.json'))) {
-    currentDir = path.dirname(currentDir);
+export async function getProjectRoot(startPath: string = process.cwd()): Promise<string | null> {
+  let currentPath = startPath;
+  let count = 0
+  while (true) {
+    const microfoxRootPath = path.join(currentPath, 'microfox-root');
+    if (fs.existsSync(microfoxRootPath)) {
+      return currentPath;
+    }
+
+    const parentPath = path.dirname(currentPath);
+    if (parentPath === currentPath || count > 10) {
+      // Reached the root of the file system
+      return null;
+    }
+    currentPath = parentPath;
   }
-  return path.join(currentDir, '..', '..', '..')
-}
+} 
