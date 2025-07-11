@@ -150,22 +150,12 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       echo "--- Root files ---"
       ls -l
       
-      for d in */; do
-          if [ ! -d "$d" ]; then continue; fi
-          dir_name="\${d%/}"
-          
-          is_node_modules=false
-          if [ "$dir_name" = "node_modules" ]; then
-            is_node_modules=true
-          fi
-
-          size_mb=$(du -sm "$d" | cut -f1)
-          
-          if [ "$is_node_modules" = true ] || [ "$size_mb" -gt 40 ]; then
-            echo "--- Listing contents of '$dir_name' (size: \${size_mb}MB) ---"
-          else
-            echo ""
-          fi
+      echo "--- Recursively finding directories larger than 40MB ---"
+      find . -type d -mindepth 1 | while IFS= read -r dir; do
+        size_mb=$(du -sm "$dir" | cut -f1)
+        if [ "$size_mb" -gt 40 ]; then
+          echo "$dir (size: \${size_mb}MB)"
+        fi
       done
     `;
     console.log(`[Debug] Conditionally listing files in ${slsPath}`);
