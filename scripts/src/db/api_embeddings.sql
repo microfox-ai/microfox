@@ -30,15 +30,13 @@ CREATE TABLE IF NOT EXISTS api_embeddings (
 -- ANN index for fast similarity search
 CREATE INDEX IF NOT EXISTS idx_api_embeddings_embedding
   ON api_embeddings
-  USING ivfflat (embedding vector_cosine_ops)
-  WITH (lists = 100);
+  USING hnsw (embedding vector_cosine_ops);
 
 -- Filter indexes
-CREATE INDEX IF NOT EXISTS idx_api_embeddings_package_name
-  ON api_embeddings(package_name);
-
-CREATE INDEX IF NOT EXISTS idx_api_embeddings_stage
-  ON api_embeddings(stage);
+CREATE INDEX IF NOT EXISTS idx_api_embeddings_package_name_stage
+  ON api_embeddings(package_name, stage);
+CREATE INDEX IF NOT EXISTS idx_api_embeddings_api_type
+  ON api_embeddings(api_type);
 
 -- Function to search API embeddings by package name
 CREATE OR REPLACE FUNCTION match_apis_by_package_name(
@@ -113,9 +111,9 @@ AS $$
       e.created_at,
       e.updated_at
     FROM api_embeddings AS e
-    WHERE (e.embedding <#> query_embedding) < match_threshold
+    WHERE (e.embedding <#> query_embedding) < 1 - match_threshold
       AND (api_type IS NULL OR e.api_type = api_type)
       AND (package_name IS NULL OR e.package_name = package_name)
-    ORDER BY similarity DESC
+    ORDER BY e.embedding <#> query_embedding
     LIMIT match_count;
 $$;

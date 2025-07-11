@@ -31,8 +31,7 @@ CREATE TABLE IF NOT EXISTS api_mcps (
 -- ANN index for fast similarity search
 CREATE INDEX IF NOT EXISTS idx_api_mcps_embedding
   ON api_mcps
-  USING ivfflat (embedding vector_cosine_ops)
-  WITH (lists = 100);
+  USING hnsw (embedding vector_cosine_ops);
 
 -- Filter index
 CREATE INDEX IF NOT EXISTS idx_api_mcps_api_type
@@ -90,8 +89,8 @@ AS $$
       m.created_at,
       m.updated_at
     FROM api_mcps AS m
-    WHERE (m.embedding <#> query_embedding) < match_threshold
+    WHERE (m.embedding <#> query_embedding) < 1 - match_threshold
       AND (api_type IS NULL OR m.api_type = api_type)
-    ORDER BY similarity DESC
+    ORDER BY m.embedding <#> query_embedding
     LIMIT match_count;
 $$;
