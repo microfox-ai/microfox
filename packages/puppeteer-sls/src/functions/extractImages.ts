@@ -9,6 +9,7 @@ export interface ExtractedImage {
 }
 
 export async function extractImages(page: Page): Promise<ExtractedImage[]> {
+  console.log('Extracting images from page...');
   const images = await page.$$eval('img', (imgs: HTMLImageElement[]) =>
     imgs.map((img: HTMLImageElement) => {
       return {
@@ -33,12 +34,17 @@ export async function extractImages(page: Page): Promise<ExtractedImage[]> {
       };
     }),
   );
+  console.log(`Extracted ${images.length} images.`);
   return images;
 }
 
 export async function extractImagesFromURL(options: OpenPageOptions) {
+  console.log(`Starting image extraction from URL: ${options.url}`);
   const { browser, page } = await openPage(options);
+  console.log('Page has been opened.');
   const images = await extractImages(page);
+  console.log('Closing browser session.');
   await browser.close();
+  console.log('Browser has been closed.');
   return images;
 }

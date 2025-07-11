@@ -1,5 +1,4 @@
 import chromium from '@sparticuz/chromium';
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 
 // Check if running locally
@@ -110,6 +109,8 @@ export const puppeteerLaunchProps = async (
   const args = finalHeadless
     ? chromium.args
     : chromium.args.filter(arg => !arg.startsWith('--headless'));
+
+  console.log('executablePath', executablePath, finalHeadless);
 
   return {
     args: [

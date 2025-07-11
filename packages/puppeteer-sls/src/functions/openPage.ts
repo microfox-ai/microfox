@@ -40,13 +40,25 @@ export async function openPage({
   headless,
   isLocal,
 }: OpenPageOptions) {
+  console.log(
+    `Opening page with options: ${JSON.stringify({
+      url,
+      defaultViewport,
+      headless,
+      isLocal,
+    })}`,
+  );
   const launchProps = await puppeteerLaunchProps(
     defaultViewport,
     isLocal ?? false,
     headless,
   );
+  console.log('Got puppeteer launch properties.');
   const browser = await puppeteer.launch(launchProps);
+  console.log('Browser launched.');
   const page = await browser.newPage();
+  console.log('New page created.');
   await page.goto(url, { waitUntil: 'networkidle2' });
+  console.log(`Navigated to URL: ${url}`);
   return { browser, page };
 }
