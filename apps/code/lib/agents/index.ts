@@ -7,16 +7,16 @@ import { docsAgent } from '@/lib/agents/docs';
 import { summarizeAgent } from '@/lib/agents/summarize';
 import { slsfoxAgent } from '@/lib/agents/slsFox';
 
-export const receptionistAgent = new AiRouter();
+export const receptionistAgent = new AiRouter<any, any, any>();
 
-const receptionistSchema = z.object({
+const receptionistInput = z.object({
     prompt: z.string().describe('The user a high-level goal to accomplish.'),
 });
 
 receptionistAgent
     .actAsTool('/', {
         description: 'Analyzes a user prompt and calls the appropriate agent.',
-        inputSchema: receptionistSchema as any,
+        inputSchema: receptionistInput as any,
     })
     .agent('/', async (ctx) => {
         const { prompt } = ctx.request
@@ -25,9 +25,14 @@ receptionistAgent
 
         const { toolCalls } = await generateText({
             model: google('gemini-2.5-pro-preview-06-05'),
-            prompt: `Based on the following user prompt, decide which agent to call.
-        
-User Prompt: ${prompt}`,
+            prompt: `You are a highly intelligent routing system. Your purpose is to deeply analyze a user's request to understand its fundamental intent. From this analysis, you will determine the single most appropriate specialized function to execute.
+
+Analyze the following user prompt:
+---
+${prompt}
+---
+
+Now, determine the core task the user wants to accomplish and invoke the corresponding function.`,
             tools: {
                 slsfox: ctx.next.agentAsTool("/slsfox"),
                 summarize: ctx.next.agentAsTool("/summarize"),
