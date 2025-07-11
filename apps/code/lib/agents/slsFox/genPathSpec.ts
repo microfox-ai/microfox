@@ -187,7 +187,8 @@ genPathSpecAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName, functionName } = ctx.request;
+    const packageName = ctx.request.params?.packageName as string
+    const functionName = ctx.request.params?.functionName as string
     console.log('genPathSpecAgent', packageName, functionName);
     try {
       const pathSpec = await generateOpenAPIPath(

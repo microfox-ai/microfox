@@ -94,7 +94,7 @@ genOpenApiMdAgent
     inputSchema: schema as any,
   })
   .agent('/', async (ctx) => {
-    const { packageName } = ctx.request;
+    const packageName = ctx.request.params?.packageName as string
 
     try {
       const markdownContent = await generateOpenAPIMarkdown(ctx.state[packageName].packageInfo, ctx.state[packageName].slsDir);
