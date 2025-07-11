@@ -1,5 +1,8 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { puppeteerLaunchProps } from '../spartacuz';
+
+puppeteer.use(StealthPlugin());
 
 /**
  * Options for opening a new page.
@@ -26,6 +29,11 @@ export interface OpenPageOptions {
    * @default false
    */
   isLocal?: boolean;
+  /**
+   * whether to wait complete page load
+   * @default true
+   */
+  waitUntil?: 'networkidle2' | 'networkidle0' | 'domcontentloaded' | 'load';
 }
 
 /**
@@ -39,6 +47,7 @@ export async function openPage({
   defaultViewport,
   headless,
   isLocal,
+  waitUntil,
 }: OpenPageOptions) {
   console.log(
     `Opening page with options: ${JSON.stringify({
@@ -54,11 +63,20 @@ export async function openPage({
     headless,
   );
   console.log('Got puppeteer launch properties.');
-  const browser = await puppeteer.launch(launchProps);
+  const browser = await puppeteer.launch(
+    !headless
+      ? {
+          ...launchProps,
+          slowMo: 100,
+        }
+      : launchProps,
+  );
   console.log('Browser launched.');
   const page = await browser.newPage();
   console.log('New page created.');
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  console.log(`Navigated to URL: ${url}`);
+  const pageLoad = await page.goto(url, {
+    waitUntil: waitUntil ?? 'networkidle2',
+  });
+  console.log(`Navigated to URL: ${pageLoad?.url()}`);
   return { browser, page };
 }

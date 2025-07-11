@@ -55,23 +55,33 @@
                           "headless": {
                             "type": "boolean",
                             "description": "Determines whether to run the browser in headless mode."
+                          },
+                          "deepExtract": {
+                            "type": "boolean",
+                            "description": "When true, the function will attempt to scroll through the page to trigger lazy-loaded images and extract background images from CSS.",
+                            "default": false
+                          },
+                          "waitUntil": {
+                            "type": "string",
+                            "description": "Defines when to consider navigation successful.",
+                            "enum": [
+                              "load",
+                              "domcontentloaded",
+                              "networkidle0",
+                              "networkidle2"
+                            ],
+                            "default": "networkidle2"
                           }
                         },
-                        "required": [
-                          "url"
-                        ]
+                        "required": ["url"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "PuppeteerSLS"
-                        ]
+                        "enum": ["PuppeteerSLS"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -211,21 +221,15 @@
                             "description": "Determines if the browser should run in headless mode."
                           }
                         },
-                        "required": [
-                          "url"
-                        ]
+                        "required": ["url"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "PuppeteerSLS"
-                        ]
+                        "enum": ["PuppeteerSLS"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -252,10 +256,7 @@
                       },
                       "type": {
                         "type": "string",
-                        "enum": [
-                          "statix",
-                          "webpage"
-                        ],
+                        "enum": ["statix", "webpage"],
                         "description": "The type of the link"
                       },
                       "inPageLink": {
@@ -272,12 +273,7 @@
                       },
                       "staticType": {
                         "type": "string",
-                        "enum": [
-                          "video",
-                          "image",
-                          "file",
-                          "other"
-                        ],
+                        "enum": ["video", "image", "file", "other"],
                         "description": "The type of static content, if applicable"
                       },
                       "fileExtension": {
@@ -374,21 +370,15 @@
                             "description": "Determines if the browser should run in headless mode."
                           }
                         },
-                        "required": [
-                          "url"
-                        ]
+                        "required": ["url"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "PuppeteerSLS"
-                        ]
+                        "enum": ["PuppeteerSLS"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -416,9 +406,7 @@
                       "description": "Full HTML content of the webpage (if toHTML is true)."
                     }
                   },
-                  "required": [
-                    "content"
-                  ]
+                  "required": ["content"]
                 }
               }
             }
@@ -511,10 +499,7 @@
                                 "description": "The height of the viewport in pixels"
                               }
                             },
-                            "required": [
-                              "width",
-                              "height"
-                            ]
+                            "required": ["width", "height"]
                           },
                           "headless": {
                             "type": "boolean",
@@ -527,21 +512,15 @@
                             "default": false
                           }
                         },
-                        "required": [
-                          "url"
-                        ]
+                        "required": ["url"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "PuppeteerSLS"
-                        ]
+                        "enum": ["PuppeteerSLS"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -565,10 +544,7 @@
                       "description": "Puppeteer Page instance"
                     }
                   },
-                  "required": [
-                    "browser",
-                    "page"
-                  ]
+                  "required": ["browser", "page"]
                 }
               }
             }
@@ -585,9 +561,7 @@
                       "description": "Error message describing the issue with the input parameters"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -604,9 +578,7 @@
                       "description": "Error message describing the internal server error"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -650,10 +622,7 @@
                           },
                           "encoding": {
                             "type": "string",
-                            "enum": [
-                              "base64",
-                              "binary"
-                            ],
+                            "enum": ["base64", "binary"],
                             "default": "binary",
                             "description": "The encoding type for the screenshot."
                           },
@@ -686,10 +655,7 @@
                                     "description": "The secret access key for the AWS account."
                                   }
                                 },
-                                "required": [
-                                  "accessKeyId",
-                                  "secretAccessKey"
-                                ]
+                                "required": ["accessKeyId", "secretAccessKey"]
                               }
                             },
                             "required": [
@@ -708,23 +674,15 @@
                             "description": "Determines if the browser should run in headless mode."
                           }
                         },
-                        "required": [
-                          "url",
-                          "fileName",
-                          "s3Config"
-                        ]
+                        "required": ["url", "fileName", "s3Config"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "PuppeteerSLS"
-                        ]
+                        "enum": ["PuppeteerSLS"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }

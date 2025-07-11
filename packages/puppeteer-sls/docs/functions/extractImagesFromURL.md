@@ -43,7 +43,10 @@ function extractImagesFromURL(
 
 ### Parameters (`OpenPageOptions`)
 
-Inherits all options from `openPage`.
+Inherits all options from `openPage`. The following options are also available:
+
+- `deepExtract` (boolean, optional): When `true`, the function will attempt to scroll through the page to trigger lazy-loaded images and extract background images from CSS. Defaults to `false`.
+- `waitUntil` ('load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2', optional): Defines when to consider navigation successful. Defaults to `networkidle2`.
 
 ### Example (Standalone)
 

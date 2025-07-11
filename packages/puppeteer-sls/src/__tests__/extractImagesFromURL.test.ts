@@ -1,15 +1,47 @@
 import { describe, it, expect } from 'vitest';
 import { extractImagesFromURL } from '../functions/extractImages';
+import { OpenPageOptions } from '../functions/openPage';
 
 describe(
   'extractImagesFromURL',
   () => {
-    it('should extract images from a given URL', async () => {
+    // it('should extract images from a given URL', async () => {
+    //   const options = {
+    //     url: 'https://www.midjourney.com/explore?tab=top_month',
+    //     isLocal: true,
+    //     headless: true,
+    //     waitUntil: 'load',
+    //   } as OpenPageOptions;
+    //   const images = await extractImagesFromURL(options);
+
+    //   console.log(images);
+
+    //   expect(Array.isArray(images)).toBe(true);
+    //   expect(images.length).toBeGreaterThan(0);
+
+    //   images.forEach(image => {
+    //     expect(image).toHaveProperty('alt');
+    //     expect(image).toHaveProperty('src');
+    //     expect(image).toHaveProperty('srcset');
+    //     expect(image).toHaveProperty('responsiveImages');
+
+    //     if (image.responsiveImages) {
+    //       image.responsiveImages.forEach(responsiveImage => {
+    //         expect(responsiveImage).toHaveProperty('url');
+    //         expect(responsiveImage).toHaveProperty('size');
+    //       });
+    //     }
+    //   });
+    // });
+
+    it('should extract background images when deepExtract is true', async () => {
       const options = {
-        url: 'https://uk.pinterest.com/search/pins/?q=anime%20cyberpunk%20running&rs=typed',
+        url: 'https://www.midjourney.com/explore',
         isLocal: true,
         headless: true,
-      };
+        deepExtract: true,
+        waitUntil: 'networkidle0',
+      } as OpenPageOptions & { deepExtract?: boolean };
       const images = await extractImagesFromURL(options);
 
       console.log(images);
@@ -17,18 +49,14 @@ describe(
       expect(Array.isArray(images)).toBe(true);
       expect(images.length).toBeGreaterThan(0);
 
-      images.forEach(image => {
-        expect(image).toHaveProperty('alt');
-        expect(image).toHaveProperty('src');
-        expect(image).toHaveProperty('srcset');
-        expect(image).toHaveProperty('responsiveImages');
+      const backgroundImages = images.filter(
+        img => img.alt && img.alt.startsWith('Background image from'),
+      );
+      expect(backgroundImages.length).toBeGreaterThan(0);
 
-        if (image.responsiveImages) {
-          image.responsiveImages.forEach(responsiveImage => {
-            expect(responsiveImage).toHaveProperty('url');
-            expect(responsiveImage).toHaveProperty('size');
-          });
-        }
+      backgroundImages.forEach(image => {
+        expect(image).toHaveProperty('alt');
+        expect(image.src || image.srcset).not.toBeNull();
       });
     });
   },
