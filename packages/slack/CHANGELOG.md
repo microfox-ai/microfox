@@ -1,5 +1,11 @@
 # @microfox/slack
 
+## 1.1.5
+
+### Patch Changes
+
+- 19771c8: release: improve npm package name checking and update MCP specification
+
 ## 1.1.4
 
 ### Patch Changes
