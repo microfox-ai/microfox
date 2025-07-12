@@ -2,11 +2,14 @@
   "mcpVersion": "1.0.2",
   "info": {
     "title": "My Tool Kit API",
+    "type": "package",
+    "status": "stable",
+    "packageName": "@microfox/my-tool-kit",
+    "packageVersion": "1.0.0",
     "version": "1.0.0",
     "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/microfox-icon.svg",
     "stage": "staging",
     "description": "A sample MCP specification for a tool kit with reusable auth providers.",
-    "packageName": "@microfox/my-tool-kit",
     "contact": {
       "name": "Dev Support",
       "email": "support@example.com"
