@@ -17,11 +17,12 @@
   },
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
+    "@microfox/slack": "^1.1.1",
     "@microfox/tool-core": "^1.0.1",
-    "dotenv": "^16.4.5",
-    "@microfox/slack": "^1.1.1"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.150",
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",

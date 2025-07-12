@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6
+
+### Patch Changes
+
+- 70f5cf5: release: simplify index.ts by removing legacy error handling and exporting new modules
+
 ## 1.0.5
 
 ### Patch Changes

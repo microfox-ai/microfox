@@ -24,7 +24,9 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
       return createApiResponse(200, JSON.parse(openapiSpec));
     } catch (error) {
       console.error('Error reading openapi.json:', error);
-      const internalError = new InternalServerError('Could not load API specification.');
+      const internalError = new InternalServerError(
+        'Could not load API specification.',
+      );
       return createApiResponse(internalError.statusCode, {
         error: internalError.message,
       });
@@ -39,7 +41,7 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
 
     // Map functions
     const sdkMap = sdkInit({
-      constructorName,
+      constructorName: 'MicrofoxSlackClient',
       ...process.env,
     });
 

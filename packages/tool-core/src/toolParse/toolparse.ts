@@ -44,9 +44,9 @@ export class ToolParse {
   async populateEnvs(options: {
     event?: APIGatewayEvent;
     body?: { xAuthSecrets?: string };
-    packages?: string[];
+    packages?: string[]; // @microfox/ai-provider-anthropic
     stage?: string;
-    specificPackageTemplates?: Record<string, string>;
+    specificPackageTemplates?: Record<string, string>; // { "@microfox/ai-provider-anthropic": "slack-ajsgduyqg" }
   }): Promise<void> {
     if (options.event) {
       this.populateEnvVars(options.event);

@@ -1,12 +1,12 @@
 {
-  "name": "@microfox/tool-core",
-  "version": "1.0.6",
-  "description": "A TypeScript SDK for Tool Core.",
+  "name": "@microfox/@microfox/types",
+  "version": "1.0.0",
+  "description": "General Required Types for Agents",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/**/*",
+    "dist/**",
     "CHANGELOG.md"
   ],
   "scripts": {
@@ -26,19 +26,14 @@
     }
   },
   "dependencies": {
-    "@microfox/crypto-sdk": "^1.2.0",
-    "@microfox/db-upstash": "^1.1.4",
-    "@upstash/redis": "^1.31.6",
-    "aws-lambda": "^1.0.7",
-    "dotenv": "^16.4.5",
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.142",
+    "@eslint/js": "latest",
     "@types/node": "^18",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^9.1.0",
     "prettier": "^3.0.0",
     "tsup": "^8",
     "typescript": "^5.6.3",
@@ -51,7 +46,7 @@
     "node": ">=18.0.0"
   },
   "keywords": [
-    "tool-core",
+    "types",
     "typescript",
     "api",
     "sdk"

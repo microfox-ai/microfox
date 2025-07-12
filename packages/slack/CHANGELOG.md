@@ -1,5 +1,17 @@
 # @microfox/slack
 
+## 1.1.5
+
+### Patch Changes
+
+- 19771c8: release: improve npm package name checking and update MCP specification
+
+## 1.1.4
+
+### Patch Changes
+
+- 70f5cf5: release: simplify index.ts by removing legacy error handling and exporting new modules
+
 ## 1.1.3
 
 ### Patch Changes
