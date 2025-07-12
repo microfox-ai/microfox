@@ -5,7 +5,7 @@ import {
   subredditListPaginator,
 } from "../helpers/ragRedis.js";
 import { handler as indexSubredditHandler } from "./sqs-index.js";
-import { createMockSQSEvent } from "@microfox/tool-core";
+import { createMockSQSEvent, ProcessTask } from "@microfox/tool-core";
 
 const sqsClient = new SQSClient({});
 const isOffline = process.env.IS_OFFLINE === "true";
@@ -18,6 +18,11 @@ const ITEMS_PER_PAGE = 100;
  */
 export const handler = async (): Promise<void> => {
   console.log("handler: cron-index-subreddit");
+
+  const taskHandler = new ProcessTask({
+    url: process.env.TASK_UPSTASH_REDIS_REST_URL,
+    token: process.env.TASK_UPSTASH_REDIS_REST_TOKEN,
+  });
 
   try {
     let paginatorState = await subredditListPaginator.getCurrentStatus();
@@ -79,7 +84,14 @@ export const handler = async (): Promise<void> => {
           subredditName,
         });
 
-        const sqsMessageBody = { subreddit: subredditName };
+        const task = await taskHandler.createTask({
+          subreddit: subredditName,
+        });
+
+        const sqsMessageBody = {
+          subreddit: subredditName,
+          task_id: task.id,
+        };
 
         if (isOffline) {
           console.log(

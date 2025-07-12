@@ -1,6 +1,6 @@
 // TODO: this is a simple lambda function, that intakes a record from an SQS queue, and indexes the subreddit into the vector database
 
-import { ToolParse } from "@microfox/tool-core";
+import { ToolParse, ProcessTask } from "@microfox/tool-core";
 import { SQSEvent, SQSBatchResponse } from "aws-lambda";
 import {
   ragSubredditPaginator,
@@ -10,7 +10,13 @@ import {
   RagPostMetadata,
 } from "../helpers/ragRedis.js";
 
+
 const toolHandler = new ToolParse({});
+
+const taskHandler = new ProcessTask({
+  url: process.env.TASK_UPSTASH_REDIS_REST_URL,
+  token: process.env.TASK_UPSTASH_REDIS_REST_TOKEN,
+});
 
 // The return type is changed to SQSBatchResponse to allow for partial batch failures.
 // This means if one message in a batch fails, only that message will be retried, not the entire batch.
@@ -24,8 +30,12 @@ export const handler = async (event: SQSEvent): Promise<SQSBatchResponse> => {
     console.log("handler: processing record", { messageId: record.messageId });
     const body = JSON.parse(record.body);
     console.log("Processing message:", body);
-    const { parma1, xAuthSecrets } = body;
+    const { parma1, xAuthSecrets, task_id } = body;
     try {
+      await taskHandler.updateTask(task_id, {
+        status: "processing",
+      });
+
       // Param checks
       if (
         !parma1 ||
@@ -115,13 +125,18 @@ export const handler = async (event: SQSEvent): Promise<SQSBatchResponse> => {
       console.log("handler: completing indexing", { id: parma1 });
       await ragSubredditPaginator(parma1).completeIndexing();
       console.log("handler: completed indexing", { id: parma1 });
+      await taskHandler.updateTask(task_id, {
+        status: "completed",
+      });
     } catch (error) {
       console.error(`Failed to process SQS message ${record.messageId}`, error);
       await ragSubredditPaginator(parma1).failIndexing(
         error instanceof Error ? error.message : "Unknown error"
       );
       console.log("handler: failed indexing", { id: parma1 });
-
+      await taskHandler.updateTask(task_id, {
+        status: "failed",
+      });
       batchItemFailures.push({ itemIdentifier: record.messageId });
     }
   }

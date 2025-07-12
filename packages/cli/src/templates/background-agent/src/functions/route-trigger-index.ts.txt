@@ -5,7 +5,7 @@ import {
 } from "aws-lambda";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { handler as indexSubredditHandler } from "./sqs-index.js";
-import { createMockSQSEvent } from "@microfox/tool-core";
+import { createMockSQSEvent, ProcessTask } from "@microfox/tool-core";
 import { ragSubredditPaginator } from "../helpers/ragRedis.js";
 
 const sqsClient = new SQSClient({});
@@ -18,6 +18,12 @@ export const handler = async (
     isOffline,
     body: event.body,
   });
+
+  const taskHandler = new ProcessTask({
+    url: process.env.TASK_UPSTASH_REDIS_REST_URL,
+    token: process.env.TASK_UPSTASH_REDIS_REST_TOKEN,
+  });
+
   if (!event.body) {
     console.log("handler: missing request body");
     return {
@@ -51,9 +57,13 @@ export const handler = async (
     // TODO: get the subreddit info
     // TODO: store/update it in db
 
+    const task = await taskHandler.createTask({
+      subreddit,
+    });
+
     console.log("handler: preparing SQS message");
     const authHeader = event.headers["x-auth-secrets"];
-    const sqsMessageBody = { subreddit, xAuthSecrets: authHeader };
+    const sqsMessageBody = { subreddit, xAuthSecrets: authHeader, task_id: task.id};
     console.log("handler: prepared SQS message", { sqsMessageBody });
 
     console.log("handler: checking if subreddit is stale", { subreddit });
