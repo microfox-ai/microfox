@@ -1,14 +1,13 @@
 import dotenv from 'dotenv';
 import { sdkInit } from './sdkInit.js';
-import { APIGatewayEvent } from 'aws-lambda';
+import { SQSEvent } from 'aws-lambda';
 import {
   ToolParse,
   createApiResponse,
   ApiError,
   InternalServerError,
+  ProcessTask,
 } from '@microfox/tool-core';
-import * as fs from 'fs';
-import * as path from 'path';
 
 dotenv.config(); // for any local vars
 
@@ -16,61 +15,66 @@ const toolHandler = new ToolParse({
   encryptionKey: process.env.ENCRYPTION_KEY,
 });
 
-export const handler = async (event: APIGatewayEvent): Promise<any> => {
-  if (event.path === '/docs.json' && event.httpMethod === 'GET') {
+const taskHandler = new ProcessTask({
+  url: process.env.TASK_UPSTASH_REDIS_REST_URL,
+  token: process.env.TASK_UPSTASH_REDIS_REST_TOKEN,
+});
+
+export const handler = async (event: SQSEvent): Promise<any> => {
+  for (const record of event.Records) {
+    console.log("handler: processing record", { messageId: record.messageId });
+    const body = JSON.parse(record.body);
+    console.log("Processing message:", body);
+    const { triggerEvent, task_id } = body;
+
+    await taskHandler.updateTask(task_id, {
+      status: "processing",
+    });
+
     try {
-      const openapiPath = path.resolve(__dirname, 'openapi.json');
-      const openapiSpec = fs.readFileSync(openapiPath, 'utf-8');
-      return createApiResponse(200, JSON.parse(openapiSpec));
+      // Extract environment variables from the new structure
+      toolHandler.populateEnvVars(triggerEvent);
+
+      const constructorName = toolHandler.extractConstructor(triggerEvent);
+
+      // Map functions
+      const sdkMap = sdkInit({
+        constructorName,
+        ...process.env,
+      });
+
+      // Extract function arguments
+      const args = toolHandler.extractArguments(triggerEvent);
+
+      // Extract function from the SDK map
+      const fn = toolHandler.extractFunction(sdkMap, triggerEvent);
+
+      // Invoke the function
+      const result = await toolHandler.executeFunction(fn, args);
+      await taskHandler.updateTask(task_id, {
+        status: "completed",
+        data: {
+          result: JSON.stringify(result),
+        },
+      });
+      // Return successful response
+      return createApiResponse(200, result);
     } catch (error) {
-      console.error('Error reading openapi.json:', error);
+      console.error('Error in handler:', error);
+
+      // Handle custom API errors
+      if (error instanceof ApiError) {
+        return createApiResponse(error.statusCode, { error: error.message });
+      }
+
+      // Handle unexpected errors
       const internalError = new InternalServerError(
-        'Could not load API specification.',
+        error instanceof Error ? error.message : String(error),
       );
       return createApiResponse(internalError.statusCode, {
         error: internalError.message,
+        details: process.env.NODE_ENV === 'development' ? error : undefined,
       });
     }
-  }
-
-  try {
-    // Extract environment variables from the new structure
-    toolHandler.populateEnvVars(event);
-
-    const constructorName = toolHandler.extractConstructor(event);
-
-    // Map functions
-    const sdkMap = sdkInit({
-      constructorName,
-      ...process.env,
-    });
-
-    // Extract function arguments
-    const args = toolHandler.extractArguments(event);
-
-    // Extract function from the SDK map
-    const fn = toolHandler.extractFunction(sdkMap, event);
-
-    // Invoke the function
-    const result = await toolHandler.executeFunction(fn, args);
-
-    // Return successful response
-    return createApiResponse(200, result);
-  } catch (error) {
-    console.error('Error in handler:', error);
-
-    // Handle custom API errors
-    if (error instanceof ApiError) {
-      return createApiResponse(error.statusCode, { error: error.message });
-    }
-
-    // Handle unexpected errors
-    const internalError = new InternalServerError(
-      error instanceof Error ? error.message : String(error),
-    );
-    return createApiResponse(internalError.statusCode, {
-      error: internalError.message,
-      details: process.env.NODE_ENV === 'development' ? error : undefined,
-    });
   }
 };
