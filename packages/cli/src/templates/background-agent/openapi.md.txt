@@ -1,0 +1,1 @@
+This is a simple API for a Reddit RAG (Retrieval-Augmented Generation) agent. It allows you to index subreddits and perform searches on the indexed content to get AI-generated reports and insights.

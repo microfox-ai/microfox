@@ -1,0 +1,147 @@
+// TODO: this is a simple lambda function, that intakes a record from an SQS queue, and indexes the subreddit into the vector database
+
+import { ToolParse, ProcessTask } from "@microfox/tool-core";
+import { SQSEvent, SQSBatchResponse } from "aws-lambda";
+import {
+  ragSubredditPaginator,
+  ragRedditVectorbase,
+  ragredditRedis,
+  subredditStore,
+  RagPostMetadata,
+} from "../helpers/ragRedis.js";
+
+
+const toolHandler = new ToolParse({});
+
+const taskHandler = new ProcessTask({
+  url: process.env.TASK_UPSTASH_REDIS_REST_URL,
+  token: process.env.TASK_UPSTASH_REDIS_REST_TOKEN,
+});
+
+// The return type is changed to SQSBatchResponse to allow for partial batch failures.
+// This means if one message in a batch fails, only that message will be retried, not the entire batch.
+// This requires enabling "Report batch item failures" in the Lambda trigger configuration for the SQS queue.
+export const handler = async (event: SQSEvent): Promise<SQSBatchResponse> => {
+  console.log("handler: sqs-index-subreddit", {
+    records: event.Records.length,
+  });
+  const batchItemFailures = [];
+  for (const record of event.Records) {
+    console.log("handler: processing record", { messageId: record.messageId });
+    const body = JSON.parse(record.body);
+    console.log("Processing message:", body);
+    const { parma1, xAuthSecrets, task_id } = body;
+    try {
+      await taskHandler.updateTask(task_id, {
+        status: "processing",
+      });
+
+      // Param checks
+      if (
+        !parma1 ||
+        parma1 === "null" ||
+        parma1 === "undefined" ||
+        parma1 === undefined
+      ) {
+        console.error("handler: param1 is required", { parma1 });
+        continue;
+      }
+
+      // Auth checks
+      if (xAuthSecrets) {
+        console.log("Populating env vars from xAuthSecrets", xAuthSecrets);
+        toolHandler.populateEnvVars({
+          headers: {
+            "x-auth-secrets": xAuthSecrets,
+          },
+        } as any);
+        console.log("handler: populated env vars from xAuthSecrets");
+      }
+
+      // Feed Env Vars dynamically.
+      if (!process.env.SOMETHING) {
+        console.log(
+          "Fetching env vars from microfox template api",
+          Object.keys(process.env)
+        );
+        await toolHandler.fetchEnvVars({
+          stage: "staging",
+          packageName: "@microfox/somthing",
+          templateType: "testing",
+        });
+        console.log("handler: fetched env vars from microfox template api");
+      }
+
+      // 1. Create Constructors
+      // 2. Write the code to do your thing.
+      // 3. Output a data object.
+      const data: any = {};
+
+      // Plain Data Insertion
+      try {
+        if (data) {
+          await subredditStore.set(data.uniqueId, data);
+          console.log(`Stored data info for ${data.uniqueId}`);
+        } else {
+          console.log(`Could not find data info for ${data.uniqueId}`);
+        }
+      } catch (e) {
+        console.error("Could not get data info", e);
+      }
+
+      // Rag Data Insertion
+      const pagination = await ragSubredditPaginator(parma1).startNewIndexing({
+        done: false,
+      });
+
+      console.log("handler: fetching new posts from subreddit", { pagination });
+      // TODO: do your thing
+      const documents = data.documents
+        .map(({ data: p }: { data: any }) => ({
+          id: p.id,
+          doc: ``,
+          metadata: p,
+        }))
+        .filter((d: any) => d.doc != null && d.id != null);
+
+      if (documents.length > 0) {
+        console.log(`Indexing ${documents.length} posts to vectorbase...`);
+        // Delete the previously Indexed Data (Optional)
+        await ragRedditVectorbase.delete(
+          {
+            filter: `metadata.subreddit = "${data.uniqueId}"`,
+          },
+          {
+            namespace: "ragreddit",
+          }
+        );
+        await ragRedditVectorbase.feedDocsToRAG(documents, "ragreddit");
+
+        console.log("Successfully indexed posts.");
+      } else {
+        console.log("No new posts to index.");
+      }
+
+      console.log("handler: completing indexing", { id: parma1 });
+      await ragSubredditPaginator(parma1).completeIndexing();
+      console.log("handler: completed indexing", { id: parma1 });
+      await taskHandler.updateTask(task_id, {
+        status: "completed",
+      });
+    } catch (error) {
+      console.error(`Failed to process SQS message ${record.messageId}`, error);
+      await ragSubredditPaginator(parma1).failIndexing(
+        error instanceof Error ? error.message : "Unknown error"
+      );
+      console.log("handler: failed indexing", { id: parma1 });
+      await taskHandler.updateTask(task_id, {
+        status: "failed",
+      });
+      batchItemFailures.push({ itemIdentifier: record.messageId });
+    }
+  }
+  console.log("handler: finished processing batch", {
+    batchItemFailures: batchItemFailures.length,
+  });
+  return { batchItemFailures };
+};

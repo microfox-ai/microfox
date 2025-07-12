@@ -1,0 +1,4 @@
+{
+  "stage": "prod",
+  "ignored": [".build/**", "package-lock.json"]
+}
