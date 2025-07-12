@@ -43,7 +43,7 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
 
     const task = await taskHandler.createTask({
       type: 'package-sls',
-      data: {
+      metadata: {
         packageName: 'puppeteer-sls',
         functionName: event.path.substring(1),
         triggerEvent: event,

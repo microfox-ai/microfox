@@ -7,6 +7,7 @@ import {
   ApiError,
   InternalServerError,
   ProcessTask,
+  TaskState,
 } from '@microfox/tool-core';
 
 dotenv.config(); // for any local vars
@@ -28,7 +29,7 @@ export const handler = async (event: SQSEvent): Promise<any> => {
     const { triggerEvent, task_id } = body;
 
     await taskHandler.updateTask(task_id, {
-      status: "processing",
+      status: TaskState.Working,
     });
 
     try {
@@ -52,8 +53,8 @@ export const handler = async (event: SQSEvent): Promise<any> => {
       // Invoke the function
       const result = await toolHandler.executeFunction(fn, args);
       await taskHandler.updateTask(task_id, {
-        status: "completed",
-        data: {
+        status: TaskState.Completed,
+        metadata: {
           result: JSON.stringify(result),
         },
       });
