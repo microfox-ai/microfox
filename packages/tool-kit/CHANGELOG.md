@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.8
+
+### Patch Changes
+
+- 19771c8: release: improve npm package name checking and update MCP specification
+
 ## 1.1.7
 
 ### Patch Changes
