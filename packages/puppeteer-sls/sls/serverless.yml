@@ -18,6 +18,7 @@ provider:
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
   timeout: 300 # 5 minutes
+  memorySize: 2048
 
 custom:
   stage: ${env:ENVIRONMENT, 'dev'}
