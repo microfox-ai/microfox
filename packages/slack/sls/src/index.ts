@@ -41,7 +41,7 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
 
     // Map functions
     const sdkMap = sdkInit({
-      constructorName: constructorName ?? 'MicrofoxSlackClient',
+      constructorName: 'MicrofoxSlackClient',
       ...process.env,
     });
 
