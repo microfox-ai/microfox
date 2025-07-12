@@ -107,11 +107,11 @@ export class ToolParse {
 
   async fetchEnvVars(options: {
     packageName: string;
-    templateType: string;
+    templateType?: string;
     templateId?: string;
     stage?: string;
     apiKey?: string;
-  }): Promise<void> {
+  }): Promise<string[]> {
     const url = `https://${
       options.stage ?? 'staging'
     }.microfox.app/api/client-secrets/get-template`;
@@ -130,7 +130,7 @@ export class ToolParse {
         },
         body: JSON.stringify({
           packageName: options.packageName,
-          templateType: options.templateType,
+          templateType: options.templateType ?? 'testing',
           templateId: options.templateId,
         }),
       });
@@ -156,6 +156,8 @@ export class ToolParse {
       });
 
       dotenv.populate(process.env as any, variables);
+
+      return Object.keys(variables);
     } catch (error) {
       console.error(
         'Error fetching/populating environment variables from template:',
