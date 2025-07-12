@@ -1,6 +1,6 @@
 {
   "name": "@microfox/tool-kit",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "A central tool kit for parsing Open Apis into MCP servers with Oauth Handling and HITL",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

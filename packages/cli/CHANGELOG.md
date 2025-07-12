@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.9
+
+### Patch Changes
+
+- 19771c8: release: improve npm package name checking and update MCP specification
+
 ## 1.0.8
 
 ### Patch Changes
