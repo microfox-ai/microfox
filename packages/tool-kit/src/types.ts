@@ -1,4 +1,5 @@
 import { Tool as AiTool, ToolSet as AiToolSet } from 'ai';
+import { z } from 'zod';
 
 export type ToolMetaInfo = {
   toolName?: string;
@@ -266,6 +267,15 @@ export interface OpenAPIToolsClientOptions {
   getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;
+
+  /**
+   * Function to dynamically fetch additional arguments for a tool call.
+   */
+  getAdditionalArgs?: (args: {
+    toolName: string;
+    clientName: string;
+    summary?: string;
+  }) => Promise<z.ZodObject<any> | undefined>;
 }
 
 export interface HumanInterventionContext {
@@ -328,6 +338,11 @@ export type ToolOptions = {
   getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;
+  getAdditionalArgs?: (args: {
+    toolName: string;
+    clientName: string;
+    summary?: string;
+  }) => Promise<z.ZodObject<any> | undefined>;
 };
 
 export type ToolResult = {

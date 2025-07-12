@@ -60,8 +60,7 @@
     {
       "name": "MicrofoxSlackClient",
       "description": "Create a new Slack MicrofoxSlackClient client through which you can interact with the API",
-      "auth": "apikey",
-      "apiType": "bot_token",
+      "auth": "oauth2",
       "requiredKeys": [],
       "internalKeys": [
         {

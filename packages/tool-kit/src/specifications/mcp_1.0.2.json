@@ -3,12 +3,15 @@
   "info": {
     "title": "My Tool Kit API",
     "version": "1.0.0",
+    "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/microfox-icon.svg",
+    "stage": "staging",
     "description": "A sample MCP specification for a tool kit with reusable auth providers.",
     "packageName": "@microfox/my-tool-kit",
     "contact": {
       "name": "Dev Support",
       "email": "support@example.com"
-    }
+    },
+    "skills": ["my-skill"]
   },
   "servers": [
     {
@@ -93,6 +96,7 @@
         "summary": "A sample method.",
         "description": "This is a very long description of the method and what it does.",
         "auth": "$components.x-auth-singleset",
+        "actions": [""],
         "x-human-in-the-loop": "dataEntry",
         "headers": {
           "x-auth-secrets": {

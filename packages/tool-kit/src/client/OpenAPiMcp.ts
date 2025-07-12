@@ -18,11 +18,13 @@ import {
   AuthObject,
   HumanInterventionDecision,
   HumanInterventionContext,
-  PendingToolContext,
   ToolMetadata,
   AuthOptions,
 } from '../types';
 import { CryptoVault } from '@microfox/crypto-sdk';
+import { convertOpenApiSchemaToZod } from '../parsing/jsonzod';
+import { addPropertiesToBody } from '../parsing/argumentHelpers';
+import zodToJsonSchema from 'zod-to-json-schema';
 
 /**
  * Individual client for interacting with a single API described by an OpenAPI schema
@@ -48,8 +50,12 @@ export class OpenApiMCP {
   private getHumanIntervention?: (
     context: HumanInterventionContext,
   ) => Promise<HumanInterventionDecision>;
-  private addPendingTool?: (context: PendingToolContext) => void;
   private cryptoVault?: CryptoVault;
+  private getAdditionalArgs?: (args: {
+    toolName: string;
+    clientName: string;
+    summary?: string;
+  }) => Promise<z.ZodObject<any> | undefined>;
 
   constructor(options: {
     schema: OpenAPIDoc;
@@ -64,7 +70,11 @@ export class OpenApiMCP {
     getHumanIntervention?: (
       context: HumanInterventionContext,
     ) => Promise<HumanInterventionDecision>;
-    addPendingTool?: (context: PendingToolContext) => void;
+    getAdditionalArgs?: (args: {
+      toolName: string;
+      clientName: string;
+      summary?: string;
+    }) => Promise<z.ZodObject<any> | undefined>;
   }) {
     this.schema = options.schema;
     this.baseUrl = options.baseUrl || '';
@@ -78,7 +88,7 @@ export class OpenApiMCP {
     this.getAuth = options.getAuth;
     this.cleanAuth = options.cleanAuth;
     this.getHumanIntervention = options.getHumanIntervention;
-    this.addPendingTool = options.addPendingTool;
+    this.getAdditionalArgs = options.getAdditionalArgs;
     if (options.auth?.encryptionKey) {
       this.cryptoVault = new CryptoVault({
         key: options.auth?.encryptionKey || '',
@@ -776,105 +786,6 @@ export class OpenApiMCP {
     return result;
   }
 
-  /**
-   * Convert OpenAPI schema to Zod schema
-   * Ensures that any property not in the required array is made optional
-   * Ensures arrays have proper item schemas for AI SDK compatibility
-   */
-  private convertOpenApiSchemaToZod(schema: JsonSchema): z.ZodType {
-    if (!schema.type) {
-      return z.any();
-    }
-
-    switch (schema.type) {
-      case 'string':
-        let stringSchema = z.string();
-        // Only use formats supported by Google AI API
-        if (schema.format === 'date-time') {
-          stringSchema = z.string().datetime();
-        }
-        if (schema.description) {
-          stringSchema = stringSchema.describe(schema.description);
-        }
-        return stringSchema;
-
-      case 'number':
-      case 'integer':
-        let numberSchema =
-          schema.type === 'integer' ? z.number().int() : z.number();
-        if (schema.description) {
-          numberSchema = numberSchema.describe(schema.description);
-        }
-        return numberSchema;
-
-      case 'boolean':
-        let booleanSchema = z.boolean();
-        if (schema.description) {
-          booleanSchema = booleanSchema.describe(schema.description);
-        }
-        return booleanSchema;
-
-      case 'array':
-        // For arrays, always ensure we have a proper item schema
-        let itemSchema: z.ZodType;
-
-        if (!schema.items) {
-          // Use passthrough object instead of z.record for better JSON schema generation
-          itemSchema = z.object({}).passthrough();
-        } else if (Array.isArray(schema.items)) {
-          if (schema.items.length === 0) {
-            itemSchema = z.object({}).passthrough();
-          } else {
-            const firstItemSchema = schema.items[0];
-            if (!firstItemSchema) {
-              itemSchema = z.object({}).passthrough();
-            } else {
-              itemSchema = this.convertOpenApiSchemaToZod(firstItemSchema);
-            }
-          }
-        } else {
-          itemSchema = this.convertOpenApiSchemaToZod(schema.items);
-        }
-
-        let arraySchema = z.array(itemSchema);
-        if (schema.description) {
-          arraySchema = arraySchema.describe(schema.description);
-        }
-        return arraySchema;
-
-      case 'object':
-        if (!schema.properties || Object.keys(schema.properties).length === 0) {
-          // Use passthrough for better JSON schema generation
-          return z.object({}).passthrough();
-        }
-
-        const shape: Record<string, z.ZodType> = {};
-
-        // Convert all properties first
-        for (const [key, propSchema] of Object.entries(schema.properties)) {
-          const propZodSchema = this.convertOpenApiSchemaToZod(propSchema);
-
-          // Check if this property is required
-          const isRequired = schema.required && schema.required.includes(key);
-          if (isRequired) {
-            shape[key] = propZodSchema;
-          } else {
-            shape[key] = propZodSchema.optional();
-          }
-        }
-
-        let objectSchema = z.object(shape);
-        if (schema.description) {
-          objectSchema = objectSchema.describe(schema.description);
-        }
-
-        return objectSchema;
-
-      default:
-        return z.any();
-    }
-  }
-
   //Each tool call must have a corresponding tool result. If you do not add a tool result, all subsequent generations will fail
   //bypass execute function process it, and return void, to put a temp stop
   // format a dataStreamPart with tool_call, and speciall toolName, & some state args, that help
@@ -894,6 +805,7 @@ export class OpenApiMCP {
     getAuth: toolGetAuth,
     cleanAuth: toolCleanAuth,
     getHumanIntervention,
+    getAdditionalArgs,
   }: ToolOptions = {}): Promise<ToolResult> {
     if (!this.initialized) {
       throw new Error('Client not initialized. Call init() first.');
@@ -936,7 +848,28 @@ export class OpenApiMCP {
           disabledExecutions.includes(toolName));
 
       const jsonSchema = this.convertOperationToJsonSchema(cleanedOperation);
-      const zodSchema = this.convertOpenApiSchemaToZod(jsonSchema);
+
+      const getAdditionalArgsFn = getAdditionalArgs || this.getAdditionalArgs;
+      let additionalArgsSchema: JsonSchema | undefined;
+      if (getAdditionalArgsFn) {
+        const additionalArgsZod = await getAdditionalArgsFn({
+          toolName,
+          clientName: this.name,
+          summary: cleanedOperation.summary,
+        });
+        if (additionalArgsZod) {
+          additionalArgsSchema = zodToJsonSchema(additionalArgsZod as any, {
+            $refStrategy: 'none',
+          }) as JsonSchema;
+        }
+      }
+
+      const finalJsonSchema = JSON.parse(JSON.stringify(jsonSchema)); // Deep copy
+      if (additionalArgsSchema) {
+        addPropertiesToBody(finalJsonSchema, additionalArgsSchema);
+      }
+
+      const zodSchema = convertOpenApiSchemaToZod(finalJsonSchema);
       // console.log(
       //   'cleanedOperation',
       //   JSON.stringify(cleanedOperation, null, 2),
@@ -952,7 +885,7 @@ export class OpenApiMCP {
           cleanedOperation.description ||
           cleanedOperation.summary ||
           `${cleanedOperation.method} ${cleanedOperation.path}`,
-        jsonSchema,
+        jsonSchema: finalJsonSchema,
         humanLayer: {
           required: isDisabled,
         },
@@ -1051,8 +984,19 @@ export class OpenApiMCP {
           };
         }
 
+        const argsForCall = { ...args };
+        if (additionalArgsSchema?.properties) {
+          // We only need to clean from the top-level args, since the helper
+          // only adds to the 'body' property.
+          // A more robust implementation might need to check where the args were added.
+          if (argsForCall.body && typeof argsForCall.body === 'object') {
+            for (const key of Object.keys(additionalArgsSchema.properties)) {
+              delete argsForCall.body[key];
+            }
+          }
+        }
         // Call the operation (do not clean auth here)
-        return this.callOperation(id, args, toolOptions, finalAuth);
+        return this.callOperation(id, argsForCall, toolOptions, finalAuth);
       };
 
       tools[toolName] = {
