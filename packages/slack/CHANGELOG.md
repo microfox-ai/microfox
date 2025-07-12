@@ -1,5 +1,11 @@
 # @microfox/slack
 
+## 1.1.3
+
+### Patch Changes
+
+- 3e41170: release: update Slack client configuration to support OAuth authentication
+
 ## 1.1.2
 
 ### Patch Changes

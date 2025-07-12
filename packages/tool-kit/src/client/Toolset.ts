@@ -1,21 +1,13 @@
 import {
-  GenerateTextResult,
-  LanguageModel,
   UIMessage as Message,
-  StepResult,
-  StreamTextResult,
-  ToolCall,
-  ToolCallPart,
-  ToolResultPart,
-  UIMessageStreamWriter,
-  PrepareStepFunction,
-  JsonToSseTransformStream,
   StopCondition,
+  ToolCallPart,
   ToolUIPart,
+  UIMessageStreamWriter,
 } from 'ai';
+import { ReadableStream } from 'stream/web';
 import {
   AuthObject,
-  HumanDecisionArgs,
   OpenAPIDoc,
   OpenAPIToolsClientOptions,
   PendingToolContext,
@@ -24,7 +16,6 @@ import {
 } from '../types';
 import { parseSchema } from '../utils';
 import { OpenApiMCP } from './OpenAPiMcp';
-import { ReadableStream } from 'stream/web';
 
 const FAKE_HUMAN_INTERACTION_TOOL_NAME = 'FAKE_HUMAN_INTERACTION';
 
@@ -64,7 +55,6 @@ export class OpenApiToolset {
             opt.name ??
             `${schemName?.length > 16 ? schemName.substring(0, 16) : schemName}`,
           getHumanIntervention: opt.getHumanIntervention,
-          addPendingTool: this.addPendingTool.bind(this),
         }),
       );
     });
@@ -333,7 +323,7 @@ export class OpenApiToolset {
       const lastStep = s.steps[s.steps.length - 1];
       if (lastStep?.toolResults && lastStep?.toolResults?.length > 0) {
         const allToolResults = lastStep.toolResults;
-        if (allToolResults.find(t => t.output._humanIntervention)) {
+        if (allToolResults.find(t => t.output._humanIntervention && t)) {
           return true;
         }
       }
