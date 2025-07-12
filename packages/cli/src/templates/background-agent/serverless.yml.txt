@@ -1,0 +1,123 @@
+service: <%= agentName %>
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - venv/**
+    - .idea/**
+    - .vscode/**
+    - src/**
+    - node_modules/serverless-offline/**
+
+custom:
+  stage: ${env:ENVIRONMENT, 'dev'}
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4002
+    useChildProcesses: true
+    useWorkerThreads: true
+    noCookieValidation: true
+    allowCache: true
+    hideStackTraces: false
+    disableCookieValidation: true
+    noTimeout: true
+    environment: ${file(env.json)}
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${env:ENVIRONMENT, 'dev'}
+  environment: ${file(env.json)}
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "sqs:SendMessage"
+          Resource:
+            - Fn::GetAtt: [IndexQueue, Arn]
+            - Fn::GetAtt: [PaginateQueue, Arn]
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-step-functions
+
+functions:
+  # Cron job to populate the index queue
+  cronPopulate:
+    handler: dist/functions/cron-populate.handler
+    environment:
+      INDEX_QUEUE_URL:
+        Ref: IndexQueue
+    events:
+      - schedule: rate(1 day)
+
+  # Cron job to paginate
+  cronPaginate:
+    handler: dist/functions/cron-paginate.handler
+    environment:
+      PAGINATE_QUEUE_URL:
+        Ref: PaginateQueue
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - PaginateQueue
+              - Arn
+
+  # HTTP trigger to add a URL to the index queue
+  triggerIndex:
+    handler: dist/functions/route-trigger-index.handler
+    environment:
+      INDEX_QUEUE_URL:
+        Ref: IndexQueue
+    events:
+      - http:
+          path: /index
+          method: POST
+          cors: true
+
+  # SQS consumer to index a URL
+  sqsIndex:
+    handler: dist/functions/sqs-index.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - IndexQueue
+              - Arn
+
+  # Documentation
+  getDocs:
+    handler: dist/index.getDocs
+    events:
+      - http:
+          path: /docs.json
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    IndexQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-index-queue-${opt:stage,env:ENVIRONMENT, 'dev'}
+        VisibilityTimeout: 300
+    PaginateQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-paginate-queue-${opt:stage,env:ENVIRONMENT, 'dev'}
+        VisibilityTimeout: 300
+  Outputs:
+    ApiEndpoints:
+      Description: "API Endpoints"
+      Value:
+        Fn::Join:
+          - ""
+          - - "API: https://"
+            - Ref: "ApiGatewayRestApi"
+            - ".execute-api."
+            - Ref: "AWS::Region"
+            - ".amazonaws.com/${env:ENVIRONMENT, 'dev'}"

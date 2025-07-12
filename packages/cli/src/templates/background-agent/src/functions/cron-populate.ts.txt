@@ -1,0 +1,33 @@
+import { ToolParse } from "@microfox/tool-core";
+import { subredditStore, SubredditInfo } from "../helpers/ragRedis.js";
+
+const toolHandler = new ToolParse({});
+
+export const handler = async (): Promise<void> => {
+  console.log("cron-save-handler: cron-save-subreddit");
+
+  try {
+    if (!process.env.REDDIT_ACCESS_TOKEN) {
+      console.log("cron-save-handler: fetching env vars for reddit");
+      await toolHandler.fetchEnvVars({
+        stage: "staging",
+        packageName: "@microfox/reddit",
+        templateType: "testing",
+      });
+      console.log("cron-save-handler: fetched env vars for reddit");
+    }
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.log("cron-save-handler: fetching env vars for anthropic");
+      await toolHandler.fetchEnvVars({
+        stage: "staging",
+        packageName: "@microfox/ai-provider-anthropic",
+        templateType: "testing",
+      });
+      console.log("cron-save-handler: fetched env vars for anthropic");
+    }
+    // TODO: Populate the content
+    const savedSubreddits = new Set<string>();
+  } catch (error) {
+    console.error("Failed to run cron to save subreddits", error);
+  }
+};
