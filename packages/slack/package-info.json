@@ -61,6 +61,8 @@
       "name": "MicrofoxSlackClient",
       "description": "Create a new Slack MicrofoxSlackClient client through which you can interact with the API",
       "auth": "oauth2",
+      "authSdk": "@microfox/slack-oauth",
+      "authEndpoint": "/connect/slack-oauth",
       "requiredKeys": [],
       "internalKeys": [
         {
