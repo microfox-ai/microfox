@@ -1,0 +1,78 @@
+import { Redis } from "@upstash/redis";
+import { RagUpstashSdk } from "@microfox/rag-upstash";
+import { Crud, Paginator } from "@microfox/db-upstash";
+
+export const ragredditRedis = new Redis({
+  url: process.env.UPSTASH_RAGREDDIT_REDIS_REST_URL || "",
+  token: process.env.UPSTASH_RAGREDDIT_REDIS_REST_TOKEN || "",
+});
+
+export type RagPostMetadata = {
+  id: string;
+  title: string;
+  url: string;
+  permalink?: string;
+  score?: number;
+  author: string;
+  author_fullname?: string;
+  created_utc: number;
+  subreddit: string;
+  num_comments: number;
+  ups: number;
+  downs: number;
+  pwls?: number;
+  wls?: number;
+  selftext: string;
+  selftext_html?: string;
+  media?: any;
+};
+
+export const ragRedditVectorbase = new RagUpstashSdk<RagPostMetadata>({
+  upstashUrl: process.env.UPSTASH_RAGREDDIT_VECTOR_REST_URL || "",
+  upstashToken: process.env.UPSTASH_RAGREDDIT_VECTOR_REST_TOKEN || "",
+});
+
+//ragRedditVectorbase.feedDocsToRAG()
+//ragRedditVectorbase.queryDocsFromRAG()
+
+export type SubredditIndexing = {
+  done: boolean;
+};
+
+export const subredditListPaginator = new Paginator<{
+  page: number;
+  itemsPerPage: number;
+  totalCount: number;
+}>(ragredditRedis, "subreddit_list");
+
+export const ragSubredditPaginator = (subreddit: string) => {
+  return new Paginator<SubredditIndexing>(
+    ragredditRedis,
+    `rag_subreddit_${subreddit}`
+  );
+};
+
+export type SubredditInfo = {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  url: string;
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
+  lastIndexedAt: string;
+  postCount: number;
+  commentCount: number;
+  color: string;
+};
+
+export const subredditStore = new Crud<SubredditInfo>(
+  ragredditRedis,
+  `subreddit`
+);
+
+export type SubredditReport = {
+  id: string;
+  name: string;
+};
