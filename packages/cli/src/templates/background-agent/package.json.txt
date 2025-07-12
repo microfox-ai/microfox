@@ -23,7 +23,7 @@
     "@microfox/ai-provider-anthropic": "^1.3.0",
     "@microfox/db-upstash": "^1.1.4",
     "@microfox/rag-upstash": "^1.1.1",
-    "@microfox/tool-core": "^1.0.3",
+    "@microfox/tool-core": "^1.0.5",
     "@upstash/redis": "^1.28.4",
     "ai": "latest",
     "aws-lambda": "*",
