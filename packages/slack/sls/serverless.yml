@@ -1,6 +1,7 @@
 service: public-slack-api
 
 package:
+  excludeDevDependencies: true
   include:
     - 'openapi.json'
 
