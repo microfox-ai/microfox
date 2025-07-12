@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.8
+
+### Patch Changes
+
+- 6d313f0: Triggered by issue #612: release @microfox/cli patch
+
 ## 1.0.7
 
 ### Patch Changes
