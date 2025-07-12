@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+### Patch Changes
+
+- fb48a30: release: deploy new toolkit
+
 ## 1.0.4
 
 ### Patch Changes
