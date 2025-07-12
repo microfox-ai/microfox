@@ -1,9 +1,9 @@
 {
   "name": "@microfox/slack",
-  "title": "Microfox Slack",
+  "title": "Slack",
   "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
   "path": "packages/slack",
-  "dependencies": ["@slack/web-api"],
+  "dependencies": ["@slack/web-api", "@microfox/slack-oauth"],
   "status": "unstable",
   "authType": "apikey",
   "authEndpoint": "/connect/slack",
