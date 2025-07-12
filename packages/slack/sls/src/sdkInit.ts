@@ -23,7 +23,7 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
     process.env.SLACK_BOT_TOKEN || process.env.SLACK_ACCESS_TOKEN || '';
 
   let webClientOption: WebClientOptions = {
-    authType: 'header',
+    //a: 'header',
   };
 
   switch (constructorName) {
