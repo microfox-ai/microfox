@@ -9,7 +9,7 @@ const NEXTJS_PORT = 3000;
 const API_URL = `http://localhost:${NEXTJS_PORT}/api/agent`;
 
 const createLogger = (rl: readline.Interface) => {
-    return (source: string, message: string, color: chalk.Chalk) => {
+    return (source: string, message: string, color: typeof chalk) => {
         readline.cursorTo(process.stdout, 0);
         readline.clearLine(process.stdout, 0);
 
