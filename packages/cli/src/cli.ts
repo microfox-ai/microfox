@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { kickstartCommand } from './commands/kickstart';
+import { addCommand } from './commands/add';
 import { pushCommand } from './commands/push';
 import { statusCommand, logsCommand, metricsCommand } from './commands/status';
 import { codeCommand } from './commands/code';
@@ -20,6 +21,18 @@ program
     try {
       console.log(chalk.blue('🚀 Package Kickstarter\n'));
       await kickstartCommand();
+    } catch (error) {
+      console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('add')
+  .description('Add features to a Microfox project')
+  .action(async () => {
+    try {
+      await addCommand();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);
