@@ -1,5 +1,5 @@
 {
-  "name": "@microfox/@microfox/types",
+  "name": "@microfox/types",
   "title": "Types TypeScript SDK",
   "description": "A TypeScript SDK for Types.",
   "platformType": "tool",
