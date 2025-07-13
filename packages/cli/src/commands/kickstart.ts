@@ -230,7 +230,7 @@ export async function kickstartCommand(): Promise<void> {
     }
 
     // Check npm availability and get final package name
-    const finalPackageName = await checkPackageNameAndPrompt(packageName.trim());
+    const finalPackageName = await checkPackageNameAndPrompt(`@microfox/${packageName.trim()}`);
     await createPackageProject(finalPackageName);
 
     const simpleName = finalPackageName.includes('/')
