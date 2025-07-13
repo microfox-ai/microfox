@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.9
+
+### Patch Changes
+
+- a65f0d3: release: enhance ToolParse and OpenApiMCP with new features and logging
+
 ## 1.1.8
 
 ### Patch Changes

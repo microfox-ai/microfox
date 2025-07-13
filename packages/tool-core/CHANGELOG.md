@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.8
+
+### Patch Changes
+
+- a65f0d3: release: enhance ToolParse and OpenApiMCP with new features and logging
+
 ## 1.0.7
 
 ### Patch Changes
