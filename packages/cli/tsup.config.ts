@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: ['src/index.ts', 'src/cli.ts', 'src/commands/push.ts', 'src/commands/kickstart.ts', 'src/commands/status.ts'],
+    entry: ['src/index.ts', 'src/cli.ts', 'src/commands/push.ts', 'src/commands/kickstart.ts', 'src/commands/status.ts', 'src/commands/add.ts', 'src/commands/code.ts'],
     format: ['cjs', 'esm'],
     dts: true,
     sourcemap: true,
