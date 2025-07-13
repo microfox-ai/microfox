@@ -33,7 +33,8 @@
     "packages/rag-upstash",
     "packages/s3-space",
     "packages/slack",
-    "packages/tool-core"
+    "packages/tool-core",
+    "packages/types"
   ],
   "stablePackages": [
     "packages/ai-provider-anthropic",
@@ -92,6 +93,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 75,
-  "generatedAt": "2025-07-12T20:41:26.110Z"
+  "total": 76,
+  "generatedAt": "2025-07-13T01:32:24.250Z"
 }
