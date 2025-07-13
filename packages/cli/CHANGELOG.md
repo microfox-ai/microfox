@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.10
+
+### Patch Changes
+
+- 21d20b0: Triggered by issue #615: release @microfox/cli patch
+
 ## 1.0.9
 
 ### Patch Changes

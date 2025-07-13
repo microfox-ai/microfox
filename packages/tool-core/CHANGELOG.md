@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7
+
+### Patch Changes
+
+- e5be299: Triggered by issue #616: release @microfox/tool-core patch
+
 ## 1.0.6
 
 ### Patch Changes
