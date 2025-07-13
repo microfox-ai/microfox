@@ -51,6 +51,18 @@ export async function pushCommand(): Promise<void> {
   console.log(chalk.cyan('🚀 Pushing your agent to Microfox...'));
 
   const microfoxConfig = JSON.parse(fs.readFileSync(microfoxConfigPath, 'utf-8'));
+
+  let agentApiKey: string | undefined;
+  const envPath = path.join(cwd, 'env.json');
+  if (fs.existsSync(envPath)) {
+    try {
+      const envConfig = JSON.parse(fs.readFileSync(envPath, 'utf-8'));
+      agentApiKey = envConfig.AGENT_API_KEY;
+    } catch (e) {
+      console.warn(chalk.yellow('⚠️  Could not read or parse `env.json`. The AGENT_API_KEY will not be sent.'));
+    }
+  }
+
   const stage = microfoxConfig.stage || 'prod';
   const ignored: string[] = microfoxConfig.ignored || [];
 
@@ -63,11 +75,19 @@ export async function pushCommand(): Promise<void> {
   
   try {
     console.log(chalk.blue('📦 Bundling and deploying your agent...'));
-    const response = await axios.post(API_ENDPOINT, {
-      stage,
-      isLocal: false,
-      dir: files,
-    });
+    const response = await axios.post(
+      API_ENDPOINT,
+      {
+        stage,
+        isLocal: false,
+        dir: files,
+      },
+      {
+        headers: {
+          'x-agent-api-key': agentApiKey,
+        },
+      },
+    );
 
     if (response.status === 200) {
       console.log(chalk.green('✅ Deployment successful!'));
