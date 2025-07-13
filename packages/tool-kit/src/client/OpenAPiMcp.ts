@@ -362,6 +362,7 @@ export class OpenApiMCP {
   private async makeRequest(options: FetchOptions): Promise<APIResponse> {
     const { url, method, headers, body, signal } = options;
 
+    console.log('makeRequest', url, method, headers, body);
     try {
       const response = await fetch(url, {
         method,

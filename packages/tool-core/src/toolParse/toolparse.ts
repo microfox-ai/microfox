@@ -114,6 +114,7 @@ export class ToolParse {
     templateId?: string;
     stage?: string;
     apiKey?: string;
+    override?: boolean;
   }): Promise<string[]> {
     const url = `https://${
       options.stage ?? 'staging'
@@ -153,7 +154,9 @@ export class ToolParse {
         const _variables = secret.variables;
         if (Array.isArray(_variables)) {
           for (const variable of _variables) {
-            variables[variable.key] = variable.value;
+            if (!process.env?.[variable.key] || options.override) {
+              variables[variable.key] = variable.value;
+            }
           }
         }
       });
