@@ -23,9 +23,9 @@ const taskHandler = new ProcessTask({
 
 export const handler = async (event: SQSEvent): Promise<any> => {
   for (const record of event.Records) {
-    console.log("handler: processing record", { messageId: record.messageId });
+    console.log('handler: processing record', { messageId: record.messageId });
     const body = JSON.parse(record.body);
-    console.log("Processing message:", body);
+    console.log('Processing message:', body);
     const { triggerEvent, task_id } = body;
 
     await taskHandler.updateTask(task_id, {
@@ -34,7 +34,7 @@ export const handler = async (event: SQSEvent): Promise<any> => {
 
     try {
       // Extract environment variables from the new structure
-      toolHandler.populateEnvVars(triggerEvent);
+      toolHandler.populateEnvs({ event: triggerEvent });
 
       const constructorName = toolHandler.extractConstructor(triggerEvent);
 

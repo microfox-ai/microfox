@@ -268,7 +268,7 @@ export class OpenApiToolset {
           (part as any).state === 'output-available' &&
           'approved' in (part as any).output
         ) {
-          console.log('approved', (part as any).output.approved);
+          //console.log('approved', (part as any).output.approved);
           const correspondingCall = thisClientTools.executions[toolName];
           if (!correspondingCall) {
             result = 'Error: No execute function found on tool';
@@ -277,7 +277,7 @@ export class OpenApiToolset {
             if (options.inserAuthVariables && _auth) {
               _auth = await options.inserAuthVariables(_auth);
             }
-            console.log('calling tool', part.input);
+            //console.log('calling tool', part.input);
             result = await correspondingCall(part.input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],

@@ -1,10 +1,18 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { APIGatewayEvent } from 'aws-lambda';
-import { createApiResponse, ApiError, InternalServerError, ProcessTask, ToolParse } from '@microfox/tool-core';
+import {
+  createApiResponse,
+  ApiError,
+  InternalServerError,
+  ProcessTask,
+  ToolParse,
+} from '@microfox/tool-core';
 import path from 'path';
 import * as fs from 'fs';
 
-const sqsClient = new SQSClient({ region: process.env.AWS_REGION ?? 'us-east-1' });
+const sqsClient = new SQSClient({
+  region: process.env.AWS_REGION ?? 'us-east-1',
+});
 
 const toolHandler = new ToolParse({
   encryptionKey: process.env.ENCRYPTION_KEY,
@@ -51,8 +59,15 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
     });
 
     const messageBody = {
-      triggerEvent: event,
+      triggerEvent: {
+        body: event.body,
+        headers: event.headers,
+        path: event.path,
+        pathParameters: event.pathParameters,
+        queryStringParameters: event.queryStringParameters,
+      },
       task_id: task.id,
+      xAuthSecrets: event.headers['x-auth-secrets'],
     };
 
     const command = new SendMessageCommand({
@@ -62,7 +77,10 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
 
     await sqsClient.send(command);
 
-    return createApiResponse(202, { message: 'Request accepted for processing.', task_id: task.id });
+    return createApiResponse(202, {
+      message: 'Request accepted for processing.',
+      task_id: task.id,
+    });
   } catch (error) {
     console.error('Error in proxy handler:', error);
 
@@ -77,4 +95,4 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
       error: internalError.message,
     });
   }
-}; 
+};
