@@ -200,14 +200,14 @@ export type AiContext<
 };
 
 /** Represents the `next` function in a middleware chain, used to pass control to the next handler. */
-export type NextFunction = () => Promise<void>;
+export type NextFunction = () => Promise<any>;
 /** A function that handles a request for a specific agent path. */
 export type AiHandler<
   METADATA,
   PARTS extends UIDataTypes = UIDataTypes,
   TOOLS extends UITools = UITools,
   ContextState extends Record<string, any> = Record<string, any>,
-> = (ctx: AiContext<METADATA, PARTS, TOOLS, ContextState>) => Promise<void>;
+> = (ctx: AiContext<METADATA, PARTS, TOOLS, ContextState>) => Promise<any>;
 
 /** A function that handles a request for a specific tool path, with validated parameters. */
 export type AiToolHandler<
@@ -239,7 +239,7 @@ export type AiMiddleware<
 > = (
   ctx: AiContext<METADATA, PARTS, TOOLS, ContextState>,
   next: NextFunction
-) => Promise<void>;
+) => Promise<any>;
 
 // --- Router Implementation ---
 
@@ -766,8 +766,9 @@ export class AiRouter<
 
     const subContext: AiContext<KIT_METADATA, PARTS, TOOLS, ContextState> = {
       ...parentCtx,
-      // Deep clone state and execution context to prevent race conditions.
-      state: JSON.parse(JSON.stringify(parentCtx.state)),
+      // State is passed by reference to allow sub-agents to modify the parent's state.
+      // The execution context is a shallow copy to ensure call-specific data is isolated.
+      state: parentCtx.state,
       executionContext: {
         ...parentCtx.executionContext,
         currentPath: options.path,
@@ -960,7 +961,7 @@ export class AiRouter<
       }
 
       // A more robust, explicit dispatcher to avoid promise chain issues.
-      const dispatch = async (index: number): Promise<void> => {
+      const dispatch = async (index: number): Promise<any> => {
         const layer = layersToRun[index];
         if (!layer) {
           // End of the chain
@@ -985,9 +986,10 @@ export class AiRouter<
           }
           // The handler is an async function, so we can await it directly.
           // The original Promise wrapper was redundant and could hide issues.
-          await layer.handler(ctx, next);
+          const result = await layer.handler(ctx, next);
 
           ctx.logger.log(`<- Finished ${layerType}: ${layerPath}`);
+          return result;
         } catch (err) {
           ctx.logger.error(
             `Error in ${layerType} layer for path: ${layerPath}`,
@@ -1001,8 +1003,7 @@ export class AiRouter<
         }
       };
 
-      await dispatch(0);
-      return;
+      return await dispatch(0);
     } finally {
       // No-op. Stack is managed by context creation/destruction.
     }

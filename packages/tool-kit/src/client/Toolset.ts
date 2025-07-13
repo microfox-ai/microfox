@@ -125,7 +125,7 @@ export class OpenApiToolset {
       return result.operations.map(op => ({
         ...op,
         // Add client name to ID to avoid conflicts
-        id: `${client.getName()}-${op.id}`,
+        id: `${client.getName()}AsTool${op.id}`,
       }));
     });
 
@@ -145,10 +145,10 @@ export class OpenApiToolset {
     }
 
     // Extract client name and operation ID
-    const [clientName, operationId] = id.split(':');
+    const [clientName, operationId] = id.split('AsTool');
     if (!clientName || !operationId) {
       throw new Error(
-        `Invalid operation ID format: ${id}. Expected format: "clientName:operationId"`,
+        `Invalid operation ID format: ${id}. Expected format: "clientNameAsTooloperationId"`,
       );
     }
 
@@ -208,7 +208,7 @@ export class OpenApiToolset {
 
       Object.entries(toolSet.tools).forEach(([key, tool]) => {
         // Create a namespaced key to avoid collisions
-        const namespacedKey = `${clientName}-${key}`;
+        const namespacedKey = `${clientName}AsTool${key}`;
 
         // Add to tools
         combinedTools.tools[namespacedKey] = {

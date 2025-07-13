@@ -4,7 +4,7 @@
   "description": "A lightweight, type-safe SDK for interacting with the Slack Web API",
   "path": "packages/slack-web-tiny",
   "dependencies": ["zod"],
-  "status": "semiStable",
+  "status": "stable",
   "authType": "apikey",
   "authEndpoint": "/connect/slack",
   "documentation": "https://www.npmjs.com/package/@microfox/slack-web-tiny",
