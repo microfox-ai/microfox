@@ -1,10 +1,17 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- a65f0d3: release: enhance ToolParse and OpenApiMCP with new features and logging
+
 All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - <%= new Date().toISOString().split('T')[0] %>
 
 ### Added
+
 - Initial release
 - Basic SDK structure
 - TypeScript support
@@ -24,4 +31,4 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Deprecated feature
---> 
+-->
