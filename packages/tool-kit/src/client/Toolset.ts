@@ -268,7 +268,6 @@ export class OpenApiToolset {
           (part as any).state === 'output-available' &&
           'approved' in (part as any).output
         ) {
-          // Get the tool and check if the tool has an execute function.
           const correspondingCall = thisClientTools.executions[toolName];
           if (!correspondingCall) {
             result = 'Error: No execute function found on tool';

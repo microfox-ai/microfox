@@ -9,7 +9,8 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    }
+    },
+    "systemPrompt": ""
   },
   "servers": [
     {
@@ -29,6 +30,7 @@
       "post": {
         "operationId": "chat.postMessage",
         "summary": "Send a message to a Slack channel.",
+        "systemPrompt": "Before triggering this function, better confirm the channel by triggering listChannels first or confirming the user by listUsers first.",
         "description": "The chat.postMessage function allows you to send a message to a specified Slack channel, private group, or IM channel. It supports various customization options including text formatting, attachments, blocks, and metadata. This function is essential for programmatically interacting with Slack channels and users.",
         "requestBody": {
           "required": true,
@@ -4740,6 +4742,7 @@
         "operationId": "messageChannel",
         "summary": "Send a message to a specific Slack channel.",
         "description": "The messageChannel function allows sending a text message to a specified Slack channel using the Microfox Slack client. It takes the channel ID and the message text as input, and returns details about the sent message including its timestamp and channel information.",
+        "systemPrompt": "Before triggering this function, better confirm the channel by triggering listChannels first.",
         "requestBody": {
           "required": true,
           "content": {
