@@ -116,7 +116,12 @@ export class ProcessTask {
     taskId: string,
     isClientUpdate: boolean = true,
     event?: 'update' | 'complete' | 'failed',
-    data?: any,
+    data?: {
+      state: TaskState;
+      metadata?: Record<string, any>;
+      response?: Record<string, any>;
+      error?: Record<string, any>;
+    },
   ): Promise<void> {
     if (event && data !== undefined) {
       // event and data are provided, no need to fetch task
@@ -144,13 +149,13 @@ export class ProcessTask {
       if (data === undefined) {
         switch (event) {
           case 'complete':
-            data = { response: task.response, metadata: task.metadata };
+            data = { state: TaskState.Completed, response: task.response, metadata: task.metadata };
             break;
           case 'failed':
-            data = { error: task.error };
+            data = { state: TaskState.Failed, error: task.error };
             break;
           default:
-            data = { metadata: task.metadata };
+            data = { state: task.status.state, metadata: task.metadata };
             break;
         }
       }
