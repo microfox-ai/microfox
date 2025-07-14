@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+### Patch Changes
+
+- b2c6e7e: Triggered by issue #626: release @microfox/ai-router patch
+
 ## 1.1.1
 
 ### Patch Changes
