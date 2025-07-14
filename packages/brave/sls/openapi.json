@@ -77,23 +77,14 @@
                           "safesearch": {
                             "type": "string",
                             "description": "Content filtering level",
-                            "enum": [
-                              "off",
-                              "moderate",
-                              "strict"
-                            ]
+                            "enum": ["off", "moderate", "strict"]
                           },
                           "freshness": {
                             "type": "string",
                             "description": "Result freshness filter",
                             "oneOf": [
                               {
-                                "enum": [
-                                  "pd",
-                                  "pw",
-                                  "pm",
-                                  "py"
-                                ]
+                                "enum": ["pd", "pw", "pm", "py"]
                               },
                               {
                                 "type": "string"
@@ -122,27 +113,13 @@
                           "units": {
                             "type": "string",
                             "description": "Measurement units",
-                            "enum": [
-                              "metric",
-                              "imperial"
-                            ]
+                            "enum": ["metric", "imperial"]
                           }
                         },
-                        "required": [
-                          "q"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "createBraveSDK"
-                        ]
+                        "required": ["q"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -413,23 +390,14 @@
                           "safesearch": {
                             "type": "string",
                             "description": "Safe search level",
-                            "enum": [
-                              "off",
-                              "moderate",
-                              "strict"
-                            ],
+                            "enum": ["off", "moderate", "strict"],
                             "default": "moderate"
                           },
                           "freshness": {
                             "oneOf": [
                               {
                                 "type": "string",
-                                "enum": [
-                                  "pd",
-                                  "pw",
-                                  "pm",
-                                  "py"
-                                ],
+                                "enum": ["pd", "pw", "pm", "py"],
                                 "description": "Predefined freshness options"
                               },
                               {
@@ -463,28 +431,19 @@
                           },
                           "units": {
                             "type": "string",
-                            "enum": [
-                              "metric",
-                              "imperial"
-                            ],
+                            "enum": ["metric", "imperial"],
                             "description": "Units for measurements"
                           }
                         },
-                        "required": [
-                          "q"
-                        ]
+                        "required": ["q"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "createBraveSDK"
-                        ]
+                        "enum": ["createBraveSDK"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -719,23 +678,14 @@
                           "safesearch": {
                             "type": "string",
                             "description": "Safe search level.",
-                            "enum": [
-                              "off",
-                              "moderate",
-                              "strict"
-                            ],
+                            "enum": ["off", "moderate", "strict"],
                             "default": "moderate"
                           },
                           "freshness": {
                             "oneOf": [
                               {
                                 "type": "string",
-                                "enum": [
-                                  "pd",
-                                  "pw",
-                                  "pm",
-                                  "py"
-                                ],
+                                "enum": ["pd", "pw", "pm", "py"],
                                 "description": "Predefined freshness options"
                               },
                               {
@@ -769,28 +719,19 @@
                           },
                           "units": {
                             "type": "string",
-                            "enum": [
-                              "metric",
-                              "imperial"
-                            ],
+                            "enum": ["metric", "imperial"],
                             "description": "Units for measurements."
                           }
                         },
-                        "required": [
-                          "q"
-                        ]
+                        "required": ["q"]
                       },
                       "constructor": {
                         "type": "string",
                         "description": "Name of the constructor to use.",
-                        "enum": [
-                          "createBraveSDK"
-                        ]
+                        "enum": ["createBraveSDK"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -1010,23 +951,14 @@
                           "safesearch": {
                             "type": "string",
                             "description": "Safe search level.",
-                            "enum": [
-                              "off",
-                              "moderate",
-                              "strict"
-                            ],
+                            "enum": ["off", "moderate", "strict"],
                             "default": "moderate"
                           },
                           "freshness": {
                             "oneOf": [
                               {
                                 "type": "string",
-                                "enum": [
-                                  "pd",
-                                  "pw",
-                                  "pm",
-                                  "py"
-                                ],
+                                "enum": ["pd", "pw", "pm", "py"],
                                 "description": "Predefined freshness periods"
                               },
                               {
@@ -1061,10 +993,7 @@
                           },
                           "units": {
                             "type": "string",
-                            "enum": [
-                              "metric",
-                              "imperial"
-                            ],
+                            "enum": ["metric", "imperial"],
                             "description": "Units for measurements."
                           },
                           "extra_snippets": {
@@ -1076,21 +1005,10 @@
                             "description": "Enable summary key generation for use with summarizer."
                           }
                         },
-                        "required": [
-                          "q"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "createBraveSDK"
-                        ]
+                        "required": ["q"]
                       }
                     },
-                    "required": [
-                      "arguments"
-                    ]
+                    "required": ["arguments"]
                   }
                 }
               }
@@ -1151,10 +1069,7 @@
                       "description": "Optional video results"
                     }
                   },
-                  "required": [
-                    "type",
-                    "query"
-                  ]
+                  "required": ["type", "query"]
                 }
               }
             }
@@ -1171,9 +1086,7 @@
                       "description": "Error message describing the issue with the request"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -1190,9 +1103,7 @@
                       "description": "Error message indicating authentication failure"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
@@ -1213,10 +1124,7 @@
                       "description": "Number of seconds to wait before retrying"
                     }
                   },
-                  "required": [
-                    "error",
-                    "retry_after"
-                  ]
+                  "required": ["error", "retry_after"]
                 }
               }
             }
@@ -1233,9 +1141,7 @@
                       "description": "Error message describing the server-side issue"
                     }
                   },
-                  "required": [
-                    "error"
-                  ]
+                  "required": ["error"]
                 }
               }
             }
