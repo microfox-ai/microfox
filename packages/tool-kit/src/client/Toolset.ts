@@ -163,6 +163,31 @@ export class OpenApiToolset {
   }
 
   /**
+   * Generates a combined system prompt from all OpenAPI schemas.
+   */
+  generateSystemPrompt(): string {
+    if (!this.initialized) {
+      throw new Error('Clients not initialized. Call init() first.');
+    }
+
+    const allPrompts: string[] = [];
+
+    this.clients.forEach(client => {
+      const { global, operations } = client.getSystemPrompts();
+      if (global) {
+        allPrompts.push(global);
+      }
+      const clientName = client.getName();
+      operations.forEach((prompt: string, toolName: string) => {
+        const namespacedKey = `${clientName}AsTool${toolName}`;
+        allPrompts.push(`[${namespacedKey}]: ${prompt}`);
+      });
+    });
+
+    return allPrompts.filter(p => p && p.trim()).join('\n\n');
+  }
+
+  /**
    * Returns a set of tools generated from all OpenAPI schemas
    */
   async tools({
@@ -288,6 +313,7 @@ export class OpenApiToolset {
                 part,
               });
             }
+            result.toolSummary = thisClientTools.metadata[toolName]?.summary;
           } else {
             result = 'Error: User denied access to tool execution';
           }

@@ -436,6 +436,47 @@ export class OpenApiMCP {
   }
 
   /**
+   * Extracts system prompts from the OpenAPI schema.
+   * @returns An object containing the global prompt and a map of operation-specific prompts.
+   */
+  public getSystemPrompts(): {
+    global?: string;
+    operations: Map<string, string>;
+  } {
+    if (!this.initialized) {
+      throw new Error('Client not initialized. Call init() first.');
+    }
+
+    const info: any = this.schema.info;
+    const global = info?.systemPrompt;
+
+    const operations = new Map<string, string>();
+    for (const [id, operation] of this.operationMap.entries()) {
+      const op: any = operation;
+      if (op.systemPrompt) {
+        const cleanedOperation = this.cleanUpMethodSchema(
+          operation,
+        ) as OpenAPIOperation & { path: string; method: string };
+
+        let toolName =
+          cleanedOperation.name || cleanedOperation.operationId || id;
+        toolName = toolName.replace(/[^a-zA-Z0-9_]/g, '');
+        if (toolName.length > 128) {
+          toolName = toolName.substring(0, 128);
+        }
+        if (!toolName) {
+          toolName = id.replace(/[^a-zA-Z0-9_]/g, '');
+          if (toolName.length > 128) {
+            toolName = toolName.substring(0, 128);
+          }
+        }
+        operations.set(toolName, op.systemPrompt);
+      }
+    }
+    return { global, operations };
+  }
+
+  /**
    * Call a specific API operation from the OpenAPI schema
    */
   async callOperation(
