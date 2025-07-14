@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.9
+
+### Patch Changes
+
+- 14e8018: Triggered by issue #621: release @microfox/tool-core patch
+
 ## 1.0.8
 
 ### Patch Changes
