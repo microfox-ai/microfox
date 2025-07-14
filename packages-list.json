@@ -44,6 +44,7 @@
     "packages/google-sheets",
     "packages/linkedin-share",
     "packages/puppeteer-sls",
+    "packages/slack-web-tiny",
     "packages/suno-api",
     "packages/whatsapp-business"
   ],
@@ -66,7 +67,6 @@
     "packages/notion",
     "packages/puppeteer-linkedin",
     "packages/reddit",
-    "packages/slack-web-tiny",
     "packages/veo-on-vertex-ai",
     "packages/youtube",
     "packages/youtube-analytics",
@@ -94,5 +94,5 @@
     "packages/webhook-core"
   ],
   "total": 76,
-  "generatedAt": "2025-07-13T01:32:24.250Z"
+  "generatedAt": "2025-07-14T01:26:40.144Z"
 }
