@@ -114,42 +114,65 @@ export class Crud<T extends { id: string } & Record<string, any>> {
    * This is a convenience method for `query('*')`.
    * @returns An array of all items.
    */
-  public async list(): Promise<T[]> {
-    return this.query('*');
+  public async list(options?: {
+    count?: number;
+    offset?: number;
+  }): Promise<T[]> {
+    return this.query('*', options);
   }
 
   /**
    * Queries for items using a glob-style pattern on the ID part of the key.
    * Example: `query('user-*')` will find all items where id starts with `user-`.
    * Uses SCAN, so it is safe for production, but can be slow.
+   * Supports pagination with `count` and `offset`.
    * @param pattern - A glob-style pattern to match against item IDs.
+   * @param options - Pagination options: `count` for page size, `offset` for starting position.
    * @returns An array of items that match the pattern.
    */
-  public async query(pattern: string): Promise<T[]> {
-    const items: T[] = [];
+  public async query(
+    pattern: string,
+    options?: { count?: number; offset?: number }
+  ): Promise<T[]> {
+    const offset = options?.offset ?? 0;
+    const count = options?.count;
+
+    const allKeys: string[] = [];
     let cursor = 0;
     const matchPattern = `${this.keyPrefix}:${pattern}`;
 
     do {
       const [nextCursor, keys] = await this.redis.scan(cursor, {
         match: matchPattern,
+        count: offset === 0 && count ? count : 1000,
       });
-
-      if (keys.length > 0) {
-        const pipeline = this.redis.pipeline();
-        keys.forEach((key) => pipeline.hgetall(key));
-        const results = await pipeline.exec<Record<string, string>[]>();
-
-        for (const result of results) {
-          const deserialized = this.deserialize<T>(result);
-          if (deserialized) {
-            items.push(deserialized);
-          }
-        }
-      }
-
+      allKeys.push(...keys);
       cursor = Number(nextCursor);
+      if (offset === 0 && count && allKeys.length >= count) {
+        break;
+      }
     } while (cursor !== 0);
+
+    const paginatedKeys = allKeys.slice(
+      offset,
+      count !== undefined ? offset + count : undefined
+    );
+
+    if (paginatedKeys.length === 0) {
+      return [];
+    }
+
+    const pipeline = this.redis.pipeline();
+    paginatedKeys.forEach((key) => pipeline.hgetall(key));
+    const results = await pipeline.exec<Record<string, string>[]>();
+
+    const items: T[] = [];
+    for (const result of results) {
+      const deserialized = this.deserialize<T>(result);
+      if (deserialized) {
+        items.push(deserialized);
+      }
+    }
 
     return items;
   }
