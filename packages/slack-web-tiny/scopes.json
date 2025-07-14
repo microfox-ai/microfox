@@ -1,15 +1,15 @@
 [
   {
     "name": "app_mentions:read",
-    "description": "Read mentions of your app in Slack"
+    "description": "Read app mentions"
   },
   {
     "name": "assistant:write",
-    "description": "Write to your app's assistants"
+    "description": "Write to assistant"
   },
   {
     "name": "channels:history",
-    "description": "Read messages from channels"
+    "description": "Read channel history"
   },
   {
     "name": "channels:join",
@@ -25,15 +25,15 @@
   },
   {
     "name": "chat:write",
-    "description": "Write messages to channels"
+    "description": "Write messages"
   },
   {
     "name": "chat:write.customize",
-    "description": "Write messages to channels with customizations"
+    "description": "Write messages with customizations"
   },
   {
     "name": "commands",
-    "description": "Use commands in Slack"
+    "description": "Read commands"
   },
   {
     "name": "files:read",
@@ -45,27 +45,27 @@
   },
   {
     "name": "groups:history",
-    "description": "Read messages from groups"
-  },
-  {
-    "name": "groups:read",
-    "description": "Read groups"
+    "description": "Read group history"
   },
   {
     "name": "groups:write",
-    "description": "Write to groups"
+    "description": "Write to group"
   },
   {
     "name": "groups:write.invites",
-    "description": "Write to groups with invites"
+    "description": "Write to group invites"
   },
   {
-    "name": "im:history",
-    "description": "Read messages from direct messages"
+    "name": "groups:read",
+    "description": "Read group"
+  },
+  {
+    "name": "im:read",
+    "description": "Read IM"
   },
   {
     "name": "im:write",
-    "description": "Write to direct messages"
+    "description": "Write to IM"
   },
   {
     "name": "reactions:read",
@@ -84,7 +84,19 @@
     "description": "Write reminders"
   },
   {
-    "name": "team:read",
-    "description": "Read team information"
+    "name": "users:read.email",
+    "description": "Read user email"
+  },
+  {
+    "name": "users:read",
+    "description": "Read users"
+  },
+  {
+    "name": "users.profile:read",
+    "description": "Read user profile"
+  },
+  {
+    "name": "metadata.message:read",
+    "description": "Read message metadata"
   }
 ]
