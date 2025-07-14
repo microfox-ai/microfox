@@ -1,5 +1,8 @@
 // https://a2aproject.github.io/A2A/latest/specification/#761-gettaskpushnotificationconfigparams-object-taskspushnotificationconfigget
 
+import { JSONRPCRequest, ListTaskPushNotificationConfigParams } from "./a2a.types";
+import { Artifact, Message } from "./message.types";
+
 export interface Task {
   /** Unique identifier for the task */
   id: string;

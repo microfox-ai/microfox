@@ -1,4 +1,4 @@
-export const PackageMetaInfo = {
+export type PackageMetaInfo = {
   /**
    * A displayable title of the package.
    */
@@ -41,7 +41,7 @@ export const PackageMetaInfo = {
   constructors: ConstructorMetaInfo[],
 };
 
-export const KeyInfo = {
+export type KeyInfo = {
   /**
    * The key used to identify the configuration value.
    */
@@ -56,7 +56,7 @@ export const KeyInfo = {
   description: string,
 };
 
-export const BotConfigKeyInfo = {
+export type BotConfigKeyInfo = {
   /**
    * The key used to identify the configuration value.
    */
@@ -88,7 +88,7 @@ export const BotConfigKeyInfo = {
   },
 };
 
-export const ConstructorMetaInfo = {
+export type ConstructorMetaInfo = {
   /**
    * The name of the constructor function.
    */

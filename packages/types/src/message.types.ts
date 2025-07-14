@@ -1,3 +1,5 @@
+import { FileBase, PartBase } from "./a2a.types";
+
 /** Represents a single message exchanged between user and agent. */
 export interface Message {
   /** Message sender's role */
