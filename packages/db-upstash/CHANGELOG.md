@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.5
+
+### Patch Changes
+
+- bb525dc: release: enhance query and list methods to support pagination with count and offset options
+
 ## 1.1.4
 
 ### Patch Changes
