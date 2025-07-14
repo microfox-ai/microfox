@@ -49,13 +49,10 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
       throw new InternalServerError('SQS queue URL not configured.');
     }
 
-    const task = await taskHandler.createTask({
-      type: 'package-sls',
-      metadata: {
-        packageName: 'puppeteer-sls',
-        functionName: event.path.substring(1),
-        triggerEvent: event,
-      },
+    const task = await taskHandler.create({
+      packageName: 'puppeteer-sls',
+      functionName: event.path.substring(1),
+      triggerEvent: event,
     });
 
     const messageBody = {
