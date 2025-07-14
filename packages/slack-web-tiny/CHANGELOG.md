@@ -1,5 +1,11 @@
 # @microfox/slack-web-tiny
 
+## 1.4.4
+
+### Patch Changes
+
+- 6ad8500: release: update type definitions and improve tool ID handling
+
 ## 1.4.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.10
+
+### Patch Changes
+
+- 6ad8500: release: update type definitions and improve tool ID handling
+
 ## 1.1.9
 
 ### Patch Changes

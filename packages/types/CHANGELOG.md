@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- c599f6f: Triggered by issue #620: release @microfox/types patch
+
 ## 1.0.1
 
 ### Patch Changes
