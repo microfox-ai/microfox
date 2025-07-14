@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.11
+
+### Patch Changes
+
+- 3a794c5: Triggered by issue #624: release @microfox/tool-kit patch
+
 ## 1.1.10
 
 ### Patch Changes
