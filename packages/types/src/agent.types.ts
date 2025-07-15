@@ -23,25 +23,29 @@ export interface AgentInfo {
   };
 }
 
+export interface AgentPathAiInstruction {
+  systemPrompt?: string;
+  preferredModel?: string;
+}
+
+export interface AgentPathSecurity {
+  requiresAuth?: boolean;
+  authSchemes?: {
+    [key: string]: string[];
+  };
+  requiresHITL?: boolean;
+  hitlPrompt?: string;
+  hitlPriority?: number;
+}
+
 export interface AgentPath {
   [key: string]: {
     operationId: string;
     summary: string;
     description: string;
     tags: string[];
-    ai: {
-      systemPrompt?: string;
-      preferredModel?: string;
-    };
-    security?: {
-      requiresAuth?: boolean;
-      authSchemes?: {
-        [key: string]: string[];
-      };
-      requiresHITL?: boolean;
-      hitlPrompt?: string;
-      hitlPriority?: number;
-    };
+    ai: AgentPathAiInstruction;
+    security?: AgentPathSecurity;
     parameters?: {
       name: string;
       in: 'query' | 'header' | 'path' | 'cookie';
