@@ -6,7 +6,7 @@
     "title": "Slack API",
     "version": "1.2.0",
     "mcpVersion": "1.0.2",
-    "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
+    "description": "An agent to interact with Slack workspace using Slack API with powerful tools for messaging, channel management, user management and more",
     "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
     "status": "stable",
     "contact": {
@@ -21,7 +21,7 @@
     }
   ],
   "ai": {
-    "systemPrompt": "You are interacting with a Slack workspace. You can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
+    "systemPrompt": "This Agent can interact with a Slack workspace. It can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
   },
   "components": {
     "schemas": {
@@ -72,13 +72,6 @@
                         "required": [
                           "channelId",
                           "userId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -371,13 +364,6 @@
                         "required": [
                           "name"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -598,13 +584,6 @@
                         },
                         "required": [
                           "channelId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -834,13 +813,6 @@
                         "required": [
                           "fileId"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1043,13 +1015,6 @@
                         },
                         "required": [
                           "userId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -1284,13 +1249,6 @@
                         "type": "object",
                         "description": "Container for function arguments.",
                         "properties": {}
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1550,13 +1508,6 @@
                         "description": "Container for function arguments.",
                         "properties": {},
                         "required": []
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1826,13 +1777,6 @@
                         "required": [
                           "channelId"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1933,13 +1877,6 @@
                         "required": [
                           "channelId",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2058,13 +1995,6 @@
                         "required": [
                           "userId",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2218,13 +2148,6 @@
                           "timestamp",
                           "reaction"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -2330,13 +2253,6 @@
                           "channelId",
                           "userId"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -2419,13 +2335,6 @@
                           "channelId",
                           "thread_ts",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2545,13 +2454,6 @@
                         },
                         "required": [
                           "email"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2808,13 +2710,6 @@
                         "required": [
                           "email"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -3048,13 +2943,6 @@
                           "channelId",
                           "file",
                           "filename"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -3315,13 +3203,6 @@
                           "userId",
                           "text",
                           "time"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },

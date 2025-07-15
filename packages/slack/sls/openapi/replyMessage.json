@@ -41,13 +41,6 @@
                       "thread_ts",
                       "text"
                     ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
-                    ]
                   }
                 },
                 "required": [
