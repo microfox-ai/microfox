@@ -1,8 +1,15 @@
 {
   "post": {
     "operationId": "removeUserFromChannel",
-    "summary": "Removes a user from a specified Slack channel.",
-    "description": "This function removes a user from a Slack channel using the provided channel ID and user ID. It interacts with the Slack API to perform the removal operation and returns a boolean indicating the success of the request.",
+    "summary": "Removes a user from a Slack channel.",
+    "description": "This function removes a specified user from a given Slack channel. It takes the channel ID and user ID as required parameters and returns a response indicating whether the operation was successful. This method is useful for managing channel membership programmatically.",
+    "tags": [
+      "channel",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "Requires `channelId` and `userId` to remove a user from a channel. Use `listChannels` and `searchUserByEmail` if necessary."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,7 +23,6 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for removing a user from a channel",
                     "properties": {
                       "channelId": {
                         "type": "string",
@@ -24,7 +30,7 @@
                       },
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to remove from the channel."
+                        "description": "The ID of the user to remove."
                       }
                     },
                     "required": [
@@ -70,80 +76,10 @@
         }
       },
       "400": {
-        "description": "Bad request - invalid channel ID or user ID",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message describing the reason for the bad request."
-                }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden - insufficient permissions",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating insufficient permissions."
-                }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not found - channel or user not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating that the channel or user was not found."
-                }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
+        "description": "Bad Request - Invalid parameters"
       },
       "500": {
-        "description": "Internal server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message describing the internal server error."
-                }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
+        "description": "Internal Server Error"
       }
     }
   }

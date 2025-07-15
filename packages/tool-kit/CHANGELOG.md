@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.13
+
+### Patch Changes
+
+- 0cd8a0d: release: update OpenAPI schemas for image, web, news, and video search endpoints to improve clarity and consistency; rename parseHitl to processHitlToolResult in tool-kit for better readability
+
 ## 1.1.12
 
 ### Patch Changes

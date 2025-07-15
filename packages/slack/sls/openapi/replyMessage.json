@@ -1,8 +1,14 @@
 {
   "post": {
     "operationId": "replyMessage",
-    "summary": "Send a threaded reply to a message in a Slack channel.",
-    "description": "This function allows sending a reply to a specific message in a Slack channel, creating or continuing a thread. It takes the channel ID, the timestamp of the original message, and the reply text as inputs. The function returns details about the sent message, including its timestamp and channel information.",
+    "summary": "Replies to a message in a Slack thread.",
+    "description": "The replyMessage function allows users to reply to an existing message in a Slack thread. It takes the channel ID, the timestamp of the original message, and the text of the reply as input. This function is useful for maintaining context in conversations and organizing discussions within Slack channels.",
+    "tags": [
+      "message"
+    ],
+    "ai": {
+      "systemPrompt": "To reply within a thread, provide the `channelId`, the `thread_ts` of the parent message, and the `text` of your reply."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,19 +22,18 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for sending a reply message",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel where the message is"
+                        "description": "The ID of the channel where the message is."
                       },
                       "thread_ts": {
                         "type": "string",
-                        "description": "The timestamp of the message to reply to, which identifies the thread"
+                        "description": "The timestamp of the message to reply to, which establishes the thread."
                       },
                       "text": {
                         "type": "string",
-                        "description": "The text of the reply"
+                        "description": "The text of the reply."
                       }
                     },
                     "required": [
@@ -64,52 +69,19 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "Indicates if the request was successful"
+                  "description": "true if the request was successful."
                 },
                 "channel": {
                   "type": "string",
-                  "description": "The ID of the channel where the message was posted"
+                  "description": "The ID of the channel where the message was posted."
                 },
                 "ts": {
                   "type": "string",
-                  "description": "The timestamp of the message"
+                  "description": "The timestamp of the message."
                 },
                 "message": {
                   "type": "object",
-                  "description": "An object containing the details of the sent message",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "description": "The type of message"
-                    },
-                    "subtype": {
-                      "type": "string",
-                      "description": "The subtype of the message"
-                    },
-                    "text": {
-                      "type": "string",
-                      "description": "The text of the message"
-                    },
-                    "ts": {
-                      "type": "string",
-                      "description": "The timestamp of the message"
-                    },
-                    "bot_id": {
-                      "type": "string",
-                      "description": "The ID of the bot that sent the message"
-                    },
-                    "username": {
-                      "type": "string",
-                      "description": "The username of the bot that sent the message"
-                    },
-                    "attachments": {
-                      "type": "array",
-                      "description": "An array of attachments",
-                      "items": {
-                        "type": "object"
-                      }
-                    }
-                  }
+                  "description": "An object containing the details of the sent message."
                 }
               },
               "required": [
@@ -123,7 +95,7 @@
         }
       },
       "400": {
-        "description": "Bad Request - Invalid parameters",
+        "description": "Bad Request - The request was invalid or cannot be served.",
         "content": {
           "application/json": {
             "schema": {
@@ -138,67 +110,13 @@
                 "error": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Channel or message not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "error": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "429": {
-        "description": "Too Many Requests - Rate limit exceeded",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "error": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }
       },
       "500": {
-        "description": "Internal Server Error",
+        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
         "content": {
           "application/json": {
             "schema": {
@@ -213,11 +131,7 @@
                 "error": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }

@@ -11,8 +11,13 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    await client.removeUserFromChannel('C12345678', 'U87654321');
-    console.log('User removed from channel.');
+    const result = await client.removeUserFromChannel({
+      channelId: 'C12345678',
+      userId: 'U12345678',
+    });
+    if (result.ok) {
+      console.log('User removed from channel.');
+    }
   } catch (error) {
     console.error(error);
   }
@@ -21,17 +26,17 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 ## Arguments
 
--   `channelId` (string): The ID of the channel to remove the user from.
--   `userId` (string): The ID of the user to remove.
+This method accepts an object with the following properties:
+
+-   `channelId` (string, required): The ID of the channel to remove the user from.
+-   `userId` (string, required): The ID of the user to remove.
 
 ## Response
 
-This method returns an object with a single `ok` property.
+This method returns an object containing the result of the API call.
 
 ### Response Schema
 
 | Property | Type    | Description                           |
 | -------- | ------- | ------------------------------------- |
-| `ok`     | Boolean | `true` if the request was successful. |
-
-</rewritten_file> 
+| `ok`     | Boolean | `true` if the request was successful. | 

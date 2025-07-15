@@ -1,8 +1,15 @@
 {
   "post": {
     "operationId": "addUserToChannel",
-    "summary": "Invites a user to a Slack channel.",
-    "description": "The addUserToChannel function adds a specified user to a given Slack channel. It takes the channel ID and user ID as inputs and returns a response containing information about the channel and the success status of the operation. This function is useful for programmatically managing channel memberships in a Slack workspace.",
+    "summary": "Adds a user to a Slack channel.",
+    "description": "The addUserToChannel function adds a specified user to a specified Slack channel. It takes two required parameters: the channel ID and the user ID. Upon successful execution, it returns information about the channel, including various properties such as channel name, creation timestamp, and member count.",
+    "tags": [
+      "channel",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "To add a user to a channel, provide the `channelId` and `userId`. If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,15 +23,14 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for adding a user to a channel",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to invite the user to."
+                        "description": "The ID of the channel to add the user to."
                       },
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to invite."
+                        "description": "The ID of the user to add."
                       }
                     },
                     "required": [
@@ -63,55 +69,45 @@
                 },
                 "channel": {
                   "type": "object",
-                  "description": "A conversation object with details on the channel.",
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "The ID of the conversation."
+                      "description": "The ID of the channel."
                     },
                     "name": {
                       "type": "string",
-                      "description": "The name of the channel-like thing."
+                      "description": "The name of the channel."
                     },
                     "is_channel": {
                       "type": "boolean",
-                      "description": "Indicates whether a conversation is a channel."
+                      "description": "Indicates if the object represents a channel."
                     },
                     "is_group": {
                       "type": "boolean",
-                      "description": "Means the channel is a private channel created before March 2021."
+                      "description": "Indicates if the object represents a private channel."
                     },
                     "is_im": {
                       "type": "boolean",
-                      "description": "Means the conversation is a direct message between two distinguished individuals or a user and a bot."
-                    },
-                    "is_mpim": {
-                      "type": "boolean",
-                      "description": "Represents an unnamed private conversation between multiple users."
-                    },
-                    "is_private": {
-                      "type": "boolean",
-                      "description": "Means the conversation is privileged between two or more members."
+                      "description": "Indicates if the object represents a direct message conversation."
                     },
                     "created": {
                       "type": "integer",
-                      "description": "Timestamp of when the conversation was created."
+                      "description": "A Unix timestamp indicating when the channel was created."
                     },
                     "creator": {
                       "type": "string",
-                      "description": "The ID of the member that created this conversation."
+                      "description": "The ID of the user who created the channel."
                     },
                     "is_archived": {
                       "type": "boolean",
-                      "description": "Indicates a conversation is archived."
+                      "description": "Indicates if the channel is archived."
                     },
                     "is_general": {
                       "type": "boolean",
-                      "description": "Means the channel is the workspace's \"general\" discussion channel."
+                      "description": "Indicates if the channel is the default \"general\" channel."
                     },
                     "unlinked": {
-                      "type": "integer",
-                      "description": "The number of members that have been removed from the channel."
+                      "type": "integer"
                     },
                     "name_normalized": {
                       "type": "string",
@@ -119,49 +115,74 @@
                     },
                     "is_shared": {
                       "type": "boolean",
-                      "description": "Indicates whether a conversation is part of a Shared Channel."
+                      "description": "Indicates if the channel is shared with other workspaces."
                     },
                     "is_ext_shared": {
                       "type": "boolean",
-                      "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization."
+                      "description": "Indicates if the channel is part of an external shared connection."
                     },
                     "is_org_shared": {
                       "type": "boolean",
-                      "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization."
+                      "description": "Indicates if the channel is shared with the entire organization."
                     },
                     "pending_shared": {
                       "type": "array",
-                      "description": "A list of team IDs that have been invited to the channel but have not yet joined.",
+                      "description": "A list of team IDs that have been invited to the channel but have not yet joined",
                       "items": {
                         "type": "string"
                       }
                     },
                     "is_pending_ext_shared": {
                       "type": "boolean",
-                      "description": "Means the conversation is ready to become an is_ext_shared channel, but needs some kind of approval or sign off first."
+                      "description": "Indicates if the conversation is ready to become an external shared channel but needs approval"
                     },
                     "is_member": {
                       "type": "boolean",
-                      "description": "Indicates whether the user, bot user or Slack app is a member of the conversation."
+                      "description": "Indicates if the calling user is a member of the channel."
+                    },
+                    "is_private": {
+                      "type": "boolean",
+                      "description": "Indicates if the channel is private."
+                    },
+                    "is_mpim": {
+                      "type": "boolean",
+                      "description": "Indicates if the object represents a multi-person direct message."
                     },
                     "topic": {
                       "type": "object",
-                      "description": "Provides information about the channel topic."
+                      "description": "An object containing the channel's topic information."
                     },
                     "purpose": {
                       "type": "object",
-                      "description": "Provides information about the channel purpose."
+                      "description": "An object containing the channel's purpose information."
                     },
                     "previous_names": {
                       "type": "array",
-                      "description": "A list of previous names for the channel.",
-                      "items": {
-                        "type": "string"
-                      }
+                      "description": "A list of any previous names the channel had."
                     },
                     "num_members": {
                       "type": "integer",
-                      "description": "The number of members in the conversation."
+                      "description": "The number of members in the channel."
+                    },
+                    "last_read": {
+                      "type": "string",
+                      "description": "The timestamp of the last message the user read in the channel."
+                    },
+                    "latest": {
+                      "type": "object",
+                      "description": "The latest message in the channel."
+                    },
+                    "unread_count": {
+                      "type": "integer",
+                      "description": "The number of unread messages for the user in the channel."
+                    },
+                    "unread_count_display": {
+                      "type": "integer",
+                      "description": "The number of unread messages to display for the user."
+                    },
+                    "is_open": {
+                      "type": "boolean",
+                      "description": "Indicates if the channel is open for the user."
                     }
                   }
                 }

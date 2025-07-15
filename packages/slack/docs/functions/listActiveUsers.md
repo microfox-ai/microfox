@@ -1,6 +1,6 @@
-# listUsers
+# listActiveUsers
 
-The `listUsers` method lists all users in a workspace.
+The `listActiveUsers` method lists all active users in a workspace. It filters out any users that have been deactivated.
 
 ## Usage
 
@@ -11,7 +11,7 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const users = await client.listUsers();
+    const users = await client.listActiveUsers();
     console.log(users);
   } catch (error) {
     console.error(error);
@@ -34,7 +34,7 @@ This method returns an array of `user` objects. A `user` object contains informa
 | `id`                              | String        | Identifier for this workspace user. It is unique to the workspace containing the user.                                                                                                                |
 | `team_id`                         | String        | The ID of the team the user belongs to.                                                                                                                                                                |
 | `name`                            | String        | The username of the user.                                                                                                                                                                              |
-| `deleted`                         | Boolean       | Indicates if the user has been deactivated.                                                                                                                                                            |
+| `deleted`                         | Boolean       | Indicates if the user has been deactivated. This will always be `false` for users returned by this method.                                                                                              |
 | `color`                           | String        | Used in some clients to display a special username color.                                                                                                                                              |
 | `real_name`                       | String        | The user's first and last name.                                                                                                                                                                        |
 | `tz`                              | String        | A human-readable string for the geographic timezone-related region this user has specified in their account.                                                                                         |

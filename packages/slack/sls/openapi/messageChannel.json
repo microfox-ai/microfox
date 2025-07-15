@@ -1,8 +1,15 @@
 {
   "post": {
     "operationId": "messageChannel",
-    "summary": "Send a message to a specific Slack channel.",
-    "description": "The messageChannel function allows sending a text message to a specified Slack channel using the Microfox Slack client. It takes the channel ID and the message text as input, and returns details about the sent message including its timestamp and channel information.",
+    "summary": "Send a message to a Slack channel.",
+    "description": "The messageChannel function sends a text message to a specified Slack channel. It requires a channel ID and the message text as input, and returns details about the sent message including its timestamp and channel.",
+    "tags": [
+      "message",
+      "channel"
+    ],
+    "ai": {
+      "systemPrompt": "Ensure you have the correct `channelId` before sending a message. Use `listChannels` to verify or find the channel ID if needed."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,15 +23,14 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for sending a message to a Slack channel",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to send the message to"
+                        "description": "The ID of the channel to send the message to."
                       },
                       "text": {
                         "type": "string",
-                        "description": "The text of the message to be sent"
+                        "description": "The text of the message."
                       }
                     },
                     "required": [
@@ -59,52 +65,19 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "Indicates if the request was successful"
+                  "description": "true if the request was successful."
                 },
                 "channel": {
                   "type": "string",
-                  "description": "The ID of the channel where the message was posted"
+                  "description": "The ID of the channel where the message was posted."
                 },
                 "ts": {
                   "type": "string",
-                  "description": "The timestamp of the message"
+                  "description": "The timestamp of the message."
                 },
                 "message": {
                   "type": "object",
-                  "description": "An object containing the details of the sent message",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "description": "The type of message"
-                    },
-                    "subtype": {
-                      "type": "string",
-                      "description": "The subtype of the message"
-                    },
-                    "text": {
-                      "type": "string",
-                      "description": "The text of the message"
-                    },
-                    "ts": {
-                      "type": "string",
-                      "description": "The timestamp of the message"
-                    },
-                    "bot_id": {
-                      "type": "string",
-                      "description": "The ID of the bot that sent the message"
-                    },
-                    "username": {
-                      "type": "string",
-                      "description": "The username of the bot that sent the message"
-                    },
-                    "attachments": {
-                      "type": "array",
-                      "description": "An array of attachments",
-                      "items": {
-                        "type": "object"
-                      }
-                    }
-                  }
+                  "description": "An object containing the details of the sent message."
                 }
               },
               "required": [
@@ -118,73 +91,31 @@
         }
       },
       "400": {
-        "description": "Bad Request - Invalid parameters",
+        "description": "Bad Request - The request was invalid or cannot be served.",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "const": false
-                },
                 "error": {
-                  "type": "string",
-                  "description": "Error message describing the issue"
+                  "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Channel not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "const": false
-                },
-                "error": {
-                  "type": "string",
-                  "const": "channel_not_found"
-                }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }
       },
       "500": {
-        "description": "Internal Server Error",
+        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "const": false
-                },
                 "error": {
-                  "type": "string",
-                  "description": "Error message describing the internal server error"
+                  "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }

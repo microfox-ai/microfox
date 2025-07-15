@@ -11,7 +11,11 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const result = await client.setReminder('U12345678', 'Check on the build status', 'in 15 minutes');
+    const result = await client.setReminder({
+      userId: 'U12345678',
+      text: 'Remember to submit your report.',
+      time: 'in 1 hour',
+    });
     console.log('Reminder set: ', result.reminder.id);
   } catch (error) {
     console.error(error);
@@ -21,9 +25,11 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 ## Arguments
 
--   `userId` (string): The ID of the user to set the reminder for.
--   `text` (string): The text of the reminder.
--   `time` (string): A string describing when the reminder should fire (e.g., "in 5 minutes", "at 10:30am", or a Unix timestamp).
+This method accepts an object with the following properties:
+
+-   `userId` (string, required): The ID of the user to set a reminder for.
+-   `text` (string, required): The text of the reminder.
+-   `time` (string, required): A string describing when the reminder should fire (e.g., "in 5 minutes", "at 10pm", or a Unix timestamp).
 
 ## Response
 
@@ -31,19 +37,7 @@ This method returns an object containing the result of the API call.
 
 ### Response Schema
 
-| Property   | Type    | Description                                                                                          |
-| ---------- | ------- | ---------------------------------------------------------------------------------------------------- |
-| `ok`       | Boolean | `true` if the request was successful.                                                                |
-| `reminder` | Object  | An object containing the details of the created reminder. See Reminder Object Schema below.          |
-
-### Reminder Object Schema
-
-| Property      | Type    | Description                                                     |
-| ------------- | ------- | --------------------------------------------------------------- |
-| `id`          | String  | The ID of the reminder.                                         |
-| `creator`     | String  | The ID of the user who created the reminder.                    |
-| `user`        | String  | The ID of the user the reminder is for.                         |
-| `text`        | String  | The text of the reminder.                                       |
-| `recurring`   | Boolean | Whether the reminder is recurring.                              |
-| `time`        | Integer | The timestamp of when the reminder will fire.                   |
-| `complete_ts` | Integer | The timestamp of when the reminder was completed.               | 
+| Property   | Type    | Description                                       |
+| ---------- | ------- | ------------------------------------------------- |
+| `ok`       | Boolean | `true` if the request was successful.             |
+| `reminder` | Object  | An object containing details of the new reminder. |

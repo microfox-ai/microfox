@@ -1,6 +1,6 @@
 # addUserToChannel
 
-The `addUserToChannel` method invites a user to a channel.
+The `addUserToChannel` method adds a user to a channel.
 
 ## Usage
 
@@ -11,8 +11,13 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const result = await client.addUserToChannel('C12345678', 'U87654321');
-    console.log('User added to channel.');
+    const result = await client.addUserToChannel({
+      channelId: 'C12345678',
+      userId: 'U12345678',
+    });
+    if (result.ok) {
+      console.log('User added to channel.');
+    }
   } catch (error) {
     console.error(error);
   }
@@ -21,8 +26,10 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 ## Arguments
 
--   `channelId` (string): The ID of the channel to invite the user to.
--   `userId` (string): The ID of the user to invite.
+This method accepts an object with the following properties:
+
+-   `channelId` (string, required): The ID of the channel to add the user to.
+-   `userId` (string, required): The ID of the user to add.
 
 ## Response
 
@@ -30,39 +37,40 @@ This method returns an object containing the result of the API call.
 
 ### Response Schema
 
-| Property | Type    | Description                                                                                          |
-| -------- | ------- | ---------------------------------------------------------------------------------------------------- |
-| `ok`     | Boolean | `true` if the request was successful.                                                                |
-| `channel`| Object  | A `conversation` object with details on the channel. See Conversation Object Schema below.             |
+| Property  | Type    | Description                                                                 |
+| --------- | ------- | --------------------------------------------------------------------------- |
+| `ok`      | Boolean | `true` if the request was successful.                                       |
+| `channel` | Object  | An object containing information about the channel. See Channel Object below. |
 
-### Conversation Object Schema
+### Channel Object
 
-| Property                 | Type   | Description                                                                                                                              |
-| ------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                     | String | The ID of the conversation.                                                                                                              |
-| `name`                   | String | The name of the channel-like thing.                                                                                                      |
-| `is_channel`             | Boolean| Indicates whether a conversation is a channel.                                                                                           |
-| `is_group`               | Boolean| Means the channel is a private channel created before March 2021.                                                                        |
-| `is_im`                  | Boolean| Means the conversation is a direct message between two distinguished individuals or a user and a bot.                                    |
-| `is_mpim`                | Boolean| Represents an unnamed private conversation between multiple users.                                                                       |
-| `is_private`             | Boolean| Means the conversation is privileged between two or more members.                                                                        |
-| `created`                | Int    | Timestamp of when the conversation was created.                                                                                          |
-| `creator`                | String | The ID of the member that created this conversation.                                                                                     |
-| `is_archived`            | Boolean| Indicates a conversation is archived.                                                                                                    |
-| `is_general`             | Boolean| Means the channel is the workspace's "general" discussion channel.                                                                       |
-| `unlinked`               | Int    | The number of members that have been removed from the channel.                                                                           |
-| `name_normalized`        | String | The channel name, but with any special characters replaced.                                                                              |
-| `is_shared`              | Boolean| Indicates whether a conversation is part of a [Shared Channel](https://slack.com/help/articles/202508758-Share-channels-with-other-workspaces).|
-| `is_ext_shared`          | Boolean| Indicates whether a conversation is part of a Shared Channel with a remote organization.                                                 |
-| `is_org_shared`          | Boolean| Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization.                             |
-| `pending_shared`         | Array  | A list of team IDs that have been invited to the channel but have not yet joined.                                                        |
-| `is_pending_ext_shared`  | Boolean| Means the conversation is ready to become an `is_ext_shared` channel, but needs some kind of approval or sign off first.                  |
-| `is_member`              | Boolean| Indicates whether the user, bot user or Slack app is a member of the conversation.                                                       |
-| `is_private`             | Boolean| Means the conversation is privileged between two or more members.                                                                        |
-| `is_mpim`                | Boolean| Represents an unnamed private conversation between multiple users.                                                                       |
-| `topic`                  | Object | Provides information about the channel topic.                                                                                            |
-| `purpose`                | Object | Provides information about the channel purpose.                                                                                          |
-| `previous_names`         | Array  | A list of previous names for the channel.                                                                                                |
-| `num_members`            | Int    | The number of members in the conversation.                                                                                               |
-
-</rewritten_file> 
+| Property                | Type    | Description                                                        |
+| ----------------------- | ------- | ------------------------------------------------------------------ |
+| `id`                    | String  | The ID of the channel.                                             |
+| `name`                  | String  | The name of the channel.                                           |
+| `is_channel`            | Boolean | Indicates if the object represents a channel.                      |
+| `is_group`              | Boolean | Indicates if the object represents a private channel.              |
+| `is_im`                 | Boolean | Indicates if the object represents a direct message conversation.  |
+| `created`               | Integer | A Unix timestamp indicating when the channel was created.          |
+| `creator`               | String  | The ID of the user who created the channel.                        |
+| `is_archived`           | Boolean | Indicates if the channel is archived.                              |
+| `is_general`            | Boolean | Indicates if the channel is the default "general" channel.         |
+| `unlinked`              | Integer |                                                                    |
+| `name_normalized`       | String  | The channel name, but with any special characters replaced.        |
+| `is_shared`             | Boolean | Indicates if the channel is shared with other workspaces.          |
+| `is_ext_shared`         | Boolean | Indicates if the channel is part of an external shared connection. |
+| `is_org_shared`         | Boolean | Indicates if the channel is shared with the entire organization.   |
+| `pending_shared`        | Array   |                                                                    |
+| `is_pending_ext_shared` | Boolean |                                                                    |
+| `is_member`             | Boolean | Indicates if the calling user is a member of the channel.          |
+| `is_private`            | Boolean | Indicates if the channel is private.                               |
+| `is_mpim`               | Boolean | Indicates if the object represents a multi-person direct message.  |
+| `topic`                 | Object  | An object containing the channel's topic information.              |
+| `purpose`               | Object  | An object containing the channel's purpose information.            |
+| `previous_names`        | Array   | A list of any previous names the channel had.                      |
+| `num_members`           | Integer | The number of members in the channel.                              |
+| `last_read`             | String  | The timestamp of the last message the user read in the channel.    |
+| `latest`                | Object  | The latest message in the channel.                                 |
+| `unread_count`          | Integer | The number of unread messages for the user in the channel.         |
+| `unread_count_display`  | Integer | The number of unread messages to display for the user.             |
+| `is_open`               | Boolean | Indicates if the channel is open for the user.                     | 

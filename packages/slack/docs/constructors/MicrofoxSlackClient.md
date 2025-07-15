@@ -15,21 +15,6 @@ const token = process.env.SLACK_BOT_TOKEN;
 const client = new MicrofoxSlackClient(token);
 ```
 
-## Advanced Initialization
-
-You can also provide a `WebClientOptions` object to configure the underlying `WebClient` with more advanced settings, such as custom retry logic, TLS configuration, or logging.
-
-```typescript
-import { MicrofoxSlackClient } from '@microfox/slack';
-import { LogLevel } from '@slack/web-api';
-
-const token = process.env.SLACK_BOT_TOKEN;
-
-const client = new MicrofoxSlackClient(token, {
-  logLevel: LogLevel.DEBUG
-});
-```
-
 ## Usage
 
 Once you have a `MicrofoxSlackClient` instance, you can use it to call any of its custom methods.

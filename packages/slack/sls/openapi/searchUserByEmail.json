@@ -1,8 +1,14 @@
 {
   "post": {
-    "operationId": "searchUser",
-    "summary": "Search for a Slack user by their email address.",
-    "description": "The searchUser function finds a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their Slack account.",
+    "operationId": "searchUserByEmail",
+    "summary": "Searches for a Slack user by their email address.",
+    "description": "The searchUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
+    "tags": [
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "Find a user and their ID by providing their `email`. The returned user object can be used in other functions."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -12,7 +18,7 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the searchUser sls call",
+                "description": "Body of the searchUserByEmail sls call",
                 "properties": {
                   "arguments": {
                     "type": "array",
@@ -46,7 +52,7 @@
     },
     "responses": {
       "200": {
-        "description": "Successful response containing the user object",
+        "description": "Successful response",
         "content": {
           "application/json": {
             "schema": {
@@ -207,49 +213,13 @@
         }
       },
       "400": {
-        "description": "Bad request - invalid email format or missing required parameter",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
+        "description": "Bad request - invalid email format or missing email"
       },
       "404": {
-        "description": "User not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
+        "description": "User not found"
       },
       "500": {
-        "description": "Internal server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
+        "description": "Server error"
       }
     }
   }

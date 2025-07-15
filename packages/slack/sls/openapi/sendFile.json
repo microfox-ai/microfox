@@ -2,7 +2,14 @@
   "post": {
     "operationId": "sendFile",
     "summary": "Upload a file to a Slack channel.",
-    "description": "The sendFile function allows users to upload a file to a specified Slack channel. It takes the channel ID, file content, filename, and an optional title as input. The function returns details about the uploaded file, including its ID, type, size, and sharing information.",
+    "description": "The sendFile function allows users to upload a file to one or more Slack channels. It takes an object containing the channel ID(s), file content, filename, and an optional title. The function returns information about the uploaded file, including its ID and various metadata.",
+    "tags": [
+      "file",
+      "channel"
+    ],
+    "ai": {
+      "systemPrompt": "To upload a file, specify the target `channelId`, the `file` content as a Buffer, and a `filename`. A `title` is optional."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,16 +23,15 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for sending a file to a Slack channel",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to upload the file to. Can be a comma-separated list."
+                        "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs."
                       },
                       "file": {
                         "type": "string",
                         "format": "binary",
-                        "description": "The content of the file to be uploaded."
+                        "description": "A Buffer containing the file content."
                       },
                       "filename": {
                         "type": "string",
@@ -33,7 +39,7 @@
                       },
                       "title": {
                         "type": "string",
-                        "description": "A title for the file."
+                        "description": "An optional title for the file."
                       }
                     },
                     "required": [
@@ -67,42 +73,57 @@
             "schema": {
               "type": "object",
               "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "true if the request was successful."
+                },
                 "file": {
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The ID of the file object."
                     },
                     "created": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "A Unix timestamp representing when the file was created."
                     },
                     "timestamp": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "A deprecated property that is provided only for backwards compatibility with older clients."
                     },
                     "name": {
                       "type": "string",
-                      "nullable": true
+                      "nullable": true,
+                      "description": "Name of the file; may be null for unnamed files."
                     },
                     "title": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Title of the file."
                     },
                     "mimetype": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The file's mimetype."
                     },
                     "filetype": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The file's type."
                     },
                     "pretty_type": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "A human-readable version of the type."
                     },
                     "user": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The ID of the user who created the object."
                     },
                     "editable": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicates that files are stored in editable mode."
                     },
                     "size": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "The filesize in bytes."
                     },
                     "mode": {
                       "type": "string",
@@ -111,46 +132,57 @@
                         "external",
                         "snippet",
                         "post"
-                      ]
+                      ],
+                      "description": "One of the following: hosted, external, snippet or post."
                     },
                     "is_external": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicates whether the master copy of a file is stored within the system or not."
                     },
                     "external_type": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Indicates what kind of external file it is, e.g. dropbox or gdoc."
                     },
                     "is_public": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "true if the file is public."
                     },
                     "public_url_shared": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "true if the file's public URL has been shared."
                     },
                     "url_private": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "A URL to the file contents. This requires an authorization header to access."
                     },
                     "permalink": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "A URL to a page for the file containing details, comments and a download link."
                     },
                     "channels": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Contains the IDs of any channels into which the file is currently shared."
                     },
                     "groups": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Contains the IDs of any private groups into which the file is currently shared."
                     },
                     "ims": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Contains the IDs of any IM channels into which the file is currently shared."
                     },
                     "comments_count": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "The number of comments on the file."
                     }
                   },
                   "required": [
@@ -178,6 +210,7 @@
                 }
               },
               "required": [
+                "ok",
                 "file"
               ]
             }
@@ -191,70 +224,45 @@
             "schema": {
               "type": "object",
               "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
                 "error": {
                   "type": "string"
                 }
-              }
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - The request requires user authentication.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden - The server understood the request but refuses to authorize it.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "413": {
-        "description": "Payload Too Large - The file size exceeds the maximum allowed size.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }
       },
       "500": {
-        "description": "Internal Server Error - The server has encountered a situation it does not know how to handle.",
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle.",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
                 "error": {
                   "type": "string"
                 }
-              }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }

@@ -2,7 +2,14 @@
   "post": {
     "operationId": "setReminder",
     "summary": "Sets a reminder for a user in Slack.",
-    "description": "The setReminder function allows setting a reminder for a specified Slack user. It takes the user ID, reminder text, and time as inputs, and returns the details of the created reminder. This function integrates with the Slack API to manage user reminders efficiently.",
+    "description": "The setReminder function creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered. This function is part of the MicrofoxSlackClient and interacts with Slack's API to manage reminders.",
+    "tags": [
+      "user",
+      "reminder"
+    ],
+    "ai": {
+      "systemPrompt": "Set a reminder by providing a `userId`, the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,19 +23,18 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for setting a reminder",
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to set the reminder for"
+                        "description": "The ID of the user to set a reminder for."
                       },
                       "text": {
                         "type": "string",
-                        "description": "The text of the reminder"
+                        "description": "The text of the reminder."
                       },
                       "time": {
                         "type": "string",
-                        "description": "A string describing when the reminder should fire (e.g., \"in 5 minutes\", \"at 10:30am\", or a Unix timestamp)"
+                        "description": "A string describing when the reminder should fire (e.g., \"in 5 minutes\", \"at 10pm\", or a Unix timestamp)."
                       }
                     },
                     "required": [
@@ -64,49 +70,17 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "true if the request was successful"
+                  "description": "true if the request was successful."
                 },
                 "reminder": {
                   "type": "object",
-                  "description": "An object containing the details of the created reminder",
+                  "description": "An object containing details of the new reminder.",
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "The ID of the reminder"
-                    },
-                    "creator": {
-                      "type": "string",
-                      "description": "The ID of the user who created the reminder"
-                    },
-                    "user": {
-                      "type": "string",
-                      "description": "The ID of the user the reminder is for"
-                    },
-                    "text": {
-                      "type": "string",
-                      "description": "The text of the reminder"
-                    },
-                    "recurring": {
-                      "type": "boolean",
-                      "description": "Whether the reminder is recurring"
-                    },
-                    "time": {
-                      "type": "integer",
-                      "description": "The timestamp of when the reminder will fire"
-                    },
-                    "complete_ts": {
-                      "type": "integer",
-                      "description": "The timestamp of when the reminder was completed"
+                      "description": "The ID of the created reminder."
                     }
-                  },
-                  "required": [
-                    "id",
-                    "creator",
-                    "user",
-                    "text",
-                    "recurring",
-                    "time"
-                  ]
+                  }
                 }
               },
               "required": [
@@ -118,7 +92,7 @@
         }
       },
       "400": {
-        "description": "Bad Request - The request was invalid or cannot be served",
+        "description": "Bad Request - The request was invalid or cannot be served.",
         "content": {
           "application/json": {
             "schema": {
@@ -128,51 +102,18 @@
                   "type": "boolean",
                   "enum": [
                     false
-                  ],
-                  "description": "Indicates the request was unsuccessful"
+                  ]
                 },
                 "error": {
-                  "type": "string",
-                  "description": "Error message describing the issue"
+                  "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - Authentication failed or user doesn't have permissions for the requested operation",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ],
-                  "description": "Indicates the request was unsuccessful"
-                },
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating authentication failure"
-                }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }
       },
       "500": {
-        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle",
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle.",
         "content": {
           "application/json": {
             "schema": {
@@ -182,18 +123,12 @@
                   "type": "boolean",
                   "enum": [
                     false
-                  ],
-                  "description": "Indicates the request was unsuccessful"
+                  ]
                 },
                 "error": {
-                  "type": "string",
-                  "description": "Error message describing the server error"
+                  "type": "string"
                 }
-              },
-              "required": [
-                "ok",
-                "error"
-              ]
+              }
             }
           }
         }

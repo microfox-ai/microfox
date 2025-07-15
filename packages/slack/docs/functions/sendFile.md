@@ -6,14 +6,19 @@ The `sendFile` method uploads a file to a channel.
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
 
 const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const fileContent = fs.readFileSync('path/to/your/file.txt');
-    const result = await client.sendFile('C12345678', fileContent, 'file.txt', 'My Text File');
+    const fileContent = await fs.readFile('path/to/your/file.txt');
+    const result = await client.sendFile({
+      channelId: 'C12345678',
+      file: fileContent,
+      filename: 'file.txt',
+      title: 'My Text File',
+    });
     console.log('File sent: ', result.file.id);
   } catch (error) {
     console.error(error);
@@ -23,14 +28,23 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 ## Arguments
 
--   `channelId` (string): The ID of the channel to upload the file to. Can be a comma-separated list.
--   `file` (Buffer): A buffer containing the file content.
--   `filename` (string): The name of the file.
--   `title` (string, optional): A title for the file.
+This method accepts an object with the following properties:
+
+-   `channelId` (string, required): The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs.
+-   `file` (Buffer, required): A Buffer containing the file content.
+-   `filename` (string, required): The name of the file.
+-   `title` (string, optional): An optional title for the file.
 
 ## Response
 
-This method returns an object containing the result of the API call. The `file` property contains a `file` object.
+This method returns an object containing information about the uploaded file.
+
+### Response Schema
+
+| Property | Type    | Description                                   |
+| -------- | ------- | --------------------------------------------- |
+| `ok`     | Boolean | `true` if the request was successful.         |
+| `file`   | Object  | An object containing details of the uploaded file. |
 
 ### File Object Schema
 
@@ -59,4 +73,4 @@ This method returns an object containing the result of the API call. The `file` 
 | `ims`               | Array          | Contains the IDs of any IM channels into which the file is currently shared.                            |
 | `comments_count`    | Integer        | The number of comments on the file.                                                                     |
 
-</rewritten_file> 
+</rewritten_file>
