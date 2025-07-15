@@ -11,7 +11,10 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const result = await client.messageUser('U12345678', 'Hello there!');
+    const result = await client.messageUser({
+      userId: 'U12345678',
+      text: 'Hello there!',
+    });
     console.log('Message sent: ', result.ts);
   } catch (error) {
     console.error(error);
@@ -21,8 +24,10 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 ## Arguments
 
--   `userId` (string): The ID of the user to send the a message to.
--   `text` (string): The text of the message.
+This method accepts an object with the following properties:
+
+-   `userId` (string, required): The ID of the user to send the a message to.
+-   `text` (string, required): The text of the message.
 
 ## Response
 
