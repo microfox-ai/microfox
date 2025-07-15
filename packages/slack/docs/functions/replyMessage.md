@@ -37,10 +37,10 @@ This method returns an object containing the result of the API call.
 
 ### Response Schema
 
-| Property  | Type   | Description                                                                                              |
-| --------- | ------ | -------------------------------------------------------------------------------------------------------- |
-| `ok`      | Boolean| `true` if the request was successful.                                                                    |
-| `channel` | String | The ID of the channel where the message was posted.                                                      |
-| `ts`      | String | The timestamp of the message.                                                                            |
-| `message` | Object | An object containing the details of the sent message.                                                     |
+| Property  | Type    | Description                                           |
+| --------- | ------- | ----------------------------------------------------- |
+| `ok`      | Boolean | `true` if the request was successful.                 |
+| `channel` | String  | The ID of the channel where the message was posted.   |
+| `ts`      | String  | The timestamp of the message.                         |
+| `message` | Object  | An object containing the details of the sent message. |
 ``` 

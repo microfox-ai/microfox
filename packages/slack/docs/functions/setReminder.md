@@ -40,4 +40,4 @@ This method returns an object containing the result of the API call.
 | Property   | Type    | Description                                       |
 | ---------- | ------- | ------------------------------------------------- |
 | `ok`       | Boolean | `true` if the request was successful.             |
-| `reminder` | Object  | An object containing details of the new reminder. | 
+| `reminder` | Object  | An object containing details of the new reminder. |

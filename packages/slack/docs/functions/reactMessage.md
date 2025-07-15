@@ -41,4 +41,4 @@ This method returns an object containing the result of the API call.
 
 | Property | Type    | Description                           |
 | -------- | ------- | ------------------------------------- |
-| `ok`     | Boolean | `true` if the request was successful. | 
+| `ok`     | Boolean | `true` if the request was successful. |
