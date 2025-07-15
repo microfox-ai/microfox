@@ -48,11 +48,11 @@ export interface AgentPathAiInstruction {
 
 export interface AgentPathSecurity {
   requiresAuth?: boolean;
-  authSchema?: string[]; // $ref to a schema in the components.schemas (x-auth-packages by default)
+  authSchema?: `x-auth-${string}`[] | string[] | JsonSchema[]; // $ref to a schema in the components.schemas (x-auth-packages by default)
   requiresHITL?: boolean;
   hitlPrompt?: string;
   hitlPriority?: number;
-  hitlSchema?: JsonSchema;
+  hitlSchema?: `x-hitl-${string}` | string | JsonSchema; // $ref to a schema in the components.schemas (x-hitl-packages by default)
 }
 
 export interface AgentPath {
@@ -71,10 +71,11 @@ export interface AgentPath {
       schema: Record<string, any>;
     }[];
     requestBody?: {
+      required?: boolean;
       content:
         | {
             'application/json': {
-              schema: Record<string, any>;
+              schema: JsonSchema;
             };
           }
         | {
@@ -89,14 +90,7 @@ export interface AgentPath {
           };
     };
     responses?: {
-      [key: string]: {
-        description: string;
-        content: {
-          'application/json': {
-            schema: Record<string, any>;
-          };
-        };
-      };
+      [key: string]: JsonSchema;
     };
   };
 }
@@ -104,7 +98,7 @@ export interface AgentPath {
 export interface AgentOpenApi {
   openapi: string; //"3.0.1",
   info: AgentInfo;
-  servers: AgentServers;
+  servers?: AgentServers[];
   ai?: AgentPathAiInstruction;
   security?: AgentPathSecurity;
   paths: Record<string, AgentPath>;

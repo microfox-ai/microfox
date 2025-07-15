@@ -450,6 +450,104 @@ export class CrudStore<
   }
 
   /**
+   * Atomically updates properties of an item.
+   * If the item does not exist, an error is thrown.
+   * This method ensures that all relevant indexes (`sortFields` and `matchFields`) are updated
+   * in a single atomic transaction along with the item's data.
+   * @param id - The ID of the item to update.
+   * @param value - The partial data to update. The `id` field cannot be updated.
+   * @returns The full updated item.
+   * @throws {ItemNotFoundError} If the item with the specified ID does not exist.
+   * @throws {InvalidFieldError} If the `id` field is included in the update value, or if a `sortField` is updated to a non-numeric value.
+   */
+  public async update(id: string, value: Partial<T>): Promise<T> {
+    if ('id' in value) {
+      throw new InvalidFieldError(
+        'Updating the "id" of an item is not allowed.'
+      );
+    }
+
+    const oldItem = await this.get(id);
+
+    if (!oldItem) {
+      throw new ItemNotFoundError(`Item with id "${id}" not found.`);
+    }
+
+    if (Object.keys(value).length === 0) {
+      return oldItem;
+    }
+
+    const newItem = { ...oldItem, ...value };
+    const itemKey = this.getItemKey(id);
+    const serializedValue = this.serialize(value);
+
+    const tx = this.redis.multi();
+
+    // Partially update the item hash
+    tx.hset(itemKey, serializedValue);
+
+    // Update sort field indexes if they have changed
+    for (const sortField of this.sortFields) {
+      if (sortField in value) {
+        const fieldValue = newItem[sortField];
+        let score: number;
+
+        if (fieldValue === null || fieldValue === undefined) {
+          throw new InvalidFieldError(
+            `Value for sort field "${sortField}" cannot be null or undefined.`
+          );
+        }
+
+        if (typeof fieldValue === 'string') {
+          score = parseFloat(fieldValue);
+          if (isNaN(score)) {
+            throw new InvalidFieldError(
+              `Value "${fieldValue}" for sort field "${sortField}" is not a parsable number.`
+            );
+          }
+        } else if (typeof fieldValue === 'number') {
+          score = fieldValue;
+        } else {
+          throw new InvalidFieldError(
+            `Value for sort field "${sortField}" must be a number or a string parsable to a number.`
+          );
+        }
+
+        const zsetKey = this.getZSetKey(sortField);
+        tx.zadd(zsetKey, { score, member: id });
+      }
+    }
+
+    // Update match field indexes if they have changed
+    for (const matchField of this.matchFields) {
+      if (matchField in value) {
+        const newValue = newItem[matchField];
+        const oldValue = oldItem[matchField];
+
+        if (newValue !== oldValue) {
+          if (oldValue !== null && oldValue !== undefined) {
+            const oldMatchKey = this.getMatchKey(
+              matchField,
+              oldValue as string | number
+            );
+            tx.srem(oldMatchKey, id);
+          }
+          if (newValue !== null && newValue !== undefined) {
+            const newMatchKey = this.getMatchKey(
+              matchField,
+              newValue as string | number
+            );
+            tx.sadd(newMatchKey, id);
+          }
+        }
+      }
+    }
+
+    await tx.exec();
+    return newItem as T;
+  }
+
+  /**
    * Deletes an item by its ID.
    * Atomically removes the item hash and its entries from all sorted set indexes.
    * @param id - The ID of the item to delete.
