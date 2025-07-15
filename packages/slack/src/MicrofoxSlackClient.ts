@@ -8,8 +8,12 @@ import {
   FilesUploadResponse,
   ReactionsAddResponse,
   RemindersAddResponse,
+  ChatPostMessageArguments
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class MicrofoxSlackClient {
   private web: WebClient;
@@ -42,11 +46,11 @@ export class MicrofoxSlackClient {
   /**
    * Lists all users in a workspace.
    */
-  async listUsers() {
+  async listActiveUsers() {
     const result = await this.web.users.list({
       limit: 1000,
     });
-    return result.members;
+    return result.members?.filter((member) => !member.deleted);
   }
 
   /**
@@ -70,29 +74,20 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Finds a channel by its name. This is case-insensitive.
-   * @param name The name of the channel to find.
-   */
-  async searchChannel(name: string) {
-    const channels = await this.listChannels();
-    return channels?.find((c) => c.name?.toLowerCase() === name.toLowerCase());
-  }
-
-  /**
    * Sends a direct message to a user.
    * @param userId The ID of the user to message.
    * @param text The text of the message to send.
    */
-  async messageUser(
-    userId: string,
-    text: string
-  ): Promise<ChatPostMessageResponse> {
+  async messageUser({
+    userId,
+    text
+  }: {
+    userId: string;
+    text: string;
+  }): Promise<ChatPostMessageResponse> {
     const im = await this.web.conversations.open({ users: userId });
     if (im.ok && im.channel?.id) {
-      return this.web.chat.postMessage({
-        channel: im.channel.id,
-        text: text,
-      });
+      return this.messageChannel({ channelId: im.channel.id, text });
     }
     throw new Error(`Could not open DM with user ${userId}`);
   }
@@ -102,14 +97,25 @@ export class MicrofoxSlackClient {
    * @param channelId The ID of the channel to message.
    * @param text The text of the message to send.
    */
-  async messageChannel(
-    channelId: string,
-    text: string
-  ): Promise<ChatPostMessageResponse> {
-    return this.web.chat.postMessage({
+  async messageChannel({
+    channelId,
+    text
+  }: {
+    channelId: string;
+    text: string;
+  }): Promise<ChatPostMessageResponse> {
+    let payload: ChatPostMessageArguments = {
       channel: channelId,
       text: text,
-    });
+    };
+
+    if (process.env.SLACK_AUTHOR_NAME) {
+      payload.username = process.env.SLACK_AUTHOR_NAME;
+    }
+    if (process.env.SLACK_ICON_URL) {
+      payload.icon_url = process.env.SLACK_ICON_URL;
+    }
+    return this.web.chat.postMessage(payload);
   }
 
   /**
@@ -118,11 +124,15 @@ export class MicrofoxSlackClient {
    * @param text The text of the reminder.
    * @param time A string describing when the reminder should fire (e.g., "in 5 minutes" or a Unix timestamp).
    */
-  async setReminder(
-    userId: string,
-    text: string,
-    time: string
-  ): Promise<RemindersAddResponse> {
+  async setReminder({
+    userId,
+    text,
+    time
+  }: {
+    userId: string;
+    text: string;
+    time: string;
+  }): Promise<RemindersAddResponse> {
     return this.web.reminders.add({
       user: userId,
       text: text,
@@ -135,10 +145,13 @@ export class MicrofoxSlackClient {
    * @param name The name of the channel to create.
    * @param isPrivate Whether the channel should be private. Defaults to false.
    */
-  async createChannel(
-    name: string,
+  async createChannel({
+    name,
     isPrivate = false
-  ): Promise<ConversationsCreateResponse['channel']> {
+  }: {
+    name: string;
+    isPrivate?: boolean;
+  }): Promise<ConversationsCreateResponse['channel']> {
     const result = await this.web.conversations.create({
       name: name,
       is_private: isPrivate,
@@ -152,11 +165,15 @@ export class MicrofoxSlackClient {
    * @param timestamp The timestamp of the message to react to.
    * @param reaction The name of the emoji to use for the reaction.
    */
-  async reactMessage(
-    channelId: string,
-    timestamp: string,
-    reaction: string
-  ): Promise<ReactionsAddResponse> {
+  async reactMessage({
+    channelId,
+    timestamp,
+    reaction
+  }: {
+    channelId: string;
+    timestamp: string;
+    reaction: string;
+  }): Promise<ReactionsAddResponse> {
     return this.web.reactions.add({
       channel: channelId,
       timestamp: timestamp,
@@ -181,11 +198,15 @@ export class MicrofoxSlackClient {
    * @param thread_ts The timestamp of the message to reply to, establishing the thread.
    * @param text The text of the reply.
    */
-  async replyMessage(
-    channelId: string,
-    thread_ts: string,
-    text: string
-  ): Promise<ChatPostMessageResponse> {
+  async replyMessage({
+    channelId,
+    thread_ts,
+    text
+  }: {
+    channelId: string;
+    thread_ts: string;
+    text: string;
+  }): Promise<ChatPostMessageResponse> {
     return this.web.chat.postMessage({
       channel: channelId,
       thread_ts: thread_ts,
@@ -198,10 +219,13 @@ export class MicrofoxSlackClient {
    * @param channelId The ID of the channel to add the user to.
    * @param userId The ID of the user to add.
    */
-  async addUserToChannel(
-    channelId: string,
-    userId: string
-  ): Promise<ConversationsInviteResponse> {
+  async addUserToChannel({
+    channelId,
+    userId
+  }: {
+    channelId: string;
+    userId: string;
+  }): Promise<ConversationsInviteResponse> {
     return this.web.conversations.invite({
       channel: channelId,
       users: userId,
@@ -213,10 +237,13 @@ export class MicrofoxSlackClient {
    * @param channelId The ID of the channel to remove the user from.
    * @param userId The ID of the user to remove.
    */
-  async removeUserFromChannel(
-    channelId: string,
-    userId: string
-  ): Promise<ConversationsKickResponse> {
+  async removeUserFromChannel({
+    channelId,
+    userId
+  }: {
+    channelId: string;
+    userId: string;
+  }): Promise<ConversationsKickResponse> {
     return this.web.conversations.kick({
       channel: channelId,
       user: userId,
@@ -230,12 +257,17 @@ export class MicrofoxSlackClient {
    * @param filename The name of the file.
    * @param title An optional title for the file.
    */
-  async sendFile(
-    channelId: string,
-    file: Buffer,
-    filename: string,
-    title?: string
-  ): Promise<FilesUploadResponse> {
+  async sendFile({
+    channelId,
+    file,
+    filename,
+    title
+  }: {
+    channelId: string;
+    file: Buffer;
+    filename: string;
+    title?: string;
+  }): Promise<FilesUploadResponse> {
     return this.web.files.upload({
       channels: channelId,
       file: file,
