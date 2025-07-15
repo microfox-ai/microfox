@@ -70,6 +70,7 @@
         "addUserToChannel",
         "createChannel",
         "getChannelConversationInfo",
+        "getConversationHistory",
         "getFileInfo",
         "getUserInfo",
         "listChannels",

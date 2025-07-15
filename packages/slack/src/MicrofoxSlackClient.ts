@@ -8,7 +8,9 @@ import {
   FilesUploadResponse,
   ReactionsAddResponse,
   RemindersAddResponse,
-  ChatPostMessageArguments
+  ChatPostMessageArguments,
+  ConversationsListResponse,
+  ConversationsInfoResponse
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -23,11 +25,11 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Lists all public and private channels in a workspace.
+   * Lists all public, private and direct message channels in a workspace.
    */
-  async listChannels() {
+  async listChannels(): Promise<ConversationsListResponse['channels']> {
     const result = await this.web.conversations.list({
-      types: 'public_channel,private_channel',
+      types: 'public_channel,private_channel,im',
     });
     return result.channels;
   }
@@ -36,7 +38,7 @@ export class MicrofoxSlackClient {
    * Fetches information about a conversation.
    * @param channelId Conversation ID to fetch information for.
    */
-  async getChannelConversationInfo(channelId: string) {
+  async getChannelConversationInfo(channelId: string): Promise<ConversationsInfoResponse['channel']> {
     const result = await this.web.conversations.info({
       channel: channelId,
     });
@@ -285,5 +287,40 @@ export class MicrofoxSlackClient {
       file: fileId,
     });
     return result.file;
+  }
+
+  /**
+   * Fetches a conversation's history of messages and events.
+   * @param channelId Conversation ID to fetch history for.
+   * @param limit The maximum number of items to return.
+   * @param latest End of the time range of messages to include in results.
+   * @param oldest Start of the time range of messages to include in results.
+   * @param inclusive Include messages with latest or oldest timestamps in results.
+   * @param cursor Paginate through collections of data by setting the cursor parameter to a next_cursor attribute returned by a previous request's response_metadata.
+   */
+  async getConversationHistory({
+    channelId,
+    limit,
+    latest,
+    oldest,
+    inclusive,
+    cursor,
+  }: {
+    channelId: string;
+    limit?: number;
+    latest?: string;
+    oldest?: string;
+    inclusive?: boolean;
+    cursor?: string;
+  }) {
+    const result = await this.web.conversations.history({
+      channel: channelId,
+      limit,
+      latest,
+      oldest,
+      inclusive,
+      cursor,
+    });
+    return result.messages;
   }
 } 
