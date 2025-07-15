@@ -23,6 +23,24 @@ export interface AgentInfo {
   };
 }
 
+type JsonSchema = {
+  type?: string;
+  format?: string;
+  description?: string;
+  properties?: Record<string, JsonSchema>;
+  items?: JsonSchema;
+  required?: string[];
+  enum?: any[];
+  default?: any;
+  additionalProperties?: boolean | JsonSchema;
+  oneOf?: JsonSchema[];
+  anyOf?: JsonSchema[];
+  allOf?: JsonSchema[];
+  $ref?: string;
+  $defs?: Record<string, JsonSchema>;
+  [key: string]: any;
+};
+
 export interface AgentPathAiInstruction {
   systemPrompt?: string;
   preferredModel?: string;
@@ -30,12 +48,11 @@ export interface AgentPathAiInstruction {
 
 export interface AgentPathSecurity {
   requiresAuth?: boolean;
-  authSchemes?: {
-    [key: string]: string[];
-  };
+  authSchema?: string[]; // $ref to a schema in the components.schemas (x-auth-packages by default)
   requiresHITL?: boolean;
   hitlPrompt?: string;
   hitlPriority?: number;
+  hitlSchema?: JsonSchema;
 }
 
 export interface AgentPath {
@@ -44,7 +61,7 @@ export interface AgentPath {
     summary: string;
     description: string;
     tags: string[];
-    ai: AgentPathAiInstruction;
+    ai?: AgentPathAiInstruction;
     security?: AgentPathSecurity;
     parameters?: {
       name: string;
@@ -88,15 +105,30 @@ export interface AgentOpenApi {
   openapi: string; //"3.0.1",
   info: AgentInfo;
   servers: AgentServers;
-  auth: 'x-auth-packages' | string;
+  ai?: AgentPathAiInstruction;
+  security?: AgentPathSecurity;
   paths: Record<string, AgentPath>;
   components: {
-    schemas: Record<string, any>;
-    'x-auth-packages': {
-      packageName: string;
-      packageConstructor: string[];
-      customSecrets: string[];
-    }[];
+    schemas: {
+      [key: `x-auth-${string}`]: {
+        packageName?: string;
+        packageConstructor?: string[];
+        customSecrets?: {
+          key: string;
+          description: string;
+          required: boolean;
+          type: string;
+          format?: string;
+          enum?: any[];
+          default?: any;
+        }[];
+      }[];
+      [key: `x-hitl-${string}`]: {
+        uiType: 'approval' | string;
+        uiSchema?: JsonSchema;
+      };
+      [key: string]: any;
+    };
   };
   tags: {
     name: string;
