@@ -8,7 +8,8 @@ const slackUserSchema = z.object({
   real_name: z.string().optional(),
   profile: z.object({
     email: z.string().optional(),
-    image_original: z.string().url(),
+    image_192: z.string().url().optional(),
+    image_original: z.string().url().optional(),
     first_name: z.string().optional(),
     last_name: z.string().optional(),
   }),
@@ -148,7 +149,7 @@ export function convertSlackIdentityToIdentity(identityInfo: {
           id: user.id,
           email: user.profile.email,
           name: user.real_name || user.name,
-          avatarUrl: user.profile.image_original,
+          avatarUrl: user?.profile?.image_original || user?.profile?.image_192,
         }
       : undefined,
     teamInfo: {
