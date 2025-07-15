@@ -11,59 +11,18 @@
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
   "constructors": [
     {
-      "name": "WebClient",
-      "description": "Create a new Slack WebClient client through which you can interact with the API",
-      "auth": "apikey",
-      "apiType": "bot_token",
-      "requiredKeys": [
-        {
-          "key": "SLACK_BOT_TOKEN",
-          "displayName": "Slack Bot Token",
-          "description": "The bot token for authenticating with the Slack API."
-        }
-      ],
-      "internalKeys": [],
-      "botConfig": [
-        {
-          "key": "SLACK_AUTHOR_NAME",
-          "displayName": "Bot Name",
-          "description": "Name that will appear as the message sender",
-          "ui": {
-            "type": "text",
-            "label": "Bot Name",
-            "placeholder": "Enter bot name"
-          }
-        },
-        {
-          "key": "SLACK_ICON_URL",
-          "displayName": "Bot Icon",
-          "description": "Icon that will appear as the bot's avatar",
-          "ui": {
-            "type": "image",
-            "label": "Bot Icon"
-          }
-        }
-      ],
-      "functionalities": [
-        "chat.postMessage",
-        "chat.update",
-        "conversations.history",
-        "conversations.join",
-        "conversations.list",
-        "reactions.add",
-        "users.info",
-        "users.list",
-        "users.lookupByEmail",
-        "views.open"
-      ]
-    },
-    {
       "name": "MicrofoxSlackClient",
       "description": "Create a new Slack MicrofoxSlackClient client through which you can interact with the API",
       "auth": "oauth2",
       "authSdk": "@microfox/slack-oauth",
       "authEndpoint": "/connect/slack-oauth",
-      "requiredKeys": [],
+      "requiredKeys": [
+        {
+          "key": "SLACK_ACCESS_TOKEN",
+          "displayName": "Slack Access Token",
+          "description": "The access token for Slack OAuth. This token is used to authenticate requests to the Slack API."
+        }
+      ],
       "internalKeys": [
         {
           "key": "SLACK_CLIENT_ID",
@@ -115,13 +74,12 @@
         "getUserInfo",
         "listChannels",
         "listChannelUsers",
-        "listUsers",
+        "listActiveUsers",
         "messageChannel",
         "messageUser",
         "reactMessage",
         "removeUserFromChannel",
         "replyMessage",
-        "searchChannel",
         "searchUser",
         "sendFile",
         "setReminder"
