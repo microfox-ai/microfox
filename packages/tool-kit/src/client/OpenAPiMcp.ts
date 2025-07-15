@@ -448,12 +448,12 @@ export class OpenApiMCP {
     }
 
     const info: any = this.schema.info;
-    const global = info?.systemPrompt;
+    const global = info?.ai?.systemPrompt;
 
     const operations = new Map<string, string>();
     for (const [id, operation] of this.operationMap.entries()) {
       const op: any = operation;
-      if (op.systemPrompt) {
+      if (op?.ai?.systemPrompt) {
         const cleanedOperation = this.cleanUpMethodSchema(
           operation,
         ) as OpenAPIOperation & { path: string; method: string };
@@ -470,7 +470,7 @@ export class OpenApiMCP {
             toolName = toolName.substring(0, 128);
           }
         }
-        operations.set(toolName, op.systemPrompt);
+        operations.set(toolName, op?.ai?.systemPrompt);
       }
     }
     return { global, operations };
