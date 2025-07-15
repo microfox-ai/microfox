@@ -29,8 +29,8 @@
     "/imageSearch": {
       "post": {
         "operationId": "imageSearch",
-        "summary": "The imageSearch function performs image searches using the Brave Search API, allowing users to find and retrieve images based on specified search queries and optional parameters.",
-        "description": "The imageSearch function enables users to search for images using the Brave Search API with customizable parameters. It supports various search criteria including query text, country, language, result count, and content filtering options. The function returns a Promise that resolves to an ImageSearchApiResponse object containing detailed information about the search results and query metadata.",
+        "summary": "Search for images using the Brave Search",
+        "description": "Search for images using the Brave Search (with a query upto 20 images per toolcall)",
         "requestBody": {
           "required": true,
           "content": {
@@ -897,8 +897,8 @@
     "/webSearch": {
       "post": {
         "operationId": "webSearch",
-        "summary": "Performs a web search using the Brave Search API and returns comprehensive search results.",
-        "description": "This function allows users to conduct web searches using the Brave Search API, providing access to a wide range of content including web pages, news, videos, discussions, and FAQs. It offers extensive customization options for refining search parameters and supports both single and batch search operations with optional progress tracking.",
+        "summary": "Search the web using the Brave Search",
+        "description": "Search the web using the Brave Search (with a query upto 20 results per toolcall)",
         "requestBody": {
           "required": true,
           "content": {
@@ -921,7 +921,7 @@
                           },
                           "country": {
                             "type": "string",
-                            "description": "2-letter country code.",
+                            "description": "2-letter country code. ( useful for news or local searches)",
                             "default": "US",
                             "minLength": 2,
                             "maxLength": 2

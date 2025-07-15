@@ -56,23 +56,14 @@
                       "safesearch": {
                         "type": "string",
                         "description": "Safe search level",
-                        "enum": [
-                          "off",
-                          "moderate",
-                          "strict"
-                        ],
+                        "enum": ["off", "moderate", "strict"],
                         "default": "moderate"
                       },
                       "freshness": {
                         "oneOf": [
                           {
                             "type": "string",
-                            "enum": [
-                              "pd",
-                              "pw",
-                              "pm",
-                              "py"
-                            ],
+                            "enum": ["pd", "pw", "pm", "py"],
                             "description": "Predefined freshness options"
                           },
                           {
@@ -106,28 +97,19 @@
                       },
                       "units": {
                         "type": "string",
-                        "enum": [
-                          "metric",
-                          "imperial"
-                        ],
+                        "enum": ["metric", "imperial"],
                         "description": "Units for measurements"
                       }
                     },
-                    "required": [
-                      "q"
-                    ]
+                    "required": ["q"]
                   },
                   "constructor": {
                     "type": "string",
                     "description": "Name of the constructor to use.",
-                    "enum": [
-                      "createBraveSDK"
-                    ]
+                    "enum": ["createBraveSDK"]
                   }
                 },
-                "required": [
-                  "arguments"
-                ]
+                "required": ["arguments"]
               }
             }
           }

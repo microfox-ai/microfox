@@ -622,10 +622,21 @@ export class OpenApiMCP {
 
     // Handle request body
     if (operation.requestBody?.content?.['application/json']?.schema) {
-      const bodySchema = this.convertOpenApiSchemaToJsonSchema(
+      let bodySchema = this.convertOpenApiSchemaToJsonSchema(
         operation.requestBody.content['application/json'].schema,
         new Set(),
       );
+
+      // Check for and unwrap a nested 'body' property to fix schemas that have an extra layer.
+      if (
+        bodySchema.type === 'object' &&
+        bodySchema.properties &&
+        Object.keys(bodySchema.properties).length === 1 &&
+        bodySchema.properties.body
+      ) {
+        bodySchema = bodySchema.properties.body;
+      }
+
       rootSchema.properties!.body = bodySchema;
       if (operation.requestBody.required) {
         rootSchema.required!.push('body');

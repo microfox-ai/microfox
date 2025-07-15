@@ -127,7 +127,7 @@ async function generateTextExample(client: OpenApiToolset, tools: ToolSet) {
     );
     console.log('[SIMULATION] User clicks "Approve"');
 
-    const parsedMessages = await client.parseHitl(messages);
+    const parsedMessages = await client.processHitlToolResult(messages);
 
     const finalResponse = await generateText({
       model: openai('gpt-4-turbo'),
@@ -187,7 +187,9 @@ async function streamTextExample(client: OpenApiToolset, tools: ToolSet) {
   if (humanInterventionCall) {
     console.log('[SIMULATION] User clicks "Approve"');
 
-    const parsedMessages = await client.parseHitl([assistantMessage]);
+    const parsedMessages = await client.processHitlToolResult([
+      assistantMessage,
+    ]);
 
     result = await streamText({
       model: openai('gpt-4-turbo'),

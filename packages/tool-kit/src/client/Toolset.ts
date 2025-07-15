@@ -259,7 +259,7 @@ export class OpenApiToolset {
    * @param messages The full message history.
    * @returns A promise that resolves to the processed message history.
    */
-  async parseHitl(
+  async processHitlToolResult(
     messages: Message[],
     options: {
       dataStream?: UIMessageStreamWriter;
@@ -288,6 +288,7 @@ export class OpenApiToolset {
         if (!(toolName in thisClientTools.executions)) return part;
 
         let result;
+        let _input = part.input;
 
         if (
           (part as any).state === 'output-available' &&
@@ -302,8 +303,11 @@ export class OpenApiToolset {
             if (options.inserAuthVariables && _auth) {
               _auth = await options.inserAuthVariables(_auth);
             }
+            if ((part as any).output === 'approved') {
+              _input = (part as any).output.mutatedInput;
+            }
             //console.log('calling tool', part.input);
-            result = await correspondingCall(part.input as any, {
+            result = await correspondingCall(_input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],
               ...(_auth ? { auth: _auth } : {}),
@@ -332,6 +336,7 @@ export class OpenApiToolset {
         // Return updated toolInvocation with the actual result.
         return {
           ...part,
+          input: _input,
           state: 'output-available',
           output: result as any,
         };

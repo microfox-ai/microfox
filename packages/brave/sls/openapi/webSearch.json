@@ -1,8 +1,8 @@
 {
   "post": {
     "operationId": "webSearch",
-    "summary": "Performs a web search using the Brave Search API and returns comprehensive search results.",
-    "description": "This function allows users to conduct web searches using the Brave Search API, providing access to a wide range of content including web pages, news, videos, discussions, and FAQs. It offers extensive customization options for refining search parameters and supports both single and batch search operations with optional progress tracking.",
+    "summary": "Search the web using the Brave Search",
+    "description": "Search the web using the Brave Search (with a query upto 20 results per toolcall)",
     "requestBody": {
       "required": true,
       "content": {
@@ -25,7 +25,7 @@
                       },
                       "country": {
                         "type": "string",
-                        "description": "2-letter country code.",
+                        "description": "2-letter country code. ( useful for news or local searches)",
                         "default": "US",
                         "minLength": 2,
                         "maxLength": 2
@@ -57,28 +57,19 @@
                       "safesearch": {
                         "type": "string",
                         "description": "Safe search level.",
-                        "enum": [
-                          "off",
-                          "moderate",
-                          "strict"
-                        ],
+                        "enum": ["off", "moderate", "strict"],
                         "default": "moderate"
                       },
                       "freshness": {
                         "oneOf": [
                           {
                             "type": "string",
-                            "enum": [
-                              "pd",
-                              "pw",
-                              "pm",
-                              "py"
-                            ],
+                            "enum": ["pd", "pw", "pm", "py"],
                             "description": "Predefined freshness periods"
                           },
                           {
                             "type": "string",
-                            "pattern": "^\\d{4}-\\d{2}-\\d{2}to\\d{4}-\\d{2}-\\d{2}$",
+                            "pattern": "^\\\\d{4}-\\\\d{2}-\\\\d{2}to\\\\d{4}-\\\\d{2}-\\\\d{2}$",
                             "description": "Custom date range in format 'YYYY-MM-DDtoYYYY-MM-DD'"
                           }
                         ],
@@ -108,10 +99,7 @@
                       },
                       "units": {
                         "type": "string",
-                        "enum": [
-                          "metric",
-                          "imperial"
-                        ],
+                        "enum": ["metric", "imperial"],
                         "description": "Units for measurements."
                       },
                       "extra_snippets": {
@@ -123,21 +111,10 @@
                         "description": "Enable summary key generation for use with summarizer."
                       }
                     },
-                    "required": [
-                      "q"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "createBraveSDK"
-                    ]
+                    "required": ["q"]
                   }
                 },
-                "required": [
-                  "arguments"
-                ]
+                "required": ["arguments"]
               }
             }
           }
@@ -198,10 +175,7 @@
                   "description": "Optional video results"
                 }
               },
-              "required": [
-                "type",
-                "query"
-              ]
+              "required": ["type", "query"]
             }
           }
         }
@@ -218,9 +192,7 @@
                   "description": "Error message describing the issue with the request"
                 }
               },
-              "required": [
-                "error"
-              ]
+              "required": ["error"]
             }
           }
         }
@@ -237,9 +209,7 @@
                   "description": "Error message indicating authentication failure"
                 }
               },
-              "required": [
-                "error"
-              ]
+              "required": ["error"]
             }
           }
         }
@@ -260,10 +230,7 @@
                   "description": "Number of seconds to wait before retrying"
                 }
               },
-              "required": [
-                "error",
-                "retry_after"
-              ]
+              "required": ["error", "retry_after"]
             }
           }
         }
@@ -280,9 +247,7 @@
                   "description": "Error message describing the server-side issue"
                 }
               },
-              "required": [
-                "error"
-              ]
+              "required": ["error"]
             }
           }
         }
