@@ -30,13 +30,10 @@ async function generateOpenAPIPath(
         .string()
         .describe('2-3 sentences explaining the function purpose and behavior'),
       parameters: z
-        .object({
-          type: z.literal('object').describe('Type must be object'),
-          description: z.string().describe('Description of the parameters object'),
-          properties: z.record(z.any()).describe('Properties of the object'),
-          required: z.array(z.string()).optional().describe('Required properties'),
-        })
-        .describe('Parameters object schema for the function arguments'),
+        .record(z.string(), z.any())
+        .describe(
+          'Parameters JSON schema. If the function takes a single object argument, this schema\'s type is "object". For all other cases (multiple arguments or single primitive argument), the type is "array", and it contains a \'properties\' object with the real argument names as keys.',
+        ),
       responses: z
         .record(
           z.object({
@@ -57,59 +54,90 @@ async function generateOpenAPIPath(
 
   const systemPrompt = dedent`You are an expert at analyzing function documentation and generating OpenAPI specifications.
 
-
   ## Principles
   1. First carefully analyze the function documentation
   2. Plan what needs to be done, including:
-     - Identifying ALL parameters of the function
-     - Planning the OpenAPI request body schema based on the parameters
-     - Planning the OpenAPI responses schema for the function
-  3. Criticize your plan and refine it to be specific to this task
-  4. Write complete, production-ready code with no TODOs or placeholders
-  5. Recheck your code for any linting or TypeScript errors
-
+     - Identifying all parameters and their types.
+     - Determining if the function takes a single object argument vs. other signatures.
+     - Planning the OpenAPI request body schema based on the rules below.
+     - Planning the OpenAPI responses schema.
+  3. Criticize your plan and refine it to be specific to this task.
+  4. Write complete, production-ready code with no TODOs or placeholders.
 
   ## Process
-  Your task is to analyze function documentation and generate OpenAPI path for the function:
-  1. Generate a clear summary (one sentence)
-  2. Generate a detailed description (2-3 sentences)
-  3. Generate a single 'parameters' JSON schema object that represents all of the function's arguments.
-  4. Generate a complete OpenAPI responses schema
+  Your task is to analyze function documentation and generate an OpenAPI path for the function:
+  1. Generate a clear summary (one sentence).
+  2. Generate a detailed description (2-3 sentences).
+  3. Generate the 'parameters' JSON schema by strictly following the rules below.
+  4. Generate a complete OpenAPI responses schema.
 
-  ## CRITICAL ANALYSIS RULES:
+  ## CRITICAL ANALYSIS RULES FOR PARAMETERS SCHEMA:
 
-  ### Parameters Structure:
-  The 'parameters' property you generate should be a single JSON Schema object representing the function's arguments. Typically, this will be an object with properties for each argument.
-  - If the function takes a single object as an argument, model that object's properties.
-  - If the function takes multiple arguments, model them as properties of a single object.
+  You MUST generate a JSON Schema for the function's arguments. The structure of this schema depends on the function's signature. Follow these rules precisely.
 
-  **Example:**
+  ### Rule 1: Single Object Argument
+  If the function takes **exactly one argument** AND that argument is an **object**, then the generated schema MUST have \`"type": "object"\`. The \`properties\` of the schema should be the properties of that single object argument.
+
+  **Example (Single Object Argument):**
+  For a function \`myFunc(options: { id: string, force: boolean })\`, the parameters schema MUST be:
   \`\`\`json
   {
     "type": "object",
-    "description": "Configuration object containing all function parameters.",
     "properties": {
-      "param1": { "type": "string", "description": "First parameter description." },
-      "param2": { "type": "number", "description": "Second parameter description." },
-      "param3": { 
-        "type": "object", 
-        "properties": { "nested": { "type": "boolean" } }
-      }
+      "id": { "type": "string" },
+      "force": { "type": "boolean" }
     },
-    "required": ["param1"]
+    "required": ["id"]
   }
   \`\`\`
 
+  ### Rule 2: Multiple Arguments or Single Primitive Argument
+  In ALL other cases (i.e., the function takes multiple arguments, OR it takes a single argument that is a primitive like a string or number), the generated schema MUST have \`"type": "array"\`. This schema MUST ALSO contain a \`properties\` object where the keys are the **actual names of the function arguments**.
+
+  **Example (Multiple Arguments):**
+  For a function \`myFunc(userId: string, text: string)\`, the parameters schema MUST be:
+  \`\`\`json
+  {
+    "type": "array",
+    "description": "Container for function arguments.",
+    "properties": {
+      "userId": {
+        "type": "string",
+        "description": "userId: The ID of the user."
+      },
+      "text": {
+        "type": "string",
+        "description": "text: The message content."
+      }
+    },
+    "required": ["userId", "text"]
+  }
+  \`\`\`
+
+  **Example (Single String Argument):**
+  For a function \`myFunc(channelId: string)\`, the parameters schema MUST be:
+  \`\`\`json
+  {
+    "type": "array",
+    "description": "Container for function arguments.",
+    "properties": {
+      "channelId": {
+        "type": "string",
+        "description": "channelId: The ID of the channel."
+      }
+    },
+    "required": ["channelId"]
+  }
+  \`\`\`
 
   ### Responses Schema:
   Generate complete OpenAPI responses with:
   - 200: Success response with appropriate schema
   - 400: Client error (bad request)
   - 500: Server error
-  - and any other status codes that are relevant to the function
   `;
 
-  const userPrompt = dedent`Analyze this function documentation and generate the required specification:
+  const userPrompt = dedent`Analyze this function documentation and generate the required specification following the rules precisely.
 
   **Function:** ${functionName}
 
@@ -118,13 +146,15 @@ async function generateOpenAPIPath(
   ${docContent}
   \`\`\`
 
-  Please analyze the Parameters section carefully and generate:
-  1. summary: One clear sentence describing what this function does
-  2. description: 2-3 sentences explaining the function's purpose and behavior
-  3. parameters: A single JSON schema object representing the function's arguments, with type "object" and properties for each argument.
-  4. responses: Complete OpenAPI responses schema with 200, 400, 500 status codes and any other status codes that are relevant to the function
+  Please analyze the **Arguments** section carefully and generate:
+  1. summary: One clear sentence describing what this function does.
+  2. description: 2-3 sentences explaining the function's purpose and behavior.
+  3. parameters: A JSON schema for the function's arguments. You must follow the rules:
+     - If it's a single object argument, the schema type is "object".
+     - Otherwise, the schema type is "array" and it must contain a "properties" field with the real argument names as keys.
+  4. responses: Complete OpenAPI responses schema.
 
-  Focus on the parameter structure - create a single object that encapsulates all parameters.`;
+  It is critical that you follow the parameter schema generation rules exactly as specified.`;
 
   try {
     const result = await generateObject({
