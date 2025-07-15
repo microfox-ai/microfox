@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.12
+
+### Patch Changes
+
+- f3c4435: release: update @microfox/db-upstash to version 1.1.7, adjust OpenAPI schemas in brave and slack-web-tiny packages, and refactor processTask to use CrudHash
+- Updated dependencies [f3c4435]
+  - @microfox/types@1.0.5
+
 ## 1.1.11
 
 ### Patch Changes

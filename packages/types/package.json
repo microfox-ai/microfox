@@ -1,6 +1,6 @@
 {
   "name": "@microfox/types",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "General Required Types for Agents",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
