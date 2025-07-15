@@ -1,7 +1,5 @@
 import {
-  WebClient,
   MicrofoxSlackClient,
-  WebClientOptions,
 } from '@microfox/slack';
 
 interface SDKConfig {
@@ -10,53 +8,21 @@ interface SDKConfig {
 }
 
 export const sdkInit = (config: SDKConfig): Record<string, Function> => {
-  const { constructorName, ...options } = config;
+  const { constructorName } = config;
 
-  // Environment variable validation
-  if (!process.env['SLACK_BOT_TOKEN'] && !process.env['SLACK_ACCESS_TOKEN']) {
+  const SLACK_BOT_TOKEN =
+    process.env.SLACK_BOT_TOKEN || process.env.SLACK_ACCESS_TOKEN;
+
+  if (!SLACK_BOT_TOKEN) {
     throw new Error(
       'SLACK_BOT_TOKEN is required but not provided in the environment variables.',
     );
   }
 
-  const SLACK_BOT_TOKEN =
-    process.env.SLACK_BOT_TOKEN || process.env.SLACK_ACCESS_TOKEN || '';
-
-  let webClientOption: WebClientOptions = {
-    //a: 'header',
-  };
-
   switch (constructorName) {
-    case 'WebClient':
-      const webClient = new WebClient(SLACK_BOT_TOKEN, webClientOption);
-      const webClientMap: Record<string, Function> = {};
-      webClientMap['chat.postMessage'] = webClient.chat.postMessage.bind(
-        webClient.chat,
-      );
-      webClientMap['chat.update'] = webClient.chat.update.bind(webClient.chat);
-      webClientMap['conversations.history'] =
-        webClient.conversations.history.bind(webClient.conversations);
-      webClientMap['conversations.join'] = webClient.conversations.join.bind(
-        webClient.conversations,
-      );
-      webClientMap['conversations.list'] = webClient.conversations.list.bind(
-        webClient.conversations,
-      );
-      webClientMap['reactions.add'] = webClient.reactions.add.bind(
-        webClient.reactions,
-      );
-      webClientMap['users.info'] = webClient.users.info.bind(webClient.users);
-      webClientMap['users.list'] = webClient.users.list.bind(webClient.users);
-      webClientMap['users.lookupByEmail'] = webClient.users.lookupByEmail.bind(
-        webClient.users,
-      );
-      webClientMap['views.open'] = webClient.views.open.bind(webClient.views);
-      return webClientMap;
-
     case 'MicrofoxSlackClient':
       const microfoxClient = new MicrofoxSlackClient(
         SLACK_BOT_TOKEN,
-        webClientOption,
       );
       const microfoxClientMap: Record<string, Function> = {};
       microfoxClientMap.addUserToChannel =
@@ -73,8 +39,8 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.listChannels.bind(microfoxClient);
       microfoxClientMap.listChannelUsers =
         microfoxClient.listChannelUsers.bind(microfoxClient);
-      microfoxClientMap.listUsers =
-        microfoxClient.listUsers.bind(microfoxClient);
+      microfoxClientMap.listActiveUsers =
+        microfoxClient.listActiveUsers.bind(microfoxClient);
       microfoxClientMap.messageChannel =
         microfoxClient.messageChannel.bind(microfoxClient);
       microfoxClientMap.messageUser =
@@ -85,8 +51,6 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.removeUserFromChannel.bind(microfoxClient);
       microfoxClientMap.replyMessage =
         microfoxClient.replyMessage.bind(microfoxClient);
-      microfoxClientMap.searchChannel =
-        microfoxClient.searchChannel.bind(microfoxClient);
       microfoxClientMap.searchUser =
         microfoxClient.searchUser.bind(microfoxClient);
       microfoxClientMap.sendFile = microfoxClient.sendFile.bind(microfoxClient);
@@ -96,35 +60,41 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
 
     default:
       // Fallback to WebClient as default
-      const defaultClient = new WebClient(SLACK_BOT_TOKEN, webClientOption);
+      const defaultClient = new MicrofoxSlackClient(SLACK_BOT_TOKEN);
       const defaultClientMap: Record<string, Function> = {};
-      defaultClientMap['chat.postMessage'] =
-        defaultClient.chat.postMessage.bind(defaultClient.chat);
-      defaultClientMap['chat.update'] = defaultClient.chat.update.bind(
-        defaultClient.chat,
-      );
-      defaultClientMap['conversations.history'] =
-        defaultClient.conversations.history.bind(defaultClient.conversations);
-      defaultClientMap['conversations.join'] =
-        defaultClient.conversations.join.bind(defaultClient.conversations);
-      defaultClientMap['conversations.list'] =
-        defaultClient.conversations.list.bind(defaultClient.conversations);
-      defaultClientMap['reactions.add'] = defaultClient.reactions.add.bind(
-        defaultClient.reactions,
-      );
-      defaultClientMap['users.info'] = defaultClient.users.info.bind(
-        defaultClient.users,
-      );
-      defaultClientMap['users.list'] = defaultClient.users.list.bind(
-        defaultClient.users,
-      );
-      defaultClientMap['users.lookupByEmail'] =
-        defaultClient.users.lookupByEmail.bind(defaultClient.users);
-      defaultClientMap['views.open'] = defaultClient.views.open.bind(
-        defaultClient.views,
-      );
+      defaultClientMap.addUserToChannel =
+        defaultClient.addUserToChannel.bind(defaultClient);
+      defaultClientMap.createChannel =
+        defaultClient.createChannel.bind(defaultClient);
+      defaultClientMap.getChannelConversationInfo =
+        defaultClient.getChannelConversationInfo.bind(defaultClient);
+      defaultClientMap.getFileInfo =
+        defaultClient.getFileInfo.bind(defaultClient);
+      defaultClientMap.getUserInfo =
+        defaultClient.getUserInfo.bind(defaultClient);
+      defaultClientMap.listChannels =
+        defaultClient.listChannels.bind(defaultClient);
+      defaultClientMap.listChannelUsers =
+        defaultClient.listChannelUsers.bind(defaultClient);
+      defaultClientMap.listActiveUsers =
+        defaultClient.listActiveUsers.bind(defaultClient);
+      defaultClientMap.messageChannel =
+        defaultClient.messageChannel.bind(defaultClient);
+      defaultClientMap.messageUser =
+        defaultClient.messageUser.bind(defaultClient);
+      defaultClientMap.reactMessage =
+        defaultClient.reactMessage.bind(defaultClient);
+      defaultClientMap.removeUserFromChannel =
+        defaultClient.removeUserFromChannel.bind(defaultClient);
+      defaultClientMap.replyMessage =
+        defaultClient.replyMessage.bind(defaultClient);
+      defaultClientMap.searchUser =
+        defaultClient.searchUser.bind(defaultClient);
+      defaultClientMap.sendFile = defaultClient.sendFile.bind(defaultClient);
+      defaultClientMap.setReminder =
+        defaultClient.setReminder.bind(defaultClient);
       return defaultClientMap;
   }
 };
 
-export { WebClient, MicrofoxSlackClient };
+export { MicrofoxSlackClient };
