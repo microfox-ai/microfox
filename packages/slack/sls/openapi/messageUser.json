@@ -1,8 +1,15 @@
 {
   "post": {
     "operationId": "messageUser",
-    "summary": "Send a direct message to a user on Slack.",
-    "description": "This function allows sending a direct message to a specified user on Slack using their user ID. It provides a simple way to programmatically send messages to individual users. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
+    "summary": "Send a direct message to a Slack user.",
+    "description": "The messageUser function allows sending a direct message to a specified Slack user. It requires the user's ID and the message text as input. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
+    "tags": [
+      "message",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "To send a direct message, provide the `userId`. If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,15 +23,14 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for sending a direct message to a user",
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to send the message to"
+                        "description": "The ID of the user to send the message to."
                       },
                       "text": {
                         "type": "string",
-                        "description": "The text content of the message to be sent"
+                        "description": "The text of the message to be sent."
                       }
                     },
                     "required": [
@@ -59,50 +65,47 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "Indicates if the request was successful"
+                  "description": "true if the request was successful."
                 },
                 "channel": {
                   "type": "string",
-                  "description": "The ID of the channel where the message was posted"
+                  "description": "The ID of the channel where the message was posted."
                 },
                 "ts": {
                   "type": "string",
-                  "description": "The timestamp of the message"
+                  "description": "The timestamp of the message."
                 },
                 "message": {
                   "type": "object",
-                  "description": "Details of the sent message",
+                  "description": "An object containing the details of the sent message.",
                   "properties": {
                     "type": {
                       "type": "string",
-                      "description": "The type of message"
+                      "description": "The type of message."
                     },
                     "subtype": {
                       "type": "string",
-                      "description": "The subtype of the message"
+                      "description": "The subtype of the message."
                     },
                     "text": {
                       "type": "string",
-                      "description": "The text of the message"
+                      "description": "The text of the message."
                     },
                     "ts": {
                       "type": "string",
-                      "description": "The timestamp of the message"
+                      "description": "The timestamp of the message."
                     },
                     "bot_id": {
                       "type": "string",
-                      "description": "The ID of the bot that sent the message"
+                      "description": "The ID of the bot that sent the message."
                     },
                     "username": {
                       "type": "string",
-                      "description": "The username of the bot that sent the message"
+                      "description": "The username of the bot that sent the message."
                     },
                     "attachments": {
                       "type": "array",
-                      "description": "An array of attachments",
-                      "items": {
-                        "type": "object"
-                      }
+                      "description": "An array of attachments."
                     }
                   }
                 }
@@ -118,60 +121,12 @@
         }
       },
       "400": {
-        "description": "Bad Request - The request was invalid or cannot be served",
+        "description": "Bad Request - The request was invalid or cannot be served.",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - Authentication failed or user doesn't have permissions",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "429": {
-        "description": "Too Many Requests - Application has exceeded its rate limit",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
                 "error": {
                   "type": "string"
                 }
@@ -181,18 +136,12 @@
         }
       },
       "500": {
-        "description": "Internal Server Error - The server has encountered an error",
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle.",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "properties": {
-                "ok": {
-                  "type": "boolean",
-                  "enum": [
-                    false
-                  ]
-                },
                 "error": {
                   "type": "string"
                 }

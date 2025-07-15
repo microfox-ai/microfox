@@ -1,8 +1,14 @@
 {
   "post": {
     "operationId": "reactMessage",
-    "summary": "Add a reaction emoji to a Slack message.",
-    "description": "The reactMessage function allows adding an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji to be used as the reaction. This function is part of the MicrofoxSlackClient and interacts with Slack's API to perform the reaction action.",
+    "summary": "Adds a reaction to a message in Slack.",
+    "description": "The reactMessage function allows adding an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction. This function is part of the MicrofoxSlackClient and interacts with the Slack API to perform the reaction action.",
+    "tags": [
+      "message"
+    ],
+    "ai": {
+      "systemPrompt": "To add a reaction, specify the `channelId`, the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,19 +22,18 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "Parameters for adding a reaction to a Slack message",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel where the message is located"
+                        "description": "The ID of the channel where the message is."
                       },
                       "timestamp": {
                         "type": "string",
-                        "description": "The timestamp of the message to react to"
+                        "description": "The timestamp of the message to react to."
                       },
                       "reaction": {
                         "type": "string",
-                        "description": "The name of the emoji to use for the reaction (e.g., 'tada', 'thumbsup')"
+                        "description": "The name of the emoji to use for the reaction (e.g., \"thumbsup\")."
                       }
                     },
                     "required": [
@@ -64,7 +69,7 @@
               "properties": {
                 "ok": {
                   "type": "boolean",
-                  "description": "true if the request was successful"
+                  "description": "true if the request was successful."
                 }
               },
               "required": [
@@ -75,7 +80,7 @@
         }
       },
       "400": {
-        "description": "Bad Request - Invalid parameters",
+        "description": "Bad request",
         "content": {
           "application/json": {
             "schema": {
@@ -83,56 +88,15 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "description": "Error message describing the issue with the request"
+                  "description": "Error message describing the bad request."
                 }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Channel or message not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating that the channel or message was not found"
-                }
-              },
-              "required": [
-                "error"
-              ]
-            }
-          }
-        }
-      },
-      "429": {
-        "description": "Too Many Requests - Rate limit exceeded",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating that the rate limit has been exceeded"
-                }
-              },
-              "required": [
-                "error"
-              ]
+              }
             }
           }
         }
       },
       "500": {
-        "description": "Internal Server Error",
+        "description": "Server error",
         "content": {
           "application/json": {
             "schema": {
@@ -140,12 +104,9 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "description": "Error message describing the internal server error"
+                  "description": "Error message describing the server error."
                 }
-              },
-              "required": [
-                "error"
-              ]
+              }
             }
           }
         }

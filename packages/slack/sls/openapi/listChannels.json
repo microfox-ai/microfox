@@ -2,7 +2,13 @@
   "post": {
     "operationId": "listChannels",
     "summary": "Lists all public and private channels in a Slack workspace.",
-    "description": "The listChannels function retrieves a comprehensive list of all channels within a Slack workspace, including both public and private channels. It returns detailed information about each channel, such as its ID, name, privacy settings, creation details, and various flags indicating its status and type. This function is useful for obtaining an overview of the workspace's structure and available communication channels.",
+    "description": "The listChannels function retrieves information about all public and private channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+    "tags": [
+      "channel"
+    ],
+    "ai": {
+      "systemPrompt": "This function lists all public and private channels in the workspace. No arguments are required."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -16,8 +22,9 @@
                 "properties": {
                   "arguments": {
                     "type": "object",
-                    "description": "This method does not take any arguments.",
-                    "properties": {}
+                    "description": "Container for function arguments.",
+                    "properties": {},
+                    "required": []
                   },
                   "constructor": {
                     "type": "string",
@@ -38,7 +45,7 @@
     },
     "responses": {
       "200": {
-        "description": "Successful response",
+        "description": "Successful response containing an array of conversation objects",
         "content": {
           "application/json": {
             "schema": {
@@ -48,115 +55,114 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "description": "The ID of the conversation."
+                    "description": "The ID of the conversation"
                   },
                   "name": {
                     "type": "string",
-                    "description": "Indicates the name of the channel-like thing, without a leading hash sign."
+                    "description": "The name of the channel-like thing, without a leading hash sign"
                   },
                   "is_channel": {
                     "type": "boolean",
-                    "description": "Indicates whether a conversation is a channel."
+                    "description": "Indicates whether a conversation is a channel"
                   },
                   "is_group": {
                     "type": "boolean",
-                    "description": "Means the channel is a private channel created before March 2021."
+                    "description": "Means the channel is a private channel created before March 2021"
                   },
                   "is_im": {
                     "type": "boolean",
-                    "description": "Means the conversation is a direct message between two distinguished individuals or a user and a bot."
+                    "description": "Means the conversation is a direct message between two individuals or a user and a bot"
                   },
                   "is_mpim": {
                     "type": "boolean",
-                    "description": "Represents an unnamed private conversation between multiple users."
+                    "description": "Represents an unnamed private conversation between multiple users"
                   },
                   "is_private": {
                     "type": "boolean",
-                    "description": "Means the conversation is privileged between two or more members."
+                    "description": "Means the conversation is privileged between two or more members"
                   },
                   "created": {
                     "type": "integer",
-                    "description": "Timestamp of when the conversation was created."
+                    "description": "Timestamp of when the conversation was created"
                   },
                   "creator": {
                     "type": "string",
-                    "description": "The ID of the member that created this conversation."
+                    "description": "The ID of the member that created this conversation"
                   },
                   "is_archived": {
                     "type": "boolean",
-                    "description": "Indicates a conversation is archived, frozen in time."
+                    "description": "Indicates a conversation is archived"
                   },
                   "is_general": {
                     "type": "boolean",
-                    "description": "Means the channel is the workspace's \"general\" discussion channel."
+                    "description": "Means the channel is the workspace's 'general' discussion channel"
                   },
                   "unlinked": {
                     "type": "integer"
                   },
                   "name_normalized": {
                     "type": "string",
-                    "description": "The \"normalized\" name of a channel, which may be different from `name` due to legacy naming rules."
+                    "description": "The 'normalized' name of a channel"
                   },
                   "is_shared": {
                     "type": "boolean",
-                    "description": "Means the conversation is in some way shared between multiple workspaces."
+                    "description": "Means the conversation is shared between multiple workspaces"
                   },
                   "is_frozen": {
                     "type": "boolean",
-                    "description": "Indicates that the channel is frozen."
+                    "description": "Indicates that the channel is frozen"
                   },
                   "is_org_shared": {
                     "type": "boolean",
-                    "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization."
+                    "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization"
                   },
                   "is_pending_ext_shared": {
                     "type": "boolean",
-                    "description": "Means the conversation is ready to become an `is_ext_shared` channel, but needs some kind of approval or sign off first."
+                    "description": "Means the conversation is ready to become an is_ext_shared channel, but needs approval"
                   },
                   "pending_shared": {
                     "type": "array",
-                    "description": "A list of team IDs that have been invited to the channel but have not yet joined.",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "description": "A list of team IDs that have been invited to the channel but have not yet joined"
                   },
                   "context_team_id": {
                     "type": "string",
-                    "description": "The team ID of the team that this channel belongs to."
+                    "description": "The team ID of the team that this channel belongs to"
                   },
                   "updated": {
                     "type": "integer",
-                    "description": "The timestamp, in milliseconds, when the channel settings were updated."
+                    "description": "The timestamp, in milliseconds, when the channel settings were updated"
                   },
                   "parent_conversation": {
                     "type": "string",
-                    "description": "The ID of the parent conversation. This is present for threaded messages."
+                    "description": "The ID of the parent conversation for threaded messages"
                   },
                   "is_ext_shared": {
                     "type": "boolean",
-                    "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization."
+                    "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization"
                   },
                   "shared_team_ids": {
                     "type": "array",
-                    "description": "A list of team IDs that are part of this shared channel.",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "description": "A list of team IDs that are part of this shared channel"
                   },
                   "pending_connected_team_ids": {
                     "type": "array",
-                    "description": "A list of team IDs that have been invited to connect to the channel but have not yet accepted.",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "description": "A list of team IDs that have been invited to connect to the channel but have not yet accepted"
                   },
                   "is_member": {
                     "type": "boolean",
-                    "description": "Indicates whether the user, bot user or Slack app associated with the token making the API call is itself a member of the conversation."
+                    "description": "Indicates whether the user, bot user or Slack app associated with the token making the API call is itself a member of the conversation"
                   },
                   "topic": {
                     "type": "object",
-                    "description": "Provides information about the channel topic.",
                     "properties": {
                       "value": {
                         "type": "string"
@@ -167,11 +173,11 @@
                       "last_set": {
                         "type": "integer"
                       }
-                    }
+                    },
+                    "description": "Provides information about the channel topic"
                   },
                   "purpose": {
                     "type": "object",
-                    "description": "Provides information about the channel purpose.",
                     "properties": {
                       "value": {
                         "type": "string"
@@ -182,45 +188,45 @@
                       "last_set": {
                         "type": "integer"
                       }
-                    }
+                    },
+                    "description": "Provides information about the channel purpose"
                   },
                   "previous_names": {
                     "type": "array",
-                    "description": "A list of previous names for the channel.",
                     "items": {
                       "type": "string"
-                    }
+                    },
+                    "description": "A list of previous names for the channel"
                   },
                   "num_members": {
                     "type": "integer",
-                    "description": "The number of members in the conversation. This field is only present if `include_num_members` is true in the request."
+                    "description": "The number of members in the conversation"
                   },
                   "locale": {
                     "type": "string",
-                    "description": "The locale for this conversation. This field is only present if `include_locale` is true in the request."
+                    "description": "The locale for this conversation"
                   },
                   "last_read": {
                     "type": "integer",
-                    "description": "The timestamp for the last message the calling user has read in this channel."
+                    "description": "The timestamp for the last message the calling user has read in this channel"
                   },
                   "latest": {
                     "type": "string",
-                    "description": "The latest message in the channel."
+                    "description": "The latest message in the channel"
                   },
                   "unread_count": {
                     "type": "integer",
-                    "description": "A full count of visible messages that the calling user has yet to read."
+                    "description": "A full count of visible messages that the calling user has yet to read"
                   },
                   "unread_count_display": {
                     "type": "integer",
-                    "description": "A count of messages that the calling user has yet to read that matter to them."
+                    "description": "A count of messages that the calling user has yet to read that matter to them"
                   }
                 },
                 "required": [
                   "id",
                   "name",
-                  "is_channel",
-                  "created"
+                  "is_channel"
                 ]
               }
             }
@@ -228,52 +234,7 @@
         }
       },
       "400": {
-        "description": "Bad Request - The request was invalid or cannot be served.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - The request requires user authentication.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden - The server understood the request but refuses to authorize it.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "429": {
-        "description": "Too Many Requests - The user has sent too many requests in a given amount of time.",
+        "description": "Bad Request - The request was invalid or cannot be served",
         "content": {
           "application/json": {
             "schema": {
@@ -288,7 +249,7 @@
         }
       },
       "500": {
-        "description": "Internal Server Error - The server has encountered a situation it does not know how to handle.",
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle",
         "content": {
           "application/json": {
             "schema": {

@@ -2,7 +2,13 @@
   "post": {
     "operationId": "getUserInfo",
     "summary": "Retrieves detailed information about a specific Slack user.",
-    "description": "The getUserInfo function fetches comprehensive details about a Slack user using their unique user ID. It returns a rich user object containing various attributes including personal information, team association, permissions, and profile details. This function is essential for applications that need to access or display user-specific data within a Slack workspace.",
+    "description": "The getUserInfo function fetches comprehensive details about a Slack user, including their profile information, team membership, and account status. It requires a user ID as input and returns a rich user object containing various attributes such as name, timezone, admin status, and profile details.",
+    "tags": [
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "Provide a `userId` to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -15,12 +21,12 @@
                 "description": "Body of the getUserInfo sls call",
                 "properties": {
                   "arguments": {
-                    "type": "object",
-                    "description": "Parameters for the getUserInfo function",
+                    "type": "array",
+                    "description": "Container for function arguments.",
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to get information for."
+                        "description": "userId: The ID of the user to get information for."
                       }
                     },
                     "required": [
@@ -46,7 +52,7 @@
     },
     "responses": {
       "200": {
-        "description": "Successful response with user information",
+        "description": "Successful response containing user information",
         "content": {
           "application/json": {
             "schema": {
@@ -66,7 +72,7 @@
                 },
                 "deleted": {
                   "type": "boolean",
-                  "description": "True if the user has been deleted."
+                  "description": "true if the user has been deleted."
                 },
                 "color": {
                   "type": "string",
@@ -168,27 +174,27 @@
                 },
                 "is_admin": {
                   "type": "boolean",
-                  "description": "True if the user is an admin."
+                  "description": "true if the user is an admin."
                 },
                 "is_owner": {
                   "type": "boolean",
-                  "description": "True if the user is an owner."
+                  "description": "true if the user is an owner."
                 },
                 "is_primary_owner": {
                   "type": "boolean",
-                  "description": "True if the user is the primary owner."
+                  "description": "true if the user is the primary owner."
                 },
                 "is_restricted": {
                   "type": "boolean",
-                  "description": "True if the user is a restricted user (single-channel guest)."
+                  "description": "true if the user is a restricted user (single-channel guest)."
                 },
                 "is_ultra_restricted": {
                   "type": "boolean",
-                  "description": "True if the user is an ultra-restricted user (multi-channel guest)."
+                  "description": "true if the user is an ultra-restricted user (multi-channel guest)."
                 },
                 "is_bot": {
                   "type": "boolean",
-                  "description": "True if the user is a bot."
+                  "description": "true if the user is a bot."
                 },
                 "updated": {
                   "type": "integer",
@@ -196,11 +202,11 @@
                 },
                 "is_app_user": {
                   "type": "boolean",
-                  "description": "True if the user is an app user."
+                  "description": "true if the user is an app user."
                 },
                 "has_2fa": {
                   "type": "boolean",
-                  "description": "True if the user has two-factor authentication enabled."
+                  "description": "true if the user has two-factor authentication enabled."
                 }
               }
             }
@@ -208,22 +214,7 @@
         }
       },
       "400": {
-        "description": "Bad request. This could occur if the userId is invalid or not provided.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "User not found. This could occur if the provided userId does not correspond to any existing user.",
+        "description": "Bad request - Invalid user ID or other client error",
         "content": {
           "application/json": {
             "schema": {
@@ -238,7 +229,7 @@
         }
       },
       "500": {
-        "description": "Internal server error. This could occur due to issues with the Slack API or server-side problems.",
+        "description": "Server error",
         "content": {
           "application/json": {
             "schema": {

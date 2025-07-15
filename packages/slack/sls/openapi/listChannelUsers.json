@@ -1,8 +1,15 @@
 {
   "post": {
     "operationId": "listChannelUsers",
-    "summary": "Lists all users in a specific Slack channel.",
-    "description": "The listChannelUsers function retrieves an array of user IDs for all members in a specified Slack channel. It requires a valid channel ID as input and returns a list of user IDs. This function is useful for obtaining a comprehensive list of participants in a particular Slack channel.",
+    "summary": "List all users in a specific Slack channel.",
+    "description": "The listChannelUsers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
+    "tags": [
+      "channel",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId`."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -15,12 +22,12 @@
                 "description": "Body of the listChannelUsers sls call",
                 "properties": {
                   "arguments": {
-                    "type": "object",
-                    "description": "Parameters for listing channel users",
+                    "type": "array",
+                    "description": "Container for function arguments.",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to get the members of."
+                        "description": "channelId: The ID of the channel to get the members of."
                       }
                     },
                     "required": [
@@ -46,7 +53,7 @@
     },
     "responses": {
       "200": {
-        "description": "Successful response with an array of user IDs",
+        "description": "Successful response",
         "content": {
           "application/json": {
             "schema": {
@@ -54,13 +61,14 @@
               "items": {
                 "type": "string",
                 "description": "User ID"
-              }
+              },
+              "description": "An array of user IDs who are members of the specified channel."
             }
           }
         }
       },
       "400": {
-        "description": "Bad Request - Invalid channel ID format",
+        "description": "Bad Request - Invalid channel ID or other client error",
         "content": {
           "application/json": {
             "schema": {
@@ -68,39 +76,7 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "description": "Error message"
-                }
-              }
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden - Bot does not have permission to access the channel",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message"
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Channel does not exist",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message"
+                  "description": "Error message describing the issue"
                 }
               }
             }
@@ -108,7 +84,7 @@
         }
       },
       "500": {
-        "description": "Internal Server Error",
+        "description": "Server error",
         "content": {
           "application/json": {
             "schema": {
@@ -116,7 +92,7 @@
               "properties": {
                 "error": {
                   "type": "string",
-                  "description": "Error message"
+                  "description": "Error message describing the server error"
                 }
               }
             }

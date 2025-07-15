@@ -1,8 +1,14 @@
 {
   "post": {
     "operationId": "getChannelConversationInfo",
-    "summary": "Retrieves information about a specific Slack channel.",
-    "description": "The getChannelConversationInfo function fetches detailed information about a specified Slack channel using its ID. It returns a comprehensive conversation object containing various properties that describe the channel's characteristics, status, and metadata.",
+    "summary": "Retrieves detailed information about a specific Slack channel.",
+    "description": "The getChannelConversationInfo function fetches comprehensive data about a given Slack channel using its ID. It returns a conversation object containing various properties that describe the channel's characteristics, status, and metadata. This function is useful for obtaining detailed insights into a channel's configuration and current state.",
+    "tags": [
+      "channel"
+    ],
+    "ai": {
+      "systemPrompt": "Provide a `channelId` to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -15,12 +21,12 @@
                 "description": "Body of the getChannelConversationInfo sls call",
                 "properties": {
                   "arguments": {
-                    "type": "object",
-                    "description": "Parameters for retrieving channel conversation information",
+                    "type": "array",
+                    "description": "Container for function arguments.",
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to get information about"
+                        "description": "channelId: The ID of the channel to get information about."
                       }
                     },
                     "required": [
@@ -101,7 +107,8 @@
                   "type": "boolean"
                 },
                 "is_pending_ext_shared": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Indicates if the conversation is ready to become an external shared channel but needs approval"
                 },
                 "pending_shared": {
                   "type": "array",

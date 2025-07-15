@@ -1,8 +1,14 @@
 {
   "post": {
     "operationId": "getFileInfo",
-    "summary": "Get information about a specified file in Slack.",
-    "description": "The getFileInfo function retrieves detailed information about a file in Slack using its file ID. It returns a comprehensive file object containing various attributes such as file metadata, sharing details, and related channel information. This function is useful for obtaining in-depth details about a specific file within a Slack workspace.",
+    "summary": "Retrieves detailed information about a specific file in Slack.",
+    "description": "The getFileInfo function fetches comprehensive metadata for a given file in Slack using its unique file ID. It returns a rich file object containing various attributes such as file properties, sharing details, and associated channel information. This function is useful for obtaining detailed insights about files shared within a Slack workspace.",
+    "tags": [
+      "file"
+    ],
+    "ai": {
+      "systemPrompt": "To retrieve file metadata, a `fileId` is required."
+    },
     "requestBody": {
       "required": true,
       "content": {
@@ -15,12 +21,12 @@
                 "description": "Body of the getFileInfo sls call",
                 "properties": {
                   "arguments": {
-                    "type": "object",
-                    "description": "Parameters for the getFileInfo function",
+                    "type": "array",
+                    "description": "Container for function arguments.",
                     "properties": {
                       "fileId": {
                         "type": "string",
-                        "description": "The ID of the file to get information for."
+                        "description": "fileId: The ID of the file to get information for."
                       }
                     },
                     "required": [
@@ -46,7 +52,7 @@
     },
     "responses": {
       "200": {
-        "description": "Successful response with file information",
+        "description": "Successful response containing file information",
         "content": {
           "application/json": {
             "schema": {
@@ -105,7 +111,7 @@
                     "snippet",
                     "post"
                   ],
-                  "description": "The mode of the file."
+                  "description": "One of the following: hosted, external, snippet or post."
                 },
                 "is_external": {
                   "type": "boolean",
@@ -113,7 +119,7 @@
                 },
                 "external_type": {
                   "type": "string",
-                  "description": "Indicates what kind of external file it is, e.g. 'dropbox' or 'gdoc'."
+                  "description": "Indicates what kind of external file it is, e.g. dropbox or gdoc."
                 },
                 "is_public": {
                   "type": "boolean",
@@ -168,7 +174,7 @@
         }
       },
       "400": {
-        "description": "Bad Request - The server cannot process the request due to a client error (e.g., malformed request syntax, invalid file ID).",
+        "description": "Bad Request - The server cannot process the request due to a client error.",
         "content": {
           "application/json": {
             "schema": {
@@ -177,22 +183,6 @@
                 "error": {
                   "type": "string",
                   "description": "Error message describing the issue with the request."
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - The specified file could not be found.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating that the file was not found."
                 }
               }
             }
