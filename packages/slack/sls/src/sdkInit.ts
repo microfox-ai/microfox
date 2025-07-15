@@ -51,8 +51,8 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.removeUserFromChannel.bind(microfoxClient);
       microfoxClientMap.replyMessage =
         microfoxClient.replyMessage.bind(microfoxClient);
-      microfoxClientMap.searchUser =
-        microfoxClient.searchUser.bind(microfoxClient);
+      microfoxClientMap.searchUserByEmail =
+        microfoxClient.searchUserByEmail.bind(microfoxClient);
       microfoxClientMap.sendFile = microfoxClient.sendFile.bind(microfoxClient);
       microfoxClientMap.setReminder =
         microfoxClient.setReminder.bind(microfoxClient);
@@ -88,8 +88,8 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         defaultClient.removeUserFromChannel.bind(defaultClient);
       defaultClientMap.replyMessage =
         defaultClient.replyMessage.bind(defaultClient);
-      defaultClientMap.searchUser =
-        defaultClient.searchUser.bind(defaultClient);
+      defaultClientMap.searchUserByEmail =
+        defaultClient.searchUserByEmail.bind(defaultClient);
       defaultClientMap.sendFile = defaultClient.sendFile.bind(defaultClient);
       defaultClientMap.setReminder =
         defaultClient.setReminder.bind(defaultClient);
