@@ -68,7 +68,7 @@ export class MicrofoxSlackClient {
    * Finds a user by their email address.
    * @param email The email address of the user to find.
    */
-  async searchUser(email: string) {
+  async searchUserByEmail(email: string) {
     const result = await this.web.users.lookupByEmail({ email });
     return result.user;
   }

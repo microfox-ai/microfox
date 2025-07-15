@@ -80,7 +80,7 @@
         "reactMessage",
         "removeUserFromChannel",
         "replyMessage",
-        "searchUser",
+        "searchUserByEmail",
         "sendFile",
         "setReminder"
       ]
