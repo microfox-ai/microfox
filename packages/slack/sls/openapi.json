@@ -4,7 +4,7 @@
     "agentName": "slack",
     "agentPath": "@microfox/slack",
     "title": "Slack API",
-    "version": "1.1.5",
+    "version": "1.2.0",
     "mcpVersion": "1.0.2",
     "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
     "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
