@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';
-import { MicrofoxSlackClient, WebClient } from '../src/index';
+import { MicrofoxSlackClient } from '../index';
 import * as dotenv from 'dotenv';
 import { randomBytes } from 'crypto';
 
@@ -27,7 +27,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
     client = new MicrofoxSlackClient(slackBotToken!);
 
     console.log(`Creating channel: #${channelName}`);
-    const createChannelResponse = await client.createChannel(channelName);
+    const createChannelResponse = await client.createChannel({ name: channelName });
     if (!createChannelResponse?.id) {
         throw new Error('Failed to create test channel.');
     }
@@ -35,7 +35,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
     console.log(`Channel #${channelName} created with ID: ${testChannelId}`);
 
     console.log(`Looking up user with email: ${testUserEmail!}`);
-    const searchUserResponse = await client.searchUser(testUserEmail!);
+    const searchUserResponse = await client.searchUserByEmail(testUserEmail!);
     if (!searchUserResponse?.id) {
         throw new Error('Failed to find test user.');
     }
@@ -44,21 +44,12 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   }, 30000);
 
   afterAll(async () => {
-    if (testChannelId) {
-      console.log(`Leaving channel ${testChannelId}`);
-      try {
-        // @ts-ignore
-        await client.conversations.leave({ channel: testChannelId });
-        console.log(`Left channel #${channelName}. Please archive it manually.`);
-      } catch (error) {
-        console.error('Error leaving channel:', (error as Error).message);
-      }
-    }
-  }, 30000);
+    // Manually archive the channel after tests are complete
+  });
 
   test('should add a user to the channel', async () => {
     console.log(`Adding user ${testUserId} to channel ${testChannelId}`);
-    const response = await client.addUserToChannel(testChannelId, testUserId);
+    const response = await client.addUserToChannel({ channelId: testChannelId, userId: testUserId });
     expect(response.ok).toBe(true);
     console.log('User added to channel.');
   });
@@ -66,7 +57,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   test('should send a message to the channel', async () => {
     const testMessage = 'Hello from the Microfox NPM package test!';
     console.log(`Sending message to channel ${testChannelId}`);
-    const response = await client.messageChannel(testChannelId, testMessage);
+    const response = await client.messageChannel({ channelId: testChannelId, text: testMessage });
     expect(response.ok).toBe(true);
     expect(response.ts).toBeDefined();
     messageTs = response.ts as string;
@@ -76,7 +67,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   test('should reply to the message in a thread', async () => {
     const replyText = 'This is a threaded reply!';
     console.log(`Replying to message ${messageTs}`);
-    const response = await client.replyMessage(testChannelId, messageTs, replyText);
+    const response = await client.replyMessage({ channelId: testChannelId, thread_ts: messageTs, text: replyText });
     expect(response.ok).toBe(true);
     console.log('Reply sent.');
   });
@@ -84,7 +75,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   test('should add a reaction to the message', async () => {
     const reactionName = 'thumbsup';
     console.log(`Adding reaction :${reactionName}: to message ${messageTs}`);
-    const response = await client.reactMessage(testChannelId, messageTs, reactionName);
+    const response = await client.reactMessage({ channelId: testChannelId, timestamp: messageTs, reaction: reactionName });
     expect(response.ok).toBe(true);
     console.log('Reaction added.');
   });
@@ -99,7 +90,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
 
   test('should remove a user from the channel', async () => {
     console.log(`Removing user ${testUserId} from channel ${testChannelId}`);
-    const response = await client.removeUserFromChannel(testChannelId, testUserId);
+    const response = await client.removeUserFromChannel({ channelId: testChannelId, userId: testUserId });
     expect(response.ok).toBe(true);
     console.log('User removed from channel.');
   });
