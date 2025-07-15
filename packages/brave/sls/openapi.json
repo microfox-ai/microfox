@@ -1,10 +1,14 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Brave SDK API",
-    "version": "1.2.0",
-    "mcp_version": "1.0.1",
-    "description": "The Brave SDK for TypeScript provides convenient access to various Brave APIs, including web, image, video, news, and local search functionalities, as well as summarization, spell check, and suggestions.",
+    "agentName": "brave",
+    "agentPath": "@microfox/brave",
+    "title": "Brave Search",
+    "version": "1.2.3",
+    "mcpVersion": "1.0.2",
+    "description": "An agent to search internet using brave search api with powerful tools for Web search, Image search, Video search and news search",
+    "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/brave.svg",
+    "status": "stable",
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
@@ -16,10 +20,14 @@
       "description": "Unified wrapper endpoint"
     }
   ],
+  "ai": {
+    "systemPrompt": "This Agent can search the internet using the Brave Search API. It can search for web pages, images, videos, and news articles. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
+  },
   "components": {
     "schemas": {
       "x-auth-packages": [
         {
+          "type": "@microfox/packages",
           "packageName": "@microfox/brave"
         }
       ]
