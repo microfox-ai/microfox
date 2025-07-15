@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.6
+
+### Patch Changes
+
+- 4fc661d: release: enhance CRUD functionality with error handling, atomic operations, and new querying capabilities
+
 ## 1.1.5
 
 ### Patch Changes

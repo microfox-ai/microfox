@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- 8fa8ccc: release: introduce JsonSchema type and enhance AgentPathSecurity and AgentOpenApi interfaces for improved schema handling
+- d1375a8: release: introduce new AgentPathAiInstruction and AgentPathSecurity interfaces for enhanced agent configuration
+- 4fc661d: release: enhance CRUD functionality with error handling, atomic operations, and new querying capabilities
+- 1dc89ba: minor fixes
+
 ## 1.0.2
 
 ### Patch Changes
