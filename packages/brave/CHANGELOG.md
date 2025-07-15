@@ -1,5 +1,11 @@
 # @microfox/brave
 
+## 1.2.3
+
+### Patch Changes
+
+- 0cd8a0d: release: update OpenAPI schemas for image, web, news, and video search endpoints to improve clarity and consistency; rename parseHitl to processHitlToolResult in tool-kit for better readability
+
 ## 1.2.2
 
 ### Patch Changes
