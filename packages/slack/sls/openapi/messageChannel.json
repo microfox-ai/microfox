@@ -8,7 +8,7 @@
       "channel"
     ],
     "ai": {
-      "systemPrompt": "Ensure you have the correct `channelId` before sending a message. Use `listChannels` to verify or find the channel ID if needed."
+      "systemPrompt": "Ensure you have the correct `channelId` (starts with 'C') before sending a message. Use `listChannels` to verify or find the channel ID if needed."
     },
     "requestBody": {
       "required": true,
@@ -26,7 +26,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to send the message to."
+                        "description": "The ID of the channel to send the message to. Channel IDs start with 'C'."
                       },
                       "text": {
                         "type": "string",
@@ -36,13 +36,6 @@
                     "required": [
                       "channelId",
                       "text"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
                     ]
                   }
                 },

@@ -8,7 +8,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "To send a direct message, provide the `userId`. If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
+      "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
     },
     "requestBody": {
       "required": true,
@@ -26,7 +26,7 @@
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to send the message to."
+                        "description": "The ID of the user to send the message to. User IDs start with 'U'."
                       },
                       "text": {
                         "type": "string",
@@ -36,13 +36,6 @@
                     "required": [
                       "userId",
                       "text"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
                     ]
                   }
                 },

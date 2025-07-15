@@ -8,7 +8,7 @@
       "channel"
     ],
     "ai": {
-      "systemPrompt": "To upload a file, specify the target `channelId`, the `file` content as a Buffer, and a `filename`. A `title` is optional."
+      "systemPrompt": "To upload a file, specify the target `channelId` (starts with 'C'), the `file` content as a Buffer, and a `filename`. A `title` is optional."
     },
     "requestBody": {
       "required": true,
@@ -26,7 +26,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs."
+                        "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs. Channel IDs start with 'C'."
                       },
                       "file": {
                         "type": "string",
@@ -46,13 +46,6 @@
                       "channelId",
                       "file",
                       "filename"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
                     ]
                   }
                 },

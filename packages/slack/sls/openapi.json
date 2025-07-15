@@ -6,7 +6,7 @@
     "title": "Slack API",
     "version": "1.2.0",
     "mcpVersion": "1.0.2",
-    "description": "A proxy for the official @slack/web-api, providing a curated set of the most useful functions.",
+    "description": "An agent to interact with Slack workspace using Slack API with powerful tools for messaging, channel management, user management and more",
     "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
     "status": "stable",
     "contact": {
@@ -21,7 +21,7 @@
     }
   ],
   "ai": {
-    "systemPrompt": "You are interacting with a Slack workspace. You can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
+    "systemPrompt": "This Agent can interact with a Slack workspace. It can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
   },
   "components": {
     "schemas": {
@@ -44,7 +44,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "To add a user to a channel, provide the `channelId` and `userId`. If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
+          "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
         },
         "requestBody": {
           "required": true,
@@ -62,23 +62,16 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel to add the user to."
+                            "description": "The ID of the channel to add the user to. Channel IDs start with 'C'."
                           },
                           "userId": {
                             "type": "string",
-                            "description": "The ID of the user to add."
+                            "description": "The ID of the user to add. User IDs start with 'U'."
                           }
                         },
                         "required": [
                           "channelId",
                           "userId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -371,13 +364,6 @@
                         "required": [
                           "name"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -574,7 +560,7 @@
           "channel"
         ],
         "ai": {
-          "systemPrompt": "Provide a `channelId` to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
         },
         "requestBody": {
           "required": true,
@@ -593,18 +579,11 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "channelId: The ID of the channel to get information about."
+                            "description": "channelId: The ID of the channel to get information about. Channel IDs start with 'C'."
                           }
                         },
                         "required": [
                           "channelId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -809,7 +788,7 @@
           "file"
         ],
         "ai": {
-          "systemPrompt": "To retrieve file metadata, a `fileId` is required."
+          "systemPrompt": "To retrieve file metadata, a `fileId` (starts with 'F') is required."
         },
         "requestBody": {
           "required": true,
@@ -828,18 +807,11 @@
                         "properties": {
                           "fileId": {
                             "type": "string",
-                            "description": "fileId: The ID of the file to get information for."
+                            "description": "fileId: The ID of the file to get information for. File IDs start with 'F'."
                           }
                         },
                         "required": [
                           "fileId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -1019,7 +991,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "Provide a `userId` to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
+          "systemPrompt": "Provide a `userId` (starts with 'U') to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
         },
         "requestBody": {
           "required": true,
@@ -1038,18 +1010,11 @@
                         "properties": {
                           "userId": {
                             "type": "string",
-                            "description": "userId: The ID of the user to get information for."
+                            "description": "userId: The ID of the user to get information for. User IDs start with 'U'."
                           }
                         },
                         "required": [
                           "userId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -1284,13 +1249,6 @@
                         "type": "object",
                         "description": "Container for function arguments.",
                         "properties": {}
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1550,13 +1508,6 @@
                         "description": "Container for function arguments.",
                         "properties": {},
                         "required": []
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -1801,7 +1752,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId`."
+          "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId` (starts with 'C')."
         },
         "requestBody": {
           "required": true,
@@ -1820,18 +1771,11 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "channelId: The ID of the channel to get the members of."
+                            "description": "channelId: The ID of the channel to get the members of. Channel IDs start with 'C'."
                           }
                         },
                         "required": [
                           "channelId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -1905,7 +1849,7 @@
           "channel"
         ],
         "ai": {
-          "systemPrompt": "Ensure you have the correct `channelId` before sending a message. Use `listChannels` to verify or find the channel ID if needed."
+          "systemPrompt": "Ensure you have the correct `channelId` (starts with 'C') before sending a message. Use `listChannels` to verify or find the channel ID if needed."
         },
         "requestBody": {
           "required": true,
@@ -1923,7 +1867,7 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel to send the message to."
+                            "description": "The ID of the channel to send the message to. Channel IDs start with 'C'."
                           },
                           "text": {
                             "type": "string",
@@ -1933,13 +1877,6 @@
                         "required": [
                           "channelId",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2030,7 +1967,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "To send a direct message, provide the `userId`. If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
+          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
         },
         "requestBody": {
           "required": true,
@@ -2048,7 +1985,7 @@
                         "properties": {
                           "userId": {
                             "type": "string",
-                            "description": "The ID of the user to send the message to."
+                            "description": "The ID of the user to send the message to. User IDs start with 'U'."
                           },
                           "text": {
                             "type": "string",
@@ -2058,13 +1995,6 @@
                         "required": [
                           "userId",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2184,7 +2114,7 @@
           "message"
         ],
         "ai": {
-          "systemPrompt": "To add a reaction, specify the `channelId`, the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
+          "systemPrompt": "To add a reaction, specify the `channelId` (starts with 'C'), the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
         },
         "requestBody": {
           "required": true,
@@ -2202,7 +2132,7 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel where the message is."
+                            "description": "The ID of the channel where the message is. Channel IDs start with 'C'."
                           },
                           "timestamp": {
                             "type": "string",
@@ -2217,13 +2147,6 @@
                           "channelId",
                           "timestamp",
                           "reaction"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2301,7 +2224,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "Requires `channelId` and `userId` to remove a user from a channel. Use `listChannels` and `searchUserByEmail` if necessary."
+          "systemPrompt": "Requires `channelId` (starts with 'C') and `userId` (starts with 'U') to remove a user from a channel. Use `listChannels` and `searchUserByEmail` if necessary."
         },
         "requestBody": {
           "required": true,
@@ -2319,23 +2242,16 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel to remove the user from."
+                            "description": "The ID of the channel to remove the user from. Channel IDs start with 'C'."
                           },
                           "userId": {
                             "type": "string",
-                            "description": "The ID of the user to remove."
+                            "description": "The ID of the user to remove. User IDs start with 'U'."
                           }
                         },
                         "required": [
                           "channelId",
                           "userId"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2386,7 +2302,7 @@
           "message"
         ],
         "ai": {
-          "systemPrompt": "To reply within a thread, provide the `channelId`, the `thread_ts` of the parent message, and the `text` of your reply."
+          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply."
         },
         "requestBody": {
           "required": true,
@@ -2404,7 +2320,7 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel where the message is."
+                            "description": "The ID of the channel where the message is. Channel IDs start with 'C'."
                           },
                           "thread_ts": {
                             "type": "string",
@@ -2419,13 +2335,6 @@
                           "channelId",
                           "thread_ts",
                           "text"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2545,13 +2454,6 @@
                         },
                         "required": [
                           "email"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -2808,13 +2710,6 @@
                         "required": [
                           "email"
                         ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
-                        ]
                       }
                     },
                     "required": [
@@ -3010,7 +2905,7 @@
           "channel"
         ],
         "ai": {
-          "systemPrompt": "To upload a file, specify the target `channelId`, the `file` content as a Buffer, and a `filename`. A `title` is optional."
+          "systemPrompt": "To upload a file, specify the target `channelId` (starts with 'C'), the `file` content as a Buffer, and a `filename`. A `title` is optional."
         },
         "requestBody": {
           "required": true,
@@ -3028,7 +2923,7 @@
                         "properties": {
                           "channelId": {
                             "type": "string",
-                            "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs."
+                            "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs. Channel IDs start with 'C'."
                           },
                           "file": {
                             "type": "string",
@@ -3048,13 +2943,6 @@
                           "channelId",
                           "file",
                           "filename"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },
@@ -3282,7 +3170,7 @@
           "reminder"
         ],
         "ai": {
-          "systemPrompt": "Set a reminder by providing a `userId`, the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
+          "systemPrompt": "Set a reminder by providing a `userId` (starts with 'U'), the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
         },
         "requestBody": {
           "required": true,
@@ -3300,7 +3188,7 @@
                         "properties": {
                           "userId": {
                             "type": "string",
-                            "description": "The ID of the user to set a reminder for."
+                            "description": "The ID of the user to set a reminder for. User IDs start with 'U'."
                           },
                           "text": {
                             "type": "string",
@@ -3315,13 +3203,6 @@
                           "userId",
                           "text",
                           "time"
-                        ]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": [
-                          "MicrofoxSlackClient"
                         ]
                       }
                     },

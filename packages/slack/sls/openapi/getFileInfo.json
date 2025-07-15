@@ -7,7 +7,7 @@
       "file"
     ],
     "ai": {
-      "systemPrompt": "To retrieve file metadata, a `fileId` is required."
+      "systemPrompt": "To retrieve file metadata, a `fileId` (starts with 'F') is required."
     },
     "requestBody": {
       "required": true,
@@ -26,18 +26,11 @@
                     "properties": {
                       "fileId": {
                         "type": "string",
-                        "description": "fileId: The ID of the file to get information for."
+                        "description": "fileId: The ID of the file to get information for. File IDs start with 'F'."
                       }
                     },
                     "required": [
                       "fileId"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
                     ]
                   }
                 },

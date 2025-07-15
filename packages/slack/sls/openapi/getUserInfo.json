@@ -7,7 +7,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "Provide a `userId` to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
+      "systemPrompt": "Provide a `userId` (starts with 'U') to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
     },
     "requestBody": {
       "required": true,
@@ -26,18 +26,11 @@
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "userId: The ID of the user to get information for."
+                        "description": "userId: The ID of the user to get information for. User IDs start with 'U'."
                       }
                     },
                     "required": [
                       "userId"
-                    ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
                     ]
                   }
                 },

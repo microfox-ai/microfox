@@ -35,13 +35,6 @@
                     "required": [
                       "name"
                     ]
-                  },
-                  "constructor": {
-                    "type": "string",
-                    "description": "Name of the constructor to use.",
-                    "enum": [
-                      "MicrofoxSlackClient"
-                    ]
                   }
                 },
                 "required": [
@@ -181,7 +174,9 @@
                   "description": "Error message describing the issue with the request"
                 }
               },
-              "required": ["error"]
+              "required": [
+                "error"
+              ]
             }
           }
         }
@@ -198,7 +193,9 @@
                   "description": "Error message indicating lack of permissions"
                 }
               },
-              "required": ["error"]
+              "required": [
+                "error"
+              ]
             }
           }
         }
@@ -215,7 +212,9 @@
                   "description": "Error message indicating a server-side issue"
                 }
               },
-              "required": ["error"]
+              "required": [
+                "error"
+              ]
             }
           }
         }
