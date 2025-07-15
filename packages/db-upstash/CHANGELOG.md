@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.7
+
+### Patch Changes
+
+- 54f604f: release: implement atomic update method in CrudStore and enhance AgentPathSecurity and AgentOpenApi interfaces for improved schema handling
+
 ## 1.1.6
 
 ### Patch Changes
