@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Redis } from '@upstash/redis';
-import { Crud } from '@microfox/db-upstash';
+import { CrudHash } from '@microfox/db-upstash';
 import { randomUUID } from 'crypto';
 import { Task, TaskState } from '@microfox/types';
 
@@ -10,7 +10,7 @@ export type ProcessTaskOptions = {
   url?: string;
   token?: string;
   redis?: Redis;
-}
+};
 
 export interface ProcessTaskType extends Task {
   response?: {
@@ -24,11 +24,9 @@ export interface ProcessTaskType extends Task {
 }
 
 export class ProcessTask {
-  private crud: Crud<ProcessTaskType>;
+  private crud: CrudHash<ProcessTaskType>;
 
-  constructor(
-    options: ProcessTaskOptions = {}
-  ) {
+  constructor(options: ProcessTaskOptions = {}) {
     let redis: Redis;
     if (options.redis) {
       redis = options.redis;
@@ -44,10 +42,14 @@ export class ProcessTask {
         );
       }
     }
-    this.crud = new Crud<ProcessTaskType>(redis, 'task');
+    this.crud = new CrudHash<ProcessTaskType>(redis, 'task');
   }
 
-  async create(metadata?: any, sendUpdate: boolean = true, isClientUpdate: boolean = true): Promise<ProcessTaskType> {
+  async create(
+    metadata?: any,
+    sendUpdate: boolean = true,
+    isClientUpdate: boolean = true
+  ): Promise<ProcessTaskType> {
     const taskId = [
       process.env.MICROFOX_BOT_PROJECT_ID,
       process.env.MICROFOX_CLIENT_REQUEST_ID,
@@ -97,7 +99,7 @@ export class ProcessTask {
       error?: Record<string, any>;
     } = {},
     sendUpdate: boolean = true,
-    isClientUpdate: boolean = true,
+    isClientUpdate: boolean = true
   ): Promise<ProcessTaskType> {
     const task = await this.crud.get(taskId);
     if (!task) {
@@ -118,7 +120,12 @@ export class ProcessTask {
 
     await this.crud.set(taskId, updatedTask);
     if (sendUpdate) {
-      const event = state === TaskState.Completed ? 'complete' : state === TaskState.Failed ? 'failed' : 'update';
+      const event =
+        state === TaskState.Completed
+          ? 'complete'
+          : state === TaskState.Failed
+            ? 'failed'
+            : 'update';
       await this.sendUpdate(taskId, isClientUpdate || true, event, {
         state,
         metadata: { ...task.metadata, ...metadata },
@@ -138,7 +145,7 @@ export class ProcessTask {
       metadata?: Record<string, any>;
       response?: Record<string, any>;
       error?: Record<string, any>;
-    },
+    }
   ): Promise<void> {
     if (event && data !== undefined) {
       // event and data are provided, no need to fetch task
@@ -166,7 +173,11 @@ export class ProcessTask {
       if (data === undefined) {
         switch (event) {
           case 'complete':
-            data = { state: TaskState.Completed, response: task.response, metadata: task.metadata };
+            data = {
+              state: TaskState.Completed,
+              response: task.response,
+              metadata: task.metadata,
+            };
             break;
           case 'failed':
             data = { state: TaskState.Failed, error: task.error };
@@ -181,7 +192,7 @@ export class ProcessTask {
     const url = `${process.env.BASE_SERVER_URL}/api/background-tasks/trigger`;
     if (!process.env.BASE_SERVER_URL) {
       console.warn(
-        'BASE_SERVER_URL is not set, skipping task update broadcast.',
+        'BASE_SERVER_URL is not set, skipping task update broadcast.'
       );
       return;
     }

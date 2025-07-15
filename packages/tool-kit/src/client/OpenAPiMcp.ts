@@ -83,7 +83,7 @@ export class OpenApiMCP {
     this.onError = options.onError;
     this.operationMap = new Map();
     this.name = options.name || 'openapi-tools-client';
-    this.mcp_version = options?.schema?.info?.mcp_version || '1.0.0';
+    this.mcp_version = options?.schema?.info?.mcpVersion || '1.0.0';
     this.auth = options.auth;
     this.getAuth = options.getAuth;
     this.cleanAuth = options.cleanAuth;
@@ -942,18 +942,29 @@ export class OpenApiMCP {
         // If not paused, proceed with normal execution.
         let finalAuth: AuthObject | undefined;
 
-        const authProvider = this.resolveAuthProvider(id);
-        if (authProvider) {
-          // ... (auth provider logic remains the same)
-        }
-
-        let authConfig: any = cleanedOperation.auth;
+        let authConfig: any = cleanedOperation.security?.authSchema;
         if (typeof authConfig === 'string' && authConfig.startsWith('#/')) {
           authConfig = this.internalResolveRef(authConfig, new Set());
+          console.log('authConfig', authConfig);
+        } else if (Array.isArray(authConfig)) {
+          authConfig = authConfig
+            .map((a: any) => {
+              if (typeof a === 'string' && a.startsWith('#/')) {
+                return this.internalResolveRef(a, new Set());
+              } else if (typeof a === 'string' && a.startsWith('x-auth-')) {
+                return this.schema.components?.schemas?.[a];
+              }
+              return a;
+            })
+            .filter(Boolean)
+            .flat();
+          console.log('authConfig', authConfig);
         }
 
         const authPreset =
-          authConfig || this.schema.components?.['x-auth-packages'] || [];
+          authConfig ??
+          this.schema.components?.schemas?.['x-auth-packages'] ??
+          [];
 
         const packages = authPreset.filter((a: any) => a.packageName);
         const customSecrets = authPreset.filter((a: any) => a.variables);

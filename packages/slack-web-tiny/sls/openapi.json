@@ -17,11 +17,13 @@
     }
   ],
   "components": {
-    "x-auth-packages": [
-      {
-        "packageName": "@microfox/slack-web-tiny"
-      }
-    ]
+    "schemas": {
+      "x-auth-packages": [
+        {
+          "packageName": "@microfox/slack-web-tiny"
+        }
+      ]
+    }
   },
   "paths": {
     "/sendMessage": {

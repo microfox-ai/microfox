@@ -1,4 +1,9 @@
 import { Tool as AiTool, ToolSet as AiToolSet } from 'ai';
+import {
+  AgentPathSecurity,
+  AgentPathAiInstruction,
+  AgentOpenApi,
+} from '@microfox/types';
 import { z } from 'zod';
 
 export type ToolMetaInfo = {
@@ -90,6 +95,8 @@ export type OpenAPIOperation = {
   description?: string;
   operationId?: string;
   tags?: string[];
+  ai?: AgentPathAiInstruction;
+  security?: AgentPathSecurity;
   parameters?: OpenAPIParameter[];
   requestBody?: OpenAPIRequestBody;
   responses: {
@@ -98,49 +105,13 @@ export type OpenAPIOperation = {
   instructions?: string;
   method?: string;
   path?: string;
-  auth?: {
-    packageName?: string;
-    packageConstructor?: string;
-    variables?: {
-      key: string;
-      description?: string;
-      why?: string;
-    }[];
-  }[];
 };
 
 export type OpenAPIPath = {
   [method: string]: OpenAPIOperation;
 };
 
-export type OpenAPIDoc = {
-  openapi: string;
-  servers: {
-    url: string;
-    description: string;
-  }[];
-  info: {
-    title: string;
-    version: string;
-    mcp_version?: string;
-    description?: string;
-  };
-  paths: {
-    [path: string]: OpenAPIPath;
-  };
-  components?: {
-    schemas?: Record<string, OpenAPISchema>;
-    ['x-auth-packages']?: {
-      packageName?: string;
-      packageConstructor?: string;
-      variables?: {
-        key: string;
-        description?: string;
-        why?: string;
-      }[];
-    }[];
-  };
-};
+export type OpenAPIDoc = AgentOpenApi;
 
 export type ToolMethod = {
   name: string;

@@ -8,9 +8,11 @@ export interface AgentServers {
 export interface AgentInfo {
   agentName: string;
   agentPath: `@microagent/${string}` | `@microfox/${string}`;
+  version: string;
+  mcpVersion?: string; // "1.0.2"
+  a2aVersion?: string; // "2.0.5"
   title: string;
   description: string;
-  version: string;
   iconUrl?: string;
   status?: 'stable' | 'semi-stable' | 'beta' | 'experimental';
   agentCard?: AgentCard;
@@ -53,6 +55,23 @@ export interface AgentPathSecurity {
   hitlPrompt?: string;
   hitlPriority?: number;
   hitlSchema?: `x-hitl-${string}` | string | JsonSchema; // $ref to a schema in the components.schemas (x-hitl-packages by default)
+}
+
+export interface SecurityAuthSchema {
+  '@microfox/packages': {
+    type?: '@microfox/packages';
+    packageName?: string;
+    packageConstructor?: string[];
+    customSecrets?: {
+      key: string;
+      description: string;
+      required: boolean;
+      type: string;
+      format?: string;
+      enum?: any[];
+      default?: any;
+    }[];
+  };
 }
 
 export interface AgentPath {
@@ -104,19 +123,7 @@ export interface AgentOpenApi {
   paths: Record<string, AgentPath>;
   components: {
     schemas: {
-      [key: `x-auth-${string}`]: {
-        packageName?: string;
-        packageConstructor?: string[];
-        customSecrets?: {
-          key: string;
-          description: string;
-          required: boolean;
-          type: string;
-          format?: string;
-          enum?: any[];
-          default?: any;
-        }[];
-      }[];
+      [key: `x-auth-${string}`]: SecurityAuthSchema['@microfox/packages'][];
       [key: `x-hitl-${string}`]: {
         uiType: 'approval' | string;
         uiSchema?: JsonSchema;

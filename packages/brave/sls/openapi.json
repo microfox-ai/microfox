@@ -17,11 +17,13 @@
     }
   ],
   "components": {
-    "x-auth-packages": [
-      {
-        "packageName": "@microfox/brave"
-      }
-    ]
+    "schemas": {
+      "x-auth-packages": [
+        {
+          "packageName": "@microfox/brave"
+        }
+      ]
+    }
   },
   "paths": {
     "/imageSearch": {
