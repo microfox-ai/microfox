@@ -7,7 +7,7 @@
       "channel"
     ],
     "ai": {
-      "systemPrompt": "Provide a `channelId` to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
+      "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
     },
     "requestBody": {
       "required": true,
@@ -26,7 +26,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "channelId: The ID of the channel to get information about."
+                        "description": "channelId: The ID of the channel to get information about. Channel IDs start with 'C'."
                       }
                     },
                     "required": [

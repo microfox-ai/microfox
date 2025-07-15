@@ -8,7 +8,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId`."
+      "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId` (starts with 'C')."
     },
     "requestBody": {
       "required": true,
@@ -27,7 +27,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "channelId: The ID of the channel to get the members of."
+                        "description": "channelId: The ID of the channel to get the members of. Channel IDs start with 'C'."
                       }
                     },
                     "required": [

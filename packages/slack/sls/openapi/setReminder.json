@@ -8,7 +8,7 @@
       "reminder"
     ],
     "ai": {
-      "systemPrompt": "Set a reminder by providing a `userId`, the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
+      "systemPrompt": "Set a reminder by providing a `userId` (starts with 'U'), the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
     },
     "requestBody": {
       "required": true,
@@ -26,7 +26,7 @@
                     "properties": {
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to set a reminder for."
+                        "description": "The ID of the user to set a reminder for. User IDs start with 'U'."
                       },
                       "text": {
                         "type": "string",

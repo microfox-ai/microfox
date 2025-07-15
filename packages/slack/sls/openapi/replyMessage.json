@@ -7,7 +7,7 @@
       "message"
     ],
     "ai": {
-      "systemPrompt": "To reply within a thread, provide the `channelId`, the `thread_ts` of the parent message, and the `text` of your reply."
+      "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply."
     },
     "requestBody": {
       "required": true,
@@ -25,7 +25,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel where the message is."
+                        "description": "The ID of the channel where the message is. Channel IDs start with 'C'."
                       },
                       "thread_ts": {
                         "type": "string",

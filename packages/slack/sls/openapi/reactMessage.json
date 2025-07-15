@@ -7,7 +7,7 @@
       "message"
     ],
     "ai": {
-      "systemPrompt": "To add a reaction, specify the `channelId`, the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
+      "systemPrompt": "To add a reaction, specify the `channelId` (starts with 'C'), the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
     },
     "requestBody": {
       "required": true,
@@ -25,7 +25,7 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel where the message is."
+                        "description": "The ID of the channel where the message is. Channel IDs start with 'C'."
                       },
                       "timestamp": {
                         "type": "string",

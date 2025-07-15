@@ -8,7 +8,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "To add a user to a channel, provide the `channelId` and `userId`. If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
+      "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
     },
     "requestBody": {
       "required": true,
@@ -26,11 +26,11 @@
                     "properties": {
                       "channelId": {
                         "type": "string",
-                        "description": "The ID of the channel to add the user to."
+                        "description": "The ID of the channel to add the user to. Channel IDs start with 'C'."
                       },
                       "userId": {
                         "type": "string",
-                        "description": "The ID of the user to add."
+                        "description": "The ID of the user to add. User IDs start with 'U'."
                       }
                     },
                     "required": [
