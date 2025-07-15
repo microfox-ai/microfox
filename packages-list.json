@@ -32,7 +32,6 @@
     "packages/puppeteer-suno",
     "packages/rag-upstash",
     "packages/s3-space",
-    "packages/slack",
     "packages/tool-core",
     "packages/types"
   ],
@@ -44,6 +43,7 @@
     "packages/google-sheets",
     "packages/linkedin-share",
     "packages/puppeteer-sls",
+    "packages/slack",
     "packages/slack-web-tiny",
     "packages/suno-api",
     "packages/whatsapp-business"
@@ -94,5 +94,5 @@
     "packages/webhook-core"
   ],
   "total": 76,
-  "generatedAt": "2025-07-14T01:26:40.144Z"
+  "generatedAt": "2025-07-15T11:13:23.750Z"
 }
