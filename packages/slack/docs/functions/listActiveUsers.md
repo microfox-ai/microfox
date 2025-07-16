@@ -8,7 +8,7 @@ The `listActiveUsers` function retrieves a list of all active (non-deleted) user
 | :----- | :------ | :---------------------------------------- |
 | isBot  | boolean | _Optional_. Whether to only return bots.  |
 | cursor | string  | _Optional_. A cursor to the next page of results. |
-| limit  | number  | _Optional_. The maximum number of users to return. |
+| limit  | number  | _Optional_. The maximum number of users to return. Defaults to 100 |
 
 ## Returns
 

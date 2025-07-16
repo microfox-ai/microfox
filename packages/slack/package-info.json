@@ -73,6 +73,7 @@
         "getConversationHistory",
         "getFileInfo",
         "getUserInfo",
+        "joinChannel",
         "listChannels",
         "listChannelUsers",
         "listActiveUsers",

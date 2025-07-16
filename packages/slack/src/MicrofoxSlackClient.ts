@@ -10,7 +10,8 @@ import {
   RemindersAddResponse,
   ChatPostMessageArguments,
   ConversationsListResponse,
-  ConversationsInfoResponse
+  ConversationsInfoResponse,
+  ConversationsJoinResponse
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -47,12 +48,24 @@ export class MicrofoxSlackClient {
 
   /**
    * Lists all users in a workspace.
+   * @param cursor A cursor to the next page of results.
+   * @param limit The maximum number of users to return.
+   * @param isBot Whether to only return bots.
    */
-  async listActiveUsers() {
+  async listActiveUsers({
+    cursor,
+    limit,
+    isBot = false,
+  }: {
+    isBot?: boolean;
+    cursor?: string;
+    limit?: number;
+  }) {
     const result = await this.web.users.list({
-      limit: 1000,
+      limit: limit || 100,
+      ...(cursor ? { cursor } : {}),
     });
-    return result.members?.filter((member) => !member.deleted);
+    return result.members?.filter((member) => !member.deleted)?.filter((member) => isBot ? member.is_bot : true);
   }
 
   /**
@@ -149,15 +162,20 @@ export class MicrofoxSlackClient {
    */
   async createChannel({
     name,
-    isPrivate = false
+    isPrivate = false,
+    join = true,
   }: {
     name: string;
     isPrivate?: boolean;
+    join?: boolean;
   }): Promise<ConversationsCreateResponse['channel']> {
     const result = await this.web.conversations.create({
       name: name,
       is_private: isPrivate,
     });
+    if (join && result?.channel?.id) {
+      await this.joinChannel({ channelId: result.channel.id });
+    }
     return result.channel;
   }
 
@@ -213,6 +231,20 @@ export class MicrofoxSlackClient {
       channel: channelId,
       thread_ts: thread_ts,
       text: text,
+    });
+  }
+
+  /**
+   * Joins a channel.
+   * @param channelId The ID of the channel to join.
+   */
+  async joinChannel({
+    channelId
+  }: {
+    channelId: string;
+  }): Promise<ConversationsJoinResponse> {
+    return this.web.conversations.join({
+      channel: channelId,
     });
   }
 
