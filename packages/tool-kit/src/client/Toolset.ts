@@ -16,6 +16,7 @@ import {
 } from '../types';
 import { parseSchema } from '../utils';
 import { OpenApiMCP } from './OpenAPiMcp';
+import { AgentUi } from '@microfox/types';
 
 const FAKE_HUMAN_INTERACTION_TOOL_NAME = 'FAKE_HUMAN_INTERACTION';
 
@@ -223,6 +224,7 @@ export class OpenApiToolset {
       tools: {},
       executions: {},
       metadata: {},
+      uiMaps: {},
     };
 
     allToolsResults.forEach((toolSet, index) => {
@@ -248,6 +250,14 @@ export class OpenApiToolset {
           combinedTools.metadata[namespacedKey] = toolSet.metadata[key]!;
         }
       });
+      if (toolSet.uiMaps) {
+        Object.entries(toolSet.uiMaps).forEach(([key, uiMap]) => {
+          const namespacedKey = `${clientName}AsTool${key}`;
+          if (combinedTools.uiMaps) {
+            combinedTools.uiMaps[namespacedKey] = uiMap;
+          }
+        });
+      }
     });
 
     return combinedTools;
@@ -266,7 +276,7 @@ export class OpenApiToolset {
       inserAuthVariables?: (auth: AuthObject) => Promise<AuthObject>;
       mutateOutput?: (
         output: any,
-        { part }: { part: ToolUIPart },
+        { part, uiMapper }: { part: ToolUIPart; uiMapper?: AgentUi },
       ) => Promise<any>;
     },
   ): Promise<Message[]> {
@@ -296,6 +306,7 @@ export class OpenApiToolset {
         ) {
           //console.log('approved', (part as any).output.approved);
           const correspondingCall = thisClientTools.executions[toolName];
+          const uiMap = thisClientTools.uiMaps?.[toolName];
           if (!correspondingCall) {
             result = 'Error: No execute function found on tool';
           } else if ((part as any).output.approved) {
@@ -315,6 +326,7 @@ export class OpenApiToolset {
             if (options.mutateOutput) {
               result = await options.mutateOutput(result, {
                 part,
+                uiMapper: uiMap,
               });
             }
             result.toolSummary = thisClientTools.metadata[toolName]?.summary;

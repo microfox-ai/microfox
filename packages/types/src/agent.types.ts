@@ -1,4 +1,5 @@
 import { AgentCard, AgentSkill } from './a2a.types';
+import { AgentUi } from './ui.types';
 
 export interface AgentServers {
   url: string;
@@ -82,6 +83,7 @@ export interface AgentPath {
     tags: string[];
     ai?: AgentPathAiInstruction;
     security?: AgentPathSecurity;
+    ui?: AgentUi;
     parameters?: {
       name: string;
       in: 'query' | 'header' | 'path' | 'cookie';
@@ -120,6 +122,7 @@ export interface AgentOpenApi {
   servers?: AgentServers[];
   ai?: AgentPathAiInstruction;
   security?: AgentPathSecurity;
+  ui?: AgentUi;
   paths: Record<string, AgentPath>;
   components: {
     schemas: {
