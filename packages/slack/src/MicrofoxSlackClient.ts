@@ -29,19 +29,37 @@ export class MicrofoxSlackClient {
 
   /**
    * Lists all public, private and direct message channels in a workspace.
+   * @param cursor A cursor to the next page of results.
+   * @param limit The maximum number of channels to return.
    */
-  async listChannels(): Promise<ConversationsListResponse['channels']> {
+  async listChannels({
+    cursor,
+    limit = 50,
+  }: {
+    cursor?: string;
+    limit?: number;
+  }): Promise<ConversationsListResponse['channels']> {
     const result = await this.web.conversations.list({
       types: 'public_channel,private_channel,im',
+      ...(cursor ? { cursor } : {}),
+      ...(limit ? { limit } : {}),
     });
     return result.channels;
   }
 
   /**
    * Lists all public, private and direct message channels in a workspace.
+   * @param cursor A cursor to the next page of results.
+   * @param limit The maximum number of channels to return.
    */
-  async listChannelIdsMap() {
-    const channels = await this.listChannels();
+  async listChannelIdsMap({
+    cursor,
+    limit,
+  }: {
+    cursor?: string;
+    limit?: number;
+  }) {
+    const channels = await this.listChannels({ cursor, limit });
     return channels?.map((channel) => ({
       id: channel.id,
       name: channel.name,

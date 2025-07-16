@@ -4,7 +4,10 @@ The `listChannelIdsMap` function retrieves a list of all public, private, and di
 
 ## Parameters
 
-This function does not take any parameters.
+| Name        | Type    | Description                               |
+| :---------- | :------ | :---------------------------------------- |
+| cursor      | string  | _Optional_. A cursor to the next page of results. |
+| limit       | number  | _Optional_. The maximum number of channels to return. Defaults to 50 |
 
 ## Returns
 

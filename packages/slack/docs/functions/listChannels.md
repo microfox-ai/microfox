@@ -33,7 +33,11 @@ async function logAllChannels() {
 
 ## Arguments
 
-This method does not take any arguments.
+| Name        | Type    | Description                               |
+| :---------- | :------ | :---------------------------------------- |
+| cursor      | string  | _Optional_. A cursor to the next page of results. |
+| limit       | number  | _Optional_. The maximum number of channels to return. Defaults to 50 |
+
 
 ## Response
 
