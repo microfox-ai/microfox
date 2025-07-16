@@ -11,7 +11,9 @@ import {
   ChatPostMessageArguments,
   ConversationsListResponse,
   ConversationsInfoResponse,
-  ConversationsJoinResponse
+  ConversationsJoinResponse,
+  FilesGetUploadURLExternalResponse,
+  FilesCompleteUploadExternalResponse
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -285,32 +287,6 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Uploads a file to a channel.
-   * @param channelId The ID of the channel to upload the file to. Can be a comma-separated list of strings.
-   * @param file A Buffer containing the file content.
-   * @param filename The name of the file.
-   * @param title An optional title for the file.
-   */
-  async sendFile({
-    channelId,
-    file,
-    filename,
-    title
-  }: {
-    channelId: string;
-    file: Buffer;
-    filename: string;
-    title?: string;
-  }): Promise<FilesUploadResponse> {
-    return this.web.files.upload({
-      channels: channelId,
-      file: file,
-      filename: filename,
-      title: title,
-    });
-  }
-
-  /**
    * Gets information about a file.
    * @param fileId The ID of the file to get information for.
    */
@@ -354,5 +330,70 @@ export class MicrofoxSlackClient {
       cursor,
     });
     return result.messages;
+  }
+
+  /**
+   * Uploads a file to a channel using an external URL.
+   * @param filename The name of the file.
+   * @param file A Buffer containing the file content.
+   * @param channelId The ID of the channel to upload the file to. Can be a comma-separated list of strings.
+   * @param alt_text Description of image for screen-reader.
+   * @param snippet_type Syntax type of the snippet being uploaded.
+   * @param initialComment The message text introducing the file in specified channels.
+   * @param title An optional title for the file.
+   */
+  async uploadFile({
+    filename,
+    file,
+    channelId,
+    alt_text,
+    snippet_type,
+    initialComment,
+    title,
+  }: {
+    filename: string;
+    file: Buffer;
+    channelId?: string;
+    alt_text?: string;
+    snippet_type?: string;
+    initialComment?: string;
+    title?: string;
+  }) {
+    // Step 1: Get an upload URL
+    const uploadURLResponse = await this.web.files.getUploadURLExternal({
+      filename,
+      length: file.length,
+      alt_text,
+      snippet_type,
+    });
+
+    if (!uploadURLResponse.ok || !uploadURLResponse.upload_url || !uploadURLResponse.file_id) {
+      throw new Error(`Failed to get upload URL: ${uploadURLResponse.error}`);
+    }
+
+    const { upload_url, file_id } = uploadURLResponse;
+
+    // Step 2: Upload the file to the URL
+    const uploadResponse = await fetch(upload_url, {
+      method: 'POST',
+      body: file,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error(`File upload failed with status: ${uploadResponse.statusText}`);
+    }
+
+    // Step 3: Complete the upload
+    const completeUploadResponse = await this.web.files.completeUploadExternal({
+      files: [{ id: file_id, title: title || filename }],
+      channel_id: channelId,
+      initial_comment: initialComment,
+    });
+
+    if (!completeUploadResponse.ok) {
+        throw new Error(`Failed to complete upload: ${completeUploadResponse.error}`);
+    }
+
+    return completeUploadResponse.files;
   }
 } 

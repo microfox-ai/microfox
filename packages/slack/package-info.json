@@ -83,8 +83,8 @@
         "removeUserFromChannel",
         "replyMessage",
         "searchUserByEmail",
-        "sendFile",
-        "setReminder"
+        "setReminder",
+        "uploadFile"
       ]
     }
   ],
