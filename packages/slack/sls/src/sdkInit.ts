@@ -41,10 +41,14 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.joinChannel.bind(microfoxClient);
       microfoxClientMap.listChannels =
         microfoxClient.listChannels.bind(microfoxClient);
+      microfoxClientMap.listChannelIdsMap =
+        microfoxClient.listChannelIdsMap.bind(microfoxClient);
       microfoxClientMap.listChannelUsers =
         microfoxClient.listChannelUsers.bind(microfoxClient);
       microfoxClientMap.listActiveUsers =
         microfoxClient.listActiveUsers.bind(microfoxClient);
+      microfoxClientMap.listUserIdsMap =
+        microfoxClient.listUserIdsMap.bind(microfoxClient);
       microfoxClientMap.messageChannel =
         microfoxClient.messageChannel.bind(microfoxClient);
       microfoxClientMap.messageUser =
@@ -57,6 +61,8 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.replyMessage.bind(microfoxClient);
       microfoxClientMap.searchUserByEmail =
         microfoxClient.searchUserByEmail.bind(microfoxClient);
+      microfoxClientMap.searchUsersByEmail =
+        microfoxClient.searchUsersByEmail.bind(microfoxClient);
       microfoxClientMap.setReminder =
         microfoxClient.setReminder.bind(microfoxClient);
       microfoxClientMap.uploadFile =
@@ -83,10 +89,14 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         defaultClient.joinChannel.bind(defaultClient);
       defaultClientMap.listChannels =
         defaultClient.listChannels.bind(defaultClient);
+      defaultClientMap.listChannelIdsMap =
+        defaultClient.listChannelIdsMap.bind(defaultClient);
       defaultClientMap.listChannelUsers =
         defaultClient.listChannelUsers.bind(defaultClient);
       defaultClientMap.listActiveUsers =
         defaultClient.listActiveUsers.bind(defaultClient);
+      defaultClientMap.listUserIdsMap =
+        defaultClient.listUserIdsMap.bind(defaultClient);
       defaultClientMap.messageChannel =
         defaultClient.messageChannel.bind(defaultClient);
       defaultClientMap.messageUser =
@@ -99,6 +109,8 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         defaultClient.replyMessage.bind(defaultClient);
       defaultClientMap.searchUserByEmail =
         defaultClient.searchUserByEmail.bind(defaultClient);
+      defaultClientMap.searchUsersByEmail =
+        defaultClient.searchUsersByEmail.bind(defaultClient);
       defaultClientMap.setReminder =
         defaultClient.setReminder.bind(defaultClient);
       defaultClientMap.uploadFile =
