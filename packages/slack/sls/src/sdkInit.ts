@@ -31,10 +31,14 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.createChannel.bind(microfoxClient);
       microfoxClientMap.getChannelConversationInfo =
         microfoxClient.getChannelConversationInfo.bind(microfoxClient);
+      microfoxClientMap.getConversationHistory =
+        microfoxClient.getConversationHistory.bind(microfoxClient);
       microfoxClientMap.getFileInfo =
         microfoxClient.getFileInfo.bind(microfoxClient);
       microfoxClientMap.getUserInfo =
         microfoxClient.getUserInfo.bind(microfoxClient);
+      microfoxClientMap.joinChannel =
+        microfoxClient.joinChannel.bind(microfoxClient);
       microfoxClientMap.listChannels =
         microfoxClient.listChannels.bind(microfoxClient);
       microfoxClientMap.listChannelUsers =
@@ -53,9 +57,10 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.replyMessage.bind(microfoxClient);
       microfoxClientMap.searchUserByEmail =
         microfoxClient.searchUserByEmail.bind(microfoxClient);
-      microfoxClientMap.sendFile = microfoxClient.sendFile.bind(microfoxClient);
       microfoxClientMap.setReminder =
         microfoxClient.setReminder.bind(microfoxClient);
+      microfoxClientMap.uploadFile =
+        microfoxClient.uploadFile.bind(microfoxClient);
       return microfoxClientMap;
 
     default:
@@ -68,10 +73,14 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         defaultClient.createChannel.bind(defaultClient);
       defaultClientMap.getChannelConversationInfo =
         defaultClient.getChannelConversationInfo.bind(defaultClient);
+      defaultClientMap.getConversationHistory =
+        defaultClient.getConversationHistory.bind(defaultClient);
       defaultClientMap.getFileInfo =
         defaultClient.getFileInfo.bind(defaultClient);
       defaultClientMap.getUserInfo =
         defaultClient.getUserInfo.bind(defaultClient);
+      defaultClientMap.joinChannel =
+        defaultClient.joinChannel.bind(defaultClient);
       defaultClientMap.listChannels =
         defaultClient.listChannels.bind(defaultClient);
       defaultClientMap.listChannelUsers =
@@ -90,9 +99,10 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         defaultClient.replyMessage.bind(defaultClient);
       defaultClientMap.searchUserByEmail =
         defaultClient.searchUserByEmail.bind(defaultClient);
-      defaultClientMap.sendFile = defaultClient.sendFile.bind(defaultClient);
       defaultClientMap.setReminder =
         defaultClient.setReminder.bind(defaultClient);
+      defaultClientMap.uploadFile =
+        defaultClient.uploadFile.bind(defaultClient);
       return defaultClientMap;
   }
 };
