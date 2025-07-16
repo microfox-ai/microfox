@@ -7,7 +7,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "Find a user and their ID by providing their `email`. The returned user object can be used in other functions."
+      "systemPrompt": "Find a user and their ID by providing their `email`. Only use this if you know the email. The returned user object can be used in other functions."
     },
     "requestBody": {
       "required": true,

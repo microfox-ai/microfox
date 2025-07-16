@@ -3,11 +3,9 @@
     "operationId": "createChannel",
     "summary": "Creates a new channel in Slack.",
     "description": "The createChannel function creates a new channel in Slack, which can be either public or private. It takes an object with the channel name and an optional privacy setting, and returns a detailed channel object containing various properties of the newly created channel.",
-    "tags": [
-      "channel"
-    ],
+    "tags": ["channel"],
     "ai": {
-      "systemPrompt": "To create a new channel, a `name` is required. You can optionally set `isPrivate` to true for a private channel."
+      "systemPrompt": "To create a new channel, a `name` is required. You can optionally set `isPrivate` to true for a private channel and `join` to false if you do not wish to join the channel upon creation."
     },
     "requestBody": {
       "required": true,
@@ -30,16 +28,16 @@
                       "isPrivate": {
                         "type": "boolean",
                         "description": "Whether the channel should be private. Defaults to false."
+                      },
+                      "join": {
+                        "type": "boolean",
+                        "description": "Whether the user should join the channel. Defaults to true."
                       }
                     },
-                    "required": [
-                      "name"
-                    ]
+                    "required": ["name"]
                   }
                 },
-                "required": [
-                  "arguments"
-                ]
+                "required": ["arguments"]
               }
             }
           }
@@ -54,110 +52,35 @@
             "schema": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "The ID of the channel."
-                },
-                "name": {
-                  "type": "string",
-                  "description": "The name of the channel."
-                },
-                "is_channel": {
-                  "type": "boolean",
-                  "description": "Indicates if the object represents a channel."
-                },
-                "is_group": {
-                  "type": "boolean",
-                  "description": "Indicates if the object represents a private channel."
-                },
-                "is_im": {
-                  "type": "boolean",
-                  "description": "Indicates if the object represents a direct message conversation."
-                },
-                "created": {
-                  "type": "integer",
-                  "description": "A Unix timestamp indicating when the channel was created."
-                },
-                "creator": {
-                  "type": "string",
-                  "description": "The ID of the user who created the channel."
-                },
-                "is_archived": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is archived."
-                },
-                "is_general": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is the default \"general\" channel."
-                },
-                "unlinked": {
-                  "type": "integer",
-                  "description": "The number of members that have been removed from the channel"
-                },
-                "name_normalized": {
-                  "type": "string",
-                  "description": "The channel name, but with any special characters replaced."
-                },
-                "is_shared": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is shared with other workspaces."
-                },
-                "is_ext_shared": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is part of an external shared connection."
-                },
-                "is_org_shared": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is shared with the entire organization."
-                },
+                "id": { "type": "string", "description": "The ID of the channel." },
+                "name": { "type": "string", "description": "The name of the channel." },
+                "is_channel": { "type": "boolean", "description": "Indicates if the object represents a channel." },
+                "is_group": { "type": "boolean", "description": "Indicates if the object represents a private channel." },
+                "is_im": { "type": "boolean", "description": "Indicates if the object represents a direct message conversation." },
+                "created": { "type": "integer", "description": "A Unix timestamp indicating when the channel was created." },
+                "creator": { "type": "string", "description": "The ID of the user who created the channel." },
+                "is_archived": { "type": "boolean", "description": "Indicates if the channel is archived." },
+                "is_general": { "type": "boolean", "description": "Indicates if the channel is the default \"general\" channel." },
+                "unlinked": { "type": "integer", "description": "The number of members that have been removed from the channel" },
+                "name_normalized": { "type": "string", "description": "The channel name, but with any special characters replaced." },
+                "is_shared": { "type": "boolean", "description": "Indicates if the channel is shared with other workspaces." },
+                "is_ext_shared": { "type": "boolean", "description": "Indicates if the channel is part of an external shared connection." },
+                "is_org_shared": { "type": "boolean", "description": "Indicates if the channel is shared with the entire organization." },
                 "pending_shared": {
                   "type": "array",
                   "description": "A list of team IDs that have been invited to the channel but have not yet joined",
-                  "items": {
-                    "type": "string"
-                  }
+                  "items": { "type": "string" }
                 },
-                "is_pending_ext_shared": {
-                  "type": "boolean",
-                  "description": "Indicates if the conversation is ready to become an external shared channel but needs approval"
-                },
-                "is_member": {
-                  "type": "boolean",
-                  "description": "Indicates if the calling user is a member of the channel."
-                },
-                "is_private": {
-                  "type": "boolean",
-                  "description": "Indicates if the channel is private."
-                },
-                "is_mpim": {
-                  "type": "boolean",
-                  "description": "Indicates if the object represents a multi-person direct message."
-                },
-                "topic": {
-                  "type": "object",
-                  "description": "An object containing the channel's topic information."
-                },
-                "purpose": {
-                  "type": "object",
-                  "description": "An object containing the channel's purpose information."
-                },
-                "previous_names": {
-                  "type": "array",
-                  "description": "A list of any previous names the channel had."
-                },
-                "num_members": {
-                  "type": "integer",
-                  "description": "The number of members in the channel."
-                }
+                "is_pending_ext_shared": { "type": "boolean", "description": "Indicates if the conversation is ready to become an external shared channel but needs approval" },
+                "is_member": { "type": "boolean", "description": "Indicates if the calling user is a member of the channel." },
+                "is_private": { "type": "boolean", "description": "Indicates if the channel is private." },
+                "is_mpim": { "type": "boolean", "description": "Indicates if the object represents a multi-person direct message." },
+                "topic": { "type": "object", "description": "An object containing the channel's topic information." },
+                "purpose": { "type": "object", "description": "An object containing the channel's purpose information." },
+                "previous_names": { "type": "array", "description": "A list of any previous names the channel had." },
+                "num_members": { "type": "integer", "description": "The number of members in the channel." }
               },
-              "required": [
-                "id",
-                "name",
-                "is_channel",
-                "is_private",
-                "created",
-                "creator"
-              ]
+              "required": ["id", "name", "is_channel", "is_private", "created", "creator"]
             }
           }
         }
@@ -168,15 +91,8 @@
           "application/json": {
             "schema": {
               "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message describing the issue with the request"
-                }
-              },
-              "required": [
-                "error"
-              ]
+              "properties": { "error": { "type": "string", "description": "Error message describing the issue with the request" } },
+              "required": ["error"]
             }
           }
         }
@@ -187,15 +103,8 @@
           "application/json": {
             "schema": {
               "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating lack of permissions"
-                }
-              },
-              "required": [
-                "error"
-              ]
+              "properties": { "error": { "type": "string", "description": "Error message indicating lack of permissions" } },
+              "required": ["error"]
             }
           }
         }
@@ -206,15 +115,8 @@
           "application/json": {
             "schema": {
               "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "Error message indicating a server-side issue"
-                }
-              },
-              "required": [
-                "error"
-              ]
+              "properties": { "error": { "type": "string", "description": "Error message indicating a server-side issue" } },
+              "required": ["error"]
             }
           }
         }

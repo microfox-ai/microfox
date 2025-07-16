@@ -1,13 +1,11 @@
 {
   "post": {
     "operationId": "listChannels",
-    "summary": "Lists all public and private channels in a Slack workspace.",
-    "description": "The listChannels function retrieves information about all public and private channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
-    "tags": [
-      "channel"
-    ],
+    "summary": "Lists all public, private and direct message channels in a Slack workspace.",
+    "description": "The listChannels function retrieves information about all public, private and direct message channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+    "tags": ["channel"],
     "ai": {
-      "systemPrompt": "This function lists all public and private channels in the workspace. No arguments are required."
+      "systemPrompt": "This function lists all public, private and direct message channels in the workspace. No arguments are required."
     },
     "requestBody": {
       "required": true,
@@ -27,9 +25,7 @@
                     "required": []
                   }
                 },
-                "required": [
-                  "arguments"
-                ]
+                "required": ["arguments"]
               }
             }
           }
@@ -90,9 +86,7 @@
                     "type": "boolean",
                     "description": "Means the channel is the workspace's 'general' discussion channel"
                   },
-                  "unlinked": {
-                    "type": "integer"
-                  },
+                  "unlinked": { "type": "integer" },
                   "name_normalized": {
                     "type": "string",
                     "description": "The 'normalized' name of a channel"
@@ -115,9 +109,7 @@
                   },
                   "pending_shared": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
+                    "items": { "type": "string" },
                     "description": "A list of team IDs that have been invited to the channel but have not yet joined"
                   },
                   "context_team_id": {
@@ -138,16 +130,12 @@
                   },
                   "shared_team_ids": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
+                    "items": { "type": "string" },
                     "description": "A list of team IDs that are part of this shared channel"
                   },
                   "pending_connected_team_ids": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
+                    "items": { "type": "string" },
                     "description": "A list of team IDs that have been invited to connect to the channel but have not yet accepted"
                   },
                   "is_member": {
@@ -157,38 +145,24 @@
                   "topic": {
                     "type": "object",
                     "properties": {
-                      "value": {
-                        "type": "string"
-                      },
-                      "creator": {
-                        "type": "string"
-                      },
-                      "last_set": {
-                        "type": "integer"
-                      }
+                      "value": { "type": "string" },
+                      "creator": { "type": "string" },
+                      "last_set": { "type": "integer" }
                     },
                     "description": "Provides information about the channel topic"
                   },
                   "purpose": {
                     "type": "object",
                     "properties": {
-                      "value": {
-                        "type": "string"
-                      },
-                      "creator": {
-                        "type": "string"
-                      },
-                      "last_set": {
-                        "type": "integer"
-                      }
+                      "value": { "type": "string" },
+                      "creator": { "type": "string" },
+                      "last_set": { "type": "integer" }
                     },
                     "description": "Provides information about the channel purpose"
                   },
                   "previous_names": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
+                    "items": { "type": "string" },
                     "description": "A list of previous names for the channel"
                   },
                   "num_members": {
@@ -216,11 +190,7 @@
                     "description": "A count of messages that the calling user has yet to read that matter to them"
                   }
                 },
-                "required": [
-                  "id",
-                  "name",
-                  "is_channel"
-                ]
+                "required": ["id", "name", "is_channel"]
               }
             }
           }
@@ -232,11 +202,7 @@
           "application/json": {
             "schema": {
               "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "properties": { "error": { "type": "string" } }
             }
           }
         }
@@ -247,11 +213,7 @@
           "application/json": {
             "schema": {
               "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
+              "properties": { "error": { "type": "string" } }
             }
           }
         }

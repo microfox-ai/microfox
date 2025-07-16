@@ -336,7 +336,7 @@
           "channel"
         ],
         "ai": {
-          "systemPrompt": "To create a new channel, a `name` is required. You can optionally set `isPrivate` to true for a private channel."
+          "systemPrompt": "To create a new channel, a `name` is required. You can optionally set `isPrivate` to true for a private channel and `join` to false if you do not wish to join the channel upon creation."
         },
         "requestBody": {
           "required": true,
@@ -359,6 +359,10 @@
                           "isPrivate": {
                             "type": "boolean",
                             "description": "Whether the channel should be private. Defaults to false."
+                          },
+                          "join": {
+                            "type": "boolean",
+                            "description": "Whether the user should join the channel. Defaults to true."
                           }
                         },
                         "required": [
@@ -740,6 +744,132 @@
                     },
                     "unread_count_display": {
                       "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getConversationHistory": {
+      "post": {
+        "operationId": "getConversationHistory",
+        "summary": "Fetches a conversation's history of messages and events.",
+        "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
+        "tags": [
+          "channel",
+          "message"
+        ],
+        "ai": {
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. You can use optional parameters like `limit`, `latest`, `oldest`, `inclusive`, and `cursor` to filter and paginate results. If the channel ID is unknown, use `listChannels` to find it."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the getConversationHistory sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "type": "string",
+                            "description": "The ID of the channel to fetch history for. Channel IDs start with 'C'."
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "description": "The maximum number of items to return."
+                          },
+                          "latest": {
+                            "type": "string",
+                            "description": "End of the time range of messages to include in results."
+                          },
+                          "oldest": {
+                            "type": "string",
+                            "description": "Start of the time range of messages to include in results."
+                          },
+                          "inclusive": {
+                            "type": "boolean",
+                            "description": "Include messages with latest or oldest timestamps in results."
+                          },
+                          "cursor": {
+                            "type": "string",
+                            "description": "Paginate through collections of data by setting the cursor parameter to a next_cursor attribute returned by a previous request's response_metadata."
+                          }
+                        },
+                        "required": [
+                          "channelId"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "user": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "ts": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -1223,6 +1353,183 @@
         }
       }
     },
+    "/joinChannel": {
+      "post": {
+        "operationId": "joinChannel",
+        "summary": "Joins a Slack channel.",
+        "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
+        "tags": [
+          "channel"
+        ],
+        "ai": {
+          "systemPrompt": "To join a channel, provide the `channelId` (starts with 'C')."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the joinChannel sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "properties": {
+                          "channelId": {
+                            "type": "string",
+                            "description": "The ID of the channel to join. Channel IDs start with 'C'."
+                          }
+                        },
+                        "required": [
+                          "channelId"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful."
+                    },
+                    "channel": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The ID of the channel."
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "channel"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Not authorized to join channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Channel not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "enum": [
+                        false
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/listActiveUsers": {
       "post": {
         "operationId": "listActiveUsers",
@@ -1232,7 +1539,7 @@
           "user"
         ],
         "ai": {
-          "systemPrompt": "This function retrieves all active users in the workspace. It can be used to find user IDs if you know the user's name."
+          "systemPrompt": "This function retrieves all active users in the workspace. It can be used to find user IDs if you know the user's name. You can filter by bots and paginate through results. The default limit is 100 users per page."
         },
         "requestBody": {
           "required": true,
@@ -1248,7 +1555,20 @@
                       "arguments": {
                         "type": "object",
                         "description": "Container for function arguments.",
-                        "properties": {}
+                        "properties": {
+                          "isBot": {
+                            "type": "boolean",
+                            "description": "Whether to only return bots."
+                          },
+                          "cursor": {
+                            "type": "string",
+                            "description": "A cursor to the next page of results."
+                          },
+                          "limit": {
+                            "type": "number",
+                            "description": "The maximum number of users to return."
+                          }
+                        }
                       }
                     },
                     "required": [
@@ -1484,13 +1804,13 @@
     "/listChannels": {
       "post": {
         "operationId": "listChannels",
-        "summary": "Lists all public and private channels in a Slack workspace.",
-        "description": "The listChannels function retrieves information about all public and private channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+        "summary": "Lists all public, private and direct message channels in a Slack workspace.",
+        "description": "The listChannels function retrieves information about all public, private and direct message channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
         "tags": [
           "channel"
         ],
         "ai": {
-          "systemPrompt": "This function lists all public and private channels in the workspace. No arguments are required."
+          "systemPrompt": "This function lists all public, private and direct message channels in the workspace. No arguments are required."
         },
         "requestBody": {
           "required": true,
@@ -2895,271 +3215,6 @@
         }
       }
     },
-    "/sendFile": {
-      "post": {
-        "operationId": "sendFile",
-        "summary": "Upload a file to a Slack channel.",
-        "description": "The sendFile function allows users to upload a file to one or more Slack channels. It takes an object containing the channel ID(s), file content, filename, and an optional title. The function returns information about the uploaded file, including its ID and various metadata.",
-        "tags": [
-          "file",
-          "channel"
-        ],
-        "ai": {
-          "systemPrompt": "To upload a file, specify the target `channelId` (starts with 'C'), the `file` content as a Buffer, and a `filename`. A `title` is optional."
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the sendFile sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "object",
-                        "properties": {
-                          "channelId": {
-                            "type": "string",
-                            "description": "The ID of the channel to upload the file to. This can be a single channel ID or a comma-separated list of channel IDs. Channel IDs start with 'C'."
-                          },
-                          "file": {
-                            "type": "string",
-                            "format": "binary",
-                            "description": "A Buffer containing the file content."
-                          },
-                          "filename": {
-                            "type": "string",
-                            "description": "The name of the file."
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "An optional title for the file."
-                          }
-                        },
-                        "required": [
-                          "channelId",
-                          "file",
-                          "filename"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "arguments"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "type": "boolean",
-                      "description": "true if the request was successful."
-                    },
-                    "file": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "description": "The ID of the file object."
-                        },
-                        "created": {
-                          "type": "integer",
-                          "description": "A Unix timestamp representing when the file was created."
-                        },
-                        "timestamp": {
-                          "type": "integer",
-                          "description": "A deprecated property that is provided only for backwards compatibility with older clients."
-                        },
-                        "name": {
-                          "type": "string",
-                          "nullable": true,
-                          "description": "Name of the file; may be null for unnamed files."
-                        },
-                        "title": {
-                          "type": "string",
-                          "description": "Title of the file."
-                        },
-                        "mimetype": {
-                          "type": "string",
-                          "description": "The file's mimetype."
-                        },
-                        "filetype": {
-                          "type": "string",
-                          "description": "The file's type."
-                        },
-                        "pretty_type": {
-                          "type": "string",
-                          "description": "A human-readable version of the type."
-                        },
-                        "user": {
-                          "type": "string",
-                          "description": "The ID of the user who created the object."
-                        },
-                        "editable": {
-                          "type": "boolean",
-                          "description": "Indicates that files are stored in editable mode."
-                        },
-                        "size": {
-                          "type": "integer",
-                          "description": "The filesize in bytes."
-                        },
-                        "mode": {
-                          "type": "string",
-                          "enum": [
-                            "hosted",
-                            "external",
-                            "snippet",
-                            "post"
-                          ],
-                          "description": "One of the following: hosted, external, snippet or post."
-                        },
-                        "is_external": {
-                          "type": "boolean",
-                          "description": "Indicates whether the master copy of a file is stored within the system or not."
-                        },
-                        "external_type": {
-                          "type": "string",
-                          "description": "Indicates what kind of external file it is, e.g. dropbox or gdoc."
-                        },
-                        "is_public": {
-                          "type": "boolean",
-                          "description": "true if the file is public."
-                        },
-                        "public_url_shared": {
-                          "type": "boolean",
-                          "description": "true if the file's public URL has been shared."
-                        },
-                        "url_private": {
-                          "type": "string",
-                          "description": "A URL to the file contents. This requires an authorization header to access."
-                        },
-                        "permalink": {
-                          "type": "string",
-                          "description": "A URL to a page for the file containing details, comments and a download link."
-                        },
-                        "channels": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "description": "Contains the IDs of any channels into which the file is currently shared."
-                        },
-                        "groups": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "description": "Contains the IDs of any private groups into which the file is currently shared."
-                        },
-                        "ims": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "description": "Contains the IDs of any IM channels into which the file is currently shared."
-                        },
-                        "comments_count": {
-                          "type": "integer",
-                          "description": "The number of comments on the file."
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "created",
-                        "timestamp",
-                        "title",
-                        "mimetype",
-                        "filetype",
-                        "pretty_type",
-                        "user",
-                        "editable",
-                        "size",
-                        "mode",
-                        "is_external",
-                        "is_public",
-                        "public_url_shared",
-                        "url_private",
-                        "permalink",
-                        "channels",
-                        "groups",
-                        "ims",
-                        "comments_count"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "ok",
-                    "file"
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - The request was invalid or cannot be served.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "type": "boolean",
-                      "enum": [
-                        false
-                      ]
-                    },
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "ok",
-                    "error"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/setReminder": {
       "post": {
         "operationId": "setReminder",
@@ -3280,6 +3335,132 @@
                         false
                       ]
                     },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/uploadFile": {
+      "post": {
+        "operationId": "uploadFile",
+        "summary": "Uploads a file to a Slack channel using an external URL.",
+        "description": "The uploadFile function uploads a file to a Slack channel by first getting an external upload URL, posting the file to that URL, and then completing the upload to make it available in the channel.",
+        "tags": [
+          "file",
+          "channel"
+        ],
+        "ai": {
+          "systemPrompt": "To upload a file, provide the `filename` and the `file` content as a Buffer. You can optionally specify a `channelId` to share the file in, along with a `title` and `initialComment`."
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "object",
+                    "description": "Body of the uploadFile sls call",
+                    "properties": {
+                      "arguments": {
+                        "type": "object",
+                        "properties": {
+                          "filename": {
+                            "type": "string",
+                            "description": "The name of the file."
+                          },
+                          "file": {
+                            "type": "string",
+                            "format": "binary",
+                            "description": "A Buffer containing the file content."
+                          },
+                          "channelId": {
+                            "type": "string",
+                            "description": "The ID of the channel to upload the file to. Can be a comma-separated list of strings."
+                          },
+                          "alt_text": {
+                            "type": "string",
+                            "description": "Description of image for screen-reader."
+                          },
+                          "snippet_type": {
+                            "type": "string",
+                            "description": "Syntax type of the snippet being uploaded."
+                          },
+                          "initialComment": {
+                            "type": "string",
+                            "description": "The message text introducing the file in specified channels."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "An optional title for the file."
+                          }
+                        },
+                        "required": [
+                          "filename",
+                          "file"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "arguments"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
                     "error": {
                       "type": "string"
                     }

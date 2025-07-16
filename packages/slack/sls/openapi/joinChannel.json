@@ -1,0 +1,125 @@
+{
+  "post": {
+    "operationId": "joinChannel",
+    "summary": "Joins a Slack channel.",
+    "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
+    "tags": ["channel"],
+    "ai": {
+      "systemPrompt": "To join a channel, provide the `channelId` (starts with 'C')."
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the joinChannel sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "channelId": {
+                        "type": "string",
+                        "description": "The ID of the channel to join. Channel IDs start with 'C'."
+                      }
+                    },
+                    "required": ["channelId"]
+                  }
+                },
+                "required": ["arguments"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "description": "Indicates if the request was successful."
+                },
+                "channel": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "description": "The ID of the channel." }
+                  }
+                }
+              },
+              "required": ["ok", "channel"]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Invalid parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": { "type": "boolean", "enum": [false] },
+                "error": { "type": "string" }
+              },
+              "required": ["ok", "error"]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Not authorized to join channel",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": { "type": "boolean", "enum": [false] },
+                "error": { "type": "string" }
+              },
+              "required": ["ok", "error"]
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Channel not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": { "type": "boolean", "enum": [false] },
+                "error": { "type": "string" }
+              },
+              "required": ["ok", "error"]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": { "type": "boolean", "enum": [false] },
+                "error": { "type": "string" }
+              },
+              "required": ["ok", "error"]
+            }
+          }
+        }
+      }
+    }
+  }
+} 
