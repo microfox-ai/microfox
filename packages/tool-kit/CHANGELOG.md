@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.15
+
+### Patch Changes
+
+- 6290725: release: update @microfox/types dependency to allow any version and enhance OpenAPI toolset with UI mapping functionality
+- Updated dependencies [6290725]
+  - @microfox/types@1.0.6
+
 ## 1.1.14
 
 ### Patch Changes

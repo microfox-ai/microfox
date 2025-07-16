@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.6
+
+### Patch Changes
+
+- 6290725: release: update @microfox/types dependency to allow any version and enhance OpenAPI toolset with UI mapping functionality
+
 ## 1.0.5
 
 ### Patch Changes
