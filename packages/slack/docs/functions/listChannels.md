@@ -1,18 +1,30 @@
 # listChannels
 
-The `listChannels` method lists all public and private channels in a workspace.
+The `listChannels` function lists all public, private, and direct message channels in a workspace.
 
-## Usage
+## Parameters
+
+This function does not take any parameters.
+
+## Returns
+
+A promise that resolves to an array of channel objects.
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function logAllChannels() {
   try {
     const channels = await client.listChannels();
-    console.log(channels);
+    if (channels) {
+      channels.forEach(channel => {
+        console.log(channel.name);
+      });
+    }
   } catch (error) {
     console.error(error);
   }

@@ -1,26 +1,33 @@
 # createChannel
 
-The `createChannel` method creates a new channel.
+The `createChannel` function creates a new channel in a Slack workspace.
 
-## Usage
+## Parameters
+
+| Name      | Type    | Description                                                     |
+| :-------- | :------ | :-------------------------------------------------------------- |
+| name      | string  | The name of the channel to create.                              |
+| isPrivate | boolean | _Optional_. Whether the channel should be private. Defaults to `false`. |
+| join      | boolean | _Optional_. Whether the user should join the channel. Defaults to `true`. |
+
+## Returns
+
+A promise that resolves to a channel object for the newly created channel.
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function createNewChannel() {
   try {
-    // Example: Create a public channel
-    const publicChannel = await client.createChannel({ name: 'new-public-channel' });
-    console.log('Public channel created: ', publicChannel.id);
-
-    // Example: Create a private channel
-    const privateChannel = await client.createChannel({
-      name: 'new-private-channel',
+    const newChannel = await client.createChannel({
+      name: 'new-exciting-project',
       isPrivate: true,
     });
-    console.log('Private channel created: ', privateChannel.id);
+    console.log(`Channel created: ${newChannel.name} (${newChannel.id})`);
   } catch (error) {
     console.error(error);
   }
@@ -33,6 +40,7 @@ This method accepts an object with the following properties:
 
 -   `name` (string, required): The name of the channel to create.
 -   `isPrivate` (boolean, optional): Whether the channel should be private. Defaults to `false`.
+-   `join` (boolean, optional): Whether the bot should join the newly created channel or not. Defaults to `true`
 
 ## Response
 

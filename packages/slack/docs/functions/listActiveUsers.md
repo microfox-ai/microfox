@@ -1,22 +1,40 @@
 # listActiveUsers
 
-The `listActiveUsers` method lists all active users in a workspace. It filters out any users that have been deactivated.
+The `listActiveUsers` function retrieves a list of all active (non-deleted) users in a Slack workspace.
 
-## Usage
+## Parameters
+
+| Name   | Type    | Description                               |
+| :----- | :------ | :---------------------------------------- |
+| isBot  | boolean | _Optional_. Whether to only return bots.  |
+| cursor | string  | _Optional_. A cursor to the next page of results. |
+| limit  | number  | _Optional_. The maximum number of users to return. |
+
+## Returns
+
+A promise that resolves to an array of user objects.
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function logActiveUsers() {
   try {
-    const users = await client.listActiveUsers();
-    console.log(users);
+    const users = await client.listActiveUsers({ limit: 50 });
+    if (users) {
+      users.forEach(user => {
+        console.log(user.real_name);
+      });
+    }
   } catch (error) {
     console.error(error);
   }
-})();
+}
+
+logActiveUsers();
 ```
 
 ## Arguments
