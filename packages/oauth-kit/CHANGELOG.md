@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.1.1
+
+### Patch Changes
+
+- 940201a: Triggered by issue #639: release @microfox/oauth-kit patch
+
 ## 1.1.0
 
 ### Minor Changes
