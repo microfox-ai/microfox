@@ -38,6 +38,17 @@ export class MicrofoxSlackClient {
   }
 
   /**
+   * Lists all public, private and direct message channels in a workspace.
+   */
+  async listChannelIdsMap() {
+    const channels = await this.listChannels();
+    return channels?.map((channel) => ({
+      id: channel.id,
+      name: channel.name,
+    }));
+  }
+
+  /**
    * Fetches information about a conversation.
    * @param channelId Conversation ID to fetch information for.
    */
@@ -52,22 +63,45 @@ export class MicrofoxSlackClient {
    * Lists all users in a workspace.
    * @param cursor A cursor to the next page of results.
    * @param limit The maximum number of users to return.
-   * @param isBot Whether to only return bots.
+   * @param includeBots Whether to include bots.
    */
   async listActiveUsers({
     cursor,
     limit,
-    isBot = false,
+    includeBots = false,
   }: {
-    isBot?: boolean;
     cursor?: string;
     limit?: number;
+    includeBots?: boolean;
   }) {
     const result = await this.web.users.list({
       limit: limit || 100,
       ...(cursor ? { cursor } : {}),
     });
-    return result.members?.filter((member) => !member.deleted)?.filter((member) => isBot ? member.is_bot : true);
+    return result.members?.filter((member) => !member.deleted)?.filter((member) => includeBots ? true : !member.is_bot);
+  }
+
+  /**
+   * Lists all users in a workspace.
+   * @param cursor A cursor to the next page of results.
+   * @param limit The maximum number of users to return.
+   * @param includeBots Whether to include bots.
+   */
+  async listUserIdsMap({
+    cursor,
+    limit,
+    includeBots = false,
+  }: {
+    includeBots?: boolean;
+    cursor?: string;
+    limit?: number;
+  }) {
+    const users = await this.listActiveUsers({ includeBots, cursor, limit });
+    return users?.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.profile?.email,
+    }));
   }
 
   /**
@@ -88,6 +122,22 @@ export class MicrofoxSlackClient {
   async searchUserByEmail(email: string) {
     const result = await this.web.users.lookupByEmail({ email });
     return result.user;
+  }
+
+  /**
+   * Finds users by their email addresses.
+   * @param emails The email addresses of the users to find.
+   */
+  async searchUsersByEmail({
+    emails,
+  }: {
+    emails: string[];
+  }) {
+    const result = await Promise.all(emails.map(async (email) => {
+      const user = await this.searchUserByEmail(email);
+      return user;
+    }));
+    return result;
   }
 
   /**
@@ -391,7 +441,7 @@ export class MicrofoxSlackClient {
     });
 
     if (!completeUploadResponse.ok) {
-        throw new Error(`Failed to complete upload: ${completeUploadResponse.error}`);
+      throw new Error(`Failed to complete upload: ${completeUploadResponse.error}`);
     }
 
     return completeUploadResponse.files;

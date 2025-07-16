@@ -4,11 +4,11 @@ The `listActiveUsers` function retrieves a list of all active (non-deleted) user
 
 ## Parameters
 
-| Name   | Type    | Description                               |
-| :----- | :------ | :---------------------------------------- |
-| isBot  | boolean | _Optional_. Whether to only return bots.  |
-| cursor | string  | _Optional_. A cursor to the next page of results. |
-| limit  | number  | _Optional_. The maximum number of users to return. Defaults to 100 |
+| Name        | Type    | Description                               |
+| :---------- | :------ | :---------------------------------------- |
+| includeBots | boolean | _Optional_. Whether to include bots in the list. Defaults to `false`. |
+| cursor      | string  | _Optional_. A cursor to the next page of results. |
+| limit       | number  | _Optional_. The maximum number of users to return. Defaults to 100 |
 
 ## Returns
 
@@ -23,7 +23,7 @@ const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
 async function logActiveUsers() {
   try {
-    const users = await client.listActiveUsers({ limit: 50 });
+    const users = await client.listActiveUsers({ limit: 50, includeBots: true });
     if (users) {
       users.forEach(user => {
         console.log(user.real_name);
@@ -39,7 +39,13 @@ logActiveUsers();
 
 ## Arguments
 
-This method does not take any arguments.
+This method accepts an optional object with the following properties:
+
+| Name        | Type    | Description                               |
+| :---------- | :------ | :---------------------------------------- |
+| includeBots | boolean | _Optional_. Whether to include bots in the list. Defaults to `false`. |
+| cursor      | string  | _Optional_. A cursor to the next page of results. |
+| limit       | number  | _Optional_. The maximum number of users to return. Defaults to 100 |
 
 ## Response
 
