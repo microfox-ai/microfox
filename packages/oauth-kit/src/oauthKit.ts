@@ -3,6 +3,10 @@ import {
   getGoogleIdentityInfo,
 } from './helpers/google';
 import {
+  convertRedditIdentityToIdentity,
+  getRedditIdentityInfo,
+} from './helpers/reddit';
+import {
   convertSlackIdentityToIdentity,
   getSlackIdentityInfo,
 } from './helpers/slack';
@@ -14,7 +18,7 @@ type ProviderConfig = {
   redirectUri: string;
 };
 
-export const SupportedProviders = ['google', 'slack'] as const;
+export const SupportedProviders = ['google', 'slack', 'reddit'] as const;
 
 export class OauthKit {
   constructor() {}
@@ -39,6 +43,17 @@ export class OauthKit {
         try {
           const identityInfo = await getSlackIdentityInfo(tokenResponse);
           return convertSlackIdentityToIdentity(identityInfo);
+        } catch (error) {
+          throw new Error(
+            `Failed to exchange token response for identity: ${error}`,
+          );
+        }
+      }
+      case 'reddit': {
+        try {
+          const identityInfo = await getRedditIdentityInfo(tokenResponse);
+          console.log('identityInfo', identityInfo);
+          return convertRedditIdentityToIdentity(identityInfo);
         } catch (error) {
           throw new Error(
             `Failed to exchange token response for identity: ${error}`,
