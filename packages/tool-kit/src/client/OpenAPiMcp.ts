@@ -228,6 +228,25 @@ export class OpenApiMCP {
     return `${method.toLowerCase()}_${pathPart}`;
   }
 
+  private static _generateToolName(
+    operation: { name?: string; operationId?: string },
+    id: string,
+  ): string {
+    let toolName = operation.name || operation.operationId || id;
+    /** toolName should match pattern - String should match pattern '^[a-zA-Z0-9_-]{1,128}$'] */
+    toolName = toolName.replace(/[^a-zA-Z0-9_]/g, '');
+    if (toolName.length > 128) {
+      toolName = toolName.substring(0, 128);
+    }
+    if (!toolName) {
+      toolName = id.replace(/[^a-zA-Z0-9_]/g, '');
+      if (toolName.length > 128) {
+        toolName = toolName.substring(0, 128);
+      }
+    }
+    return toolName;
+  }
+
   private structureBodyForRequest(
     body: Record<string, any>,
     operation: OpenAPIOperation,
@@ -458,22 +477,36 @@ export class OpenApiMCP {
           operation,
         ) as OpenAPIOperation & { path: string; method: string };
 
-        let toolName =
-          cleanedOperation.name || cleanedOperation.operationId || id;
-        toolName = toolName.replace(/[^a-zA-Z0-9_]/g, '');
-        if (toolName.length > 128) {
-          toolName = toolName.substring(0, 128);
-        }
-        if (!toolName) {
-          toolName = id.replace(/[^a-zA-Z0-9_]/g, '');
-          if (toolName.length > 128) {
-            toolName = toolName.substring(0, 128);
-          }
-        }
+        const toolName = OpenApiMCP._generateToolName(cleanedOperation, id);
         operations.set(toolName, op?.ai?.systemPrompt);
       }
     }
     return { global, operations };
+  }
+
+  public getUiMap(): {
+    global?: any;
+    operations: Map<string, any>;
+  } {
+    const globalUi = (this.schema.info as any)?.['x-ui'];
+    const operationUis = new Map<string, any>();
+    const info: any = this.schema.info;
+    const global = info?.ai?.systemPrompt;
+
+    const operations = new Map<string, string>();
+    for (const [id, operation] of this.operationMap.entries()) {
+      const op = operation;
+      if (op?.ui) {
+        const cleanedOperation = this.cleanUpMethodSchema(
+          operation,
+        ) as OpenAPIOperation & { path: string; method: string };
+
+        const toolName = OpenApiMCP._generateToolName(cleanedOperation, id);
+        operationUis.set(toolName, op?.ui);
+      }
+    }
+
+    return { global: globalUi, operations: operationUis };
   }
 
   /**
@@ -867,6 +900,7 @@ export class OpenApiMCP {
     const tools: ToolSet = {};
     const toolExecutions: ToolExecuteSet = {}; // Reset tool executions
     const metadata: ToolMetadataSet = {};
+    const uiMaps: Record<string, any> = {};
 
     // Get all available operations
     const { operations } = await this.listOperations();
@@ -881,19 +915,7 @@ export class OpenApiMCP {
       ) as OpenAPIOperation & { path: string; method: string };
       if (!cleanedOperation.path || !cleanedOperation.method) continue;
 
-      let toolName =
-        cleanedOperation.name || cleanedOperation.operationId || id;
-      /** toolName should match pattern - String should match pattern '^[a-zA-Z0-9_-]{1,128}$'] */
-      toolName = toolName.replace(/[^a-zA-Z0-9_]/g, '');
-      if (toolName.length > 128) {
-        toolName = toolName.substring(0, 128);
-      }
-      if (!toolName) {
-        toolName = id.replace(/[^a-zA-Z0-9_]/g, '');
-        if (toolName.length > 128) {
-          toolName = toolName.substring(0, 128);
-        }
-      }
+      const toolName = OpenApiMCP._generateToolName(cleanedOperation, id);
 
       const isDisabled =
         disableAllExecutions ||
@@ -1079,7 +1101,12 @@ export class OpenApiMCP {
       metadata[toolName] = toolMetaData;
     }
 
-    return { tools, executions: toolExecutions, metadata };
+    const { operations: uiMapsData } = this.getUiMap();
+    for (const [toolName, uiMap] of uiMapsData.entries()) {
+      uiMaps[toolName] = uiMap;
+    }
+
+    return { tools, executions: toolExecutions, metadata, uiMaps };
   }
 
   /**

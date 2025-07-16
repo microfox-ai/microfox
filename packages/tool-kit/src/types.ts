@@ -3,6 +3,7 @@ import {
   AgentPathSecurity,
   AgentPathAiInstruction,
   AgentOpenApi,
+  AgentUi,
 } from '@microfox/types';
 import { z } from 'zod';
 
@@ -97,6 +98,7 @@ export type OpenAPIOperation = {
   tags?: string[];
   ai?: AgentPathAiInstruction;
   security?: AgentPathSecurity;
+  ui?: AgentUi;
   parameters?: OpenAPIParameter[];
   requestBody?: OpenAPIRequestBody;
   responses: {
@@ -320,6 +322,7 @@ export type ToolResult = {
   tools: ToolSet;
   executions: ToolExecuteSet;
   metadata: ToolMetadataSet;
+  uiMaps?: Record<string, any>;
 };
 
 export const PAUSED_TOOL_CONTEXT = Symbol('paused_tool_context');
