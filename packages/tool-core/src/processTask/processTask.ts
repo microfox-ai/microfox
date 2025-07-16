@@ -188,11 +188,11 @@ export class ProcessTask {
         }
       }
     }
-
-    const url = `${process.env.BASE_SERVER_URL}/api/background-tasks/trigger`;
-    if (!process.env.BASE_SERVER_URL) {
-      console.warn(
-        'BASE_SERVER_URL is not set, skipping task update broadcast.'
+    const protectionKey = process.env.TASK_API_PROTECTION_KEY;
+    const url = `${process.env.TASK_API_BASE_URL}/task/${taskId}`;
+    if (!process.env.TASK_API_BASE_URL) {
+      console.log(
+        'TASK_API_BASE_URL is not set, skipping task update broadcast.'
       );
       return;
     }
@@ -202,11 +202,11 @@ export class ProcessTask {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-task-protection-key': protectionKey ?? '',
         },
         body: JSON.stringify({
           data,
           event,
-          taskId,
           isClientUpdate,
         }),
       });
