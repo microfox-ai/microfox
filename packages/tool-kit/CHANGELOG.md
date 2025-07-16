@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.14
+
+### Patch Changes
+
+- 16d347c: Triggered by issue #635: release @microfox/tool-kit patch
+
 ## 1.1.13
 
 ### Patch Changes
