@@ -3162,7 +3162,160 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/user"
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "team_id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "deleted": {
+                          "type": "boolean"
+                        },
+                        "color": {
+                          "type": "string"
+                        },
+                        "real_name": {
+                          "type": "string"
+                        },
+                        "tz": {
+                          "type": "string"
+                        },
+                        "tz_label": {
+                          "type": "string"
+                        },
+                        "tz_offset": {
+                          "type": "integer"
+                        },
+                        "profile": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string"
+                            },
+                            "phone": {
+                              "type": "string"
+                            },
+                            "skype": {
+                              "type": "string"
+                            },
+                            "real_name": {
+                              "type": "string"
+                            },
+                            "real_name_normalized": {
+                              "type": "string"
+                            },
+                            "display_name": {
+                              "type": "string"
+                            },
+                            "display_name_normalized": {
+                              "type": "string"
+                            },
+                            "fields": {
+                              "type": "object"
+                            },
+                            "status_text": {
+                              "type": "string"
+                            },
+                            "status_emoji": {
+                              "type": "string"
+                            },
+                            "status_expiration": {
+                              "type": "integer"
+                            },
+                            "avatar_hash": {
+                              "type": "string"
+                            },
+                            "start_date": {
+                              "type": "string"
+                            },
+                            "image_original": {
+                              "type": "string"
+                            },
+                            "is_custom_image": {
+                              "type": "boolean"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "pronouns": {
+                              "type": "string"
+                            },
+                            "first_name": {
+                              "type": "string"
+                            },
+                            "last_name": {
+                              "type": "string"
+                            },
+                            "image_24": {
+                              "type": "string"
+                            },
+                            "image_32": {
+                              "type": "string"
+                            },
+                            "image_48": {
+                              "type": "string"
+                            },
+                            "image_72": {
+                              "type": "string"
+                            },
+                            "image_192": {
+                              "type": "string"
+                            },
+                            "image_512": {
+                              "type": "string"
+                            },
+                            "image_1024": {
+                              "type": "string"
+                            },
+                            "status_text_canonical": {
+                              "type": "string"
+                            },
+                            "team": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "is_admin": {
+                          "type": "boolean"
+                        },
+                        "is_owner": {
+                          "type": "boolean"
+                        },
+                        "is_primary_owner": {
+                          "type": "boolean"
+                        },
+                        "is_restricted": {
+                          "type": "boolean"
+                        },
+                        "is_ultra_restricted": {
+                          "type": "boolean"
+                        },
+                        "is_bot": {
+                          "type": "boolean"
+                        },
+                        "is_app_user": {
+                          "type": "boolean"
+                        },
+                        "updated": {
+                          "type": "string"
+                        },
+                        "is_email_confirmed": {
+                          "type": "boolean"
+                        },
+                        "who_can_share_contact_card": {
+                          "type": "string"
+                        },
+                        "enterprise_user": {
+                          "type": "object"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -3176,164 +3329,6 @@
           },
           "500": {
             "description": "Server error"
-          }
-        }
-      },
-      "components": {
-        "schemas": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "team_id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "deleted": {
-                "type": "boolean"
-              },
-              "color": {
-                "type": "string"
-              },
-              "real_name": {
-                "type": "string"
-              },
-              "tz": {
-                "type": "string"
-              },
-              "tz_label": {
-                "type": "string"
-              },
-              "tz_offset": {
-                "type": "integer"
-              },
-              "profile": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string"
-                  },
-                  "phone": {
-                    "type": "string"
-                  },
-                  "skype": {
-                    "type": "string"
-                  },
-                  "real_name": {
-                    "type": "string"
-                  },
-                  "real_name_normalized": {
-                    "type": "string"
-                  },
-                  "display_name": {
-                    "type": "string"
-                  },
-                  "display_name_normalized": {
-                    "type": "string"
-                  },
-                  "fields": {
-                    "type": "object"
-                  },
-                  "status_text": {
-                    "type": "string"
-                  },
-                  "status_emoji": {
-                    "type": "string"
-                  },
-                  "status_expiration": {
-                    "type": "integer"
-                  },
-                  "avatar_hash": {
-                    "type": "string"
-                  },
-                  "start_date": {
-                    "type": "string"
-                  },
-                  "image_original": {
-                    "type": "string"
-                  },
-                  "is_custom_image": {
-                    "type": "boolean"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "pronouns": {
-                    "type": "string"
-                  },
-                  "first_name": {
-                    "type": "string"
-                  },
-                  "last_name": {
-                    "type": "string"
-                  },
-                  "image_24": {
-                    "type": "string"
-                  },
-                  "image_32": {
-                    "type": "string"
-                  },
-                  "image_48": {
-                    "type": "string"
-                  },
-                  "image_72": {
-                    "type": "string"
-                  },
-                  "image_192": {
-                    "type": "string"
-                  },
-                  "image_512": {
-                    "type": "string"
-                  },
-                  "image_1024": {
-                    "type": "string"
-                  },
-                  "status_text_canonical": {
-                    "type": "string"
-                  },
-                  "team": {
-                    "type": "string"
-                  }
-                }
-              },
-              "is_admin": {
-                "type": "boolean"
-              },
-              "is_owner": {
-                "type": "boolean"
-              },
-              "is_primary_owner": {
-                "type": "boolean"
-              },
-              "is_restricted": {
-                "type": "boolean"
-              },
-              "is_ultra_restricted": {
-                "type": "boolean"
-              },
-              "is_bot": {
-                "type": "boolean"
-              },
-              "is_app_user": {
-                "type": "boolean"
-              },
-              "updated": {
-                "type": "string"
-              },
-              "is_email_confirmed": {
-                "type": "boolean"
-              },
-              "who_can_share_contact_card": {
-                "type": "string"
-              },
-              "enterprise_user": {
-                "type": "object"
-              }
-            }
           }
         }
       }
