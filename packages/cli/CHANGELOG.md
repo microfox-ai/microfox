@@ -1,5 +1,13 @@
 # @microfox/cli
 
+## 1.0.11
+
+### Patch Changes
+
+- e704003: Triggered by issue #633: release microfox patch
+- Updated dependencies [c192e6b]
+  - @microfox/slack@1.2.1
+
 ## 1.0.10
 
 ### Patch Changes
