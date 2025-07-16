@@ -1,3 +1,4 @@
+import { Command } from 'commander';
 import chalk from 'chalk';
 import axios from 'axios';
 import { spawn, ChildProcess } from 'child_process';
@@ -24,8 +25,7 @@ const createLogger = (rl: readline.Interface) => {
     };
 };
 
-
-export async function codeCommand(): Promise<void> {
+async function codeAction(): Promise<void> {
   let childProcess: ChildProcess | null = null;
   
   const killProcess = () => {
@@ -140,4 +140,15 @@ export async function codeCommand(): Promise<void> {
     }
     process.exit(1);
   }
-} 
+}
+
+export const codeCommand = new Command('code')
+    .description('Run the code agent for your project')
+    .action(async () => {
+        try {
+            await codeAction();
+        } catch (error) {
+            console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+    }); 

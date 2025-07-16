@@ -1,3 +1,4 @@
+import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
@@ -38,7 +39,7 @@ const getDirectoryFiles = (dir: string, basePath: string = '', ignorePatterns: s
   return structure;
 };
 
-export async function pushCommand(): Promise<void> {
+async function pushAction(): Promise<void> {
   const cwd = process.cwd();
   const microfoxConfigPath = path.join(cwd, 'microfox.json');
 
@@ -108,4 +109,15 @@ export async function pushCommand(): Promise<void> {
     }
     process.exit(1);
   }
-} 
+}
+
+export const pushCommand = new Command('push')
+    .description('Deploy your agent to the Microfox platform')
+    .action(async () => {
+        try {
+            await pushAction();
+        } catch (error) {
+            console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+    }); 

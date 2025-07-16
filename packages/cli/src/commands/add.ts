@@ -1,3 +1,4 @@
+import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
@@ -37,8 +38,7 @@ async function addBackgroundAgentFunctions(name: string): Promise<void> {
   }
 }
 
-
-export async function addCommand(): Promise<void> {
+async function addAction(): Promise<void> {
   console.log(chalk.cyan("✨ Add new features to your project!\n"));
 
   const workingDir = getWorkingDirectory();
@@ -84,4 +84,15 @@ export async function addCommand(): Promise<void> {
     console.log(chalk.yellow('   1. Check the new files in src/functions/'));
     console.log(chalk.yellow('   2. Update your agent logic to use the new functions.'));
   }
-} 
+}
+
+export const addCommand = new Command('add')
+    .description('Add features to a Microfox project')
+    .action(async () => {
+        try {
+            await addAction();
+        } catch (error) {
+            console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+    }); 

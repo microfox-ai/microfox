@@ -1,3 +1,4 @@
+import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
@@ -145,7 +146,7 @@ async function createBackgroundAgentProject(agentName: string): Promise<void> {
     copyTemplates(templateDir, agentDir);
 }
 
-export async function kickstartCommand(): Promise<void> {
+async function kickstartAction(): Promise<void> {
   console.log(chalk.cyan("🚀 Let's kickstart your new project!\n"));
 
   const { boilerplateType } = await inquirer.prompt([
@@ -258,3 +259,15 @@ export async function kickstartCommand(): Promise<void> {
     console.log(chalk.red('Invalid boilerplate type selected. Please choose "package" or "agent".'));
   }
 }
+
+export const kickstartCommand = new Command('kickstart')
+    .description('Kickstart a new TypeScript SDK or agent package')
+    .action(async () => {
+        try {
+            console.log(chalk.blue('🚀 Package Kickstarter\n'));
+            await kickstartAction();
+        } catch (error) {
+            console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+    });
