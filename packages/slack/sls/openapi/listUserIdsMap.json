@@ -1,0 +1,99 @@
+{
+  "post": {
+    "operationId": "listUserIdsMap",
+    "summary": "Retrieves a map of user IDs to user names and emails.",
+    "description": "The listUserIdsMap function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
+    "tags": [
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. You can use optional parameters like `limit`, `cursor`, and `includeBots` to filter and paginate results."
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the listUserIdsMap sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "includeBots": {
+                        "type": "boolean",
+                        "description": "Whether to include bot users in the list. Defaults to false."
+                      },
+                      "cursor": {
+                        "type": "string",
+                        "description": "A cursor to the next page of results."
+                      },
+                      "limit": {
+                        "type": "number",
+                        "description": "The maximum number of users to return."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The ID of the user."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the user."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "The email of the user."
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

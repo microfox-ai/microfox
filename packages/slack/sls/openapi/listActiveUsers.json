@@ -22,9 +22,9 @@
                     "type": "object",
                     "description": "Container for function arguments.",
                     "properties": {
-                      "isBot": {
+                      "includeBots": {
                         "type": "boolean",
-                        "description": "Whether to only return bots."
+                        "description": "Whether to include bots."
                       },
                       "cursor": {
                         "type": "string",

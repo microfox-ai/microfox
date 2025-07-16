@@ -21,8 +21,16 @@
                   "arguments": {
                     "type": "object",
                     "description": "Container for function arguments.",
-                    "properties": {},
-                    "required": []
+                    "properties": {
+                      "cursor": {
+                        "type": "string",
+                        "description": "A cursor to the next page of results."
+                      },
+                      "limit": {
+                        "type": "number",
+                        "description": "The maximum number of channels to return. Defaults to 50."
+                      }
+                    }
                   }
                 },
                 "required": ["arguments"]

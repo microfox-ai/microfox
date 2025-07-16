@@ -1,0 +1,92 @@
+{
+  "post": {
+    "operationId": "listChannelIdsMap",
+    "summary": "Retrieves a map of channel IDs to channel names.",
+    "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
+    "tags": [
+      "channel"
+    ],
+    "ai": {
+      "systemPrompt": "Lists all public, private and direct message channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name."
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the listChannelIdsMap sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "description": "Container for function arguments.",
+                    "properties": {
+                      "cursor": {
+                        "type": "string",
+                        "description": "A cursor to the next page of results."
+                      },
+                      "limit": {
+                        "type": "number",
+                        "description": "The maximum number of channels to return. Defaults to 50."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The ID of the channel."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the channel."
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 
