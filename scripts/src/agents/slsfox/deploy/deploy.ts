@@ -242,6 +242,30 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         return false;
       }
 
+      // --- New logic for cleaning up deleted endpoints ---
+      console.log(`Fetching existing endpoints for ${packageName}...`);
+      const { data: existingEndpoints, error: fetchAllError } = await supabase
+        .from('api_embeddings')
+        .select('id, endpoint_path, http_method')
+        .eq('package_name', packageName);
+
+      if (fetchAllError) {
+        console.error(
+          `Error fetching existing endpoints for ${packageName}:`,
+          fetchAllError,
+        );
+        return false;
+      }
+
+      const allDbEndpoints = new Map(
+        existingEndpoints.map(e => [
+          `${e.http_method.toUpperCase()} ${e.endpoint_path}`,
+          e.id,
+        ]),
+      );
+      const currentApiEndpoints = new Set<string>();
+      // --- End of new logic section ---
+
       const results = {
         success: 0,
         failed: 0,
@@ -251,6 +275,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
       for (const [path, methods] of Object.entries(docsData.paths)) {
         console.log(`Processing path: ${path}`);
         for (const [method, op] of Object.entries(methods)) {
+          currentApiEndpoints.add(`${method.toUpperCase()} ${path}`); // Track current endpoints
           try {
             console.log(`Processing method: ${method}`);
             // build doc_text
@@ -316,6 +341,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
               .match({
                 package_name: packageName,
                 endpoint_path: path,
+                http_method: method.toUpperCase(),
               })
               .maybeSingle();
 
@@ -403,6 +429,41 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         console.log('results after', path, results);
       }
       console.log('results', results);
+
+      // --- New logic to delete stale endpoints ---
+      const endpointsToDeleteKeys = [...allDbEndpoints.keys()].filter(
+        key => !currentApiEndpoints.has(key),
+      );
+
+      if (endpointsToDeleteKeys.length > 0) {
+        console.log('Deleting stale endpoints:', endpointsToDeleteKeys);
+        const idsToDelete = endpointsToDeleteKeys.map(key =>
+          allDbEndpoints.get(key),
+        );
+
+        const { error: deleteError } = await supabase
+          .from('api_embeddings')
+          .delete()
+          .in('id', idsToDelete);
+
+        if (deleteError) {
+          console.error('Error deleting stale endpoints:', deleteError);
+          results.failed += endpointsToDeleteKeys.length;
+          endpointsToDeleteKeys.forEach(key => {
+            const [method, path] = key.split(' ');
+            results.errors.push({
+              path,
+              method,
+              error: `Failed to delete stale endpoint: ${deleteError.message}`,
+            });
+          });
+        } else {
+          console.log(
+            `Successfully deleted ${endpointsToDeleteKeys.length} stale endpoints.`,
+          );
+        }
+      }
+      // --- End of new logic section ---
 
       // Return based on overall results
       if (results.failed > 0) {
