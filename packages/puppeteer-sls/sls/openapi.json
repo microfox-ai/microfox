@@ -69,11 +69,6 @@
                           }
                         },
                         "required": ["url"]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": ["PuppeteerSLS"]
                       }
                     },
                     "required": ["arguments"]
@@ -213,11 +208,6 @@
                           }
                         },
                         "required": ["url"]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": ["PuppeteerSLS"]
                       }
                     },
                     "required": ["arguments"]
@@ -358,11 +348,6 @@
                           }
                         },
                         "required": ["url"]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": ["PuppeteerSLS"]
                       }
                     },
                     "required": ["arguments"]
@@ -495,11 +480,6 @@
                           }
                         },
                         "required": ["url"]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": ["PuppeteerSLS"]
                       }
                     },
                     "required": ["arguments"]
@@ -653,11 +633,6 @@
                           }
                         },
                         "required": ["url", "fileName", "s3Config"]
-                      },
-                      "constructor": {
-                        "type": "string",
-                        "description": "Name of the constructor to use.",
-                        "enum": ["PuppeteerSLS"]
                       }
                     },
                     "required": ["arguments"]

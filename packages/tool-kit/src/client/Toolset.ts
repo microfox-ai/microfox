@@ -329,6 +329,9 @@ export class OpenApiToolset {
                 uiMapper: uiMap,
               });
             }
+            if (result.data.taskId) {
+              result.data.message = `Task ${result.data.taskId} has been started. We will notify you when it is completed.`;
+            }
             result.toolSummary = thisClientTools.metadata[toolName]?.summary;
           } else {
             result = 'Error: User denied access to tool execution';
