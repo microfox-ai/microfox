@@ -96,10 +96,15 @@ export class ProcessTask {
   async update({
     taskId,
     state,
-    data = {},
+    metadata = {},
+    response = {},
+    error = {},
     sendUpdate = true,
     isClientUpdate = true,
-  }: AgentTask & {
+  }: Omit<AgentTask, 'data'> & {
+    metadata?: Record<string, any>;
+    response?: Record<string, any>;
+    error?: Record<string, any>;
     sendUpdate?: boolean;
     isClientUpdate?: boolean;
   }): Promise<ProcessTaskType> {
@@ -107,7 +112,6 @@ export class ProcessTask {
     if (!task) {
       throw new Error(`Task with id "${taskId}" not found.`);
     }
-    const { metadata, response, error } = data;
 
     const updatedTask: ProcessTaskType = {
       ...task,
@@ -147,6 +151,7 @@ export class ProcessTask {
     taskId,
     isClientUpdate = true,
     event,
+    state,
     data,
   }: AgentTask & {
     isClientUpdate: boolean;
@@ -155,7 +160,10 @@ export class ProcessTask {
     let updateEventData: AgentTaskEvent = {
       taskId,
       event: event || 'update',
-      state: TaskState.Unknown,
+      state: state || TaskState.Unknown,
+      error: data?.error,
+      response: data?.response,
+      metadata: data?.metadata,
     };
     if (event && data !== undefined) {
       // event and data are provided, no need to fetch task

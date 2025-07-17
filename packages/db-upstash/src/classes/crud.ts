@@ -81,10 +81,16 @@ export class CrudHash<T extends { id: string } & Record<string, any>> {
    * The item is stored in a hash. This is an atomic operation that replaces the entire item.
    * @param id - The ID of the item.
    * @param value - The item data.
+   * @param options - Optional settings for this operation.
+   *   - `ttl`: Time-to-live in seconds. If provided, the item will automatically expire.
    * @returns The item that was set.
    * @todo Allow passing an existing transaction object to chain operations.
    */
-  public async set(id: string, value: T): Promise<T> {
+  public async set(
+    id: string,
+    value: T,
+    options?: { ttl?: number }
+  ): Promise<T> {
     const key = this.getKey(id);
     const serializedValue = this.serialize(value);
 
@@ -92,6 +98,9 @@ export class CrudHash<T extends { id: string } & Record<string, any>> {
     tx.del(key);
     if (Object.keys(serializedValue).length > 0) {
       tx.hset(key, serializedValue);
+    }
+    if (options?.ttl && options.ttl > 0) {
+      tx.expire(key, options.ttl);
     }
     await tx.exec();
 
