@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { Redis } from '@upstash/redis';
 import { CrudHash } from '@microfox/db-upstash';
 import { randomUUID } from 'crypto';
-import { Task, TaskState } from '@microfox/types';
+import { Task, TaskState, AgentTask, AgentTaskEvent } from '@microfox/types';
 
 dotenv.config();
 
@@ -74,9 +74,12 @@ export class ProcessTask {
 
     await this.crud.set(taskId, task);
     if (sendUpdate) {
-      await this.sendUpdate(taskId, isClientUpdate || true, 'update', {
+      await this.sendUpdate({
+        taskId,
+        isClientUpdate: isClientUpdate || true,
+        event: 'update',
         state: TaskState.Submitted,
-        metadata: { ...metadata },
+        data: { metadata: { ...metadata } },
       });
     }
     return task;
@@ -90,17 +93,16 @@ export class ProcessTask {
     return task as ProcessTaskType;
   }
 
-  async update(
-    taskId: string,
-    state: TaskState,
-    data: {
-      metadata?: Record<string, any>;
-      response?: Record<string, any>;
-      error?: Record<string, any>;
-    } = {},
-    sendUpdate: boolean = true,
-    isClientUpdate: boolean = true
-  ): Promise<ProcessTaskType> {
+  async update({
+    taskId,
+    state,
+    data = {},
+    sendUpdate = true,
+    isClientUpdate = true,
+  }: AgentTask & {
+    sendUpdate?: boolean;
+    isClientUpdate?: boolean;
+  }): Promise<ProcessTaskType> {
     const task = await this.crud.get(taskId);
     if (!task) {
       throw new Error(`Task with id "${taskId}" not found.`);
@@ -126,27 +128,35 @@ export class ProcessTask {
           : state === TaskState.Failed
             ? 'failed'
             : 'update';
-      await this.sendUpdate(taskId, isClientUpdate || true, event, {
+      await this.sendUpdate({
+        taskId,
+        isClientUpdate: isClientUpdate || true,
+        event,
         state,
-        metadata: { ...task.metadata, ...metadata },
-        response: { ...task.response, ...response },
-        error: { ...task.error, ...error },
+        data: {
+          metadata: { ...task.metadata, ...metadata },
+          response: { ...task.response, ...response },
+          error: { ...task.error, ...error },
+        },
       });
     }
     return updatedTask;
   }
 
-  async sendUpdate(
-    taskId: string,
-    isClientUpdate: boolean = true,
-    event?: 'update' | 'complete' | 'failed',
-    data?: {
-      state: TaskState;
-      metadata?: Record<string, any>;
-      response?: Record<string, any>;
-      error?: Record<string, any>;
-    }
-  ): Promise<void> {
+  async sendUpdate({
+    taskId,
+    isClientUpdate = true,
+    event,
+    data,
+  }: AgentTask & {
+    isClientUpdate: boolean;
+    event?: 'update' | 'complete' | 'failed';
+  }): Promise<void> {
+    let updateEventData: AgentTaskEvent = {
+      taskId,
+      event: event || 'update',
+      state: TaskState.Unknown,
+    };
     if (event && data !== undefined) {
       // event and data are provided, no need to fetch task
     } else {
@@ -173,17 +183,29 @@ export class ProcessTask {
       if (data === undefined) {
         switch (event) {
           case 'complete':
-            data = {
+            updateEventData = {
+              taskId,
+              event: 'complete',
               state: TaskState.Completed,
               response: task.response,
               metadata: task.metadata,
             };
             break;
           case 'failed':
-            data = { state: TaskState.Failed, error: task.error };
+            updateEventData = {
+              taskId,
+              event: 'failed',
+              state: TaskState.Failed,
+              error: task.error,
+            };
             break;
           default:
-            data = { state: task.status.state, metadata: task.metadata };
+            updateEventData = {
+              taskId,
+              event: 'update',
+              state: task.status.state,
+              metadata: task.metadata,
+            };
             break;
         }
       }
@@ -205,7 +227,7 @@ export class ProcessTask {
           'x-task-protection-key': protectionKey ?? '',
         },
         body: JSON.stringify({
-          data,
+          data: { ...updateEventData, updatedAt: new Date().toISOString() },
           event,
           isClientUpdate,
         }),
