@@ -1,5 +1,11 @@
 # @microfox/tool-kit
 
+## 1.1.16
+
+### Patch Changes
+
+- ec1bd0c: release: improve task handling in OpenApiToolset by updating input mutation logic and enhancing background task structure
+
 ## 1.1.15
 
 ### Patch Changes
