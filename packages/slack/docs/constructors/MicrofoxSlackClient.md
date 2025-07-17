@@ -23,7 +23,7 @@ Once you have a `MicrofoxSlackClient` instance, you can use it to call any of it
 (async () => {
   try {
     // Example: List all channels
-    const channels = await client.listChannels();
+    const channels = await client.getChannels();
     console.log(channels);
   } catch (error) {
     console.error(error);

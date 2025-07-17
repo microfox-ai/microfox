@@ -1,6 +1,6 @@
-# searchUserByEmail
+# getUserByEmail
 
-The `searchUserByEmail` method finds a user by their email address.
+The `getUserByEmail` method finds a user by their email address.
 
 ## Arguments
 
@@ -15,6 +15,6 @@ This method returns a `User` object, which contains details about the user.
 ## Example
 
 ```typescript
-const user = await client.searchUserByEmail('name@example.com');
+const user = await client.getUserByEmail('name@example.com');
 console.log(user);
 ``` 

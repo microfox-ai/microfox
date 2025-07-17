@@ -1,6 +1,6 @@
-# listChannelUsers
+# getChannelMembers
 
-The `listChannelUsers` method lists all users in a specific channel.
+The `getChannelMembers` method lists all users in a specific channel.
 
 ## Usage
 
@@ -11,7 +11,7 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const users = await client.listChannelUsers('C12345678');
+    const users = await client.getChannelMembers('C12345678');
     console.log(users);
   } catch (error) {
     console.error(error);

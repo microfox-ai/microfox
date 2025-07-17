@@ -1,6 +1,6 @@
-# listChannels
+# getChannels
 
-The `listChannels` function lists all public, private, and direct message channels in a workspace.
+The `getChannels` function lists all public, private, and direct message channels in a workspace.
 
 ## Parameters
 
@@ -19,7 +19,7 @@ const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
 async function logAllChannels() {
   try {
-    const channels = await client.listChannels();
+    const channels = await client.getChannels();
     if (channels) {
       channels.forEach(channel => {
         console.log(channel.name);

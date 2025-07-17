@@ -1,6 +1,6 @@
-# searchUsersByEmail
+# getUsersByEmails
 
-The `searchUsersByEmail` function finds multiple users in a Slack workspace by their email addresses.
+The `getUsersByEmails` function finds multiple users in a Slack workspace by their email addresses.
 
 ## Parameters
 
@@ -21,7 +21,7 @@ const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
 async function findUsers() {
   try {
-    const users = await client.searchUsersByEmail({
+    const users = await client.getUsersByEmails({
       emails: ['user1@example.com', 'user2@example.com'],
     });
     if (users) {

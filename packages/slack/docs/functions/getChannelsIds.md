@@ -1,6 +1,6 @@
-# listChannelIdsMap
+# getChannelsIds
 
-The `listChannelIdsMap` function retrieves a list of all public, private, and direct message channels in a Slack workspace and returns an array of objects, where each object contains the ID and name of a channel.
+The `getChannelsIds` function retrieves a list of all public, private, and direct message channels in a Slack workspace and returns an array of objects, where each object contains the ID and name of a channel.
 
 ## Parameters
 
@@ -25,7 +25,7 @@ const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
 async function logChannelIds() {
   try {
-    const channelMap = await client.listChannelIdsMap();
+    const channelMap = await client.getChannelsIds();
     if (channelMap) {
       channelMap.forEach(channel => {
         console.log(`Channel: ${channel.name}, ID: ${channel.id}`);
