@@ -1,10 +1,10 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Puppeteer SLS Provider API",
+    "title": "Chrome Browser use",
     "version": "1.2.0",
-    "mcp_version": "1.0.1",
-    "description": "A simple and easy to use client for running Puppeteer on serverless functions.",
+    "mcp_version": "1.0.2",
+    "description": "A simple and easy way to run Chrome Browser on serverless functions.",
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
@@ -17,11 +17,13 @@
     }
   ],
   "components": {
-    "x-auth-packages": [
-      {
-        "packageName": "@microfox/puppeteer-sls"
-      }
-    ]
+    "schemas": {
+      "x-auth-packages": [
+        {
+          "packageName": "@microfox/puppeteer-sls"
+        }
+      ]
+    }
   },
   "paths": {
     "/extractImagesFromURL": {
