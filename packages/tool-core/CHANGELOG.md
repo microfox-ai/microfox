@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.12
+
+### Patch Changes
+
+- f4c56a9: release: enhance CrudHash set method to support optional TTL and update ProcessTask to include metadata, response, and error handling
+- Updated dependencies [f4c56a9]
+  - @microfox/db-upstash@1.1.8
+
 ## 1.0.11
 
 ### Patch Changes
