@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.8
+
+### Patch Changes
+
+- f4c56a9: release: enhance CrudHash set method to support optional TTL and update ProcessTask to include metadata, response, and error handling
+
 ## 1.1.7
 
 ### Patch Changes
