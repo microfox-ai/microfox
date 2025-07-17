@@ -28,9 +28,12 @@ export const handler = async (event: SQSEvent): Promise<any> => {
     console.log('Processing message:', body);
     const { triggerEvent, task_id } = body;
 
-    await taskHandler.update(task_id, TaskState.Working, {
+    await taskHandler.update({
+      taskId: task_id,
+      state: TaskState.Working,
       metadata: {
         triggerEvent,
+        loader: 'Started the browser',
       },
     });
 
@@ -55,17 +58,27 @@ export const handler = async (event: SQSEvent): Promise<any> => {
       // Invoke the function
       const result = await toolHandler.executeFunction(fn, args);
 
-      await taskHandler.update(task_id, TaskState.Completed, {
+      await taskHandler.update({
+        taskId: task_id,
+        state: TaskState.Completed,
         response: result,
+        metadata: {
+          loader: 'Completed the task',
+        },
       });
 
       // Return successful response
       return createApiResponse(200, result);
     } catch (error) {
       console.error('Error in handler:', error);
-      await taskHandler.update(task_id, TaskState.Failed, {
+      await taskHandler.update({
+        taskId: task_id,
+        state: TaskState.Failed,
         error: {
           message: error instanceof Error ? error.message : String(error),
+        },
+        metadata: {
+          loader: 'Failed the task',
         },
       });
       // Handle custom API errors
