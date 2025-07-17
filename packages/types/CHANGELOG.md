@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7
+
+### Patch Changes
+
+- 5549e4f: release: update task handling by introducing AgentTask and AgentTaskEvent types, and simplify update method signatures
+
 ## 1.0.6
 
 ### Patch Changes

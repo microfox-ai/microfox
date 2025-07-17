@@ -1,6 +1,6 @@
 {
   "name": "@microfox/tool-core",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A TypeScript SDK for Tool Core.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
