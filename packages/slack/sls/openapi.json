@@ -3,7 +3,7 @@
   "info": {
     "agentName": "slack",
     "agentPath": "@microfox/slack",
-    "title": "Slack API",
+    "title": "Slack",
     "version": "1.2.0",
     "mcpVersion": "1.0.2",
     "description": "An agent to interact with Slack workspace using Slack API with powerful tools for messaging, channel management, user management and more",
@@ -21,7 +21,7 @@
     }
   ],
   "ai": {
-    "systemPrompt": "This Agent can interact with a Slack workspace. It can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
+    "systemPrompt": "Theese tools can interact with a Slack workspace. It can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
   },
   "components": {
     "schemas": {

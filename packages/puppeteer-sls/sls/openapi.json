@@ -3,6 +3,9 @@
   "info": {
     "title": "Chrome Browser use",
     "version": "1.2.0",
+    "agentName": "puppeteer-sls",
+    "agentPath": "@microfox/puppeteer-sls",
+    "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/main/logos/chrome.svg",
     "mcp_version": "1.0.2",
     "description": "A simple and easy way to run Chrome Browser on serverless functions.",
     "contact": {
