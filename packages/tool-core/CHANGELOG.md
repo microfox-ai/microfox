@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.11
+
+### Patch Changes
+
+- 5549e4f: release: update task handling by introducing AgentTask and AgentTaskEvent types, and simplify update method signatures
+- Updated dependencies [5549e4f]
+  - @microfox/types@1.0.7
+
 ## 1.0.10
 
 ### Patch Changes
