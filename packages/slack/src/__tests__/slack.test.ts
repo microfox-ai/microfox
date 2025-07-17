@@ -35,7 +35,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
     console.log(`Channel #${channelName} created with ID: ${testChannelId}`);
 
     console.log(`Looking up user with email: ${testUserEmail!}`);
-    const searchUserResponse = await client.searchUserByEmail(testUserEmail!);
+    const searchUserResponse = await client.getUserByEmail(testUserEmail!);
     if (!searchUserResponse?.id) {
         throw new Error('Failed to find test user.');
     }
@@ -82,7 +82,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   
   test('should list users in the channel', async () => {
     console.log(`Listing users in channel ${testChannelId}`);
-    const userIds = await client.listChannelUsers(testChannelId);
+    const userIds = await client.getChannelMembers(testChannelId);
     expect(userIds).toBeInstanceOf(Array);
     expect(userIds).toContain(testUserId);
     console.log(`Found ${userIds?.length} user(s) in the channel.`);

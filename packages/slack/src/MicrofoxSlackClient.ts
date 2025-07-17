@@ -5,15 +5,14 @@ import {
   ConversationsCreateResponse,
   ConversationsInviteResponse,
   ConversationsKickResponse,
-  FilesUploadResponse,
   ReactionsAddResponse,
   RemindersAddResponse,
   ChatPostMessageArguments,
   ConversationsListResponse,
   ConversationsInfoResponse,
   ConversationsJoinResponse,
-  FilesGetUploadURLExternalResponse,
-  FilesCompleteUploadExternalResponse
+  UsersListResponse,
+  ConversationsHistoryResponse,
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -32,19 +31,33 @@ export class MicrofoxSlackClient {
    * @param cursor A cursor to the next page of results.
    * @param limit The maximum number of channels to return.
    */
-  async listChannels({
+  async getChannels({
     cursor,
     limit = 50,
   }: {
     cursor?: string;
     limit?: number;
-  }): Promise<ConversationsListResponse['channels']> {
-    const result = await this.web.conversations.list({
-      types: 'public_channel,private_channel,im',
-      ...(cursor ? { cursor } : {}),
-      ...(limit ? { limit } : {}),
-    });
-    return result.channels;
+  }): Promise<{
+    channels: ConversationsListResponse['channels'];
+    nextCursor: string | undefined;
+  }> {
+    let channels: ConversationsListResponse['channels'] = [];
+    let nextCursor: string | undefined = cursor;
+    let hasMore = true;
+    while (hasMore) {
+      const result = await this.web.conversations.list({
+        types: 'public_channel,private_channel,im',
+        limit,
+        cursor: nextCursor,
+      });
+      channels = [...channels, ...(result.channels || [])];
+      nextCursor = result.response_metadata?.next_cursor;
+      hasMore = !!nextCursor && channels.length < limit;
+    }
+    return {
+      channels,
+      nextCursor,
+    };
   }
 
   /**
@@ -52,18 +65,21 @@ export class MicrofoxSlackClient {
    * @param cursor A cursor to the next page of results.
    * @param limit The maximum number of channels to return.
    */
-  async listChannelIdsMap({
+  async getChannelsIds({
     cursor,
     limit,
   }: {
     cursor?: string;
     limit?: number;
   }) {
-    const channels = await this.listChannels({ cursor, limit });
-    return channels?.map((channel) => ({
-      id: channel.id,
-      name: channel.name,
-    }));
+    const response = await this.getChannels({ cursor, limit });
+    return {
+      channels: response.channels?.map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+      })) || [],
+      nextCursor: response.nextCursor,
+    }
   }
 
   /**
@@ -83,7 +99,7 @@ export class MicrofoxSlackClient {
    * @param limit The maximum number of users to return.
    * @param includeBots Whether to include bots.
    */
-  async listActiveUsers({
+  async getActiveUsers({
     cursor,
     limit,
     includeBots = false,
@@ -91,12 +107,18 @@ export class MicrofoxSlackClient {
     cursor?: string;
     limit?: number;
     includeBots?: boolean;
-  }) {
+  }): Promise<{
+    users: UsersListResponse['members'];
+    nextCursor: string | undefined;
+  }> {
     const result = await this.web.users.list({
       limit: limit || 100,
       ...(cursor ? { cursor } : {}),
     });
-    return result.members?.filter((member) => !member.deleted)?.filter((member) => includeBots ? true : !member.is_bot);
+    return {
+      users: result.members?.filter((member) => !member.deleted)?.filter((member) => includeBots ? true : !member.is_bot) || [],
+      nextCursor: result.response_metadata?.next_cursor,
+    }
   }
 
   /**
@@ -105,7 +127,7 @@ export class MicrofoxSlackClient {
    * @param limit The maximum number of users to return.
    * @param includeBots Whether to include bots.
    */
-  async listUserIdsMap({
+  async getActiveUsersIds({
     cursor,
     limit,
     includeBots = false,
@@ -113,20 +135,30 @@ export class MicrofoxSlackClient {
     includeBots?: boolean;
     cursor?: string;
     limit?: number;
-  }) {
-    const users = await this.listActiveUsers({ includeBots, cursor, limit });
-    return users?.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.profile?.email,
-    }));
+  }): Promise<{
+    users: {
+      id: string;
+      name: string;
+      email: string;
+    }[];
+    nextCursor: string | undefined;
+  }> {
+    const response = await this.getActiveUsers({ includeBots, cursor, limit });
+    return {
+      users: response.users?.map((user) => ({
+        id: user.id || '',
+        name: user.name || '',
+        email: user.profile?.email || '',
+      })) || [],
+      nextCursor: response.nextCursor,
+    }
   }
 
   /**
    * Lists all users in a channel.
    * @param channelId Channel ID to get members of.
    */
-  async listChannelUsers(channelId: string) {
+  async getChannelMembers(channelId: string) {
     const result = await this.web.conversations.members({
       channel: channelId,
     });
@@ -137,7 +169,7 @@ export class MicrofoxSlackClient {
    * Finds a user by their email address.
    * @param email The email address of the user to find.
    */
-  async searchUserByEmail(email: string) {
+  async getUserByEmail(email: string) {
     const result = await this.web.users.lookupByEmail({ email });
     return result.user;
   }
@@ -146,13 +178,13 @@ export class MicrofoxSlackClient {
    * Finds users by their email addresses.
    * @param emails The email addresses of the users to find.
    */
-  async searchUsersByEmail({
+  async getUsersByEmails({
     emails,
   }: {
     emails: string[];
   }) {
     const result = await Promise.all(emails.map(async (email) => {
-      const user = await this.searchUserByEmail(email);
+      const user = await this.getUserByEmail(email);
       return user;
     }));
     return result;
@@ -388,7 +420,10 @@ export class MicrofoxSlackClient {
     oldest?: string;
     inclusive?: boolean;
     cursor?: string;
-  }) {
+  }): Promise<{
+    messages: ConversationsHistoryResponse['messages'];
+    nextCursor: string | undefined;
+  }> {
     const result = await this.web.conversations.history({
       channel: channelId,
       limit,
@@ -397,7 +432,10 @@ export class MicrofoxSlackClient {
       inclusive,
       cursor,
     });
-    return result.messages;
+    return {
+      messages: result.messages || [],
+      nextCursor: result.response_metadata?.next_cursor,
+    }
   }
 
   /**
