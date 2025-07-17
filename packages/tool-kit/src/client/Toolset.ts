@@ -314,10 +314,13 @@ export class OpenApiToolset {
             if (options.inserAuthVariables && _auth) {
               _auth = await options.inserAuthVariables(_auth);
             }
-            if ((part as any).output === 'approved') {
+            if (
+              (part as any).output.mutatedInput &&
+              Object.keys((part as any).output.mutatedInput).length > 0
+            ) {
               _input = (part as any).output.mutatedInput;
             }
-            //console.log('calling tool', part.input);
+            //console.log('calling tool', _input, part);
             result = await correspondingCall(_input as any, {
               toolCallId: (part as any).toolCallId,
               messages: messages as any[],
@@ -329,8 +332,13 @@ export class OpenApiToolset {
                 uiMapper: uiMap,
               });
             }
-            if (result.data.taskId) {
-              result.data.message = `Task ${result.data.taskId} has been started. We will notify you when it is completed.`;
+            if (result.data.task_id) {
+              result.backgroundTask = {
+                taskId: result.data.task_id,
+                startedAt: new Date().toISOString(),
+                status: 'pending',
+                message: `You task is started, I will notify you when it is completed.`,
+              };
             }
             result.toolSummary = thisClientTools.metadata[toolName]?.summary;
           } else {
