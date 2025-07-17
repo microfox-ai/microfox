@@ -28,18 +28,18 @@ export const handler = async (event: SQSEvent): Promise<any> => {
     console.log('Processing message:', body);
     const { triggerEvent, task_id } = body;
 
-    await taskHandler.update({
-      taskId: task_id,
-      state: TaskState.Working,
-      metadata: {
-        triggerEvent,
-        loader: 'Started the browser',
-      },
-    });
-
     try {
       // Extract environment variables from the new structure
       toolHandler.populateEnvs({ event: triggerEvent });
+
+      await taskHandler.update({
+        taskId: task_id,
+        state: TaskState.Working,
+        metadata: {
+          triggerEvent,
+          loader: 'Started the browser',
+        },
+      });
 
       const constructorName = toolHandler.extractConstructor(triggerEvent);
 

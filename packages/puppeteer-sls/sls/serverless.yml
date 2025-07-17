@@ -20,11 +20,11 @@ provider:
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: 'Allow'
           Action:
-            - "sqs:SendMessage"
+            - 'sqs:SendMessage'
           Resource:
-            - "Fn::GetAtt": [ "PuppeteerQueue", "Arn" ]
+            - 'Fn::GetAtt': ['PuppeteerQueue', 'Arn']
 
 custom:
   stage: ${env:ENVIRONMENT, 'dev'}
@@ -45,7 +45,7 @@ functions:
   proxy:
     handler: dist/proxy.handler
     environment:
-      PUPPETEER_QUEUE_URL: { "Ref": "PuppeteerQueue" }
+      PUPPETEER_QUEUE_URL: { 'Ref': 'PuppeteerQueue' }
     events:
       - http:
           path: /{functionName}
@@ -53,6 +53,7 @@ functions:
           cors: true
   unifiedHandler:
     handler: dist/index.handler
+    timeout: 300
     events:
       - sqs:
           arn:
@@ -65,9 +66,9 @@ functions:
 resources:
   Resources:
     PuppeteerQueue:
-      Type: "AWS::SQS::Queue"
+      Type: 'AWS::SQS::Queue'
       Properties:
-        QueueName: "puppeteer-queue-${self:provider.stage}"
+        QueueName: 'puppeteer-queue-${self:provider.stage}'
   Outputs:
     ApiEndpoints:
       Description: 'API Endpoints'
@@ -78,4 +79,4 @@ resources:
             - Ref: 'ApiGatewayRestApi'
             - '.execute-api.'
             - Ref: 'AWS::Region'
-            - "/${self:provider.stage}"
+            - '/${self:provider.stage}'
