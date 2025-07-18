@@ -38,10 +38,10 @@
       "post": {
         "operationId": "addUserToChannel",
         "summary": "Adds a user to a Slack channel.",
-        "description": "The addUserToChannel function adds a specified user to a specified Slack channel. It takes two required parameters: the channel ID and the user ID. Upon successful execution, it returns information about the channel, including various properties such as channel name, creation timestamp, and member count.",
+        "description": "Adds a specified user to a specified Slack channel & returns information about the channel, including various properties such as channel name, creation timestamp, and member count.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
+          "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). DO NOT ASSUME THESE IDS BY NAMES. If the `channelId` is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. To find a `userId`, use `getActiveUsersIds` or `getUsersByEmails` only if exact user email is known."
         },
         "requestBody": {
           "required": true,
@@ -302,9 +302,6 @@
         "summary": "Creates a new channel in Slack.",
         "description": "The createChannel function creates a new channel in Slack, which can be either public or private. It takes an object with the channel name and an optional privacy setting, and returns a detailed channel object containing various properties of the newly created channel.",
         "tags": ["channel"],
-        "ai": {
-          "systemPrompt": "To create a new channel, a `name` is required. You can optionally set `isPrivate` to true for a private channel and `join` to false if you do not wish to join the channel upon creation."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -518,9 +515,6 @@
         "summary": "Retrieves detailed information about a specific Slack channel.",
         "description": "The getChannelConversationInfo function fetches comprehensive data about a given Slack channel using its ID. It returns a conversation object containing various properties that describe the channel's characteristics, status, and metadata. This function is useful for obtaining detailed insights into a channel's configuration and current state.",
         "tags": ["channel"],
-        "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -741,7 +735,7 @@
         "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
         "tags": ["channel", "message"],
         "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. You can use optional parameters like `limit`, `latest`, `oldest`, `inclusive`, and `cursor` to filter and paginate results. If the channel ID is unknown, use `listChannels` to find it."
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
         },
         "requestBody": {
           "required": true,
@@ -798,209 +792,32 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string"
-                      },
-                      "user": {
-                        "type": "string"
-                      },
-                      "text": {
-                        "type": "string"
-                      },
-                      "ts": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - The server cannot process the request due to a client error.",
-            "content": {
-              "application/json": {
-                "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/getFileInfo": {
-      "post": {
-        "operationId": "getFileInfo",
-        "summary": "Retrieves detailed information about a specific file in Slack.",
-        "description": "The getFileInfo function fetches comprehensive metadata for a given file in Slack using its unique file ID. It returns a rich file object containing various attributes such as file properties, sharing details, and associated channel information. This function is useful for obtaining detailed insights about files shared within a Slack workspace.",
-        "tags": ["file"],
-        "ai": {
-          "systemPrompt": "To retrieve file metadata, a `fileId` (starts with 'F') is required."
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the getFileInfo sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "array",
-                        "description": "Container for function arguments.",
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
                         "properties": {
-                          "fileId": {
-                            "type": "string",
-                            "description": "fileId: The ID of the file to get information for. File IDs start with 'F'."
+                          "type": {
+                            "type": "string"
+                          },
+                          "user": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "ts": {
+                            "type": "string"
                           }
-                        },
-                        "required": ["fileId"]
+                        }
                       }
                     },
-                    "required": ["arguments"]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response containing file information",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The ID of the file object."
-                    },
-                    "created": {
-                      "type": "integer",
-                      "description": "A Unix timestamp representing when the file was created."
-                    },
-                    "timestamp": {
-                      "type": "integer",
-                      "description": "A deprecated property that is provided only for backwards compatibility with older clients."
-                    },
-                    "name": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "Name of the file; may be null for unnamed files."
-                    },
-                    "title": {
-                      "type": "string",
-                      "description": "Title of the file."
-                    },
-                    "mimetype": {
-                      "type": "string",
-                      "description": "The file's mimetype."
-                    },
-                    "filetype": {
-                      "type": "string",
-                      "description": "The file's type."
-                    },
-                    "pretty_type": {
-                      "type": "string",
-                      "description": "A human-readable version of the type."
-                    },
-                    "user": {
-                      "type": "string",
-                      "description": "The ID of the user who created the object."
-                    },
-                    "editable": {
-                      "type": "boolean",
-                      "description": "Indicates that files are stored in editable mode."
-                    },
-                    "size": {
-                      "type": "integer",
-                      "description": "The filesize in bytes."
-                    },
-                    "mode": {
-                      "type": "string",
-                      "enum": ["hosted", "external", "snippet", "post"],
-                      "description": "One of the following: hosted, external, snippet or post."
-                    },
-                    "is_external": {
-                      "type": "boolean",
-                      "description": "Indicates whether the master copy of a file is stored within the system or not."
-                    },
-                    "external_type": {
-                      "type": "string",
-                      "description": "Indicates what kind of external file it is, e.g. dropbox or gdoc."
-                    },
-                    "is_public": {
-                      "type": "boolean",
-                      "description": "true if the file is public."
-                    },
-                    "public_url_shared": {
-                      "type": "boolean",
-                      "description": "true if the file's public URL has been shared."
-                    },
-                    "url_private": {
-                      "type": "string",
-                      "description": "A URL to the file contents. This requires an authorization header to access."
-                    },
-                    "permalink": {
-                      "type": "string",
-                      "description": "A URL to a page for the file containing details, comments and a download link."
-                    },
-                    "channels": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Contains the IDs of any channels into which the file is currently shared."
-                    },
-                    "groups": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Contains the IDs of any private groups into which the file is currently shared."
-                    },
-                    "ims": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Contains the IDs of any IM channels into which the file is currently shared."
-                    },
-                    "comments_count": {
-                      "type": "integer",
-                      "description": "The number of comments on the file."
+                    "nextCursor": {
+                      "type": "string"
                     }
-                  },
-                  "required": ["id", "created", "user", "size"]
+                  }
                 }
               }
             }
@@ -1013,8 +830,7 @@
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string",
-                      "description": "Error message describing the issue with the request."
+                      "type": "string"
                     }
                   }
                 }
@@ -1029,8 +845,7 @@
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "string",
-                      "description": "Error message describing the server error."
+                      "type": "string"
                     }
                   }
                 }
@@ -1046,9 +861,6 @@
         "summary": "Retrieves detailed information about a specific Slack user.",
         "description": "The getUserInfo function fetches comprehensive details about a Slack user, including their profile information, team membership, and account status. It requires a user ID as input and returns a rich user object containing various attributes such as name, timezone, admin status, and profile details.",
         "tags": ["user"],
-        "ai": {
-          "systemPrompt": "Provide a `userId` (starts with 'U') to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1281,9 +1093,6 @@
         "summary": "Joins a Slack channel.",
         "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
         "tags": ["channel"],
-        "ai": {
-          "systemPrompt": "To join a channel, provide the `channelId` (starts with 'C')."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1423,15 +1232,12 @@
         }
       }
     },
-    "/listActiveUsers": {
+    "/getActiveUsers": {
       "post": {
-        "operationId": "listActiveUsers",
+        "operationId": "getActiveUsers",
         "summary": "Lists all active users in a Slack workspace.",
-        "description": "The listActiveUsers function retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user, including their profile data, team information, and various status indicators.",
+        "description": "The getActiveUsers function retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user, including their profile data, team information, and various status indicators.",
         "tags": ["user"],
-        "ai": {
-          "systemPrompt": "This function retrieves all active users in the workspace. It can be used to find user IDs if you know the user's name. You can filter by bots and paginate through results. The default limit is 100 users per page."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1441,7 +1247,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the listActiveUsers sls call",
+                    "description": "Body of the getActiveUsers sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -1475,126 +1281,140 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "Unique identifier for the workspace user"
-                      },
-                      "team_id": {
-                        "type": "string",
-                        "description": "The ID of the team the user belongs to"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "The username of the user"
-                      },
-                      "deleted": {
-                        "type": "boolean",
-                        "description": "Indicates if the user has been deactivated (always false for this method)"
-                      },
-                      "color": {
-                        "type": "string",
-                        "description": "Used in some clients to display a special username color"
-                      },
-                      "real_name": {
-                        "type": "string",
-                        "description": "The user's first and last name"
-                      },
-                      "tz": {
-                        "type": "string",
-                        "description": "A human-readable string for the geographic timezone-related region"
-                      },
-                      "tz_label": {
-                        "type": "string",
-                        "description": "Describes the commonly used name of the tz timezone"
-                      },
-                      "tz_offset": {
-                        "type": "integer",
-                        "description": "Number of seconds to offset UTC time by for this user's tz"
-                      },
-                      "profile": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
-                        "description": "The profile object contains the default fields of a user's workspace profile",
                         "properties": {
-                          "title": { "type": "string" },
-                          "phone": { "type": "string" },
-                          "skype": { "type": "string" },
-                          "real_name": { "type": "string" },
-                          "real_name_normalized": { "type": "string" },
-                          "display_name": { "type": "string" },
-                          "display_name_normalized": { "type": "string" },
-                          "fields": { "type": "object" },
-                          "status_text": { "type": "string" },
-                          "status_emoji": { "type": "string" },
-                          "status_expiration": { "type": "integer" },
-                          "avatar_hash": { "type": "string" },
-                          "start_date": { "type": "string" },
-                          "image_original": { "type": "string" },
-                          "is_custom_image": { "type": "boolean" },
-                          "email": { "type": "string" },
-                          "pronouns": { "type": "string" },
-                          "first_name": { "type": "string" },
-                          "last_name": { "type": "string" },
-                          "image_24": { "type": "string" },
-                          "image_32": { "type": "string" },
-                          "image_48": { "type": "string" },
-                          "image_72": { "type": "string" },
-                          "image_192": { "type": "string" },
-                          "image_512": { "type": "string" },
-                          "image_1024": { "type": "string" },
-                          "status_text_canonical": { "type": "string" },
-                          "team": { "type": "string" }
+                          "id": {
+                            "type": "string",
+                            "description": "Unique identifier for the workspace user"
+                          },
+                          "team_id": {
+                            "type": "string",
+                            "description": "The ID of the team the user belongs to"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The username of the user"
+                          },
+                          "deleted": {
+                            "type": "boolean",
+                            "description": "Indicates if the user has been deactivated (always false for this method)"
+                          },
+                          "color": {
+                            "type": "string",
+                            "description": "Used in some clients to display a special username color"
+                          },
+                          "real_name": {
+                            "type": "string",
+                            "description": "The user's first and last name"
+                          },
+                          "tz": {
+                            "type": "string",
+                            "description": "A human-readable string for the geographic timezone-related region"
+                          },
+                          "tz_label": {
+                            "type": "string",
+                            "description": "Describes the commonly used name of the tz timezone"
+                          },
+                          "tz_offset": {
+                            "type": "integer",
+                            "description": "Number of seconds to offset UTC time by for this user's tz"
+                          },
+                          "profile": {
+                            "type": "object",
+                            "description": "The profile object contains the default fields of a user's workspace profile",
+                            "properties": {
+                              "title": { "type": "string" },
+                              "phone": { "type": "string" },
+                              "skype": { "type": "string" },
+                              "real_name": { "type": "string" },
+                              "real_name_normalized": { "type": "string" },
+                              "display_name": { "type": "string" },
+                              "display_name_normalized": { "type": "string" },
+                              "fields": { "type": "object" },
+                              "status_text": { "type": "string" },
+                              "status_emoji": { "type": "string" },
+                              "status_expiration": { "type": "integer" },
+                              "avatar_hash": { "type": "string" },
+                              "start_date": { "type": "string" },
+                              "image_original": { "type": "string" },
+                              "is_custom_image": { "type": "boolean" },
+                              "email": { "type": "string" },
+                              "pronouns": { "type": "string" },
+                              "first_name": { "type": "string" },
+                              "last_name": { "type": "string" },
+                              "image_24": { "type": "string" },
+                              "image_32": { "type": "string" },
+                              "image_48": { "type": "string" },
+                              "image_72": { "type": "string" },
+                              "image_192": { "type": "string" },
+                              "image_512": { "type": "string" },
+                              "image_1024": { "type": "string" },
+                              "status_text_canonical": { "type": "string" },
+                              "team": { "type": "string" }
+                            }
+                          },
+                          "is_admin": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user is an Admin of the current workspace"
+                          },
+                          "is_owner": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user is an Owner of the current workspace"
+                          },
+                          "is_primary_owner": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user is the Primary Owner of the current workspace"
+                          },
+                          "is_restricted": {
+                            "type": "boolean",
+                            "description": "Indicates whether or not the user is a guest user"
+                          },
+                          "is_ultra_restricted": {
+                            "type": "boolean",
+                            "description": "Indicates whether or not the user is a single-channel guest"
+                          },
+                          "is_bot": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user is a bot user"
+                          },
+                          "is_app_user": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user is an authorized user of the calling app"
+                          },
+                          "updated": {
+                            "type": "string",
+                            "description": "A Unix timestamp indicating when the user object was last updated"
+                          },
+                          "is_email_confirmed": {
+                            "type": "boolean",
+                            "description": "Indicates if the user's email address has been confirmed"
+                          },
+                          "who_can_share_contact_card": {
+                            "type": "string",
+                            "description": "Who can share the user's contact card"
+                          },
+                          "enterprise_user": {
+                            "type": "object",
+                            "description": "An object containing info related to an Enterprise Grid user"
+                          },
+                          "is_active": {
+                            "type": "boolean",
+                            "description": "Indicates if the user is active"
+                          }
                         }
-                      },
-                      "is_admin": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user is an Admin of the current workspace"
-                      },
-                      "is_owner": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user is an Owner of the current workspace"
-                      },
-                      "is_primary_owner": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user is the Primary Owner of the current workspace"
-                      },
-                      "is_restricted": {
-                        "type": "boolean",
-                        "description": "Indicates whether or not the user is a guest user"
-                      },
-                      "is_ultra_restricted": {
-                        "type": "boolean",
-                        "description": "Indicates whether or not the user is a single-channel guest"
-                      },
-                      "is_bot": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user is a bot user"
-                      },
-                      "is_app_user": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user is an authorized user of the calling app"
-                      },
-                      "updated": {
-                        "type": "string",
-                        "description": "A Unix timestamp indicating when the user object was last updated"
-                      },
-                      "is_email_confirmed": {
-                        "type": "boolean",
-                        "description": "Indicates if the user's email address has been confirmed"
-                      },
-                      "who_can_share_contact_card": {
-                        "type": "string",
-                        "description": "Who can share the user's contact card"
-                      },
-                      "enterprise_user": {
-                        "type": "object",
-                        "description": "An object containing info related to an Enterprise Grid user"
                       }
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "description": "A cursor to the next page of results"
                     }
-                  }
+                  },
+                  "required": ["users", "nextCursor"]
                 }
               }
             }
@@ -1634,9 +1454,9 @@
         }
       }
     },
-    "/listChannelIdsMap": {
+    "/getChannelsIds": {
       "post": {
-        "operationId": "listChannelIdsMap",
+        "operationId": "getChannelsIds",
         "summary": "Retrieves a map of channel IDs to channel names.",
         "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
         "tags": ["channel"],
@@ -1652,7 +1472,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the listChannelIdsMap sls call",
+                    "description": "Body of the getChannelsIds sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -1682,20 +1502,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The ID of the channel."
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the channel."
+                  "type": "object",
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the channel."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the channel."
+                          }
+                        },
+                        "required": ["id", "name"]
                       }
                     },
-                    "required": ["id", "name"]
+                    "nextCursor": {
+                      "type": "string",
+                      "description": "A cursor to the next page of results"
+                    }
                   }
                 }
               }
@@ -1719,15 +1548,12 @@
         }
       }
     },
-    "/listChannels": {
+    "/getChannels": {
       "post": {
-        "operationId": "listChannels",
+        "operationId": "getChannels",
         "summary": "Lists all public, private and direct message channels in a Slack workspace.",
-        "description": "The listChannels function retrieves information about all public, private and direct message channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+        "description": "Retrieves information about all public, private and direct message channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
         "tags": ["channel"],
-        "ai": {
-          "systemPrompt": "This function lists all public, private and direct message channels in the workspace. No arguments are required."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1737,7 +1563,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the listChannels sls call",
+                    "description": "Body of the getChannels sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -1767,159 +1593,168 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The ID of the conversation"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the channel-like thing, without a leading hash sign"
-                      },
-                      "is_channel": {
-                        "type": "boolean",
-                        "description": "Indicates whether a conversation is a channel"
-                      },
-                      "is_group": {
-                        "type": "boolean",
-                        "description": "Means the channel is a private channel created before March 2021"
-                      },
-                      "is_im": {
-                        "type": "boolean",
-                        "description": "Means the conversation is a direct message between two individuals or a user and a bot"
-                      },
-                      "is_mpim": {
-                        "type": "boolean",
-                        "description": "Represents an unnamed private conversation between multiple users"
-                      },
-                      "is_private": {
-                        "type": "boolean",
-                        "description": "Means the conversation is privileged between two or more members"
-                      },
-                      "created": {
-                        "type": "integer",
-                        "description": "Timestamp of when the conversation was created"
-                      },
-                      "creator": {
-                        "type": "string",
-                        "description": "The ID of the member that created this conversation"
-                      },
-                      "is_archived": {
-                        "type": "boolean",
-                        "description": "Indicates a conversation is archived"
-                      },
-                      "is_general": {
-                        "type": "boolean",
-                        "description": "Means the channel is the workspace's 'general' discussion channel"
-                      },
-                      "unlinked": { "type": "integer" },
-                      "name_normalized": {
-                        "type": "string",
-                        "description": "The 'normalized' name of a channel"
-                      },
-                      "is_shared": {
-                        "type": "boolean",
-                        "description": "Means the conversation is shared between multiple workspaces"
-                      },
-                      "is_frozen": {
-                        "type": "boolean",
-                        "description": "Indicates that the channel is frozen"
-                      },
-                      "is_org_shared": {
-                        "type": "boolean",
-                        "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization"
-                      },
-                      "is_pending_ext_shared": {
-                        "type": "boolean",
-                        "description": "Means the conversation is ready to become an is_ext_shared channel, but needs approval"
-                      },
-                      "pending_shared": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "A list of team IDs that have been invited to the channel but have not yet joined"
-                      },
-                      "context_team_id": {
-                        "type": "string",
-                        "description": "The team ID of the team that this channel belongs to"
-                      },
-                      "updated": {
-                        "type": "integer",
-                        "description": "The timestamp, in milliseconds, when the channel settings were updated"
-                      },
-                      "parent_conversation": {
-                        "type": "string",
-                        "description": "The ID of the parent conversation for threaded messages"
-                      },
-                      "is_ext_shared": {
-                        "type": "boolean",
-                        "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization"
-                      },
-                      "shared_team_ids": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "A list of team IDs that are part of this shared channel"
-                      },
-                      "pending_connected_team_ids": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "A list of team IDs that have been invited to connect to the channel but have not yet accepted"
-                      },
-                      "is_member": {
-                        "type": "boolean",
-                        "description": "Indicates whether the user, bot user or Slack app associated with the token making the API call is itself a member of the conversation"
-                      },
-                      "topic": {
+                  "type": "object",
+                  "properties": {
+                    "channels": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
-                          "value": { "type": "string" },
-                          "creator": { "type": "string" },
-                          "last_set": { "type": "integer" }
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the conversation"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the channel-like thing, without a leading hash sign"
+                          },
+                          "is_channel": {
+                            "type": "boolean",
+                            "description": "Indicates whether a conversation is a channel"
+                          },
+                          "is_group": {
+                            "type": "boolean",
+                            "description": "Means the channel is a private channel created before March 2021"
+                          },
+                          "is_im": {
+                            "type": "boolean",
+                            "description": "Means the conversation is a direct message between two individuals or a user and a bot"
+                          },
+                          "is_mpim": {
+                            "type": "boolean",
+                            "description": "Represents an unnamed private conversation between multiple users"
+                          },
+                          "is_private": {
+                            "type": "boolean",
+                            "description": "Means the conversation is privileged between two or more members"
+                          },
+                          "created": {
+                            "type": "integer",
+                            "description": "Timestamp of when the conversation was created"
+                          },
+                          "creator": {
+                            "type": "string",
+                            "description": "The ID of the member that created this conversation"
+                          },
+                          "is_archived": {
+                            "type": "boolean",
+                            "description": "Indicates a conversation is archived"
+                          },
+                          "is_general": {
+                            "type": "boolean",
+                            "description": "Means the channel is the workspace's 'general' discussion channel"
+                          },
+                          "unlinked": { "type": "integer" },
+                          "name_normalized": {
+                            "type": "string",
+                            "description": "The 'normalized' name of a channel"
+                          },
+                          "is_shared": {
+                            "type": "boolean",
+                            "description": "Means the conversation is shared between multiple workspaces"
+                          },
+                          "is_frozen": {
+                            "type": "boolean",
+                            "description": "Indicates that the channel is frozen"
+                          },
+                          "is_org_shared": {
+                            "type": "boolean",
+                            "description": "Indicates whether this shared channel is shared between Enterprise Grid workspaces within the same organization"
+                          },
+                          "is_pending_ext_shared": {
+                            "type": "boolean",
+                            "description": "Means the conversation is ready to become an is_ext_shared channel, but needs approval"
+                          },
+                          "pending_shared": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "A list of team IDs that have been invited to the channel but have not yet joined"
+                          },
+                          "context_team_id": {
+                            "type": "string",
+                            "description": "The team ID of the team that this channel belongs to"
+                          },
+                          "updated": {
+                            "type": "integer",
+                            "description": "The timestamp, in milliseconds, when the channel settings were updated"
+                          },
+                          "parent_conversation": {
+                            "type": "string",
+                            "description": "The ID of the parent conversation for threaded messages"
+                          },
+                          "is_ext_shared": {
+                            "type": "boolean",
+                            "description": "Indicates whether a conversation is part of a Shared Channel with a remote organization"
+                          },
+                          "shared_team_ids": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "A list of team IDs that are part of this shared channel"
+                          },
+                          "pending_connected_team_ids": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "A list of team IDs that have been invited to connect to the channel but have not yet accepted"
+                          },
+                          "is_member": {
+                            "type": "boolean",
+                            "description": "Indicates whether the user, bot user or Slack app associated with the token making the API call is itself a member of the conversation"
+                          },
+                          "topic": {
+                            "type": "object",
+                            "properties": {
+                              "value": { "type": "string" },
+                              "creator": { "type": "string" },
+                              "last_set": { "type": "integer" }
+                            },
+                            "description": "Provides information about the channel topic"
+                          },
+                          "purpose": {
+                            "type": "object",
+                            "properties": {
+                              "value": { "type": "string" },
+                              "creator": { "type": "string" },
+                              "last_set": { "type": "integer" }
+                            },
+                            "description": "Provides information about the channel purpose"
+                          },
+                          "previous_names": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "A list of previous names for the channel"
+                          },
+                          "num_members": {
+                            "type": "integer",
+                            "description": "The number of members in the conversation"
+                          },
+                          "locale": {
+                            "type": "string",
+                            "description": "The locale for this conversation"
+                          },
+                          "last_read": {
+                            "type": "integer",
+                            "description": "The timestamp for the last message the calling user has read in this channel"
+                          },
+                          "latest": {
+                            "type": "string",
+                            "description": "The latest message in the channel"
+                          },
+                          "unread_count": {
+                            "type": "integer",
+                            "description": "A full count of visible messages that the calling user has yet to read"
+                          },
+                          "unread_count_display": {
+                            "type": "integer",
+                            "description": "A count of messages that the calling user has yet to read that matter to them"
+                          }
                         },
-                        "description": "Provides information about the channel topic"
+                        "required": ["id", "name", "is_channel"]
                       },
-                      "purpose": {
-                        "type": "object",
-                        "properties": {
-                          "value": { "type": "string" },
-                          "creator": { "type": "string" },
-                          "last_set": { "type": "integer" }
-                        },
-                        "description": "Provides information about the channel purpose"
-                      },
-                      "previous_names": {
-                        "type": "array",
-                        "items": { "type": "string" },
-                        "description": "A list of previous names for the channel"
-                      },
-                      "num_members": {
-                        "type": "integer",
-                        "description": "The number of members in the conversation"
-                      },
-                      "locale": {
+                      "nextCursor": {
                         "type": "string",
-                        "description": "The locale for this conversation"
-                      },
-                      "last_read": {
-                        "type": "integer",
-                        "description": "The timestamp for the last message the calling user has read in this channel"
-                      },
-                      "latest": {
-                        "type": "string",
-                        "description": "The latest message in the channel"
-                      },
-                      "unread_count": {
-                        "type": "integer",
-                        "description": "A full count of visible messages that the calling user has yet to read"
-                      },
-                      "unread_count_display": {
-                        "type": "integer",
-                        "description": "A count of messages that the calling user has yet to read that matter to them"
+                        "description": "A cursor to the next page of results"
                       }
-                    },
-                    "required": ["id", "name", "is_channel"]
+                    }
                   }
                 }
               }
@@ -1950,14 +1785,14 @@
         }
       }
     },
-    "/listChannelUsers": {
+    "/getChannelMembers": {
       "post": {
-        "operationId": "listChannelUsers",
+        "operationId": "getChannelMembers",
         "summary": "List all users in a specific Slack channel.",
-        "description": "The listChannelUsers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
+        "description": "The getChannelMembers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId` (starts with 'C')."
+          "systemPrompt": "To get a list of users in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
         },
         "requestBody": {
           "required": true,
@@ -1968,7 +1803,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the listChannelUsers sls call",
+                    "description": "Body of the getChannelMembers sls call",
                     "properties": {
                       "arguments": {
                         "type": "array",
@@ -2040,14 +1875,14 @@
         }
       }
     },
-    "/listUserIdsMap": {
+    "/getActiveUsersIds": {
       "post": {
-        "operationId": "listUserIdsMap",
+        "operationId": "getActiveUsersIds",
         "summary": "Retrieves a map of user IDs to user names and emails.",
-        "description": "The listUserIdsMap function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
+        "description": "The getActiveUsersIds function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
         "tags": ["user"],
         "ai": {
-          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. You can use optional parameters like `limit`, `cursor`, and `includeBots` to filter and paginate results."
+          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. Use this when you need to find a userId by their name or email."
         },
         "requestBody": {
           "required": true,
@@ -2058,7 +1893,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the listUserIdsMap sls call",
+                    "description": "Body of the getActiveUsersIds sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -2091,24 +1926,33 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "The ID of the user."
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the user."
-                      },
-                      "email": {
-                        "type": "string",
-                        "description": "The email of the user."
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the user."
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the user."
+                          },
+                          "email": {
+                            "type": "string",
+                            "description": "The email of the user."
+                          }
+                        },
+                        "required": ["id", "name"]
                       }
                     },
-                    "required": ["id", "name"]
+                    "nextCursor": {
+                      "type": "string",
+                      "description": "A cursor to the next page of results"
+                    }
                   }
                 }
               }
@@ -2139,7 +1983,7 @@
         "description": "The messageChannel function sends a text message to a specified Slack channel. It requires a channel ID and the message text as input, and returns details about the sent message including its timestamp and channel.",
         "tags": ["message", "channel"],
         "ai": {
-          "systemPrompt": "Ensure you have the correct `channelId` (starts with 'C') before sending a message. Use `listChannels` to verify or find the channel ID if needed."
+          "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel. DO NOT ASSUME THE CHANNEL ID BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
         },
         "requestBody": {
           "required": true,
@@ -2244,7 +2088,7 @@
         "description": "The messageUser function allows sending a direct message to a specified Slack user. It requires the user's ID and the message text as input. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
         "tags": ["message", "user"],
         "ai": {
-          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
+          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME. If the user's ID is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by name from the output or use `getUsersByEmails` only if exact user email is known."
         },
         "requestBody": {
           "required": true,
@@ -2378,9 +2222,6 @@
         "summary": "Adds a reaction to a message in Slack.",
         "description": "The reactMessage function allows adding an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction. This function is part of the MicrofoxSlackClient and interacts with the Slack API to perform the reaction action.",
         "tags": ["message"],
-        "ai": {
-          "systemPrompt": "To add a reaction, specify the `channelId` (starts with 'C'), the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -2477,9 +2318,6 @@
         "summary": "Removes a user from a Slack channel.",
         "description": "This function removes a specified user from a given Slack channel. It takes the channel ID and user ID as required parameters and returns a response indicating whether the operation was successful. This method is useful for managing channel membership programmatically.",
         "tags": ["channel", "user"],
-        "ai": {
-          "systemPrompt": "Requires `channelId` (starts with 'C') and `userId` (starts with 'U') to remove a user from a channel. Use `listChannels` and `searchUserByEmail` if necessary."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -2547,7 +2385,7 @@
         "description": "The replyMessage function allows users to reply to an existing message in a Slack thread. It takes the channel ID, the timestamp of the original message, and the text of the reply as input. This function is useful for maintaining context in conversations and organizing discussions within Slack channels.",
         "tags": ["message"],
         "ai": {
-          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply."
+          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If thread_ts is unknown, use `getConversationHistory` to find it."
         },
         "requestBody": {
           "required": true,
@@ -2657,259 +2495,12 @@
         }
       }
     },
-    "/searchUser": {
+    "/getUserByEmail": {
       "post": {
-        "operationId": "searchUser",
-        "summary": "Search for a Slack user by their email address.",
-        "description": "The searchUser function finds a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their Slack account.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the searchUser sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "object",
-                        "properties": {
-                          "email": {
-                            "type": "string",
-                            "description": "email: The email address of the user to find."
-                          }
-                        },
-                        "required": ["email"]
-                      }
-                    },
-                    "required": ["arguments"]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response containing the user object",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "team_id": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "deleted": {
-                      "type": "boolean"
-                    },
-                    "color": {
-                      "type": "string"
-                    },
-                    "real_name": {
-                      "type": "string"
-                    },
-                    "tz": {
-                      "type": "string"
-                    },
-                    "tz_label": {
-                      "type": "string"
-                    },
-                    "tz_offset": {
-                      "type": "integer"
-                    },
-                    "profile": {
-                      "type": "object",
-                      "properties": {
-                        "title": {
-                          "type": "string"
-                        },
-                        "phone": {
-                          "type": "string"
-                        },
-                        "skype": {
-                          "type": "string"
-                        },
-                        "real_name": {
-                          "type": "string"
-                        },
-                        "real_name_normalized": {
-                          "type": "string"
-                        },
-                        "display_name": {
-                          "type": "string"
-                        },
-                        "display_name_normalized": {
-                          "type": "string"
-                        },
-                        "fields": {
-                          "type": "object"
-                        },
-                        "status_text": {
-                          "type": "string"
-                        },
-                        "status_emoji": {
-                          "type": "string"
-                        },
-                        "status_expiration": {
-                          "type": "integer"
-                        },
-                        "avatar_hash": {
-                          "type": "string"
-                        },
-                        "start_date": {
-                          "type": "string"
-                        },
-                        "image_original": {
-                          "type": "string"
-                        },
-                        "is_custom_image": {
-                          "type": "boolean"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "pronouns": {
-                          "type": "string"
-                        },
-                        "first_name": {
-                          "type": "string"
-                        },
-                        "last_name": {
-                          "type": "string"
-                        },
-                        "image_24": {
-                          "type": "string"
-                        },
-                        "image_32": {
-                          "type": "string"
-                        },
-                        "image_48": {
-                          "type": "string"
-                        },
-                        "image_72": {
-                          "type": "string"
-                        },
-                        "image_192": {
-                          "type": "string"
-                        },
-                        "image_512": {
-                          "type": "string"
-                        },
-                        "image_1024": {
-                          "type": "string"
-                        },
-                        "status_text_canonical": {
-                          "type": "string"
-                        },
-                        "team": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "is_admin": {
-                      "type": "boolean"
-                    },
-                    "is_owner": {
-                      "type": "boolean"
-                    },
-                    "is_primary_owner": {
-                      "type": "boolean"
-                    },
-                    "is_restricted": {
-                      "type": "boolean"
-                    },
-                    "is_ultra_restricted": {
-                      "type": "boolean"
-                    },
-                    "is_bot": {
-                      "type": "boolean"
-                    },
-                    "is_app_user": {
-                      "type": "boolean"
-                    },
-                    "updated": {
-                      "type": "string"
-                    },
-                    "is_email_confirmed": {
-                      "type": "boolean"
-                    },
-                    "who_can_share_contact_card": {
-                      "type": "string"
-                    },
-                    "enterprise_user": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - invalid email format or missing required parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/searchUserByEmail": {
-      "post": {
-        "operationId": "searchUserByEmail",
+        "operationId": "getUserByEmail",
         "summary": "Searches for a Slack user by their email address.",
-        "description": "The searchUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
+        "description": "The getUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
         "tags": ["user"],
-        "ai": {
-          "systemPrompt": "Find a user and their ID by providing their `email`. The returned user object can be used in other functions."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -2919,7 +2510,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the searchUserByEmail sls call",
+                    "description": "Body of the getUserByEmail sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -3113,15 +2704,12 @@
         }
       }
     },
-    "/searchUsersByEmail": {
+    "/getUsersByEmails": {
       "post": {
-        "operationId": "searchUsersByEmail",
+        "operationId": "getUsersByEmails",
         "summary": "Searches for multiple Slack users by their email addresses.",
-        "description": "The searchUsersByEmail function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
+        "description": "The getUsersByEmails function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
         "tags": ["user"],
-        "ai": {
-          "systemPrompt": "Find multiple users and their IDs by providing their `emails` as an array of strings. The returned user objects can be used in other functions."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -3131,7 +2719,7 @@
                 "properties": {
                   "body": {
                     "type": "object",
-                    "description": "Body of the searchUsersByEmail sls call",
+                    "description": "Body of the getUsersByEmails sls call",
                     "properties": {
                       "arguments": {
                         "type": "object",
@@ -3339,9 +2927,6 @@
         "summary": "Sets a reminder for a user in Slack.",
         "description": "The setReminder function creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered. This function is part of the MicrofoxSlackClient and interacts with Slack's API to manage reminders.",
         "tags": ["user", "reminder"],
-        "ai": {
-          "systemPrompt": "Set a reminder by providing a `userId` (starts with 'U'), the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -3437,124 +3022,6 @@
                       "type": "boolean",
                       "enum": [false]
                     },
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/uploadFile": {
-      "post": {
-        "operationId": "uploadFile",
-        "summary": "Uploads a file to a Slack channel using an external URL.",
-        "description": "The uploadFile function uploads a file to a Slack channel by first getting an external upload URL, posting the file to that URL, and then completing the upload to make it available in the channel.",
-        "tags": ["file", "channel"],
-        "ai": {
-          "systemPrompt": "To upload a file, provide the `filename` and the `file` content as a Buffer. You can optionally specify a `channelId` to share the file in, along with a `title` and `initialComment`."
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "body": {
-                    "type": "object",
-                    "description": "Body of the uploadFile sls call",
-                    "properties": {
-                      "arguments": {
-                        "type": "object",
-                        "properties": {
-                          "filename": {
-                            "type": "string",
-                            "description": "The name of the file."
-                          },
-                          "file": {
-                            "type": "string",
-                            "format": "binary",
-                            "description": "A Buffer containing the file content."
-                          },
-                          "channelId": {
-                            "type": "string",
-                            "description": "The ID of the channel to upload the file to. Can be a comma-separated list of strings."
-                          },
-                          "alt_text": {
-                            "type": "string",
-                            "description": "Description of image for screen-reader."
-                          },
-                          "snippet_type": {
-                            "type": "string",
-                            "description": "Syntax type of the snippet being uploaded."
-                          },
-                          "initialComment": {
-                            "type": "string",
-                            "description": "The message text introducing the file in specified channels."
-                          },
-                          "title": {
-                            "type": "string",
-                            "description": "An optional title for the file."
-                          }
-                        },
-                        "required": ["filename", "file"]
-                      }
-                    },
-                    "required": ["arguments"]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string"
-                      },
-                      "title": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - The server cannot process the request due to a client error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
                     "error": {
                       "type": "string"
                     }
