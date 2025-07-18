@@ -10,9 +10,10 @@ describe(
         url: 'https://uk.pinterest.com/pin/8585055535696734', //'https://www.midjourney.com/explore?tab=top_month',
         isLocal: true,
         headless: true,
-        waitUntil: 'networkidle0',
+        waitUntil: 'networkidle0' as const,
         deepExtract: false,
-      } as OpenPageOptions;
+        enableColorExtraction: true,
+      };
       const images = await extractImagesFromURL(options);
       console.log(images);
       expect(Array.isArray(images)).toBe(true);

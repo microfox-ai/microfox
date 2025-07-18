@@ -1,6 +1,11 @@
 import { Page } from 'puppeteer-core';
 import { openPage, OpenPageOptions } from './openPage';
+import { extractPaletteFromImageData, ExtractedPalette } from './colorExtract';
 
+export interface AccessibilityInfo {
+  color: string;
+  contrastRatio: number;
+}
 export interface ExtractedImage {
   src: string | null;
   srcset: string | null;
@@ -10,19 +15,89 @@ export interface ExtractedImage {
   pagePermalink: string;
   width: number | null;
   height: number | null;
+  dominantColor?: string | null;
+  secondaryColor?: string | null;
+  accentColor?: string | null;
+  accessibility?: AccessibilityInfo | null;
+  palette?: string[] | null;
+  colorExtractionLogs?: string[];
 }
 
-export async function extractImages(page: Page): Promise<ExtractedImage[]> {
+export async function extractImages(
+  page: Page,
+  options?: { enableColorExtraction?: boolean },
+): Promise<ExtractedImage[]> {
   console.log('Extracting images from page...');
   const pageUrl = page.url();
+  const enableColorExtraction = options?.enableColorExtraction;
+  // Convert the function to a string to pass it into the browser context reliably.
+  const extractPaletteFnString = extractPaletteFromImageData.toString();
+
   const images = await page.$$eval(
     'img',
-    (imgs: HTMLImageElement[], pageUrl: string) =>
-      imgs.map((img: HTMLImageElement) => {
+    (
+      imgs: HTMLImageElement[],
+      pageUrl: string,
+      enableColorExtraction: boolean,
+      _extractPaletteString: string,
+    ) => {
+      // Reconstruct the function inside the browser context from the string.
+      const _extractPalette = new Function(
+        `return ${_extractPaletteString}`,
+      )() as (imageData: Uint8ClampedArray) => ExtractedPalette;
+
+      return imgs.map((img: HTMLImageElement) => {
+        let palette: string[] | undefined = undefined;
+        let dominantColor: string | undefined = undefined;
+        let secondaryColor: string | undefined = undefined;
+        let accentColor: string | undefined = undefined;
+        let accessibility: AccessibilityInfo | undefined = undefined;
+        const logs: string[] = [];
+        if (enableColorExtraction) {
+          logs.push(`Color extraction enabled for image: ${img.src}`);
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            if (canvas.width && canvas.height) {
+              logs.push(
+                `Created canvas with dimensions: ${canvas.width}x${canvas.height}`,
+              );
+              const ctx = canvas.getContext('2d');
+              if (ctx) {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(
+                  0,
+                  0,
+                  canvas.width,
+                  canvas.height,
+                ).data;
+                const result = _extractPalette(imageData);
+                palette = result.palette;
+                dominantColor = result.dominantColor;
+                secondaryColor = result.secondaryColor;
+                accentColor = result.accentColor;
+                accessibility = result.accessibility;
+                if (result.logs) {
+                  logs.push(...result.logs);
+                }
+              } else {
+                logs.push('Failed to get 2D context from canvas.');
+              }
+            } else {
+              logs.push(
+                `Skipping color extraction: Invalid image dimensions (${img.naturalWidth}x${img.naturalHeight})`,
+              );
+            }
+          } catch (e: any) {
+            logs.push(
+              `ERROR during canvas operations: ${e.message || 'Unknown error'}`,
+            );
+          }
+        }
         const parentAnchor = img.closest('a');
         const imgPermalink = parentAnchor ? parentAnchor.href : pageUrl;
-
-        return {
+        const result: any = {
           src: img.getAttribute('src'),
           srcset: img.getAttribute('srcset'),
           responsiveImages:
@@ -51,8 +126,20 @@ export async function extractImages(page: Page): Promise<ExtractedImage[]> {
           width: img.width || null,
           height: img.height || null,
         };
-      }),
+        if (enableColorExtraction) {
+          result.dominantColor = dominantColor || null;
+          result.secondaryColor = secondaryColor || null;
+          result.accentColor = accentColor || null;
+          result.accessibility = accessibility || null;
+          result.palette = palette || null;
+          result.colorExtractionLogs = logs;
+        }
+        return result;
+      });
+    },
     pageUrl,
+    Boolean(enableColorExtraction),
+    extractPaletteFnString,
   );
   console.log(`Extracted ${images.length} images.`);
   return images;
@@ -171,6 +258,7 @@ export async function extractBackgroundImages(
 export async function extractImagesFromURL(
   options: OpenPageOptions & {
     deepExtract?: boolean;
+    enableColorExtraction?: boolean;
   },
 ) {
   try {
@@ -214,11 +302,21 @@ export async function extractImagesFromURL(
       );
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
-    let images = await extractImages(page);
+    let images = await extractImages(page, {
+      enableColorExtraction: options.enableColorExtraction,
+    });
     if (options.deepExtract) {
       const backgroundImages = await extractBackgroundImages(page);
       images = images.concat(backgroundImages);
     }
+    // Log the results for debugging
+    images.forEach(img => {
+      if (img.colorExtractionLogs && img.colorExtractionLogs.length > 0) {
+        console.log(`--- Logs for image: ${img.src} ---`);
+        img.colorExtractionLogs.forEach(log => console.log(log));
+        console.log('--- End of logs ---');
+      }
+    });
     console.log('Closing browser session.');
     await browser.close();
     console.log('Browser has been closed.');
