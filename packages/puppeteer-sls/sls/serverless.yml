@@ -17,6 +17,7 @@ provider:
   region: us-east-1
   stage: ${opt:stage, env:ENVIRONMENT, 'dev'}
   environment: ${file(env.json)}
+  memorySize: 2048
   iam:
     role:
       statements:
