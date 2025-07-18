@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.7
+
+### Patch Changes
+
+- 8f270f6: added colorExtraction
+
 ## 1.2.6
 
 ### Patch Changes
