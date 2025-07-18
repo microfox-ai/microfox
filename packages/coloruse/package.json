@@ -1,11 +1,14 @@
 {
-  "name": "@microfox/@microfox/coloruse",
+  "name": "@microfox/coloruse",
   "version": "1.0.0",
   "description": "A TypeScript SDK for Coloruse.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "files": ["dist/**", "CHANGELOG.md"],
+  "files": [
+    "dist/**",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsup",
     "build:watch": "tsup --watch",
@@ -42,5 +45,10 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": ["coloruse", "typescript", "api", "sdk"]
+  "keywords": [
+    "coloruse",
+    "typescript",
+    "api",
+    "sdk"
+  ]
 }

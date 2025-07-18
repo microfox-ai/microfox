@@ -1,23 +1,24 @@
 # Types
 
 <!-- Add your project description here -->
+
 A TypeScript SDK for Types.
 
 ## Installation
 
 \`\`\`bash
-npm install @microfox/@microfox/types
+npm install @microfox/types
 \`\`\`
 
 ## Quick Start
 
 \`\`\`typescript
-import { TypesSdk } from '@microfox/@microfox/types';
+import { TypesSdk } from '@microfox/types';
 
 // Initialize the SDK
 const sdk = new TypesSdk({
-  apiKey: 'your-api-key',
-  // Add other config options
+apiKey: 'your-api-key',
+// Add other config options
 });
 
 // Example usage
@@ -29,10 +30,10 @@ console.log(result.data);
 
 \`\`\`typescript
 interface TypesSdkConfig {
-  apiKey: string;        // Required: Your API key
-  baseUrl?: string;      // Optional: Custom base URL
-  name?: string;         // Optional: SDK instance name
-  version?: string;      // Optional: API version
+apiKey: string; // Required: Your API key
+baseUrl?: string; // Optional: Custom base URL
+name?: string; // Optional: SDK instance name
+version?: string; // Optional: API version
 }
 \`\`\`
 
@@ -47,7 +48,7 @@ const result = await sdk.hello('World');
 // Returns: { data: "Hello, World!", success: true, status: 200, message: "Success" }
 \`\`\`
 
-<!-- 
+<!--
 ## TODO: Add your API documentation here
 
 ### getData(id: string)
@@ -64,16 +65,21 @@ const result = await sdk.createItem({ name: 'Example' });
 ## Development
 
 \`\`\`bash
+
 # Install dependencies
+
 npm install
 
 # Build the project
+
 npm run build
 
 # Run tests
+
 npm test
 
 # Lint code
+
 npm run lint
 \`\`\`
 
