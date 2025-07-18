@@ -8,6 +8,7 @@ package:
 plugins:
   - serverless-plugin-typescript
   - serverless-api-gateway-throttling
+  - serverless-offline
 
 provider:
   name: aws
@@ -26,7 +27,9 @@ custom:
     httpPort: 4000
     lambdaPort: 4002
     environment: ${file(env.json)}
-
+    disableCookieValidation: true
+    timeout: 6000
+    
 functions:
   unifiedHandler:
     handler: dist/index.handler
