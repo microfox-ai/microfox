@@ -1,101 +1,134 @@
 {
-  "operationId": "getConversationHistory",
-  "summary": "Fetches a conversation's history of messages and events.",
-  "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
-  "tags": ["channel", "message"],
-  "ai": {
-    "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. You can use optional parameters like `limit`, `latest`, `oldest`, `inclusive`, and `cursor` to filter and paginate results. If the channel ID is unknown, use `listChannels` to find it."
-  },
-  "requestBody": {
-    "required": true,
-    "content": {
-      "application/json": {
-        "schema": {
-          "type": "object",
-          "properties": {
-            "body": {
-              "type": "object",
-              "description": "Body of the getConversationHistory sls call",
-              "properties": {
-                "arguments": {
-                  "type": "object",
-                  "properties": {
-                    "channelId": {
-                      "type": "string",
-                      "description": "The ID of the channel to fetch history for. Channel IDs start with 'C'."
-                    },
-                    "limit": {
-                      "type": "integer",
-                      "description": "The maximum number of items to return."
-                    },
-                    "latest": {
-                      "type": "string",
-                      "description": "End of the time range of messages to include in results."
-                    },
-                    "oldest": {
-                      "type": "string",
-                      "description": "Start of the time range of messages to include in results."
-                    },
-                    "inclusive": {
-                      "type": "boolean",
-                      "description": "Include messages with latest or oldest timestamps in results."
-                    },
-                    "cursor": {
-                      "type": "string",
-                      "description": "Paginate through collections of data by setting the cursor parameter to a next_cursor attribute returned by a previous request's response_metadata."
-                    }
-                  },
-                  "required": ["channelId"]
-                }
-              },
-              "required": ["arguments"]
-            }
-          }
-        }
-      }
-    }
-  },
-  "responses": {
-    "200": {
-      "description": "Successful response",
+  "post": {
+    "operationId": "getConversationHistory",
+    "summary": "Fetches a conversation's history of messages and events.",
+    "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
+    "tags": [
+      "channel",
+      "message"
+    ],
+    "ai": {
+      "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
+    },
+    "requestBody": {
+      "required": true,
       "content": {
         "application/json": {
           "schema": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "type": { "type": "string" },
-                "user": { "type": "string" },
-                "text": { "type": "string" },
-                "ts": { "type": "string" }
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the getConversationHistory sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "channelId": {
+                        "type": "string",
+                        "description": "The ID of the channel to fetch history for. Channel IDs start with 'C'."
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "description": "The maximum number of items to return."
+                      },
+                      "latest": {
+                        "type": "string",
+                        "description": "End of the time range of messages to include in results."
+                      },
+                      "oldest": {
+                        "type": "string",
+                        "description": "Start of the time range of messages to include in results."
+                      },
+                      "inclusive": {
+                        "type": "boolean",
+                        "description": "Include messages with latest or oldest timestamps in results."
+                      },
+                      "cursor": {
+                        "type": "string",
+                        "description": "Paginate through collections of data by setting the cursor parameter to a next_cursor attribute returned by a previous request's response_metadata."
+                      }
+                    },
+                    "required": [
+                      "channelId"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
               }
             }
           }
         }
       }
     },
-    "400": {
-      "description": "Bad Request - The server cannot process the request due to a client error.",
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": { "error": { "type": "string" } }
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "messages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "user": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "ts": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "nextCursor": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
-      }
-    },
-    "500": {
-      "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": { "error": { "type": "string" } }
+      },
+      "400": {
+        "description": "Bad Request - The server cannot process the request due to a client error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
     }
   }
-} 
+}

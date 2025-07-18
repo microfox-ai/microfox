@@ -6,9 +6,6 @@
     "tags": [
       "user"
     ],
-    "ai": {
-      "systemPrompt": "Provide a `userId` (starts with 'U') to fetch user details. If you only have an email, use `searchUserByEmail` to get the user ID first."
-    },
     "requestBody": {
       "required": true,
       "content": {

@@ -1,14 +1,14 @@
 {
   "post": {
-    "operationId": "listChannelUsers",
+    "operationId": "getChannelMembers",
     "summary": "List all users in a specific Slack channel.",
-    "description": "The listChannelUsers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
+    "description": "The getChannelMembers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
     "tags": [
       "channel",
       "user"
     ],
     "ai": {
-      "systemPrompt": "To get a list of user IDs in a specific channel, provide the `channelId` (starts with 'C')."
+      "systemPrompt": "To get a list of users in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
     },
     "requestBody": {
       "required": true,
@@ -19,7 +19,7 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the listChannelUsers sls call",
+                "description": "Body of the getChannelMembers sls call",
                 "properties": {
                   "arguments": {
                     "type": "array",

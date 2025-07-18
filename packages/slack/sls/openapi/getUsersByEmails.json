@@ -1,12 +1,11 @@
 {
   "post": {
-    "operationId": "searchUsersByEmail",
+    "operationId": "getUsersByEmails",
     "summary": "Searches for multiple Slack users by their email addresses.",
-    "description": "The searchUsersByEmail function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
-    "tags": ["user"],
-    "ai": {
-      "systemPrompt": "Find multiple users and their IDs by providing their `emails` as an array of strings. The returned user objects can be used in other functions."
-    },
+    "description": "The getUsersByEmails function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
+    "tags": [
+      "user"
+    ],
     "requestBody": {
       "required": true,
       "content": {
@@ -16,7 +15,7 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the searchUsersByEmail sls call",
+                "description": "Body of the getUsersByEmails sls call",
                 "properties": {
                   "arguments": {
                     "type": "object",
@@ -29,10 +28,14 @@
                         "description": "An array of email addresses for the users to find."
                       }
                     },
-                    "required": ["emails"]
+                    "required": [
+                      "emails"
+                    ]
                   }
                 },
-                "required": ["arguments"]
+                "required": [
+                  "arguments"
+                ]
               }
             }
           }

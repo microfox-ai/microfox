@@ -1,6 +1,6 @@
 {
   "post": {
-    "operationId": "listChannelIdsMap",
+    "operationId": "getChannelsIds",
     "summary": "Retrieves a map of channel IDs to channel names.",
     "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
     "tags": [
@@ -18,7 +18,7 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the listChannelIdsMap sls call",
+                "description": "Body of the getChannelsIds sls call",
                 "properties": {
                   "arguments": {
                     "type": "object",
@@ -50,23 +50,32 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "description": "The ID of the channel."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the channel."
+              "type": "object",
+              "properties": {
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the channel."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the channel."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
                   }
                 },
-                "required": [
-                  "id",
-                  "name"
-                ]
+                "nextCursor": {
+                  "type": "string",
+                  "description": "A cursor to the next page of results"
+                }
               }
             }
           }
@@ -89,4 +98,4 @@
       }
     }
   }
-} 
+}

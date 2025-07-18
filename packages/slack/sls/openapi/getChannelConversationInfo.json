@@ -6,9 +6,6 @@
     "tags": [
       "channel"
     ],
-    "ai": {
-      "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve detailed channel information. If the ID is unknown, use `listChannels` to find it."
-    },
     "requestBody": {
       "required": true,
       "content": {
@@ -209,7 +206,7 @@
         }
       },
       "500": {
-        "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle",
         "content": {
           "application/json": {
             "schema": {

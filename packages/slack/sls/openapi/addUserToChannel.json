@@ -2,13 +2,13 @@
   "post": {
     "operationId": "addUserToChannel",
     "summary": "Adds a user to a Slack channel.",
-    "description": "The addUserToChannel function adds a specified user to a specified Slack channel. It takes two required parameters: the channel ID and the user ID. Upon successful execution, it returns information about the channel, including various properties such as channel name, creation timestamp, and member count.",
+    "description": "Adds a specified user to a specified Slack channel & returns information about the channel, including various properties such as channel name, creation timestamp, and member count.",
     "tags": [
       "channel",
       "user"
     ],
     "ai": {
-      "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). If the `channelId` is unknown, use `listChannels`. To find a `userId`, use `searchUserByEmail` or `listActiveUsers`."
+      "systemPrompt": "To add a user to a channel, provide the `channelId` (starts with 'C') and `userId` (starts with 'U'). DO NOT ASSUME THESE IDS BY NAMES. If the `channelId` is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. To find a `userId`, use `getActiveUsersIds` or `getUsersByEmails` only if exact user email is known."
     },
     "requestBody": {
       "required": true,

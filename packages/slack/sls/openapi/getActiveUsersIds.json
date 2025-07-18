@@ -1,13 +1,13 @@
 {
   "post": {
-    "operationId": "listUserIdsMap",
+    "operationId": "getActiveUsersIds",
     "summary": "Retrieves a map of user IDs to user names and emails.",
-    "description": "The listUserIdsMap function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
+    "description": "The getActiveUsersIds function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
     "tags": [
       "user"
     ],
     "ai": {
-      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. You can use optional parameters like `limit`, `cursor`, and `includeBots` to filter and paginate results."
+      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. Use this when you need to find a userId by their name or email."
     },
     "requestBody": {
       "required": true,
@@ -18,7 +18,7 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the listUserIdsMap sls call",
+                "description": "Body of the getActiveUsersIds sls call",
                 "properties": {
                   "arguments": {
                     "type": "object",
@@ -53,27 +53,36 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "description": "The ID of the user."
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the user."
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "The email of the user."
+              "type": "object",
+              "properties": {
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the user."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the user."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The email of the user."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ]
                   }
                 },
-                "required": [
-                  "id",
-                  "name"
-                ]
+                "nextCursor": {
+                  "type": "string",
+                  "description": "A cursor to the next page of results"
+                }
               }
             }
           }
@@ -96,4 +105,4 @@
       }
     }
   }
-} 
+}
