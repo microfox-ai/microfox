@@ -8,7 +8,7 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). If the user's ID is unknown, use `searchUserByEmail` with their email or browse the output of `listActiveUsers`."
+      "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME. If the user's ID is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by name from the output or use `getUsersByEmails` only if exact user email is known."
     },
     "requestBody": {
       "required": true,

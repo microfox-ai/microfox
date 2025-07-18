@@ -3,10 +3,9 @@
     "operationId": "joinChannel",
     "summary": "Joins a Slack channel.",
     "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
-    "tags": ["channel"],
-    "ai": {
-      "systemPrompt": "To join a channel, provide the `channelId` (starts with 'C')."
-    },
+    "tags": [
+      "channel"
+    ],
     "requestBody": {
       "required": true,
       "content": {
@@ -26,10 +25,14 @@
                         "description": "The ID of the channel to join. Channel IDs start with 'C'."
                       }
                     },
-                    "required": ["channelId"]
+                    "required": [
+                      "channelId"
+                    ]
                   }
                 },
-                "required": ["arguments"]
+                "required": [
+                  "arguments"
+                ]
               }
             }
           }
@@ -51,11 +54,17 @@
                 "channel": {
                   "type": "object",
                   "properties": {
-                    "id": { "type": "string", "description": "The ID of the channel." }
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the channel."
+                    }
                   }
                 }
               },
-              "required": ["ok", "channel"]
+              "required": [
+                "ok",
+                "channel"
+              ]
             }
           }
         }
@@ -67,10 +76,20 @@
             "schema": {
               "type": "object",
               "properties": {
-                "ok": { "type": "boolean", "enum": [false] },
-                "error": { "type": "string" }
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
               },
-              "required": ["ok", "error"]
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }
@@ -82,10 +101,20 @@
             "schema": {
               "type": "object",
               "properties": {
-                "ok": { "type": "boolean", "enum": [false] },
-                "error": { "type": "string" }
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
               },
-              "required": ["ok", "error"]
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }
@@ -97,10 +126,20 @@
             "schema": {
               "type": "object",
               "properties": {
-                "ok": { "type": "boolean", "enum": [false] },
-                "error": { "type": "string" }
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
               },
-              "required": ["ok", "error"]
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }
@@ -112,14 +151,24 @@
             "schema": {
               "type": "object",
               "properties": {
-                "ok": { "type": "boolean", "enum": [false] },
-                "error": { "type": "string" }
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
               },
-              "required": ["ok", "error"]
+              "required": [
+                "ok",
+                "error"
+              ]
             }
           }
         }
       }
     }
   }
-} 
+}

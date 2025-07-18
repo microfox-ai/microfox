@@ -7,9 +7,6 @@
       "channel",
       "user"
     ],
-    "ai": {
-      "systemPrompt": "Requires `channelId` (starts with 'C') and `userId` (starts with 'U') to remove a user from a channel. Use `listChannels` and `searchUserByEmail` if necessary."
-    },
     "requestBody": {
       "required": true,
       "content": {

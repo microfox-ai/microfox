@@ -7,9 +7,6 @@
       "user",
       "reminder"
     ],
-    "ai": {
-      "systemPrompt": "Set a reminder by providing a `userId` (starts with 'U'), the reminder `text`, and the `time` (e.g., 'in 30 minutes' or a Unix timestamp)."
-    },
     "requestBody": {
       "required": true,
       "content": {

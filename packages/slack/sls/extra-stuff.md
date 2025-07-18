@@ -32,19 +32,19 @@ The API provides the following functionalities:
 
 **Description:** The getUserInfo function fetches comprehensive details about a Slack user using their unique user ID. It returns a rich user object containing various attributes including personal information, team association, permissions, and profile details. This function is essential for applications that need to access or display user-specific data within a Slack workspace.
 
-### 6. List Channels (`/listChannels`)
+### 6. List Channels (`/getChannels`)
 
 **Summary:** Lists all public and private channels in a Slack workspace.
 
-**Description:** The listChannels function retrieves a comprehensive list of all channels within a Slack workspace, including both public and private channels. It returns detailed information about each channel, such as its ID, name, privacy settings, creation details, and various flags indicating its status and type. This function is useful for obtaining an overview of the workspace's structure and available communication channels.
+**Description:** The getChannels function retrieves a comprehensive list of all channels within a Slack workspace, including both public and private channels. It returns detailed information about each channel, such as its ID, name, privacy settings, creation details, and various flags indicating its status and type. This function is useful for obtaining an overview of the workspace's structure and available communication channels.
 
-### 7. List Channel Users (`/listChannelUsers`)
+### 7. List Channel Users (`/getChannelMembers`)
 
 **Summary:** Lists all users in a specific Slack channel.
 
-**Description:** The listChannelUsers function retrieves an array of user IDs for all members in a specified Slack channel. It requires a valid channel ID as input and returns a list of user IDs. This function is useful for obtaining a comprehensive list of participants in a particular Slack channel.
+**Description:** The getChannelMembers function retrieves an array of user IDs for all members in a specified Slack channel. It requires a valid channel ID as input and returns a list of user IDs. This function is useful for obtaining a comprehensive list of participants in a particular Slack channel.
 
-### 8. List Active Users (`/listActiveUsers`)
+### 8. List Active Users (`/getActiveUsers`)
 
 **Summary:** Lists all active users in a Slack workspace.
 
@@ -80,11 +80,11 @@ The API provides the following functionalities:
 
 **Description:** This function allows sending a reply to a specific message in a Slack channel, creating or continuing a thread. It takes the channel ID, the timestamp of the original message, and the reply text as inputs. The function returns details about the sent message, including its timestamp and channel information.
 
-### 14. Search User (`/searchUserByEmail`)
+### 14. Search User (`/getUserByEmail`)
 
 **Summary:** Searches for a user in a Slack workspace by their email address.
 
-**Description:** The searchUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the user, including their profile and other attributes.
+**Description:** The getUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the user, including their profile and other attributes.
 
 ### 15. Send File (`/sendFile`)
 

@@ -1,14 +1,11 @@
 {
   "post": {
-    "operationId": "searchUserByEmail",
+    "operationId": "getUserByEmail",
     "summary": "Searches for a Slack user by their email address.",
-    "description": "The searchUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
+    "description": "The getUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
     "tags": [
       "user"
     ],
-    "ai": {
-      "systemPrompt": "Find a user and their ID by providing their `email`. Only use this if you know the email. The returned user object can be used in other functions."
-    },
     "requestBody": {
       "required": true,
       "content": {
@@ -18,15 +15,14 @@
             "properties": {
               "body": {
                 "type": "object",
-                "description": "Body of the searchUserByEmail sls call",
+                "description": "Body of the getUserByEmail sls call",
                 "properties": {
                   "arguments": {
-                    "type": "array",
-                    "description": "Container for function arguments.",
+                    "type": "object",
                     "properties": {
                       "email": {
                         "type": "string",
-                        "description": "email: The email address of the user to find."
+                        "description": "The email address of the user to find."
                       }
                     },
                     "required": [

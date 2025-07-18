@@ -6,9 +6,6 @@
     "tags": [
       "message"
     ],
-    "ai": {
-      "systemPrompt": "To add a reaction, specify the `channelId` (starts with 'C'), the message `timestamp`, and the `reaction` name (e.g., 'thumbsup')."
-    },
     "requestBody": {
       "required": true,
       "content": {
