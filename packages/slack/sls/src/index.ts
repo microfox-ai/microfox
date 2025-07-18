@@ -7,8 +7,7 @@ import {
   ApiError,
   InternalServerError,
 } from '@microfox/tool-core';
-import * as fs from 'fs';
-import * as path from 'path';
+import openapi from '../openapi.json' with { type: 'json' };
 
 dotenv.config(); // for any local vars
 
@@ -19,9 +18,7 @@ const toolHandler = new ToolParse({
 export const handler = async (event: APIGatewayEvent): Promise<any> => {
   if (event.path === '/docs.json' && event.httpMethod === 'GET') {
     try {
-      const openapiPath = path.resolve(__dirname, 'openapi.json');
-      const openapiSpec = fs.readFileSync(openapiPath, 'utf-8');
-      return createApiResponse(200, JSON.parse(openapiSpec));
+      return createApiResponse(200, openapi);
     } catch (error) {
       console.error('Error reading openapi.json:', error);
       const internalError = new InternalServerError(
@@ -36,8 +33,6 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
   try {
     // Extract environment variables from the new structure
     toolHandler.populateEnvVars(event);
-
-    const constructorName = toolHandler.extractConstructor(event);
 
     // Map functions
     const sdkMap = sdkInit({
