@@ -1,8 +1,8 @@
 {
   "post": {
     "operationId": "getChannels",
-    "summary": "Lists all public, private and direct message channels in a Slack workspace.",
-    "description": "Retrieves information about all public, private and direct message channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+    "summary": "Lists all public and private channels in a Slack workspace.",
+    "description": "Retrieves information about all public and private channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
     "tags": [
       "channel"
     ],
