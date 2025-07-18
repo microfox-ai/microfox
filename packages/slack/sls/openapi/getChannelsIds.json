@@ -7,7 +7,7 @@
       "channel"
     ],
     "ai": {
-      "systemPrompt": "Lists all public, private and direct message channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name."
+      "systemPrompt": "Lists all public and private channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name."
     },
     "requestBody": {
       "required": true,
