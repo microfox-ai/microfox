@@ -1941,6 +1941,18 @@
                             "type": "string",
                             "description": "The name of the user."
                           },
+                          "real_name": {
+                            "type": "string",
+                            "description": "The real name of the user."
+                          },
+                          "display_name": {
+                            "type": "string",
+                            "description": "The display name of the user."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the user."
+                          },
                           "email": {
                             "type": "string",
                             "description": "The email of the user."
