@@ -93,7 +93,7 @@ export class MicrofoxSlackClient {
    * Fetches information about a conversation.
    * @param channelId Conversation ID to fetch information for.
    */
-  async getChannelConversationInfo({channelId}: {channelId: string}): Promise<ConversationsInfoResponse['channel']> {
+  async getChannelConversationInfo({ channelId }: { channelId: string }): Promise<ConversationsInfoResponse['channel']> {
     const result = await this.web.conversations.info({
       channel: channelId,
     });
@@ -171,18 +171,60 @@ export class MicrofoxSlackClient {
    * Lists all users in a channel.
    * @param channelId Channel ID to get members of.
    */
-  async getChannelMembers({channelId}: {channelId: string}) {
+  async getChannelMembers({ channelId, includeBots = false, limit, nextCursor }: { channelId: string, includeBots?: boolean, limit?: number, nextCursor?: string }): Promise<{
+    members: {
+      id: string;
+      name: string;
+      is_bot: boolean;
+      real_name: string;
+      display_name: string;
+      title: string;
+      email: string;
+      is_deleted: boolean;
+    }[];
+    nextCursor: string | undefined;
+  }> {
     const result = await this.web.conversations.members({
       channel: channelId,
+      limit,
+      cursor: nextCursor,
     });
-    return result.members;
+    let members: {
+      id: string;
+      name: string;
+      is_bot: boolean;
+      real_name: string;
+      display_name: string;
+      title: string;
+      email: string;
+      is_deleted: boolean;
+    }[] = [];
+    if (result?.members) {
+      members = await Promise.all(result?.members?.map(async (member) => {
+        const user = await this.getUserInfo({ userId: member });
+        return {
+          id: member || '',
+          name: user?.name || '',
+          is_bot: user?.is_bot || false,
+          real_name: user?.profile?.real_name || '',
+          display_name: user?.profile?.display_name || '',
+          title: user?.profile?.title || '',
+          email: user?.profile?.email || '',
+          is_deleted: user?.deleted || false,
+        };
+      }));
+    }
+    return {
+      members: members?.filter((member) => includeBots ? true : !member.is_bot) || [],
+      nextCursor: result.response_metadata?.next_cursor,
+    }
   }
 
   /**
    * Finds a user by their email address.
    * @param email The email address of the user to find.
    */
-  async getUserByEmail({email}: {email: string}): Promise<UsersLookupByEmailResponse['user']> {
+  async getUserByEmail({ email }: { email: string }): Promise<UsersLookupByEmailResponse['user']> {
     const result = await this.web.users.lookupByEmail({ email });
     return result.user;
   }
@@ -191,9 +233,9 @@ export class MicrofoxSlackClient {
    * Finds users by their email addresses.
    * @param emails The email addresses of the users to find.
    */
-  async getUsersByEmails({emails}: {emails: string[]}): Promise<UsersLookupByEmailResponse['user'][]> {
+  async getUsersByEmails({ emails }: { emails: string[] }): Promise<UsersLookupByEmailResponse['user'][]> {
     const result = await Promise.all(emails.map(async (email) => {
-      const user = await this.getUserByEmail({email});
+      const user = await this.getUserByEmail({ email });
       return user;
     }));
     return result;
@@ -316,7 +358,7 @@ export class MicrofoxSlackClient {
    * Gets information about a user.
    * @param userId The ID of the user to get information for.
    */
-  async getUserInfo({userId}: {userId: string}) {
+  async getUserInfo({ userId }: { userId: string }) {
     const result = await this.web.users.info({
       user: userId,
     });
@@ -399,7 +441,7 @@ export class MicrofoxSlackClient {
    * Gets information about a file.
    * @param fileId The ID of the file to get information for.
    */
-  async getFileInfo({fileId}: {fileId: string}) {
+  async getFileInfo({ fileId }: { fileId: string }) {
     const result = await this.web.files.info({
       file: fileId,
     });
