@@ -300,7 +300,7 @@
       "post": {
         "operationId": "createChannel",
         "summary": "Creates a new channel in Slack.",
-        "description": "The createChannel function creates a new channel in Slack, which can be either public or private. It takes an object with the channel name and an optional privacy setting, and returns a detailed channel object containing various properties of the newly created channel.",
+        "description": "Creates a new channel in Slack, which can be either public or private.",
         "tags": ["channel"],
         "requestBody": {
           "required": true,
@@ -513,7 +513,10 @@
       "post": {
         "operationId": "getChannelConversationInfo",
         "summary": "Retrieves detailed information about a specific Slack channel.",
-        "description": "The getChannelConversationInfo function fetches comprehensive data about a given Slack channel using its ID. It returns a conversation object containing various properties that describe the channel's characteristics, status, and metadata. This function is useful for obtaining detailed insights into a channel's configuration and current state.",
+        "description": "Fetches comprehensive data about a given Slack channel using its ID. Returns a conversation object containing various properties that describe the channel's characteristics, status, and metadata.",
+        "ai": {
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation info. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. This does not provide the chat history of the channel, use `getConversationHistory` to get the chat history of the channel."
+        },
         "tags": ["channel"],
         "requestBody": {
           "required": true,
@@ -732,10 +735,10 @@
       "post": {
         "operationId": "getConversationHistory",
         "summary": "Fetches a conversation's history of messages and events.",
-        "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
+        "description": "Fetches a conversation's history of messages and events from a specific channel.",
         "tags": ["channel", "message"],
         "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try"
         },
         "requestBody": {
           "required": true,
@@ -859,7 +862,7 @@
       "post": {
         "operationId": "getUserInfo",
         "summary": "Retrieves detailed information about a specific Slack user.",
-        "description": "The getUserInfo function fetches comprehensive details about a Slack user, including their profile information, team membership, and account status. It requires a user ID as input and returns a rich user object containing various attributes such as name, timezone, admin status, and profile details.",
+        "description": "Fetches comprehensive details about a Slack user, including their profile information, team membership, and account status.",
         "tags": ["user"],
         "requestBody": {
           "required": true,
@@ -1091,7 +1094,7 @@
       "post": {
         "operationId": "joinChannel",
         "summary": "Joins a Slack channel.",
-        "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
+        "description": "Join a specified Slack channel.",
         "tags": ["channel"],
         "requestBody": {
           "required": true,
@@ -1236,7 +1239,7 @@
       "post": {
         "operationId": "getActiveUsers",
         "summary": "Lists all active users in a Slack workspace.",
-        "description": "The getActiveUsers function retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user, including their profile data, team information, and various status indicators.",
+        "description": "Retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user.",
         "tags": ["user"],
         "requestBody": {
           "required": true,
@@ -1552,7 +1555,7 @@
       "post": {
         "operationId": "getChannels",
         "summary": "Lists all public and private channels in a Slack workspace.",
-        "description": "Retrieves information about all public and private channels in a Slack workspace. It returns an array of conversation objects, each containing detailed information about a channel-like entity such as public channels, private channels, direct messages, multi-person direct messages, or huddles. This function is useful for obtaining a comprehensive overview of all communication channels within a Slack workspace.",
+        "description": "Retrieves detailed information about all public and private channels in a Slack workspace.",
         "tags": ["channel"],
         "requestBody": {
           "required": true,
@@ -1789,10 +1792,10 @@
       "post": {
         "operationId": "getChannelMembers",
         "summary": "List all users in a specific Slack channel.",
-        "description": "The getChannelMembers function retrieves a list of all user IDs in a specified Slack channel. It takes a single channel ID as input and returns an array of user IDs who are members of that channel. This function is useful for obtaining a comprehensive list of users in a particular Slack channel for further processing or analysis.",
+        "description": "Retrieves a list of all users in a specified Slack channel. It provides a detailed information about each user.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To get a list of users in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
+          "systemPrompt": "To get a list of users in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet."
         },
         "requestBody": {
           "required": true,
@@ -1879,10 +1882,10 @@
       "post": {
         "operationId": "getActiveUsersIds",
         "summary": "Retrieves a map of user IDs to user names and emails.",
-        "description": "The getActiveUsersIds function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
+        "description": "Returns an array of objects, each containing the ID, name, real name, display name, title, and email of an active users in the workspace.",
         "tags": ["user"],
         "ai": {
-          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. Use this when you need to find a userId by their name or email."
+          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try"
         },
         "requestBody": {
           "required": true,
@@ -1992,7 +1995,7 @@
       "post": {
         "operationId": "messageChannel",
         "summary": "Send a message to a Slack channel.",
-        "description": "The messageChannel function sends a text message to a specified Slack channel. It requires a channel ID and the message text as input, and returns details about the sent message including its timestamp and channel.",
+        "description": "Sends a text message to a specified Slack channel. Returns details about the sent message including its timestamp and channel.",
         "tags": ["message", "channel"],
         "ai": {
           "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel. DO NOT ASSUME THE CHANNEL ID BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
@@ -2097,7 +2100,7 @@
       "post": {
         "operationId": "messageUser",
         "summary": "Send a direct message to a Slack user.",
-        "description": "The messageUser function allows sending a direct message to a specified Slack user. It requires the user's ID and the message text as input. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
+        "description": "Sends a direct message to a specified Slack user. Returns details about the sent message, including its timestamp and the channel where it was posted.",
         "tags": ["message", "user"],
         "ai": {
           "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME. If the user's ID is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by name from the output or use `getUsersByEmails` only if exact user email is known."
@@ -2232,7 +2235,7 @@
       "post": {
         "operationId": "reactMessage",
         "summary": "Adds a reaction to a message in Slack.",
-        "description": "The reactMessage function allows adding an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction. This function is part of the MicrofoxSlackClient and interacts with the Slack API to perform the reaction action.",
+        "description": "Adds an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction.",
         "tags": ["message"],
         "requestBody": {
           "required": true,
@@ -2328,7 +2331,7 @@
       "post": {
         "operationId": "removeUserFromChannel",
         "summary": "Removes a user from a Slack channel.",
-        "description": "This function removes a specified user from a given Slack channel. It takes the channel ID and user ID as required parameters and returns a response indicating whether the operation was successful. This method is useful for managing channel membership programmatically.",
+        "description": "Removes a specified user from a given Slack channel.",
         "tags": ["channel", "user"],
         "requestBody": {
           "required": true,
@@ -2394,7 +2397,7 @@
       "post": {
         "operationId": "replyMessage",
         "summary": "Replies to a message in a Slack thread.",
-        "description": "The replyMessage function allows users to reply to an existing message in a Slack thread. It takes the channel ID, the timestamp of the original message, and the text of the reply as input. This function is useful for maintaining context in conversations and organizing discussions within Slack channels.",
+        "description": "Replies to an existing message in a Slack thread.",
         "tags": ["message"],
         "ai": {
           "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If thread_ts is unknown, use `getConversationHistory` to find it."
@@ -2511,7 +2514,10 @@
       "post": {
         "operationId": "getUserByEmail",
         "summary": "Searches for a Slack user by their email address.",
-        "description": "The getUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
+        "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
+        "ai": {
+          "systemPrompt": "Provide the `email` of the user to find. DO NOT ASSUME THE EMAIL BY NAME. If the email is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by email from the output."
+        },
         "tags": ["user"],
         "requestBody": {
           "required": true,
@@ -2720,7 +2726,7 @@
       "post": {
         "operationId": "getUsersByEmails",
         "summary": "Searches for multiple Slack users by their email addresses.",
-        "description": "The getUsersByEmails function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
+        "description": "Finds multiple users in a Slack workspace using their email addresses. Returns an array of comprehensive user objects containing detailed information about the found users.",
         "tags": ["user"],
         "requestBody": {
           "required": true,
@@ -2937,7 +2943,7 @@
       "post": {
         "operationId": "setReminder",
         "summary": "Sets a reminder for a user in Slack.",
-        "description": "The setReminder function creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered. This function is part of the MicrofoxSlackClient and interacts with Slack's API to manage reminders.",
+        "description": "Creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered.",
         "tags": ["user", "reminder"],
         "requestBody": {
           "required": true,
