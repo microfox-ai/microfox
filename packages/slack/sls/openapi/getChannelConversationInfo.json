@@ -21,7 +21,7 @@
                 "description": "Body of the getChannelConversationInfo sls call",
                 "properties": {
                   "arguments": {
-                    "type": "array",
+                    "type": "object",
                     "description": "Container for function arguments.",
                     "properties": {
                       "channelId": {
