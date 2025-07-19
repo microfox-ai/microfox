@@ -3,10 +3,7 @@
     "operationId": "getChannelMembers",
     "summary": "List all users in a specific Slack channel.",
     "description": "Retrieves a list of all userIds of users in a specified Slack channel. It provides only the userIds of the users in the channel.",
-    "tags": [
-      "channel",
-      "user"
-    ],
+    "tags": ["channel", "user"],
     "ai": {
       "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information. If you want to get a list of users with their information, use `getActiveUsersIds` after this tool to get names corresponding to the userIds."
     },
@@ -28,16 +25,24 @@
                       "channelId": {
                         "type": "string",
                         "description": "channelId: The ID of the channel to get the members of. Channel IDs start with 'C'."
+                      },
+                      "includeBots": {
+                        "type": "boolean",
+                        "description": "Whether to include bot users in the list. Defaults to false."
+                      },
+                      "limit": {
+                        "type": "number",
+                        "description": "The maximum number of users to return. Defaults to 50."
+                      },
+                      "nextCursor": {
+                        "type": "string",
+                        "description": "A cursor to the next page of results."
                       }
                     },
-                    "required": [
-                      "channelId"
-                    ]
+                    "required": ["channelId"]
                   }
                 },
-                "required": [
-                  "arguments"
-                ]
+                "required": ["arguments"]
               }
             }
           }
@@ -50,12 +55,54 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "description": "User ID"
-              },
-              "description": "An array of user IDs who are members of the specified channel."
+              "type": "object",
+              "properties": {
+                "members": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "User name"
+                      },
+                      "is_bot": {
+                        "type": "boolean",
+                        "description": "Whether the user is a bot"
+                      },
+                      "real_name": {
+                        "type": "string",
+                        "description": "User real name"
+                      },
+                      "display_name": {
+                        "type": "string",
+                        "description": "User display name"
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "User title"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "User email"
+                      },
+                      "is_deleted": {
+                        "type": "boolean",
+                        "description": "Whether the user is deleted"
+                      }
+                    },
+                    "required": ["id", "name"]
+                  }
+                },
+                "nextCursor": {
+                  "type": "string",
+                  "description": "A cursor to the next page of results"
+                }
+              }
             }
           }
         }
