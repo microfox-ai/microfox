@@ -11,7 +11,7 @@ const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
 
 (async () => {
   try {
-    const userInfo = await client.getUserInfo('U12345678');
+    const userInfo = await client.getUserInfo({ userId: 'U12345678' });
     console.log(userInfo);
   } catch (error) {
     console.error(error);

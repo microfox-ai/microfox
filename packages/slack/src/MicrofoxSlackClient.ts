@@ -13,6 +13,7 @@ import {
   ConversationsJoinResponse,
   UsersListResponse,
   ConversationsHistoryResponse,
+  UsersLookupByEmailResponse,
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -71,12 +72,18 @@ export class MicrofoxSlackClient {
   }: {
     cursor?: string;
     limit?: number;
-  }) {
+  }): Promise<{
+    channels: {
+      id: string;
+      name: string;
+    }[];
+    nextCursor: string | undefined;
+  }> {
     const response = await this.getChannels({ cursor, limit });
     return {
       channels: response.channels?.map((channel) => ({
-        id: channel.id,
-        name: channel.name,
+        id: channel.id || '',
+        name: channel.name || '',
       })) || [],
       nextCursor: response.nextCursor,
     }
@@ -86,7 +93,7 @@ export class MicrofoxSlackClient {
    * Fetches information about a conversation.
    * @param channelId Conversation ID to fetch information for.
    */
-  async getChannelConversationInfo(channelId: string): Promise<ConversationsInfoResponse['channel']> {
+  async getChannelConversationInfo({channelId}: {channelId: string}): Promise<ConversationsInfoResponse['channel']> {
     const result = await this.web.conversations.info({
       channel: channelId,
     });
@@ -164,7 +171,7 @@ export class MicrofoxSlackClient {
    * Lists all users in a channel.
    * @param channelId Channel ID to get members of.
    */
-  async getChannelMembers(channelId: string) {
+  async getChannelMembers({channelId}: {channelId: string}) {
     const result = await this.web.conversations.members({
       channel: channelId,
     });
@@ -175,7 +182,7 @@ export class MicrofoxSlackClient {
    * Finds a user by their email address.
    * @param email The email address of the user to find.
    */
-  async getUserByEmail(email: string) {
+  async getUserByEmail({email}: {email: string}): Promise<UsersLookupByEmailResponse['user']> {
     const result = await this.web.users.lookupByEmail({ email });
     return result.user;
   }
@@ -184,13 +191,9 @@ export class MicrofoxSlackClient {
    * Finds users by their email addresses.
    * @param emails The email addresses of the users to find.
    */
-  async getUsersByEmails({
-    emails,
-  }: {
-    emails: string[];
-  }) {
+  async getUsersByEmails({emails}: {emails: string[]}): Promise<UsersLookupByEmailResponse['user'][]> {
     const result = await Promise.all(emails.map(async (email) => {
-      const user = await this.getUserByEmail(email);
+      const user = await this.getUserByEmail({email});
       return user;
     }));
     return result;
@@ -313,7 +316,7 @@ export class MicrofoxSlackClient {
    * Gets information about a user.
    * @param userId The ID of the user to get information for.
    */
-  async getUserInfo(userId: string) {
+  async getUserInfo({userId}: {userId: string}) {
     const result = await this.web.users.info({
       user: userId,
     });
@@ -396,7 +399,7 @@ export class MicrofoxSlackClient {
    * Gets information about a file.
    * @param fileId The ID of the file to get information for.
    */
-  async getFileInfo(fileId: string) {
+  async getFileInfo({fileId}: {fileId: string}) {
     const result = await this.web.files.info({
       file: fileId,
     });
