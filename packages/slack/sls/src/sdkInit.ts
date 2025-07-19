@@ -53,6 +53,10 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
         microfoxClient.messageChannel.bind(microfoxClient);
       microfoxClientMap.messageUser =
         microfoxClient.messageUser.bind(microfoxClient);
+      microfoxClientMap.messageUsers =
+        microfoxClient.messageUsers.bind(microfoxClient);
+      microfoxClientMap.messageChannels =
+        microfoxClient.messageChannels.bind(microfoxClient);
       microfoxClientMap.reactMessage =
         microfoxClient.reactMessage.bind(microfoxClient);
       microfoxClientMap.removeUserFromChannel =
