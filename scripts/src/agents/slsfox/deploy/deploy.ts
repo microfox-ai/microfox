@@ -291,23 +291,23 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
             docText += `  Summary: ${op.summary}\n`;
             docText += `  Instructions: ${op.instructions}\n`;
 
-            if (op.requestBody?.content?.['application/json']?.schema) {
-              const schema = op.requestBody.content['application/json'].schema;
-              docText += `\n**REQUEST SCHEMA:**\n`;
-              docText += formatSchemaToMarkdown(schema);
-            }
+            // if (op.requestBody?.content?.['application/json']?.schema) {
+            //   const schema = op.requestBody.content['application/json'].schema;
+            //   docText += `\n**REQUEST SCHEMA:**\n`;
+            //   docText += formatSchemaToMarkdown(schema);
+            // }
 
-            docText += `\n**RESPONSES:**\n`;
-            for (const [status, resp] of Object.entries(op.responses)) {
-              if (resp?.content?.['application/json']?.schema) {
-                const schema = resp.content['application/json'].schema;
-                docText += `\n**${status} Response:**\n`;
-                if (resp.description) {
-                  docText += `- Description: ${resp.description}\n`;
-                }
-                docText += formatSchemaToMarkdown(schema);
-              }
-            }
+            // docText += `\n**RESPONSES:**\n`;
+            // for (const [status, resp] of Object.entries(op.responses)) {
+            //   if (resp?.content?.['application/json']?.schema) {
+            //     const schema = resp.content['application/json'].schema;
+            //     docText += `\n**${status} Response:**\n`;
+            //     if (resp.description) {
+            //       docText += `- Description: ${resp.description}\n`;
+            //     }
+            //     docText += formatSchemaToMarkdown(schema);
+            //   }
+            // }
 
             // embed and upsert
             let embedding;
