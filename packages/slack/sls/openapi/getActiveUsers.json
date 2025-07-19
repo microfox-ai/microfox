@@ -2,7 +2,7 @@
   "post": {
     "operationId": "getActiveUsers",
     "summary": "Lists all active users in a Slack workspace.",
-    "description": "The getActiveUsers function retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user, including their profile data, team information, and various status indicators.",
+    "description": "Retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user.",
     "tags": [
       "user"
     ],

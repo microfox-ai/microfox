@@ -2,7 +2,7 @@
   "post": {
     "operationId": "getUserInfo",
     "summary": "Retrieves detailed information about a specific Slack user.",
-    "description": "The getUserInfo function fetches comprehensive details about a Slack user, including their profile information, team membership, and account status. It requires a user ID as input and returns a rich user object containing various attributes such as name, timezone, admin status, and profile details.",
+    "description": "Fetches comprehensive details about a Slack user, including their profile information, team membership, and account status.",
     "tags": [
       "user"
     ],

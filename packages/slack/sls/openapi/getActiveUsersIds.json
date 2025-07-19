@@ -2,12 +2,12 @@
   "post": {
     "operationId": "getActiveUsersIds",
     "summary": "Retrieves a map of user IDs to user names and emails.",
-    "description": "The getActiveUsersIds function returns an array of objects, each containing the ID, name, and email of an active user in the workspace.",
+    "description": "Returns an array of objects, each containing the ID, name, real name, display name, title, and email of an active users in the workspace.",
     "tags": [
       "user"
     ],
     "ai": {
-      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. Use this when you need to find a userId by their name or email."
+      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try"
     },
     "requestBody": {
       "required": true,

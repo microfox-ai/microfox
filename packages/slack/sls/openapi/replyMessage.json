@@ -2,7 +2,7 @@
   "post": {
     "operationId": "replyMessage",
     "summary": "Replies to a message in a Slack thread.",
-    "description": "The replyMessage function allows users to reply to an existing message in a Slack thread. It takes the channel ID, the timestamp of the original message, and the text of the reply as input. This function is useful for maintaining context in conversations and organizing discussions within Slack channels.",
+    "description": "Replies to an existing message in a Slack thread.",
     "tags": [
       "message"
     ],

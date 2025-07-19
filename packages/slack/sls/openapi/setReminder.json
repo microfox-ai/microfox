@@ -2,7 +2,7 @@
   "post": {
     "operationId": "setReminder",
     "summary": "Sets a reminder for a user in Slack.",
-    "description": "The setReminder function creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered. This function is part of the MicrofoxSlackClient and interacts with Slack's API to manage reminders.",
+    "description": "Creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered.",
     "tags": [
       "user",
       "reminder"

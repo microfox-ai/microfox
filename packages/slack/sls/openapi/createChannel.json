@@ -2,7 +2,7 @@
   "post": {
     "operationId": "createChannel",
     "summary": "Creates a new channel in Slack.",
-    "description": "The createChannel function creates a new channel in Slack, which can be either public or private. It takes an object with the channel name and an optional privacy setting, and returns a detailed channel object containing various properties of the newly created channel.",
+    "description": "Creates a new channel in Slack, which can be either public or private.",
     "tags": [
       "channel"
     ],

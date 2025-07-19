@@ -2,7 +2,7 @@
   "post": {
     "operationId": "messageChannel",
     "summary": "Send a message to a Slack channel.",
-    "description": "The messageChannel function sends a text message to a specified Slack channel. It requires a channel ID and the message text as input, and returns details about the sent message including its timestamp and channel.",
+    "description": "Sends a text message to a specified Slack channel. Returns details about the sent message including its timestamp and channel.",
     "tags": [
       "message",
       "channel"

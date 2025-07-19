@@ -2,7 +2,7 @@
   "post": {
     "operationId": "reactMessage",
     "summary": "Adds a reaction to a message in Slack.",
-    "description": "The reactMessage function allows adding an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction. This function is part of the MicrofoxSlackClient and interacts with the Slack API to perform the reaction action.",
+    "description": "Adds an emoji reaction to a specific message in a Slack channel. It requires the channel ID, message timestamp, and the name of the emoji reaction.",
     "tags": [
       "message"
     ],

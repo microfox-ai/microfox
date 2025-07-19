@@ -2,7 +2,7 @@
   "post": {
     "operationId": "joinChannel",
     "summary": "Joins a Slack channel.",
-    "description": "The joinChannel function joins a specified Slack channel. It takes a channel ID as a required parameter.",
+    "description": "Join a specified Slack channel.",
     "tags": [
       "channel"
     ],

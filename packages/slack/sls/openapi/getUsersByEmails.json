@@ -2,7 +2,7 @@
   "post": {
     "operationId": "getUsersByEmails",
     "summary": "Searches for multiple Slack users by their email addresses.",
-    "description": "The getUsersByEmails function allows you to find multiple users in a Slack workspace using their email addresses. It returns an array of comprehensive user objects containing detailed information about the found users.",
+    "description": "Finds multiple users in a Slack workspace using their email addresses. Returns an array of comprehensive user objects containing detailed information about the found users.",
     "tags": [
       "user"
     ],

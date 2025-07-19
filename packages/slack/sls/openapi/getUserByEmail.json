@@ -2,7 +2,10 @@
   "post": {
     "operationId": "getUserByEmail",
     "summary": "Searches for a Slack user by their email address.",
-    "description": "The getUserByEmail function allows you to find a user in a Slack workspace using their email address. It returns a comprehensive user object containing detailed information about the found user, including their profile data, permissions, and various attributes related to their account and workspace status.",
+    "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
+    "ai": {
+      "systemPrompt": "Provide the `email` of the user to find. DO NOT ASSUME THE EMAIL BY NAME. If the email is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by email from the output."
+    },
     "tags": [
       "user"
     ],

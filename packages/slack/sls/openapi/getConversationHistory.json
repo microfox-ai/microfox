@@ -2,13 +2,13 @@
   "post": {
     "operationId": "getConversationHistory",
     "summary": "Fetches a conversation's history of messages and events.",
-    "description": "The getConversationHistory function fetches a conversation's history of messages and events from a specific channel.",
+    "description": "Fetches a conversation's history of messages and events from a specific channel.",
     "tags": [
       "channel",
       "message"
     ],
     "ai": {
-      "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
+      "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try"
     },
     "requestBody": {
       "required": true,

@@ -2,7 +2,7 @@
   "post": {
     "operationId": "messageUser",
     "summary": "Send a direct message to a Slack user.",
-    "description": "The messageUser function allows sending a direct message to a specified Slack user. It requires the user's ID and the message text as input. The function returns details about the sent message, including its timestamp and the channel where it was posted.",
+    "description": "Sends a direct message to a specified Slack user. Returns details about the sent message, including its timestamp and the channel where it was posted.",
     "tags": [
       "message",
       "user"

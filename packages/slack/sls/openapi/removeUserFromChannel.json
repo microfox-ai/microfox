@@ -2,7 +2,7 @@
   "post": {
     "operationId": "removeUserFromChannel",
     "summary": "Removes a user from a Slack channel.",
-    "description": "This function removes a specified user from a given Slack channel. It takes the channel ID and user ID as required parameters and returns a response indicating whether the operation was successful. This method is useful for managing channel membership programmatically.",
+    "description": "Removes a specified user from a given Slack channel.",
     "tags": [
       "channel",
       "user"
