@@ -14,6 +14,9 @@ import {
   UsersListResponse,
   ConversationsHistoryResponse,
   UsersLookupByEmailResponse,
+  UsersInfoResponse,
+  FilesInfoResponse,
+  FilesCompleteUploadExternalResponse,
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -287,6 +290,42 @@ export class MicrofoxSlackClient {
   }
 
   /**
+   * Sends a direct message to multiple users.
+   * @param userIds The IDs of the users to message.
+   * @param text The text of the message to send.
+   */
+  async messageUsers({
+    userIds,
+    text,
+  }: {
+    userIds: string[];
+    text: string;
+  }): Promise<ChatPostMessageResponse[]> {
+    const results = await Promise.all(
+      userIds.map((userId) => this.messageUser({ userId, text }))
+    );
+    return results;
+  }
+
+  /**
+   * Sends a message to multiple channels.
+   * @param channelIds The IDs of the channels to message.
+   * @param text The text of the message to send.
+   */
+  async messageChannels({
+    channelIds,
+    text,
+  }: {
+    channelIds: string[];
+    text: string;
+  }): Promise<ChatPostMessageResponse[]> {
+    const results = await Promise.all(
+      channelIds.map((channelId) => this.messageChannel({ channelId, text }))
+    );
+    return results;
+  }
+  
+  /**
    * Sets a reminder for a user.
    * @param userId The ID of the user to set a reminder for.
    * @param text The text of the reminder.
@@ -358,7 +397,7 @@ export class MicrofoxSlackClient {
    * Gets information about a user.
    * @param userId The ID of the user to get information for.
    */
-  async getUserInfo({ userId }: { userId: string }) {
+  async getUserInfo({ userId }: { userId: string }): Promise<UsersInfoResponse['user']> {
     const result = await this.web.users.info({
       user: userId,
     });
@@ -441,7 +480,7 @@ export class MicrofoxSlackClient {
    * Gets information about a file.
    * @param fileId The ID of the file to get information for.
    */
-  async getFileInfo({ fileId }: { fileId: string }) {
+  async getFileInfo({ fileId }: { fileId: string }): Promise<FilesInfoResponse['file']> {
     const result = await this.web.files.info({
       file: fileId,
     });
@@ -515,7 +554,7 @@ export class MicrofoxSlackClient {
     snippet_type?: string;
     initialComment?: string;
     title?: string;
-  }) {
+  }): Promise<FilesCompleteUploadExternalResponse['files']> {
     // Step 1: Get an upload URL
     const uploadURLResponse = await this.web.files.getUploadURLExternal({
       filename,
