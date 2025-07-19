@@ -530,7 +530,7 @@
                     "description": "Body of the getChannelConversationInfo sls call",
                     "properties": {
                       "arguments": {
-                        "type": "array",
+                        "type": "object",
                         "description": "Container for function arguments.",
                         "properties": {
                           "channelId": {
@@ -876,7 +876,7 @@
                     "description": "Body of the getUserInfo sls call",
                     "properties": {
                       "arguments": {
-                        "type": "array",
+                        "type": "object",
                         "description": "Container for function arguments.",
                         "properties": {
                           "userId": {
@@ -1809,7 +1809,7 @@
                     "description": "Body of the getChannelMembers sls call",
                     "properties": {
                       "arguments": {
-                        "type": "array",
+                        "type": "object",
                         "description": "Container for function arguments.",
                         "properties": {
                           "channelId": {
