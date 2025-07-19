@@ -139,6 +139,9 @@ export class MicrofoxSlackClient {
     users: {
       id: string;
       name: string;
+      real_name: string;
+      display_name: string;
+      title: string;
       email: string;
     }[];
     nextCursor: string | undefined;
@@ -149,6 +152,9 @@ export class MicrofoxSlackClient {
         id: user.id || '',
         name: user.name || '',
         email: user.profile?.email || '',
+        real_name: user.profile?.real_name || '',
+        display_name: user.profile?.display_name || '',
+        title: user.profile?.title || '',
       })) || [],
       nextCursor: response.nextCursor,
     }
