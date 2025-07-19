@@ -1,0 +1,154 @@
+{
+  "post": {
+    "operationId": "messageUsers",
+    "summary": "Send a direct message to multiple Slack users.",
+    "description": "Sends a direct message to multiple Slack users.",
+    "tags": [
+      "message",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "To send a direct message to multiple users, provide the `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THE USER IDs BY NAME. If the user IDs are unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userIds by name from the output or use `getUsersByEmails` only if exact user emails are known."
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the messageUsers sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "userIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "The IDs of the users to send the message to. User IDs start with 'U'."
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The text of the message to be sent."
+                      }
+                    },
+                    "required": [
+                      "userIds",
+                      "text"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean",
+                    "description": "true if the request was successful."
+                  },
+                  "channel": {
+                    "type": "string",
+                    "description": "The ID of the channel where the message was posted."
+                  },
+                  "ts": {
+                    "type": "string",
+                    "description": "The timestamp of the message."
+                  },
+                  "message": {
+                    "type": "object",
+                    "description": "An object containing the details of the sent message.",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "The type of message."
+                      },
+                      "subtype": {
+                        "type": "string",
+                        "description": "The subtype of the message."
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The text of the message."
+                      },
+                      "ts": {
+                        "type": "string",
+                        "description": "The timestamp of the message."
+                      },
+                      "bot_id": {
+                        "type": "string",
+                        "description": "The ID of the bot that sent the message."
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "The username of the bot that sent the message."
+                      },
+                      "attachments": {
+                        "type": "array",
+                        "description": "An array of attachments."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "ok",
+                  "channel",
+                  "ts",
+                  "message"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - The request was invalid or cannot be served.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error - The server has encountered a situation it doesn't know how to handle.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
