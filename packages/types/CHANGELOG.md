@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.8
+
+### Patch Changes
+
+- 3b2f090: Triggered by issue #654: release @microfox/types patch
+
 ## 1.0.7
 
 ### Patch Changes

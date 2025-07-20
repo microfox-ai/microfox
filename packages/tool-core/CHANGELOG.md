@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.13
+
+### Patch Changes
+
+- 0014938: Triggered by issue #656: release @microfox/tool-core patch
+- Updated dependencies [3b2f090]
+  - @microfox/types@1.0.8
+
 ## 1.0.12
 
 ### Patch Changes
