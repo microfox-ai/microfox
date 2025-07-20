@@ -78,15 +78,15 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
       message: 'Request accepted for processing.',
       task_id: task.id,
     });
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error in proxy handler:', error);
 
-    if (error instanceof ApiError) {
+    if (error) {
       return createApiResponse(error.statusCode, { error: error.message });
     }
 
     const internalError = new InternalServerError(
-      (error as Error).message ?? String(error),
+      error instanceof Error ? error.message : String(error),
     );
     return createApiResponse(internalError.statusCode, {
       error: internalError.message,
