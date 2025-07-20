@@ -13,6 +13,8 @@ export type ProcessTaskOptions = {
 };
 
 export interface ProcessTaskType extends Task {
+  originUserMessageId: string;
+  originAssistantMessageId: string;
   response?: {
     [key: string]: any;
   };
@@ -60,7 +62,9 @@ export class ProcessTask {
 
     const task: ProcessTaskType = {
       id: taskId,
-      contextId: taskId,
+      contextId: process.env.MICROFOX_CLIENT_REQUEST_ID ?? '',
+      originUserMessageId: process.env.MICROFOX_USER_MESSAGE_ID ?? '',
+      originAssistantMessageId: process.env.MICROFOX_ASSISTANT_MESSAGE_ID ?? '',
       status: {
         state: TaskState.Submitted,
       },
@@ -159,6 +163,8 @@ export class ProcessTask {
   }): Promise<void> {
     let updateEventData: AgentTaskEvent = {
       taskId,
+      originUserMessageId: process.env.MICROFOX_USER_MESSAGE_ID ?? '',
+      originAssistantMessageId: process.env.MICROFOX_ASSISTANT_MESSAGE_ID ?? '',
       event: event || 'update',
       state: state || TaskState.Unknown,
       error: data?.error,
@@ -193,6 +199,8 @@ export class ProcessTask {
           case 'complete':
             updateEventData = {
               taskId,
+              originUserMessageId: process.env.MICROFOX_USER_MESSAGE_ID ?? '',
+              originAssistantMessageId: process.env.MICROFOX_ASSISTANT_MESSAGE_ID ?? '',
               event: 'complete',
               state: TaskState.Completed,
               response: task.response,
@@ -202,6 +210,8 @@ export class ProcessTask {
           case 'failed':
             updateEventData = {
               taskId,
+              originUserMessageId: process.env.MICROFOX_USER_MESSAGE_ID ?? '',
+              originAssistantMessageId: process.env.MICROFOX_ASSISTANT_MESSAGE_ID ?? '',
               event: 'failed',
               state: TaskState.Failed,
               error: task.error,
@@ -210,6 +220,8 @@ export class ProcessTask {
           default:
             updateEventData = {
               taskId,
+              originUserMessageId: process.env.MICROFOX_USER_MESSAGE_ID ?? '',
+              originAssistantMessageId: process.env.MICROFOX_ASSISTANT_MESSAGE_ID ?? '',
               event: 'update',
               state: task.status.state,
               metadata: task.metadata,
