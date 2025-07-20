@@ -1,4 +1,4 @@
-import { AgentCard, AgentSkill, TaskState } from './a2a.types';
+import { AgentCard, TaskState } from './a2a.types';
 import { AgentUi } from './ui.types';
 
 export interface AgentServers {
@@ -142,6 +142,8 @@ export interface AgentOpenApi {
 
 export type AgentTask = {
   taskId: `${string}-${string}-${string}` | `${string}-${string}` | string;
+  originUserMessageId: string;
+  originAssistantMessageId: string;
   state: TaskState;
   createdAt?: string;
   updatedAt?: string;
@@ -154,6 +156,8 @@ export type AgentTask = {
 
 export type AgentTaskEvent = {
   taskId: `${string}-${string}-${string}` | `${string}-${string}` | string;
+  originUserMessageId: string;
+  originAssistantMessageId: string;
   event: 'update' | 'complete' | 'failed';
   state: TaskState;
   metadata?: Record<string, any>;
