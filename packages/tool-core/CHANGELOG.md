@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.14
+
+### Patch Changes
+
+- c87c2b6: Triggered by issue #658: release @microfox/tool-core
+
 ## 1.0.13
 
 ### Patch Changes
