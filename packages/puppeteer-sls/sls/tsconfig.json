@@ -15,8 +15,8 @@
     "noImplicitAny": true,
     "noCheck": false,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./src",
+    "rootDir": "./",
+    "baseUrl": "./",
     "paths": {
       "@/*": ["*"]
     }
@@ -28,6 +28,6 @@
       "moduleResolution": "NodeNext"
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "microfox-tool-core.d.ts"],
   "exclude": ["node_modules", "dist/**", ".serverless/**"]
 }
