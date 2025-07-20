@@ -1,5 +1,11 @@
 # @microfox/usage-pricing
 
+## 0.2.1
+
+### Patch Changes
+
+- 7a50060: release: update Google AI pricing configuration with new models and cache settings
+
 ## 0.2.0
 
 ### Minor Changes

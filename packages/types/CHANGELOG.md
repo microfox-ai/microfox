@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.9
+
+### Patch Changes
+
+- 7a50060: release: update Google AI pricing configuration with new models and cache settings
+
 ## 1.0.8
 
 ### Patch Changes
