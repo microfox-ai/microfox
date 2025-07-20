@@ -25,6 +25,7 @@
     "puppeteer-core": "^24.12.1"
   },
   "devDependencies": {
+    "@microfox/types": "^1.0.8",
     "@sparticuz/chromium": "^138.0.1",
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
