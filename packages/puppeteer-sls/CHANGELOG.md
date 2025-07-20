@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.8
+
+### Patch Changes
+
+- 7a50060: release: update Google AI pricing configuration with new models and cache settings
+
 ## 1.2.7
 
 ### Patch Changes

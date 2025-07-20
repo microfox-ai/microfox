@@ -1,5 +1,11 @@
 # @microfox/ai-provider-google
 
+## 1.3.1
+
+### Patch Changes
+
+- 7a50060: release: update Google AI pricing configuration with new models and cache settings
+
 ## 1.3.0
 
 ### Minor Changes
