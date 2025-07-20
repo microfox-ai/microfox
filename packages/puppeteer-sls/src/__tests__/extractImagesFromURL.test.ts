@@ -7,7 +7,7 @@ describe(
   () => {
     it('should extract images from a given URL', async () => {
       const options = {
-        url: 'https://uk.pinterest.com/pin/8585055535696734', //'https://www.midjourney.com/explore?tab=top_month',
+        url: 'https://in.pinterest.com/pin/40673202879773183/', //'https://www.midjourney.com/explore?tab=top_month',
         isLocal: true,
         headless: true,
         waitUntil: 'networkidle0' as const,

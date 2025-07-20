@@ -1,5 +1,12 @@
 import { RagUpstashSdkConfigSchema, RagUpstashSdkConfig } from './schemas';
 import {
+  Filter,
+  filterToString,
+  validateFilter,
+  createFilter,
+  FilterHelpers,
+} from './filter-helper';
+import {
   FusionAlgorithm,
   Index,
   QueryMode,
@@ -72,19 +79,30 @@ export class RagUpstashSdk<TMetadata extends Record<string, any>> {
     query: {
       data: string;
       topK: number;
-      filter?: string;
+      filter?: Filter;
       includeData?: boolean;
       includeMetadata?: boolean;
     },
     namespace?: string
   ) {
+    // Convert filter object to string if provided
+    const queryWithStringFilter = {
+      ...query,
+      filter: query.filter ? filterToString(query.filter) : undefined,
+    };
+
     if (namespace) {
-      const vectors = await this.index.query<TQueryMetadata>(query, {
-        namespace,
-      });
+      const vectors = await this.index.query<TQueryMetadata>(
+        queryWithStringFilter,
+        {
+          namespace,
+        }
+      );
       return vectors;
     }
-    const vectors = await this.index.query<TQueryMetadata>(query);
+    const vectors = await this.index.query<TQueryMetadata>(
+      queryWithStringFilter
+    );
     return vectors;
   }
 

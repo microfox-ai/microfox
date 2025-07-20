@@ -142,8 +142,8 @@ export interface AgentOpenApi {
 
 export type AgentTask = {
   taskId: `${string}-${string}-${string}` | `${string}-${string}` | string;
-  originUserMessageId: string;
-  originAssistantMessageId: string;
+  originUserMessageId?: string;
+  originAssistantMessageId?: string;
   state: TaskState;
   createdAt?: string;
   updatedAt?: string;

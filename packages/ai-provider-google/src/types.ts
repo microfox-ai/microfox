@@ -4,42 +4,34 @@ export type GoogleImageModelId =
   | (string & {});
 
 export type GoogleLanguageModelId =
-  | 'gemini-2.5-pro-preview-05-06'
-  | 'gemini-2.5-pro-preview-05-06-long-context'
-  | 'gemini-2.5-flash-preview-05-20'
-  | 'gemini-2.5-flash-preview-05-20-thinking'
-  | 'gemini-2.5-flash-preview-native-audio-dialog'
-  | 'gemini-2.5-flash-exp-native-audio-thinking-dialog'
-  | 'gemini-2.5-flash-preview-tts'
-  | 'gemini-2.5-pro-preview-tts'
-  | 'gemini-2.0-flash'
-  | 'gemini-2.0-flash-audio'
-  | 'gemini-2.0-flash-live-001'
-  | 'gemini-2.0-flash-live-001-audio'
-  | 'gemini-2.0-flash-lite'
-  | 'gemini-2.0-flash-preview-image-generation'
-  | 'gemini-1.5-pro'
-  | 'gemini-1.5-pro-long-context'
   | 'gemini-1.5-flash'
-  | 'gemini-1.5-flash-long-context'
+  | 'gemini-1.5-flash-latest'
+  | 'gemini-1.5-flash-001'
+  | 'gemini-1.5-flash-002'
   | 'gemini-1.5-flash-8b'
-  | 'gemini-1.5-flash-8b-long-context'
+  | 'gemini-1.5-flash-8b-latest'
+  | 'gemini-1.5-flash-8b-001'
+  | 'gemini-1.5-pro'
+  | 'gemini-1.5-pro-latest'
+  | 'gemini-1.5-pro-001'
+  | 'gemini-1.5-pro-002'
+  | 'gemini-2.0-flash'
+  | 'gemini-2.0-flash-001'
+  | 'gemini-2.0-flash-live-001'
+  | 'gemini-2.0-flash-lite'
   | 'gemini-2.0-pro-exp-02-05'
   | 'gemini-2.0-flash-thinking-exp-01-21'
+  | 'gemini-2.0-flash-exp'
+  | 'gemini-2.5-pro-exp-03-25'
+  | 'gemini-2.5-flash'
+  | 'gemini-2.5-flash-lite-preview-06-17'
+  | 'gemini-2.5-flash-preview-04-17'
   | 'gemini-exp-1206'
-  | 'gemini-exp-1121'
-  | 'gemini-exp-1114'
-  | 'gemini-1.5-pro-exp-0827'
-  | 'gemini-1.5-pro-exp-0801'
-  | 'gemini-1.5-flash-8b-exp-0924'
-  | 'gemini-1.5-flash-8b-exp-0827'
+  | 'gemma-3-27b-it'
+  | 'learnlm-1.5-pro-experimental'
   | (string & {});
 
-export type GoogleEmbeddingModelId =
-  | 'gemini-embedding-exp'
-  | 'text-embedding-004'
-  | 'embedding-001'
-  | (string & {});
+export type GoogleEmbeddingModelId = 'text-embedding-004' | (string & {});
 
 export interface GoogleGenerativeAISettings {
   /**
