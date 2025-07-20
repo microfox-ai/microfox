@@ -86,7 +86,7 @@ export const handler = async (event: APIGatewayEvent): Promise<any> => {
     }
 
     const internalError = new InternalServerError(
-      error instanceof Error ? error.message : String(error),
+      (error as Error).message ?? String(error),
     );
     return createApiResponse(internalError.statusCode, {
       error: internalError.message,
