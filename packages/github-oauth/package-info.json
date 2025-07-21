@@ -1,0 +1,52 @@
+{
+  "name": "@microfox/github-oauth",
+  "description": "OAuth SDK for GitHub: A robust TypeScript SDK for GitHub OAuth 2.0 authentication and API integration",
+  "path": "packages/github-oauth",
+  "dependencies": ["zod"],
+  "status": "oauthConnector",
+  "authType": "oauth2",
+  "authEndpoint": "/connect/github-oauth",
+  "documentation": "https://www.npmjs.com/package/@microfox/github-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/github-icon.svg",
+  "constructors": [
+    {
+      "name": "GitHubOAuthSdk",
+      "description": "Create a new GitHub OAuth client",
+      "zodSecretSchema": "GitHubAuthConfigSchema",
+      "auth": "oauth2",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GITHUB_ACCESS_TOKEN",
+          "displayName": "Access Token",
+          "description": "The access token for the GitHub client"
+        },
+        {
+          "key": "GITHUB_REFRESH_TOKEN",
+          "displayName": "Refresh Token",
+          "description": "The refresh token for the GitHub client"
+        },
+        {
+          "key": "GITHUB_CLIENT_ID",
+          "displayName": "Client ID",
+          "description": "The client ID for the GitHub application"
+        },
+        {
+          "key": "GITHUB_CLIENT_SECRET",
+          "displayName": "Client Secret",
+          "description": "The client secret for the GitHub application"
+        },
+        {
+          "key": "GITHUB_SCOPES",
+          "displayName": "Scopes",
+          "description": "The scopes for the GitHub client"
+        }
+      ],
+      "docUrl": "https://github.com/microfox-ai/microfox/blob/main/packages/github-oauth/docs/main.md"
+    }
+  ],
+  "extraInfo": [
+    "Use the `GitHubOAuthSdk` class to create a new GitHub OAuth client."
+  ],
+  "platformType": "tool"
+}
