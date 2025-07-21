@@ -1,6 +1,6 @@
 {
   "name": "@microfox/github-oauth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "OAuth SDK for GitHub: A robust TypeScript SDK for GitHub OAuth 2.0 authentication and API integration",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
