@@ -81,6 +81,7 @@
   ],
   "oauthConnectorPackages": [
     "packages/fillout-oauth",
+    "packages/github-oauth",
     "packages/google",
     "packages/google-oauth",
     "packages/instagram-business-oauth",
@@ -94,6 +95,6 @@
     "packages/task-kit",
     "packages/webhook-core"
   ],
-  "total": 77,
-  "generatedAt": "2025-07-18T10:31:19.436Z"
+  "total": 78,
+  "generatedAt": "2025-07-21T05:04:28.393Z"
 }
