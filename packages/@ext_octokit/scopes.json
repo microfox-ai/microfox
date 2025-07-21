@@ -1,0 +1,130 @@
+[
+  {
+    "name": "repo",
+    "description": "Grants full access to repositories, including private repositories. That includes read/write access to code, commit statuses, repository and organization projects, invitations, collaborators, adding team memberships, deployment statuses, and repository webhooks for repositories and organizations."
+  },
+  {
+    "name": "public_repo",
+    "description": "Grants read/write access to code, commit statuses, collaborators, and deployment statuses for public repositories and organizations. Also required for starring public repositories."
+  },
+  {
+    "name": "repo:status",
+    "description": "Grants read/write access to public and private repository commit statuses. This scope is only necessary to grant other users or services access to private repository commit statuses without granting access to the code."
+  },
+  {
+    "name": "repo_deployment",
+    "description": "Grants access to deployment statuses for public and private repositories. This scope is only necessary to grant other users or services access to deployment statuses, without granting access to the code."
+  },
+  {
+    "name": "admin:repo_hook",
+    "description": "Grants read and ping access to hooks in public or private repositories."
+  },
+  {
+    "name": "write:repo_hook",
+    "description": "Grants read, write, and ping access to hooks in public or private repositories."
+  },
+  {
+    "name": "read:repo_hook",
+    "description": "Grants read and ping access to hooks in public or private repositories."
+  },
+  {
+    "name": "admin:org",
+    "description": "Fully manage the organization and its teams, projects, and memberships."
+  },
+  {
+    "name": "write:org",
+    "description": "Read and write access to organization membership, organization projects, and team membership."
+  },
+  {
+    "name": "read:org",
+    "description": "Read-only access to organization membership, organization projects, and team membership."
+  },
+  {
+    "name": "admin:public_key",
+    "description": "Fully manage public keys."
+  },
+  {
+    "name": "write:public_key",
+    "description": "Create, list, and view details for public keys."
+  },
+  {
+    "name": "read:public_key",
+    "description": "List and view details for public keys."
+  },
+  {
+    "name": "admin:org_hook",
+    "description": "Grants read, write, ping, and delete access to organization hooks."
+  },
+  {
+    "name": "gist",
+    "description": "Grants write access to gists."
+  },
+  {
+    "name": "notifications",
+    "description": "Grants read access to a user's notifications"
+  },
+  {
+    "name": "user",
+    "description": "Grants read/write access to profile info only. Note that this scope includes user:email and user:follow."
+  },
+  {
+    "name": "user:email",
+    "description": "Grants read access to a user's email addresses."
+  },
+  {
+    "name": "user:follow",
+    "description": "Grants access to follow or unfollow other users."
+  },
+  {
+    "name": "project",
+    "description": "Grants read/write access to user and organization projects."
+  },
+  {
+    "name": "read:project",
+    "description": "Grants read only access to user and organization projects."
+  },
+  {
+    "name": "delete_repo",
+    "description": "Grants access to delete adminable repositories."
+  },
+  {
+    "name": "write:discussion",
+    "description": "Allows read and write access for team discussions."
+  },
+  {
+    "name": "read:discussion",
+    "description": "Allows read access for team discussions."
+  },
+  {
+    "name": "write:packages",
+    "description": "Grants access to upload or publish a package in GitHub Packages."
+  },
+  {
+    "name": "read:packages",
+    "description": "Grants access to download or install packages from GitHub Packages."
+  },
+  {
+    "name": "delete:packages",
+    "description": "Grants access to delete packages from GitHub Packages."
+  },
+  {
+    "name": "admin:gpg_key",
+    "description": "Fully manage GPG keys."
+  },
+  {
+    "name": "write:gpg_key",
+    "description": "Create, list, and view details for GPG keys."
+  },
+  {
+    "name": "read:gpg_key",
+    "description": "List and view details for GPG keys."
+  },
+  {
+    "name": "codespace",
+    "description": "Grants the ability to create and manage codespaces."
+  },
+  {
+    "name": "workflow",
+    "description": "Grants the ability to add and update GitHub Actions workflow files."
+  }
+] 

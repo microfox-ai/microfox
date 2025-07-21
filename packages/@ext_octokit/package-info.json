@@ -1,8 +1,8 @@
 {
   "name": "octokit",
-  "title": "octokit",
-  "description": "The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno",
-  "platformType": "tool",
+  "title": "GitHub Octokit",
+  "description": "The all-batteries-included GitHub SDK for Browsers, Node.js, and Deno with OAuth support",
+  "platformType": "code_management",
   "path": "packages/@ext_octokit",
   "dependencies": [
     "@octokit/app",
@@ -16,6 +16,9 @@
     "@octokit/request-error",
     "@octokit/types"
   ],
+  "addedDependencies": [
+    "@microfox/github-oauth"
+  ],
   "status": "external",
   "authEndpoint": "",
   "documentation": "https://www.npmjs.com/package/octokit",
@@ -23,19 +26,63 @@
   "constructors": [
     {
       "name": "Octokit",
-      "description": "Create a new Octokit SDK client through which you can interact with the GitHub API",
+      "description": "Create a new Octokit SDK client through which you can interact with the GitHub API using Personal Access Token",
       "auth": "apikey",
-      "apiType": "api_key",
+      "apiType": "personal_access_token",
       "requiredKeys": [
         {
           "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
           "displayName": "GitHub Personal Access Token",
-          "description": "Your GitHub personal access token or OAuth access token."
+          "description": "Your GitHub personal access token. Generate one at https://github.com/settings/tokens"
         }
       ],
       "internalKeys": [],
-      "functionalities": ["rest", "request"]
+      "functionalities": ["rest", "request", "graphql", "repositories", "issues", "pulls"]
+    },
+    {
+      "name": "GitHubOAuthSdk",
+      "description": "Create a new Octokit SDK client through which you can interact with the GitHub API using OAuth authentication",
+      "auth": "oauth2",
+      "authSdk": "@microfox/github-oauth",
+      "authEndpoint": "/connect/github-oauth",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "GITHUB_CLIENT_ID",
+          "displayName": "GitHub OAuth Client ID",
+          "description": "The client ID for GitHub OAuth. You can obtain this from your GitHub App settings at https://github.com/settings/applications/new"
+        },
+        {
+          "key": "GITHUB_CLIENT_SECRET",
+          "displayName": "GitHub OAuth Client Secret",
+          "description": "The client secret for GitHub OAuth. You can obtain this from your GitHub App settings."
+        },
+        {
+          "key": "GITHUB_ACCESS_TOKEN",
+          "displayName": "GitHub OAuth Access Token",
+          "description": "The access token for GitHub OAuth. This token is used to authenticate requests to the GitHub API."
+        },
+        {
+          "key": "GITHUB_SCOPES",
+          "displayName": "OAuth Scopes",
+          "description": "The scopes for GitHub OAuth authentication. This specifies the permissions that the application needs (e.g., repo, user, gist)."
+        }
+      ],
+      "functionalities": ["rest", "request", "graphql", "repositories", "issues", "pulls", "oauth"]
     }
   ],
-  "extraInfo": []
+  "extraInfo": [
+    {
+      "title": "Authentication Methods",
+      "description": "This package supports both Personal Access Token and OAuth authentication methods for GitHub API access."
+    },
+    {
+      "title": "OAuth Setup",
+      "description": "To use OAuth authentication, create a GitHub OAuth App at https://github.com/settings/applications/new and configure the client credentials."
+    },
+    {
+      "title": "Available Scopes",
+      "description": "Common OAuth scopes include: 'repo' (repository access), 'user' (user profile), 'user:email' (user email), 'public_repo' (public repositories), 'gist' (gists), 'notifications' (notifications)."
+    }
+  ]
 }
