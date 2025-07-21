@@ -24,9 +24,9 @@ npm install @microfox/github-oauth
 ### 1. Basic OAuth Flow
 
 ```typescript
-import { createGitHubOAuth } from '@microfox/github-oauth';
+import { GitHubOAuthSdk } from '@microfox/github-oauth';
 
-const githubOAuth = createGitHubOAuth({
+const githubOAuth = new GitHubOAuthSdk({
   clientId: 'your-github-client-id',
   clientSecret: 'your-github-client-secret',
   redirectUri: 'http://localhost:3000/auth/github/callback',
@@ -47,9 +47,9 @@ console.log('Access Token:', tokenResponse.access_token);
 ### 2. OAuth Flow with PKCE (Recommended for SPAs)
 
 ```typescript
-import { createGitHubOAuth } from '@microfox/github-oauth';
+import { GitHubOAuthSdk } from '@microfox/github-oauth';
 
-const githubOAuth = createGitHubOAuth({
+const githubOAuth = new GitHubOAuthSdk({
   clientId: 'your-github-client-id',
   clientSecret: 'your-github-client-secret',
   redirectUri: 'http://localhost:3000/auth/github/callback',
@@ -240,10 +240,10 @@ try {
 
 ```typescript
 // app/auth/github/route.ts
-import { createGitHubOAuth } from '@microfox/github-oauth';
+import { GitHubOAuthSdk } from '@microfox/github-oauth';
 import { NextRequest, NextResponse } from 'next/server';
 
-const githubOAuth = createGitHubOAuth({
+const githubOAuth = new GitHubOAuthSdk({
   clientId: process.env.GITHUB_CLIENT_ID!,
   clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   redirectUri: process.env.GITHUB_REDIRECT_URI!,
@@ -285,10 +285,10 @@ export async function GET(request: NextRequest) {
 
 ```typescript
 import express from 'express';
-import { createGitHubOAuth } from '@microfox/github-oauth';
+import { GitHubOAuthSdk } from '@microfox/github-oauth';
 
 const app = express();
-const githubOAuth = createGitHubOAuth({
+const githubOAuth = new GitHubOAuthSdk({
   clientId: process.env.GITHUB_CLIENT_ID!,
   clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   redirectUri: 'http://localhost:3000/auth/github/callback',
