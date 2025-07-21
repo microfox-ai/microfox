@@ -11,6 +11,8 @@
     "@microfox/aws-ses": "*",
     "@microfox/reddit": "*",
     "@microfox/reddit-oauth": "*",
+    "@microfox/github-oauth": "*",
+    "@microfox/oauth-kit": "*",
     "dotenv": "^16.3.1",
     "next": "^14.0.0",
     "react": "^18.2.0",

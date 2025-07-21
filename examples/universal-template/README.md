@@ -1,14 +1,17 @@
 # Universal Package Testing Template
 
-This template provides a universal testing interface for any package that requires OAuth authentication. It's designed to be easily adaptable for testing different packages without creating a new UI for each one.
+This template provides a universal testing interface for Microfox packages that require OAuth authentication. It showcases real-world implementations of our OAuth SDKs and provides a reference for developers.
 
 ## Features
 
-- Universal OAuth authentication flow
-- Configurable function parameters through JSON input
-- Clean and simple interface
-- Error handling and result display
-- Easy to modify for different packages
+- **GitHub OAuth SDK**: Complete OAuth 2.0 implementation with PKCE
+- **Reddit SDK**: Reddit API integration with OAuth
+- **OAuth Kit**: Unified identity management across providers
+- **AWS SES**: Email sending functionality
+- Universal OAuth authentication flows
+- Clean and intuitive user interfaces
+- Comprehensive error handling
+- Real-world SDK demonstrations
 
 ## Setup
 
@@ -21,28 +24,56 @@ npm install
 2. Create a `.env.local` file with your OAuth credentials:
 
 ```env
-NEXT_PUBLIC_[PROVIDER]_CLIENT_ID=your_client_id
-NEXT_PUBLIC_[PROVIDER]_CLIENT_SECRET=your_client_secret
-NEXT_PUBLIC_[PROVIDER]_REDIRECT_URI=http://localhost:3000
-NEXT_PUBLIC_[PROVIDER]_AUTH_URL=https://your-oauth-provider.com/auth
-NEXT_PUBLIC_[PROVIDER]_TOKEN_URL=https://your-oauth-provider.com/token
-NEXT_PUBLIC_[PROVIDER]_SCOPE=your_required_scopes
+# GitHub OAuth Configuration
+NEXT_PUBLIC_GITHUB_CLIENT_ID=your_github_oauth_app_client_id
+GITHUB_CLIENT_SECRET=your_github_oauth_app_client_secret
+NEXT_PUBLIC_GITHUB_REDIRECT_URI=http://localhost:3000/github
+
+# Reddit OAuth Configuration (optional)
+REDDIT_CLIENT_ID=your_reddit_client_id
+REDDIT_CLIENT_SECRET=your_reddit_client_secret
+REDDIT_REDIRECT_URI=http://localhost:3000/reddit/callback
+
+# AWS SES Configuration (optional)
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=us-east-1
+SES_FROM_EMAIL=noreply@yourdomain.com
 ```
 
-3. Run the development server:
+3. Set up GitHub OAuth App:
+   - Go to GitHub Settings > Developer settings > OAuth Apps
+   - Create a new OAuth App
+   - Set Authorization callback URL to: `http://localhost:3000/github`
+   - Copy Client ID and Client Secret to your `.env.local`
+
+4. Run the development server:
 
 ```bash
 npm run dev
 ```
 
+## Available SDKs
+
+### GitHub OAuth SDK (`/github`)
+- Complete OAuth 2.0 authorization flow with PKCE
+- User profile and email fetching  
+- Token validation and revocation
+- Integration with OAuth Kit
+- Security features (state parameter, PKCE)
+
+### Reddit SDK (`/`)
+- Reddit API integration
+- OAuth authentication
+- Post and comment management
+
 ## How to Use
 
-1. **Authentication**: Click the "Authenticate" button to start the OAuth flow.
-
-2. **Testing Functions**: After authentication:
-   - Enter your function parameters in the JSON textarea
-   - Click "Test Function" to execute
-   - View results or errors in the response section
+1. **Navigate to SDK Pages**: Use the navigation to visit different SDK demonstrations
+2. **GitHub OAuth**: Visit `/github` to test the complete GitHub OAuth flow
+3. **Authentication**: Click "Login with GitHub" to start OAuth flow
+4. **Profile Information**: View fetched user profile, repositories, and follower counts
+5. **API Testing**: Test various GitHub API endpoints with authenticated requests
 
 ## Customizing for Your Package
 
