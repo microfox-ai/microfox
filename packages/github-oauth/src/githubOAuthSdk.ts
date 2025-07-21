@@ -90,11 +90,11 @@ export class GitHubOAuthSdk {
    * @param options Optional parameters for the authorization URL
    * @returns The complete authorization URL
    */
-  public async getAuthUrl(options?: {
+  public getAuthUrl(options?: {
     state?: string;
     usePKCE?: boolean;
     codeChallenge?: string;
-  }): Promise<string> {
+  }): string {
     const baseUrl = 'https://github.com/login/oauth/authorize';
     
     const params = new URLSearchParams({
