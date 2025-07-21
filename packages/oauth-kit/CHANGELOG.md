@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.1.2
+
+### Patch Changes
+
+- ab583fb: Triggered by issue #664: release @microfox/oauth-kit patch
+
 ## 1.1.1
 
 ### Patch Changes
