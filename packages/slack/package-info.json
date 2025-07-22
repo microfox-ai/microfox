@@ -75,7 +75,6 @@
         "getChannelMembers",
         "getChannels",
         "getChannelsIds",
-        "getChannelMembers",
         "getConversationHistory",
         "getFileInfo",
         "getUserByEmail",
