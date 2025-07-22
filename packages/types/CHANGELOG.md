@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.11
+
+### Patch Changes
+
+- e7fb7c8: Triggered by issue #670: release @microfox/types patch
+
 ## 1.0.10
 
 ### Patch Changes

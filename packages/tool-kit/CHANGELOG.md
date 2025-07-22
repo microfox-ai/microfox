@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.18
+
+### Patch Changes
+
+- 67840f2: Triggered by issue #669: release @microfox/tool-kit patch
+- Updated dependencies [e7fb7c8]
+  - @microfox/types@1.0.11
+
 ## 1.1.17
 
 ### Patch Changes
