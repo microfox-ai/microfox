@@ -46,6 +46,7 @@ type JsonSchema = {
 
 export interface AgentPathAiInstruction {
   systemPrompt?: string;
+  disableTool?: boolean; // false by default
   preferredModel?: string;
 }
 
