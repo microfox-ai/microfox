@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.17
+
+### Patch Changes
+
+- 2a02a4a: release: fix formatting in package.json description for puppeteer-sls
+- Updated dependencies [2a02a4a]
+  - @microfox/types@1.0.10
+
 ## 1.1.16
 
 ### Patch Changes
