@@ -31,26 +31,37 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Lists all public, private and direct message channels in a workspace.
+   * Lists channels in a workspace.
    * @param cursor A cursor to the next page of results.
    * @param limit The maximum number of channels to return.
+   * @param types Channel types to include. Defaults to all types (public, private, im).
    */
   async getChannels({
     cursor,
     limit = 50,
+    types = ['public', 'private', 'im'],
   }: {
     cursor?: string;
     limit?: number;
+    types?: ('public' | 'private' | 'im')[];
   }): Promise<{
     channels: ConversationsListResponse['channels'];
     nextCursor: string | undefined;
   }> {
+    // Convert types to Slack API format
+    const typeMapping = {
+      'public': 'public_channel',
+      'private': 'private_channel',
+      'im': 'im'
+    };
+    const slackTypes = types.map(type => typeMapping[type]).join(',');
+
     let channels: ConversationsListResponse['channels'] = [];
     let nextCursor: string | undefined = cursor;
     let hasMore = true;
     while (hasMore) {
       const result = await this.web.conversations.list({
-        types: 'public_channel,private_channel,im',
+        types: slackTypes,
         limit,
         cursor: nextCursor,
       });
@@ -65,16 +76,19 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Lists all public, private and direct message channels in a workspace.
+   * Lists channel IDs and names in a workspace.
    * @param cursor A cursor to the next page of results.
    * @param limit The maximum number of channels to return.
+   * @param types Channel types to include. Defaults to all types (public, private, im).
    */
   async getChannelsIds({
     cursor,
     limit,
+    types = ['public', 'private', 'im'],
   }: {
     cursor?: string;
     limit?: number;
+    types?: ('public' | 'private' | 'im')[];
   }): Promise<{
     channels: {
       id: string;
@@ -82,7 +96,7 @@ export class MicrofoxSlackClient {
     }[];
     nextCursor: string | undefined;
   }> {
-    const response = await this.getChannels({ cursor, limit });
+    const response = await this.getChannels({ cursor, limit, types });
     return {
       channels: response.channels?.map((channel) => ({
         id: channel.id || '',
@@ -290,9 +304,35 @@ export class MicrofoxSlackClient {
   }
 
   /**
-   * Sends a direct message to multiple users.
+   * Sends a direct message to multiple users with optional templating.
    * @param userIds The IDs of the users to message.
-   * @param text The text of the message to send.
+   * @param text The text of the message to send. Can include template variables for personalization.
+   * 
+   * Available template variables:
+   * - {mention} - Mentions the user (@username)
+   * - {user_name} - User's name (fallback: username -> real_name -> display_name)
+   * - {user_email} - User's email address
+   * - {user_title} - User's job title
+   * - {user_phone} - User's phone number
+   * - {user_status} - User's status text
+   * - {user_avatar} - User's profile image URL
+   * - {first_name} - User's first name
+   * - {last_name} - User's last name
+   * 
+   * @example
+   * ```typescript
+   * // Simple message
+   * await client.messageUsers({
+   *   userIds: ['U1234567890', 'U0987654321'],
+   *   text: "Hello everyone!"
+   * });
+   * 
+   * // Templated message
+   * await client.messageUsers({
+   *   userIds: ['U1234567890', 'U0987654321'],
+   *   text: "Hi {mention}! Your title is {user_title} and email is {user_email}."
+   * });
+   * ```
    */
   async messageUsers({
     userIds,
@@ -301,9 +341,64 @@ export class MicrofoxSlackClient {
     userIds: string[];
     text: string;
   }): Promise<ChatPostMessageResponse[]> {
-    const results = await Promise.all(
-      userIds.map((userId) => this.messageUser({ userId, text }))
-    );
+    const results: ChatPostMessageResponse[] = [];
+
+    // Check if text contains template variables
+    const hasTemplateVars = /{(mention|user_name|user_email|user_title|user_phone|user_status|user_avatar|first_name|last_name)}/.test(text);
+
+    if (!hasTemplateVars) {
+      // No template variables, send same message to all users
+      const responses = await Promise.all(
+        userIds.map((userId) => this.messageUser({ userId, text }))
+      );
+      return responses;
+    }
+
+    // Process each user ID for templated messages
+    for (const userId of userIds) {
+      try {
+        // Get detailed user information
+        const user = await this.getUserInfo({ userId });
+        
+        if (!user) {
+          // Skip user if not found, but continue with others
+          continue;
+        }
+
+        // Replace template variables with actual user data using fallbacks
+        let personalizedMessage = text
+          // {mention} -> <@U1234567>
+          .replace(/{mention}/g, `<@${user.id}>`)
+          // {user_name} -> best available name
+          .replace(/{user_name}/g, user.name || user.real_name || user.profile?.display_name || user.profile?.real_name || 'User')
+          // {user_email} -> email
+          .replace(/{user_email}/g, user.profile?.email || '')
+          // {user_title} -> job title
+          .replace(/{user_title}/g, user.profile?.title || '')
+          // {user_phone} -> phone number
+          .replace(/{user_phone}/g, user.profile?.phone || '')
+          // {user_status} -> status text
+          .replace(/{user_status}/g, user.profile?.status_text || '')
+          // {user_avatar} -> profile image (prefer 72px size)
+          .replace(/{user_avatar}/g, user.profile?.image_72 || user.profile?.image_192 || user.profile?.image_original || '')
+          // {first_name} -> first name
+          .replace(/{first_name}/g, user.profile?.first_name || user.profile?.real_name?.split(' ')[0] || user.name || 'User')
+          // {last_name} -> last name
+          .replace(/{last_name}/g, user.profile?.last_name || (user.profile?.real_name?.split(' ').slice(1).join(' ')) || '');
+
+        // Send the personalized message
+        const result = await this.messageUser({
+          userId: user.id!,
+          text: personalizedMessage
+        });
+
+        results.push(result);
+      } catch (error) {
+        // Skip failed users but continue with others
+        console.error(`Failed to send message to user ${userId}:`, error);
+      }
+    }
+
     return results;
   }
 
@@ -351,23 +446,39 @@ export class MicrofoxSlackClient {
    * Creates a new channel.
    * @param name The name of the channel to create.
    * @param isPrivate Whether the channel should be private. Defaults to false.
+   * @param join Whether to join the channel after creation. Defaults to true.
+   * @param userIds Optional array of user IDs to add to the channel after creation.
    */
   async createChannel({
     name,
     isPrivate = false,
     join = true,
+    userIds,
   }: {
     name: string;
     isPrivate?: boolean;
     join?: boolean;
+    userIds?: string[];
   }): Promise<ConversationsCreateResponse['channel']> {
     const result = await this.web.conversations.create({
       name: name,
       is_private: isPrivate,
     });
-    if (join && result?.channel?.id) {
-      await this.joinChannel({ channelId: result.channel.id });
+    
+    if (result?.channel?.id) {
+      if (join) {
+        await this.joinChannel({ channelId: result.channel.id });
+      }
+      
+      // Add users to the channel if provided
+      if (userIds && userIds.length > 0) {
+        await this.addUsersToChannel({ 
+          channelId: result.channel.id, 
+          userIds 
+        });
+      }
     }
+    
     return result.channel;
   }
 
@@ -440,22 +551,49 @@ export class MicrofoxSlackClient {
     });
   }
 
+
+
   /**
-   * Adds a user to a channel.
-   * @param channelId The ID of the channel to add the user to.
-   * @param userId The ID of the user to add.
+   * Adds multiple users to a channel.
+   * @param channelId The ID of the channel to add users to.
+   * @param userIds Array of user IDs to add to the channel.
    */
-  async addUserToChannel({
+  async addUsersToChannel({
     channelId,
-    userId
+    userIds
   }: {
     channelId: string;
-    userId: string;
-  }): Promise<ConversationsInviteResponse> {
-    return this.web.conversations.invite({
-      channel: channelId,
-      users: userId,
-    });
+    userIds: string[];
+  }): Promise<ConversationsInviteResponse[]> {
+    const results: ConversationsInviteResponse[] = [];
+    
+    // Slack API supports adding multiple users in one call with comma-separated list
+    // but to handle errors better, we'll add them in batches or individually if needed
+    try {
+      // Try to add all users at once (more efficient)
+      const result = await this.web.conversations.invite({
+        channel: channelId,
+        users: userIds.join(','),
+      });
+      results.push(result);
+    } catch (error) {
+      // If bulk invite fails, try adding users individually
+      console.warn('Bulk user invite failed, trying individual invites:', error);
+      for (const userId of userIds) {
+        try {
+          const result = await this.web.conversations.invite({
+            channel: channelId,
+            users: userId,
+          });
+          results.push(result);
+        } catch (individualError) {
+          console.error(`Failed to add user ${userId} to channel ${channelId}:`, individualError);
+          // Continue with other users even if one fails
+        }
+      }
+    }
+    
+    return results;
   }
 
   /**
