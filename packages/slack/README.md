@@ -10,20 +10,18 @@ npm install @microfox/slack
 
 ## Usage
 
-To use this package, import the `WebClient` and initialize it with your Slack API token.
+To use this package, import the `MicrofoxSlackClient` and initialize it with your Slack API token.
 
 ```typescript
-import { WebClient } from '@microfox/slack';
+import { MicrofoxSlackClient } from '@microfox/slack';
 
-const token = process.env.SLACK_TOKEN;
-const web = new WebClient(token);
+const token = process.env.SLACK_ACCESS_TOKEN;
+const slackClient = new MicrofoxSlackClient(token);
 
-// Example: Post a message to a channel
+// Example: Send a message to a channel
 (async () => {
-  const conversationId = 'C12345678';
-  const res = await web.chat.postMessage({ channel: conversationId, text: 'Hello there' });
+  const channelId = 'C12345678';
+  const res = await slackClient.messageChannel({ channelId: channelId, text: 'Hello there' });
   console.log('Message sent: ', res.ts);
 })();
 ```
-
-For more details on the available functions and their usage, please refer to the documentation in the `docs` directory and the official [Slack API documentation](https://api.slack.com/). 
