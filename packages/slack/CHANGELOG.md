@@ -1,5 +1,11 @@
 # @microfox/slack
 
+## 1.2.8
+
+### Patch Changes
+
+- 426da83: Triggered by issue #667: release @microfox/slack patch
+
 ## 1.2.7
 
 ### Patch Changes
