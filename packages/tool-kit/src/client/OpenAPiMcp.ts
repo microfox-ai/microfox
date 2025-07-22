@@ -851,6 +851,7 @@ export class OpenApiMCP {
     schemas = 'automatic',
     validateParameters = false,
     disabledExecutions = [],
+    includeDisabled = false,
     disableAllExecutions = false,
     auth: toolAuth,
     getAuth: toolGetAuth,
@@ -873,6 +874,10 @@ export class OpenApiMCP {
     for (const [id, operation] of this.operationMap.entries()) {
       if (schemas !== 'automatic' && !schemas[id]) {
         continue;
+      }
+
+      if (operation?.ai?.disableTool && !includeDisabled){
+        continue
       }
 
       const cleanedOperation = this.cleanUpMethodSchema(

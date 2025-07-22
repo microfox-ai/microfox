@@ -302,6 +302,7 @@ export type ToolOptions = {
   validateParameters?: boolean;
   disabledExecutions?: string[];
   disableAllExecutions?: boolean;
+  includeDisabled?: boolean;
   auth?: AuthObject;
   getAuth?: (options: AuthOptions) => Promise<AuthObject>;
   cleanAuth?: (auth: AuthObject) => Promise<AuthObject>;
