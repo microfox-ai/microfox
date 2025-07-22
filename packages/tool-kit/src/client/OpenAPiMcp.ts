@@ -25,6 +25,8 @@ import { CryptoVault } from '@microfox/crypto-sdk';
 import { convertOpenApiSchemaToZod } from '../parsing/jsonzod';
 import { addPropertiesToBody } from '../parsing/argumentHelpers';
 import zodToJsonSchema from 'zod-to-json-schema';
+import { SecurityAuthSchema } from '@microfox/types';
+import { constructHeaders, getAuthOptions } from './headers';
 
 /**
  * Individual client for interacting with a single API described by an OpenAPI schema
@@ -274,44 +276,7 @@ export class OpenApiMCP {
   }
 
   private structureHeaders(auth?: AuthObject): Record<string, string> {
-    const headers: Record<string, string> = {};
-    let _cryptoVault = this.cryptoVault;
-    if (!auth?.encryptionKey) {
-      return headers;
-    }
-    if (!_cryptoVault || auth?.encryptionKey) {
-      try {
-        _cryptoVault = new CryptoVault({
-          key: auth?.encryptionKey,
-          keyFormat: 'base64',
-          encryptionAlgo: 'aes-256-gcm',
-          hashAlgo: 'sha256',
-          outputEncoding: 'base64url',
-        });
-      } catch (error) {
-        // console.error('Error creating crypto vault', error);
-      }
-    }
-    if (auth && _cryptoVault) {
-      const variables = auth.variables?.reduce(
-        (
-          acc: Record<string, string>,
-          variable: { key: string; value: string },
-        ) => {
-          acc[variable.key] = variable.value;
-          return acc;
-        },
-        {},
-      );
-      if (variables && Object.keys(variables).length > 0) {
-        headers['x-auth-secrets'] = _cryptoVault.encrypt(
-          JSON.stringify(variables),
-        );
-      }
-    } else {
-      // console.warn('No auth provided');
-    }
-    return headers;
+    return constructHeaders(auth);
   }
 
   private prepareRequest(
@@ -975,45 +940,19 @@ export class OpenApiMCP {
         // If not paused, proceed with normal execution.
         let finalAuth: AuthObject | undefined;
 
-        let authConfig: any = cleanedOperation.security?.authSchema;
-        if (typeof authConfig === 'string' && authConfig.startsWith('#/')) {
-          authConfig = this.internalResolveRef(authConfig, new Set());
-          console.log('authConfig', authConfig);
-        } else if (Array.isArray(authConfig)) {
-          authConfig = authConfig
-            .map((a: any) => {
-              if (typeof a === 'string' && a.startsWith('#/')) {
-                return this.internalResolveRef(a, new Set());
-              } else if (typeof a === 'string' && a.startsWith('x-auth-')) {
-                return this.schema.components?.schemas?.[a];
-              }
-              return a;
-            })
-            .filter(Boolean)
-            .flat();
-          console.log('authConfig', authConfig);
-        }
+        // Replace the auth config extraction with getAuthOptions
+        const { packages, customSecrets } = getAuthOptions(
+          this.schema,
+          cleanedOperation,
+        );
 
-        const authPreset =
-          authConfig ??
-          this.schema.components?.schemas?.['x-auth-packages'] ??
-          [];
-
-        const packages = authPreset.filter((a: any) => a.packageName);
-        const customSecrets = authPreset.filter((a: any) => a.variables);
         if (!finalAuth) {
           if (toolGetAuth) {
-            finalAuth = await toolGetAuth({
-              packages: packages as any,
-              customSecrets: customSecrets as any,
-            });
+            finalAuth = await toolGetAuth({ packages, customSecrets });
           } else if (toolAuth) {
             finalAuth = toolAuth;
           } else if (this.getAuth) {
-            finalAuth = await this.getAuth({
-              packages: packages as any,
-              customSecrets: customSecrets as any,
-            });
+            finalAuth = await this.getAuth({ packages, customSecrets });
           } else if (this.auth) {
             finalAuth = this.auth;
           }

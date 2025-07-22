@@ -4,6 +4,7 @@ import {
   AgentPathAiInstruction,
   AgentOpenApi,
   AgentUi,
+  SecurityAuthSchema,
 } from '@microfox/types';
 import { z } from 'zod';
 
@@ -175,11 +176,7 @@ export type AuthOptions = {
     packageName: string;
     packageConstructor?: string;
   }[];
-  customSecrets?: {
-    key: string;
-    description?: string;
-    why?: string;
-  }[];
+  customSecrets?: SecurityAuthSchema['@microfox/packages']['customSecrets'];
 };
 
 export type AuthObject = {
