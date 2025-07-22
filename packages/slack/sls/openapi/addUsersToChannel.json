@@ -1,0 +1,299 @@
+{
+  "post": {
+    "operationId": "addUsersToChannel",
+    "summary": "Add multiple users to a Slack channel.",
+    "description": "Adds multiple users to a specified Slack channel. Efficiently handles bulk user additions with automatic fallback to individual invites if needed. First attempts bulk addition, then falls back to individual invites if bulk fails.",
+    "tags": [
+      "channel",
+      "user"
+    ],
+    "ai": {
+      "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THESE IDs BY NAMES. If the `channelId` is unknown, use `getChannelsIds` to find the channelId by name. To find `userIds`, use `getActiveUsersIds` or `getUsersByEmails` only if exact user emails are known."
+    },
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the addUsersToChannel sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "channelId": {
+                        "type": "string",
+                        "description": "The ID of the channel to add users to. Channel IDs start with 'C'."
+                      },
+                      "userIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Array of user IDs to add to the channel. User IDs start with 'U'."
+                      }
+                    },
+                    "required": [
+                      "channelId",
+                      "userIds"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean",
+                    "description": "Indicates if the request was successful."
+                  },
+                  "channel": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "The ID of the channel."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the channel."
+                      },
+                      "is_channel": {
+                        "type": "boolean",
+                        "description": "Indicates if the object represents a channel."
+                      },
+                      "is_group": {
+                        "type": "boolean",
+                        "description": "Indicates if the object represents a private channel."
+                      },
+                      "is_im": {
+                        "type": "boolean",
+                        "description": "Indicates if the object represents a direct message conversation."
+                      },
+                      "created": {
+                        "type": "integer",
+                        "description": "A Unix timestamp indicating when the channel was created."
+                      },
+                      "creator": {
+                        "type": "string",
+                        "description": "The ID of the user who created the channel."
+                      },
+                      "is_archived": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is archived."
+                      },
+                      "is_general": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is the default \"general\" channel."
+                      },
+                      "unlinked": {
+                        "type": "integer"
+                      },
+                      "name_normalized": {
+                        "type": "string",
+                        "description": "The channel name, but with any special characters replaced."
+                      },
+                      "is_shared": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is shared with other workspaces."
+                      },
+                      "is_ext_shared": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is part of an external shared connection."
+                      },
+                      "is_org_shared": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is shared with the entire organization."
+                      },
+                      "pending_shared": {
+                        "type": "array",
+                        "description": "A list of team IDs that have been invited to the channel but have not yet joined",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "is_pending_ext_shared": {
+                        "type": "boolean",
+                        "description": "Indicates if the conversation is ready to become an external shared channel but needs approval"
+                      },
+                      "is_member": {
+                        "type": "boolean",
+                        "description": "Indicates if the calling user is a member of the channel."
+                      },
+                      "is_private": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is private."
+                      },
+                      "is_mpim": {
+                        "type": "boolean",
+                        "description": "Indicates if the object represents a multi-person direct message."
+                      },
+                      "topic": {
+                        "type": "object",
+                        "description": "An object containing the channel's topic information."
+                      },
+                      "purpose": {
+                        "type": "object",
+                        "description": "An object containing the channel's purpose information."
+                      },
+                      "previous_names": {
+                        "type": "array",
+                        "description": "A list of any previous names the channel had."
+                      },
+                      "num_members": {
+                        "type": "integer",
+                        "description": "The number of members in the channel."
+                      },
+                      "last_read": {
+                        "type": "string",
+                        "description": "The timestamp of the last message the user read in the channel."
+                      },
+                      "latest": {
+                        "type": "object",
+                        "description": "The latest message in the channel."
+                      },
+                      "unread_count": {
+                        "type": "integer",
+                        "description": "The number of unread messages for the user in the channel."
+                      },
+                      "unread_count_display": {
+                        "type": "integer",
+                        "description": "The number of unread messages to display for the user."
+                      },
+                      "is_open": {
+                        "type": "boolean",
+                        "description": "Indicates if the channel is open for the user."
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "ok"
+                ]
+              },
+              "description": "Array of invite responses"
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Invalid parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Not authorized to add user to channel",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Channel or user not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "ok",
+                "error"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

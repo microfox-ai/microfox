@@ -1,14 +1,15 @@
 {
   "post": {
     "operationId": "messageUsers",
-    "summary": "Send a direct message to multiple Slack users.",
-    "description": "Sends a direct message to multiple Slack users.",
+    "summary": "Send a direct message to multiple Slack users with optional templating.",
+    "description": "Sends direct messages to multiple Slack users. Supports both simple text messages and templated messages with dynamic content for each user.",
     "tags": [
       "message",
-      "user"
+      "user",
+      "template"
     ],
     "ai": {
-      "systemPrompt": "To send a direct message to multiple users, provide the `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THE USER IDs BY NAME. If the user IDs are unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userIds by name from the output or use `getUsersByEmails` only if exact user emails are known."
+      "systemPrompt": "To send messages to multiple users, provide `userIds` (array of strings, each starting with 'U') and `text`. The text can include template variables like {mention}, {user_name}, {user_email}, {user_title}, {user_phone}, {user_status}, {user_avatar}, {first_name}, {last_name}. If template variables are used, the function automatically fetches user info and personalizes each message. DO NOT ASSUME USER IDs BY NAME - use `getActiveUsersIds` to find userIds by name."
     },
     "requestBody": {
       "required": true,
@@ -33,7 +34,7 @@
                       },
                       "text": {
                         "type": "string",
-                        "description": "The text of the message to be sent."
+                        "description": "The text of the message to be sent. Can include template variables: {mention} (mentions user), {user_name} (user's name), {user_email} (email), {user_title} (job title), {user_phone} (phone), {user_status} (status), {user_avatar} (profile image), {first_name} (first name), {last_name} (last name). Template variables are automatically replaced with user data."
                       }
                     },
                     "required": [

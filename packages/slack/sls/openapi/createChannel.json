@@ -31,6 +31,13 @@
                       "join": {
                         "type": "boolean",
                         "description": "Whether the user should join the channel. Defaults to true."
+                      },
+                      "userIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional array of user IDs to add to the channel after creation. User IDs start with 'U'."
                       }
                     },
                     "required": [
