@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.10
+
+### Patch Changes
+
+- 2a02a4a: release: fix formatting in package.json description for puppeteer-sls
+
 ## 1.0.9
 
 ### Patch Changes
