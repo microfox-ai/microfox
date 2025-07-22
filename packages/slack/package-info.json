@@ -67,16 +67,21 @@
         }
       ],
       "functionalities": [
-        "addUserToChannel",
+        "addUsersToChannel",
         "createChannel",
+        "getActiveUsers",
+        "getActiveUsersIds",
         "getChannelConversationInfo",
+        "getChannelMembers",
+        "getChannels",
+        "getChannelsIds",
+        "getChannelMembers",
         "getConversationHistory",
         "getFileInfo",
+        "getUserByEmail",
         "getUserInfo",
+        "getUsersByEmails",
         "joinChannel",
-        "getChannels",
-        "getChannelMembers",
-        "getActiveUsers",
         "messageChannel",
         "messageChannels",
         "messageUser",
@@ -84,7 +89,6 @@
         "reactMessage",
         "removeUserFromChannel",
         "replyMessage",
-        "getUserByEmail",
         "setReminder",
         "uploadFile"
       ]
