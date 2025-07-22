@@ -7,6 +7,61 @@ interface SDKConfig {
   [key: string]: any;
 }
 
+/**
+ * Dynamically binds all available methods from a client instance
+ */
+function bindAllAvailableMethods(client: any): Record<string, Function> {
+  const clientMap: Record<string, Function> = {};
+  
+  // Get all method names from the client instance
+  const prototype = Object.getPrototypeOf(client);
+  const methodNames = Object.getOwnPropertyNames(prototype)
+    .filter(name => {
+      // Filter out constructor and non-function properties
+      if (name === 'constructor') return false;
+      
+      try {
+        const descriptor = Object.getOwnPropertyDescriptor(prototype, name);
+        return descriptor && typeof descriptor.value === 'function';
+      } catch {
+        return false;
+      }
+    });
+  
+  // Bind each available method
+  methodNames.forEach(methodName => {
+    try {
+      const method = client[methodName];
+      if (typeof method === 'function') {
+        clientMap[methodName] = method.bind(client);
+      }
+    } catch (error) {
+      // Skip methods that can't be accessed or bound
+      console.warn(`Could not bind method ${methodName}:`, error);
+    }
+  });
+  
+  return clientMap;
+}
+
+/**
+ * Creates a client instance based on constructor name
+ */
+function createClientInstance(constructorName: string, token: string): any {
+  switch (constructorName) {
+    case 'MicrofoxSlackClient':
+      return new MicrofoxSlackClient(token);
+    
+    // Add other client types here as needed
+    // case 'AnotherSlackClient':
+    //   return new AnotherSlackClient(token);
+    
+    default:
+      // Default fallback to MicrofoxSlackClient
+      return new MicrofoxSlackClient(token);
+  }
+}
+
 export const sdkInit = (config: SDKConfig): Record<string, Function> => {
   const { constructorName } = config;
 
@@ -19,108 +74,11 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
     );
   }
 
-  switch (constructorName) {
-    case 'MicrofoxSlackClient':
-      const microfoxClient = new MicrofoxSlackClient(
-        SLACK_BOT_TOKEN,
-      );
-      const microfoxClientMap: Record<string, Function> = {};
-      microfoxClientMap.addUserToChannel =
-        microfoxClient.addUserToChannel.bind(microfoxClient);
-      microfoxClientMap.createChannel =
-        microfoxClient.createChannel.bind(microfoxClient);
-      microfoxClientMap.getChannelConversationInfo =
-        microfoxClient.getChannelConversationInfo.bind(microfoxClient);
-      microfoxClientMap.getConversationHistory =
-        microfoxClient.getConversationHistory.bind(microfoxClient);
-      microfoxClientMap.getFileInfo =
-        microfoxClient.getFileInfo.bind(microfoxClient);
-      microfoxClientMap.getUserInfo =
-        microfoxClient.getUserInfo.bind(microfoxClient);
-      microfoxClientMap.joinChannel =
-        microfoxClient.joinChannel.bind(microfoxClient);
-      microfoxClientMap.getChannels =
-        microfoxClient.getChannels.bind(microfoxClient);
-      microfoxClientMap.getChannelsIds =
-        microfoxClient.getChannelsIds.bind(microfoxClient);
-      microfoxClientMap.getChannelMembers =
-        microfoxClient.getChannelMembers.bind(microfoxClient);
-      microfoxClientMap.getActiveUsers =
-        microfoxClient.getActiveUsers.bind(microfoxClient);
-      microfoxClientMap.getActiveUsersIds =
-        microfoxClient.getActiveUsersIds.bind(microfoxClient);
-      microfoxClientMap.messageChannel =
-        microfoxClient.messageChannel.bind(microfoxClient);
-      microfoxClientMap.messageUser =
-        microfoxClient.messageUser.bind(microfoxClient);
-      microfoxClientMap.messageUsers =
-        microfoxClient.messageUsers.bind(microfoxClient);
-      microfoxClientMap.messageChannels =
-        microfoxClient.messageChannels.bind(microfoxClient);
-      microfoxClientMap.reactMessage =
-        microfoxClient.reactMessage.bind(microfoxClient);
-      microfoxClientMap.removeUserFromChannel =
-        microfoxClient.removeUserFromChannel.bind(microfoxClient);
-      microfoxClientMap.replyMessage =
-        microfoxClient.replyMessage.bind(microfoxClient);
-      microfoxClientMap.getUserByEmail =
-        microfoxClient.getUserByEmail.bind(microfoxClient);
-      microfoxClientMap.getUsersByEmails =
-        microfoxClient.getUsersByEmails.bind(microfoxClient);
-      microfoxClientMap.setReminder =
-        microfoxClient.setReminder.bind(microfoxClient);
-      microfoxClientMap.uploadFile =
-        microfoxClient.uploadFile.bind(microfoxClient);
-      return microfoxClientMap;
-
-    default:
-      // Fallback to WebClient as default
-      const defaultClient = new MicrofoxSlackClient(SLACK_BOT_TOKEN);
-      const defaultClientMap: Record<string, Function> = {};
-      defaultClientMap.addUserToChannel =
-        defaultClient.addUserToChannel.bind(defaultClient);
-      defaultClientMap.createChannel =
-        defaultClient.createChannel.bind(defaultClient);
-      defaultClientMap.getChannelConversationInfo =
-        defaultClient.getChannelConversationInfo.bind(defaultClient);
-      defaultClientMap.getConversationHistory =
-        defaultClient.getConversationHistory.bind(defaultClient);
-      defaultClientMap.getFileInfo =
-        defaultClient.getFileInfo.bind(defaultClient);
-      defaultClientMap.getUserInfo =
-        defaultClient.getUserInfo.bind(defaultClient);
-      defaultClientMap.joinChannel =
-        defaultClient.joinChannel.bind(defaultClient);
-      defaultClientMap.getChannels =
-        defaultClient.getChannels.bind(defaultClient);
-      defaultClientMap.getChannelsIds =
-        defaultClient.getChannelsIds.bind(defaultClient);
-      defaultClientMap.getChannelMembers =
-        defaultClient.getChannelMembers.bind(defaultClient);
-      defaultClientMap.getActiveUsers =
-        defaultClient.getActiveUsers.bind(defaultClient);
-      defaultClientMap.getActiveUsersIds =
-        defaultClient.getActiveUsersIds.bind(defaultClient);
-      defaultClientMap.messageChannel =
-        defaultClient.messageChannel.bind(defaultClient);
-      defaultClientMap.messageUser =
-        defaultClient.messageUser.bind(defaultClient);
-      defaultClientMap.reactMessage =
-        defaultClient.reactMessage.bind(defaultClient);
-      defaultClientMap.removeUserFromChannel =
-        defaultClient.removeUserFromChannel.bind(defaultClient);
-      defaultClientMap.replyMessage =
-        defaultClient.replyMessage.bind(defaultClient);
-      defaultClientMap.getUserByEmail =
-        defaultClient.getUserByEmail.bind(defaultClient);
-      defaultClientMap.getUsersByEmails =
-        defaultClient.getUsersByEmails.bind(defaultClient);
-      defaultClientMap.setReminder =
-        defaultClient.setReminder.bind(defaultClient);
-      defaultClientMap.uploadFile =
-        defaultClient.uploadFile.bind(defaultClient);
-      return defaultClientMap;
-  }
+  // Create the appropriate client instance
+  const client = createClientInstance(constructorName, SLACK_BOT_TOKEN);
+  
+  // Dynamically bind all available methods from the client
+  return bindAllAvailableMethods(client);
 };
 
 export { MicrofoxSlackClient };
