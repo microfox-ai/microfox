@@ -19,12 +19,21 @@ const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
 async function logAllChannels() {
   try {
-    const channels = await client.getChannels();
-    if (channels) {
-      channels.forEach(channel => {
-        console.log(channel.name);
-      });
-    }
+    // Get all channels
+    const allChannels = await client.getChannels();
+    console.log(`Found ${allChannels.channels.length} total channels`);
+
+    // Get only public channels
+    const publicChannels = await client.getChannels({ 
+      types: ['public'] 
+    });
+    console.log(`Found ${publicChannels.channels.length} public channels`);
+
+    // Get private channels and DMs
+    const privateConversations = await client.getChannels({ 
+      types: ['private', 'im'] 
+    });
+    console.log(`Found ${privateConversations.channels.length} private conversations`);
   } catch (error) {
     console.error(error);
   }
@@ -33,10 +42,11 @@ async function logAllChannels() {
 
 ## Arguments
 
-| Name        | Type    | Description                               |
-| :---------- | :------ | :---------------------------------------- |
-| cursor      | string  | _Optional_. A cursor to the next page of results. |
-| limit       | number  | _Optional_. The maximum number of channels to return. Defaults to 50 |
+| Name        | Type       | Description                               |
+| :---------- | :--------- | :---------------------------------------- |
+| cursor      | string     | _Optional_. A cursor to the next page of results. |
+| limit       | number     | _Optional_. The maximum number of channels to return. Defaults to 50 |
+| types       | string[]   | _Optional_. Channel types to include. Can be 'public', 'private', 'im'. Defaults to all types. |
 
 
 ## Response
