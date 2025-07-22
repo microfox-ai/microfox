@@ -38,10 +38,10 @@
       "post": {
         "operationId": "addUsersToChannel",
         "summary": "Add multiple users to a Slack channel.",
-        "description": "Adds multiple users to a specified Slack channel. Efficiently handles bulk user additions with automatic fallback to individual invites if needed. First attempts bulk addition, then falls back to individual invites if bulk fails.",
+        "description": "Adds multiple users to a specified Slack channel.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THESE IDs BY NAMES. If the `channelId` is unknown, use `getChannelsIds` to find the channelId by name. To find `userIds`, use `getActiveUsersIds` or `getUsersByEmails` only if exact user emails are known."
+          "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THESE IDs BY NAMES."
         },
         "requestBody": {
           "required": true,
@@ -529,7 +529,7 @@
         "summary": "Retrieves detailed information about a specific Slack channel.",
         "description": "Fetches comprehensive data about a given Slack channel using its ID. Returns a conversation object containing various properties that describe the channel's characteristics, status, and metadata.",
         "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation info. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. This does not provide the chat history of the channel, use `getConversationHistory` to get the chat history of the channel."
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation info. DO NOT ASSUME THE CHANNEL ID BY NAME."
         },
         "tags": ["channel"],
         "requestBody": {
@@ -752,7 +752,7 @@
         "description": "Fetches a conversation's history of messages and events from a specific channel.",
         "tags": ["channel", "message"],
         "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME. If the channel ID is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try"
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME."
         },
         "requestBody": {
           "required": true,
@@ -1255,6 +1255,9 @@
         "summary": "Lists all active users in a Slack workspace.",
         "description": "Retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user.",
         "tags": ["user"],
+        "ai": {
+          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email."
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1478,7 +1481,8 @@
         "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
         "tags": ["channel"],
         "ai": {
-          "systemPrompt": "Lists all public and private channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name."
+          "systemPrompt": "Lists all public and private channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name.",
+          "disableTool": true
         },
         "requestBody": {
           "required": true,
@@ -1809,7 +1813,7 @@
         "description": "Retrieves a list of all userIds of users in a specified Slack channel. It provides only the userIds of the users in the channel.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information. If you want to get a list of users with their information, use `getActiveUsersIds` after this tool to get names corresponding to the userIds."
+          "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information."
         },
         "requestBody": {
           "required": true,
@@ -1953,7 +1957,8 @@
         "description": "Returns an array of objects, each containing the ID, name, real name, display name, title, and email of an active users in the workspace.",
         "tags": ["user"],
         "ai": {
-          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try"
+          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try",
+          "disableTool": true
         },
         "requestBody": {
           "required": true,
@@ -2066,7 +2071,7 @@
         "description": "Sends a text message to a Slack channel. Returns details about the sent message including its timestamp and channel.",
         "tags": ["message", "channel"],
         "ai": {
-          "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel. DO NOT ASSUME THE CHANNEL ID BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output."
+          "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel. DO NOT ASSUME THE CHANNEL ID BY NAME."
         },
         "requestBody": {
           "required": true,
@@ -2171,7 +2176,7 @@
         "description": "Sends a direct message to a specified Slack user. Returns details about the sent message, including its timestamp and the channel where it was posted.",
         "tags": ["message", "user"],
         "ai": {
-          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME. If the user's ID is unknown, use `getActiveUsersIds` to get the paginated userIds to names mapper and find the userId by name from the output or use `getUsersByEmails` only if exact user email is known."
+          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME."
         },
         "requestBody": {
           "required": true,
@@ -2468,7 +2473,7 @@
         "description": "Replies to an existing message in a Slack thread.",
         "tags": ["message"],
         "ai": {
-          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If thread_ts is unknown, use `getConversationHistory` to find it."
+          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME."
         },
         "requestBody": {
           "required": true,
@@ -2584,7 +2589,7 @@
         "summary": "Searches for a Slack user by their email address.",
         "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
         "ai": {
-          "systemPrompt": "Provide the `email` of the user to find. DO NOT ASSUME THE EMAIL. If the email is not provided by user, use `getActiveUsersIds` to get the paginated userIds to names mapper."
+          "systemPrompt": "Provide the `email` of the user to find. DO NOT ASSUME THE EMAIL."
         },
         "tags": ["user"],
         "requestBody": {
@@ -3126,7 +3131,7 @@
         "description": "Sends a text message to multiple Slack channels.",
         "tags": ["message", "channel"],
         "ai": {
-          "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels. DO NOT ASSUME THE CHANNEL IDs BY NAME. If channelIds are unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelIds by name from the output."
+          "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels. DO NOT ASSUME THE CHANNEL IDs BY NAME."
         },
         "requestBody": {
           "required": true,
@@ -3237,7 +3242,7 @@
         "description": "Sends direct messages to multiple Slack users. Supports both simple text messages and templated messages with dynamic content for each user.",
         "tags": ["message", "user", "template"],
         "ai": {
-          "systemPrompt": "To send messages to multiple users, provide `userIds` (array of strings, each starting with 'U') and `text`. The text can include template variables like {mention}, {user_name}, {user_email}, {user_title}, {user_phone}, {user_status}, {user_avatar}, {first_name}, {last_name}. If template variables are used, the function automatically fetches user info and personalizes each message. DO NOT ASSUME USER IDs BY NAME - use `getActiveUsersIds` to find userIds by name."
+          "systemPrompt": "To send messages to multiple users, provide `userIds` (array of strings, each starting with 'U') and `text`. The text can include template variables like {mention}, {user_name}, {user_email}, {user_title}, {user_phone}, {user_status}, {user_avatar}, {first_name}, {last_name}. If template variables are used, the function automatically fetches user info and personalizes each message. DO NOT ASSUME USER IDs BY NAME"
         },
         "requestBody": {
           "required": true,
