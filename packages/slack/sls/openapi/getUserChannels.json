@@ -1,0 +1,86 @@
+{
+  "post": {
+    "operationId": "getUserChannels",
+    "summary": "Fetches a list of conversations a user is a member of.",
+    "description": "Fetches a list of conversations a user is a member of.",
+    "tags": [
+      "user",
+      "channel"
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "body": {
+                "type": "object",
+                "description": "Body of the getUserChannels sls call",
+                "properties": {
+                  "arguments": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string",
+                        "description": "The ID of the user to fetch conversations for."
+                      },
+                      "cursor": {
+                        "type": "string",
+                        "description": "A cursor to the next page of results."
+                      },
+                      "limit": {
+                        "type": "integer",
+                        "description": "The maximum number of conversations to return."
+                      },
+                      "types": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "An array of conversation types to include."
+                      },
+                      "excludeArchived": {
+                        "type": "boolean",
+                        "description": "Whether to exclude archived conversations."
+                      }
+                    },
+                    "required": [
+                      "userId"
+                    ]
+                  }
+                },
+                "required": [
+                  "arguments"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Successful response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "nextCursor": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

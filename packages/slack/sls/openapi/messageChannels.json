@@ -44,7 +44,10 @@
                         "description": "Optional URL to an image to use as the icon for the message."
                       }
                     },
-                    "required": ["channelIds", "text"]
+                    "required": [
+                      "channelIds",
+                      "text"
+                    ]
                   }
                 },
                 "required": [
