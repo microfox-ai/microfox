@@ -41,7 +41,7 @@
         "description": "Adds multiple users to a specified Slack channel.",
         "tags": ["channel", "user"],
         "ai": {
-          "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THESE IDs BY NAMES."
+          "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U')."
         },
         "requestBody": {
           "required": true,
@@ -752,7 +752,7 @@
         "description": "Fetches a conversation's history of messages and events from a specific channel.",
         "tags": ["channel", "message"],
         "ai": {
-          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history. DO NOT ASSUME THE CHANNEL ID BY NAME."
+          "systemPrompt": "Provide a `channelId` (starts with 'C') to retrieve conversation history."
         },
         "requestBody": {
           "required": true,
@@ -1255,9 +1255,6 @@
         "summary": "Lists all active users in a Slack workspace.",
         "description": "Retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user.",
         "tags": ["user"],
-        "ai": {
-          "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email."
-        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1810,7 +1807,7 @@
       "post": {
         "operationId": "getChannelMembers",
         "summary": "List all users in a specific Slack channel.",
-        "description": "Retrieves a list of all userIds of users in a specified Slack channel. It provides only the userIds of the users in the channel.",
+        "description": "Retrieves a list of all userIds of users in a specified Slack channel.",
         "tags": ["channel", "user"],
         "ai": {
           "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information."
@@ -2071,7 +2068,7 @@
         "description": "Sends a text message to a Slack channel. Returns details about the sent message including its timestamp and channel.",
         "tags": ["message", "channel"],
         "ai": {
-          "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel. DO NOT ASSUME THE CHANNEL ID BY NAME."
+          "systemPrompt": "Requires `channelId` (starts with 'C') and `text` to send a message to a channel."
         },
         "requestBody": {
           "required": true,
@@ -2094,6 +2091,14 @@
                           "text": {
                             "type": "string",
                             "description": "The text of the message."
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Optional custom username for the message."
+                          },
+                          "icon_url": {
+                            "type": "string",
+                            "description": "Optional URL to an image to use as the icon for the message."
                           }
                         },
                         "required": ["channelId", "text"]
@@ -2176,7 +2181,7 @@
         "description": "Sends a direct message to a specified Slack user. Returns details about the sent message, including its timestamp and the channel where it was posted.",
         "tags": ["message", "user"],
         "ai": {
-          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). DO NOT ASSUME THE USER ID BY NAME."
+          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U')."
         },
         "requestBody": {
           "required": true,
@@ -2199,6 +2204,14 @@
                           "text": {
                             "type": "string",
                             "description": "The text of the message to be sent."
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Optional custom username for the message."
+                          },
+                          "icon_url": {
+                            "type": "string",
+                            "description": "Optional URL to an image to use as the icon for the message."
                           }
                         },
                         "required": ["userId", "text"]
@@ -2473,7 +2486,7 @@
         "description": "Replies to an existing message in a Slack thread.",
         "tags": ["message"],
         "ai": {
-          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME."
+          "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply."
         },
         "requestBody": {
           "required": true,
@@ -2500,6 +2513,14 @@
                           "text": {
                             "type": "string",
                             "description": "The text of the reply."
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Optional custom username for the message."
+                          },
+                          "icon_url": {
+                            "type": "string",
+                            "description": "Optional URL to an image to use as the icon for the message."
                           }
                         },
                         "required": ["channelId", "thread_ts", "text"]
@@ -2589,7 +2610,7 @@
         "summary": "Searches for a Slack user by their email address.",
         "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
         "ai": {
-          "systemPrompt": "Provide the `email` of the user to find. DO NOT ASSUME THE EMAIL."
+          "systemPrompt": "Provide the `email` of the user to find."
         },
         "tags": ["user"],
         "requestBody": {
@@ -3131,7 +3152,7 @@
         "description": "Sends a text message to multiple Slack channels.",
         "tags": ["message", "channel"],
         "ai": {
-          "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels. DO NOT ASSUME THE CHANNEL IDs BY NAME."
+          "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels."
         },
         "requestBody": {
           "required": true,
@@ -3157,6 +3178,14 @@
                           "text": {
                             "type": "string",
                             "description": "The text of the message."
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Optional custom username for the message."
+                          },
+                          "icon_url": {
+                            "type": "string",
+                            "description": "Optional URL to an image to use as the icon for the message."
                           }
                         },
                         "required": ["channelIds", "text"]
@@ -3242,7 +3271,7 @@
         "description": "Sends direct messages to multiple Slack users. Supports both simple text messages and templated messages with dynamic content for each user.",
         "tags": ["message", "user", "template"],
         "ai": {
-          "systemPrompt": "To send messages to multiple users, provide `userIds` (array of strings, each starting with 'U') and `text`. The text can include template variables like {mention}, {user_name}, {user_email}, {user_title}, {user_phone}, {user_status}, {user_avatar}, {first_name}, {last_name}. If template variables are used, the function automatically fetches user info and personalizes each message. DO NOT ASSUME USER IDs BY NAME"
+          "systemPrompt": "To send messages to multiple users, provide `userIds` (array of strings, each starting with 'U') and `text`. The text can include template variables like {mention}, {user_name}, {user_email}, {user_title}, {user_phone}, {user_status}, {user_avatar}, {first_name}, {last_name}. If template variables are used, the function automatically fetches user info and personalizes each message."
         },
         "requestBody": {
           "required": true,
@@ -3268,6 +3297,14 @@
                           "text": {
                             "type": "string",
                             "description": "The text of the message to be sent. Can include template variables: {mention} (mentions user), {user_name} (user's name), {user_email} (email), {user_title} (job title), {user_phone} (phone), {user_status} (status), {user_avatar} (profile image), {first_name} (first name), {last_name} (last name). Template variables are automatically replaced with user data."
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Optional custom username for the message."
+                          },
+                          "icon_url": {
+                            "type": "string",
+                            "description": "Optional URL to an image to use as the icon for the message."
                           }
                         },
                         "required": ["userIds", "text"]
