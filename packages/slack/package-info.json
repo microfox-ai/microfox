@@ -78,6 +78,7 @@
         "getConversationHistory",
         "getFileInfo",
         "getUserByEmail",
+        "getUserChannels",
         "getUserInfo",
         "getUsersByEmails",
         "joinChannel",
