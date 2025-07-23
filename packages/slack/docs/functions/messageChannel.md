@@ -1,33 +1,39 @@
 # messageChannel
 
-The `messageChannel` method sends a message to a channel.
+Sends a message to a Slack channel.
 
-## Usage
+## Arguments
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `channelId` | `string` | The ID of the channel to send the message to. |
+| `text` | `string` | The text of the message. |
+| `username` | `string` (optional) | The username for the message. Defaults to the one set in environment variables if not provided. |
+| `icon_url` | `string` (optional) | The icon URL for the message. Defaults to the one set in environment variables if not provided. |
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function sendMessage() {
   try {
-    const result = await client.messageChannel({
-      channelId: 'C12345678',
-      text: 'Hello world!',
+    const response = await client.messageChannel({
+      channelId: 'C1234567890', // Replace with your channel ID
+      text: 'Hello, world!',
+      username: 'CustomBot',
+      icon_url: 'http://example.com/icon.png',
     });
-    console.log('Message sent: ', result.ts);
+    console.log('Message sent:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Error sending message:', error);
   }
-})();
+}
+
+sendMessage();
 ```
-
-## Arguments
-
-This method accepts an object with the following properties:
-
--   `channelId` (string, required): The ID of the channel to send the message to.
--   `text` (string, required): The text of the message.
 
 ## Response
 

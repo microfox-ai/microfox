@@ -1,33 +1,39 @@
 # messageChannels
 
-The `messageChannels` method sends a message to multiple channels.
+Sends a message to multiple Slack channels.
 
-## Usage
+## Arguments
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `channelIds` | `string[]` | An array of channel IDs to send the message to. |
+| `text` | `string` | The text of the message. |
+| `username` | `string` (optional) | The username for the message. Defaults to the one set in environment variables if not provided. |
+| `icon_url` | `string` (optional) | The icon URL for the message. Defaults to the one set in environment variables if not provided. |
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function sendMessages() {
   try {
-    const result = await client.messageChannels({
-      channelIds: ['C12345678', 'C87654321'],
-      text: 'Hello there!',
+    const response = await client.messageChannels({
+      channelIds: ['C1234567890', 'C0987654321'], // Replace with your channel IDs
+      text: 'Hello, everyone!',
+      username: 'AnnouncementBot',
+      icon_url: 'http://example.com/icon.png',
     });
-    console.log('Messages sent: ', result.map(r => r.ts));
+    console.log('Messages sent:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Error sending messages:', error);
   }
-})();
+}
+
+sendMessages();
 ```
-
-## Arguments
-
-This method accepts an object with the following properties:
-
--   `channelIds` (array of strings, required): The IDs of the channels to send the a message to.
--   `text` (string, required): The text of the message.
 
 ## Response
 

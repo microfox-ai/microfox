@@ -1,65 +1,74 @@
 # messageUsers
 
-The `messageUsers` function sends direct messages to multiple users. It supports both simple text messages and templated messages with dynamic content that gets personalized for each user.
+Sends a direct message to multiple users, with support for templating.
 
-## Usage
+## Arguments
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `userIds` | `string[]` | An array of user IDs to send the message to. |
+| `text` | `string` | The message text. Can include template variables. |
+| `username` | `string` (optional) | The username for the message. Defaults to the one set in environment variables if not provided. |
+| `icon_url` | `string` (optional) | The icon URL for the message. Defaults to the one set in environment variables if not provided. |
+
+## Template Variables
+
+The `text` argument can contain the following template variables, which will be replaced with the user's information:
+
+* `{mention}`: Mentions the user (e.g., `<@U12345678>`).
+* `{user_name}`: The user's display name.
+* `{user_email}`: The user's email address.
+* `{user_title}`: The user's title.
+* `{first_name}`: The user's first name.
+* `{last_name}`: The user's last name.
+
+## Example
+
+### Simple Message
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
 const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-// Simple message
-async function sendSimpleMessage() {
+async function sendSimpleMessages() {
   try {
-    const results = await client.messageUsers({
+    const response = await client.messageUsers({
       userIds: ['U1234567890', 'U0987654321'],
-      text: "Hello everyone! This is a simple message."
+      text: 'This is a bulk message to all users.',
+      username: 'BulkSender',
+      icon_url: 'http://example.com/icon.png',
     });
-    
-    console.log(`Sent ${results.length} messages`);
+    console.log('Messages sent:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Error sending messages:', error);
   }
 }
 
-// Templated message
-async function sendTemplatedMessages() {
-  try {
-    const results = await client.messageUsers({
-      userIds: ['U1234567890', 'U0987654321'],
-      text: "Hi {mention}! Your role is {user_title} and we can reach you at {user_email}."
-    });
-    
-    console.log(`Sent ${results.length} personalized messages`);
-  } catch (error) {
-    console.error(error);
-  }
-}
+sendSimpleMessages();
 ```
 
-## Arguments
+### Templated Message
 
-This method accepts an object with the following properties:
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
 
-| Name    | Type     | Description                                                     |
-| :------ | :------- | :-------------------------------------------------------------- |
-| userIds | String[] | **Required**. Array of user IDs to send messages to. User IDs start with 'U'. |
-| text    | String   | **Required**. The message text. Can include template variables for personalization. |
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-### Template Variables
+async function sendTemplatedMessages() {
+  try {
+    const response = await client.messageUsers({
+      userIds: ['U1234567890', 'U0987654321'],
+      text: 'Hi {first_name}, this is a personalized message for you!',
+    });
+    console.log('Personalized messages sent:', response);
+  } catch (error) {
+    console.error('Error sending personalized messages:', error);
+  }
+}
 
-| Variable       | Type   | Description                                    | Fallback Logic                                |
-| :------------- | :----- | :--------------------------------------------- | :-------------------------------------------- |
-| `{mention}`    | String | Mentions the user (@username)                  | Always works with user.id                    |
-| `{user_name}`  | String | User's display name                            | username → real_name → display_name → "User" |
-| `{user_email}` | String | User's email address                           | profile.email or empty                       |
-| `{user_title}` | String | User's job title                               | profile.title or empty                       |
-| `{user_phone}` | String | User's phone number                            | profile.phone or empty                       |
-| `{user_status}`| String | User's current status text                     | profile.status_text or empty                 |
-| `{user_avatar}`| String | User's profile image URL                       | 72px → 192px → original or empty             |
-| `{first_name}` | String | User's first name                              | profile.first_name → extracted from real_name → username → "User" |
-| `{last_name}`  | String | User's last name                               | profile.last_name → extracted from real_name or empty |
+sendTemplatedMessages();
+```
 
 ## Response
 

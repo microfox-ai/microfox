@@ -1,33 +1,39 @@
 # messageUser
 
-The `messageUser` method sends a direct message to a user.
+Sends a direct message to a Slack user.
 
-## Usage
+## Arguments
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `userId` | `string` | The ID of the user to send the message to. |
+| `text` | `string` | The text of the message. |
+| `username` | `string` (optional) | The username for the message. Defaults to the one set in environment variables if not provided. |
+| `icon_url` | `string` (optional) | The icon URL for the message. Defaults to the one set in environment variables if not provided. |
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function sendMessage() {
   try {
-    const result = await client.messageUser({
-      userId: 'U12345678',
-      text: 'Hello there!',
+    const response = await client.messageUser({
+      userId: 'U1234567890', // Replace with your user ID
+      text: 'Hello, there!',
+      username: 'CustomBot',
+      icon_url: 'http://example.com/icon.png',
     });
-    console.log('Message sent: ', result.ts);
+    console.log('Message sent:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Error sending message:', error);
   }
-})();
+}
+
+sendMessage();
 ```
-
-## Arguments
-
-This method accepts an object with the following properties:
-
--   `userId` (string, required): The ID of the user to send the a message to.
--   `text` (string, required): The text of the message.
 
 ## Response
 

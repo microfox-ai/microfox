@@ -1,35 +1,41 @@
 # replyMessage
 
-The `replyMessage` method replies to a message in a thread.
+Replies to a message in a Slack thread.
 
-## Usage
+## Arguments
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `channelId` | `string` | The ID of the channel where the message is. |
+| `thread_ts` | `string` | The timestamp of the message to reply to. |
+| `text` | `string` | The text of the reply. |
+| `username` | `string` (optional) | The username for the message. Defaults to the one set in environment variables if not provided. |
+| `icon_url` | `string` (optional) | The icon URL for the message. Defaults to the one set in environment variables if not provided. |
+
+## Example
 
 ```typescript
 import { MicrofoxSlackClient } from '@microfox/slack';
 
-const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
 
-(async () => {
+async function sendReply() {
   try {
-    const result = await client.replyMessage({
-      channelId: 'C12345678',
-      thread_ts: '1234567890.123456',
-      text: 'This is a reply in a thread.',
+    const response = await client.replyMessage({
+      channelId: 'C1234567890', // Replace with your channel ID
+      thread_ts: '1628784000.000100', // Replace with the parent message's timestamp
+      text: 'This is a reply to the thread.',
+      username: 'ReplyBot',
+      icon_url: 'http://example.com/icon.png',
     });
-    console.log('Reply sent: ', result.ts);
+    console.log('Reply sent:', response);
   } catch (error) {
-    console.error(error);
+    console.error('Error sending reply:', error);
   }
-})();
+}
+
+sendReply();
 ```
-
-## Arguments
-
-This method accepts an object with the following properties:
-
--   `channelId` (string, required): The ID of the channel where the message is.
--   `thread_ts` (string, required): The timestamp of the message to reply to, which establishes the thread.
--   `text` (string, required): The text of the reply.
 
 ## Response
 
