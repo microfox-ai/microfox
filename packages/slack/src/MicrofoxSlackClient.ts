@@ -17,6 +17,7 @@ import {
   UsersInfoResponse,
   FilesInfoResponse,
   FilesCompleteUploadExternalResponse,
+  UsersConversationsResponse,
 } from '@slack/web-api';
 import { Buffer } from 'buffer';
 import dotenv from 'dotenv';
@@ -39,7 +40,7 @@ export class MicrofoxSlackClient {
   async getChannels({
     cursor,
     limit = 50,
-    types = ['public', 'private', 'im'],
+    types = ['public', 'private'],
   }: {
     cursor?: string;
     limit?: number;
@@ -491,7 +492,6 @@ export class MicrofoxSlackClient {
   async createChannel({
     name,
     isPrivate = false,
-    join = true,
     userIds,
   }: {
     name: string;
@@ -505,10 +505,6 @@ export class MicrofoxSlackClient {
     });
     
     if (result?.channel?.id) {
-      if (join) {
-        await this.joinChannel({ channelId: result.channel.id });
-      }
-      
       // Add users to the channel if provided
       if (userIds && userIds.length > 0) {
         await this.addUsersToChannel({ 
@@ -552,6 +548,44 @@ export class MicrofoxSlackClient {
       user: userId,
     });
     return result.user;
+  }
+
+  /**
+   * Fetches a list of conversations a user is a member of.
+   * @param userId The ID of the user to fetch conversations for.
+   * @param cursor A cursor to the next page of results.
+   * @param limit The maximum number of conversations to return.
+   * @param types An array of conversation types to include.
+   * @param excludeArchived Whether to exclude archived conversations.
+   */
+  async getUserChannels({
+    userId,
+    cursor,
+    limit,
+    types = ['public_channel', 'private_channel'],
+    excludeArchived,
+  }: {
+    userId: string;
+    cursor?: string;
+    limit?: number;
+    types?: ('public_channel' | 'private_channel' | 'mpim' | 'im')[];
+    excludeArchived?: boolean;
+  }): Promise<{
+    channels: UsersConversationsResponse['channels'];
+    nextCursor: string | undefined;
+  }> {
+    const result = await this.web.users.conversations({
+      user: userId,
+      cursor,
+      limit,
+      types: types.join(','),
+      exclude_archived: excludeArchived,
+    });
+
+    return {
+      channels: result.channels || [],
+      nextCursor: result.response_metadata?.next_cursor,
+    };
   }
 
   /**
