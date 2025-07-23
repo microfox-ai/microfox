@@ -7,7 +7,7 @@
       "message"
     ],
     "ai": {
-      "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply. DO NOT ASSUME THE CHANNEL ID OR THREAD TIMESTAMP BY NAME. If channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If thread_ts is unknown, use `getConversationHistory` to find it."
+      "systemPrompt": "To reply within a thread, provide the `channelId` (starts with 'C'), the `thread_ts` of the parent message, and the `text` of your reply."
     },
     "requestBody": {
       "required": true,
@@ -34,6 +34,14 @@
                       "text": {
                         "type": "string",
                         "description": "The text of the reply."
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "Optional custom username for the message."
+                      },
+                      "icon_url": {
+                        "type": "string",
+                        "description": "Optional URL to an image to use as the icon for the message."
                       }
                     },
                     "required": [

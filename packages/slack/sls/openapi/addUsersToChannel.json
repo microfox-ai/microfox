@@ -2,13 +2,13 @@
   "post": {
     "operationId": "addUsersToChannel",
     "summary": "Add multiple users to a Slack channel.",
-    "description": "Adds multiple users to a specified Slack channel. Efficiently handles bulk user additions with automatic fallback to individual invites if needed. First attempts bulk addition, then falls back to individual invites if bulk fails.",
+    "description": "Adds multiple users to a specified Slack channel.",
     "tags": [
       "channel",
       "user"
     ],
     "ai": {
-      "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U'). DO NOT ASSUME THESE IDs BY NAMES. If the `channelId` is unknown, use `getChannelsIds` to find the channelId by name. To find `userIds`, use `getActiveUsersIds` or `getUsersByEmails` only if exact user emails are known."
+      "systemPrompt": "To add multiple users to a channel, provide the `channelId` (starts with 'C') and `userIds` (array of strings, each starting with 'U')."
     },
     "requestBody": {
       "required": true,

@@ -7,7 +7,8 @@
       "user"
     ],
     "ai": {
-      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try"
+      "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try",
+      "disableTool": true
     },
     "requestBody": {
       "required": true,

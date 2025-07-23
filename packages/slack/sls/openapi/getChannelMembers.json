@@ -2,13 +2,13 @@
   "post": {
     "operationId": "getChannelMembers",
     "summary": "List all users in a specific Slack channel.",
-    "description": "Retrieves a list of all userIds of users in a specified Slack channel. It provides only the userIds of the users in the channel.",
+    "description": "Retrieves a list of all userIds of users in a specified Slack channel.",
     "tags": [
       "channel",
       "user"
     ],
     "ai": {
-      "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. If the channelId is unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelId by name from the output. If needed, paginate until the channelId is found using nextCursor in the response of the last try. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information. If you want to get a list of users with their information, use `getActiveUsersIds` after this tool to get names corresponding to the userIds."
+      "systemPrompt": "To get a list of userIds in a specific channel, provide the `channelId` (starts with 'C'). DO NOT ASSUME THE CHANNEL ID BY NAME. DO NOT CALL THIS ON NEWLY CREATED CHANNELS which don't have any members yet. Remember, the output is only an array of userIds, not a list of users with their information."
     },
     "requestBody": {
       "required": true,

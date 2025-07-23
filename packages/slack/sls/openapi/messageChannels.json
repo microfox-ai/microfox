@@ -8,7 +8,7 @@
       "channel"
     ],
     "ai": {
-      "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels. DO NOT ASSUME THE CHANNEL IDs BY NAME. If channelIds are unknown, use `getChannelsIds` to get the paginated channelIds to names mapper and find the channelIds by name from the output."
+      "systemPrompt": "Requires `channelIds` (array of strings, each starts with 'C') and `text` to send a message to multiple channels."
     },
     "requestBody": {
       "required": true,
@@ -34,12 +34,17 @@
                       "text": {
                         "type": "string",
                         "description": "The text of the message."
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "Optional custom username for the message."
+                      },
+                      "icon_url": {
+                        "type": "string",
+                        "description": "Optional URL to an image to use as the icon for the message."
                       }
                     },
-                    "required": [
-                      "channelIds",
-                      "text"
-                    ]
+                    "required": ["channelIds", "text"]
                   }
                 },
                 "required": [
