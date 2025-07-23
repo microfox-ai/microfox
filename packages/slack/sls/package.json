@@ -20,7 +20,7 @@
     "@microfox/tool-core": "^1.0.1",
     "aws-lambda": "^1.0.7",
     "dotenv": "^16.4.5",
-    "@microfox/slack": "^1.2.8"
+    "@microfox/slack": "^1.2.9"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.150",

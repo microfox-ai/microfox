@@ -2610,7 +2610,7 @@
         "summary": "Searches for a Slack user by their email address.",
         "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
         "ai": {
-          "systemPrompt": "Provide the `email` of the user to find."
+          "systemPrompt": "Provide the `email` of the user to find. DO NOT USE THIS IF YOU DON'T KNOW THE CORRECT EMAIL ADDRESS OF THE USER."
         },
         "tags": ["user"],
         "requestBody": {
