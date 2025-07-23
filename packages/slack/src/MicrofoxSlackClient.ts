@@ -262,17 +262,28 @@ export class MicrofoxSlackClient {
    * Sends a direct message to a user.
    * @param userId The ID of the user to message.
    * @param text The text of the message to send.
+   * @param username Optional custom username for the message.
+   * @param icon_url Optional URL to an image to use as the icon for the message.
    */
   async messageUser({
     userId,
-    text
+    text,
+    username,
+    icon_url,
   }: {
     userId: string;
     text: string;
+    username?: string;
+    icon_url?: string;
   }): Promise<ChatPostMessageResponse> {
     const im = await this.web.conversations.open({ users: userId });
     if (im.ok && im.channel?.id) {
-      return this.messageChannel({ channelId: im.channel.id, text });
+      return this.messageChannel({
+        channelId: im.channel.id,
+        text,
+        username,
+        icon_url,
+      });
     }
     throw new Error(`Could not open DM with user ${userId}`);
   }
@@ -281,25 +292,35 @@ export class MicrofoxSlackClient {
    * Sends a message to a channel.
    * @param channelId The ID of the channel to message.
    * @param text The text of the message to send.
+   * @param username Optional custom username for the message.
+   * @param icon_url Optional URL to an image to use as the icon for the message.
    */
   async messageChannel({
     channelId,
-    text
+    text,
+    username,
+    icon_url,
   }: {
     channelId: string;
     text: string;
+    username?: string;
+    icon_url?: string;
   }): Promise<ChatPostMessageResponse> {
-    let payload: ChatPostMessageArguments = {
+    const payload: ChatPostMessageArguments = {
       channel: channelId,
       text: text,
     };
 
-    if (process.env.SLACK_AUTHOR_NAME) {
-      payload.username = process.env.SLACK_AUTHOR_NAME;
+    const finalUsername = username ?? process.env.SLACK_AUTHOR_NAME;
+    if (finalUsername) {
+      payload.username = finalUsername;
     }
-    if (process.env.SLACK_ICON_URL) {
-      payload.icon_url = process.env.SLACK_ICON_URL;
+
+    const finalIconUrl = icon_url ?? process.env.SLACK_ICON_URL;
+    if (finalIconUrl) {
+      payload.icon_url = finalIconUrl;
     }
+
     return this.web.chat.postMessage(payload);
   }
 
@@ -307,6 +328,8 @@ export class MicrofoxSlackClient {
    * Sends a direct message to multiple users with optional templating.
    * @param userIds The IDs of the users to message.
    * @param text The text of the message to send. Can include template variables for personalization.
+   * @param username Optional custom username for the message.
+   * @param icon_url Optional URL to an image to use as the icon for the message.
    * 
    * Available template variables:
    * - {mention} - Mentions the user (@username)
@@ -337,9 +360,13 @@ export class MicrofoxSlackClient {
   async messageUsers({
     userIds,
     text,
+    username,
+    icon_url,
   }: {
     userIds: string[];
     text: string;
+    username?: string;
+    icon_url?: string;
   }): Promise<ChatPostMessageResponse[]> {
     const results: ChatPostMessageResponse[] = [];
 
@@ -349,7 +376,9 @@ export class MicrofoxSlackClient {
     if (!hasTemplateVars) {
       // No template variables, send same message to all users
       const responses = await Promise.all(
-        userIds.map((userId) => this.messageUser({ userId, text }))
+        userIds.map((userId) =>
+          this.messageUser({ userId, text, username, icon_url })
+        )
       );
       return responses;
     }
@@ -389,7 +418,9 @@ export class MicrofoxSlackClient {
         // Send the personalized message
         const result = await this.messageUser({
           userId: user.id!,
-          text: personalizedMessage
+          text: personalizedMessage,
+          username,
+          icon_url,
         });
 
         results.push(result);
@@ -406,16 +437,24 @@ export class MicrofoxSlackClient {
    * Sends a message to multiple channels.
    * @param channelIds The IDs of the channels to message.
    * @param text The text of the message to send.
+   * @param username Optional custom username for the message.
+   * @param icon_url Optional URL to an image to use as the icon for the message.
    */
   async messageChannels({
     channelIds,
     text,
+    username,
+    icon_url,
   }: {
     channelIds: string[];
     text: string;
+    username?: string;
+    icon_url?: string;
   }): Promise<ChatPostMessageResponse[]> {
     const results = await Promise.all(
-      channelIds.map((channelId) => this.messageChannel({ channelId, text }))
+      channelIds.map((channelId) =>
+        this.messageChannel({ channelId, text, username, icon_url })
+      )
     );
     return results;
   }
@@ -520,21 +559,39 @@ export class MicrofoxSlackClient {
    * @param channelId The ID of the channel where the message is.
    * @param thread_ts The timestamp of the message to reply to, establishing the thread.
    * @param text The text of the reply.
+   * @param username Optional custom username for the message.
+   * @param icon_url Optional URL to an image to use as the icon for the message.
    */
   async replyMessage({
     channelId,
     thread_ts,
-    text
+    text,
+    username,
+    icon_url,
   }: {
     channelId: string;
     thread_ts: string;
     text: string;
+    username?: string;
+    icon_url?: string;
   }): Promise<ChatPostMessageResponse> {
-    return this.web.chat.postMessage({
+    const payload: ChatPostMessageArguments = {
       channel: channelId,
       thread_ts: thread_ts,
       text: text,
-    });
+    };
+
+    const finalUsername = username ?? process.env.SLACK_AUTHOR_NAME;
+    if (finalUsername) {
+      payload.username = finalUsername;
+    }
+
+    const finalIconUrl = icon_url ?? process.env.SLACK_ICON_URL;
+    if (finalIconUrl) {
+      payload.icon_url = finalIconUrl;
+    }
+
+    return this.web.chat.postMessage(payload);
   }
 
   /**
