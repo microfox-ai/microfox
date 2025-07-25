@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.13
+
+### Patch Changes
+
+- dea9432: minor fix
+
 ## 1.0.12
 
 ### Patch Changes
