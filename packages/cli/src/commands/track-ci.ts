@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { pathToFileURL } from 'url';
 import yaml from 'js-yaml';
+import findUp from 'find-up';
 
 export const trackCi = new Command('track-ci')
   .description('Generate GitHub Actions workflows from tracker scripts.')
@@ -96,7 +97,16 @@ export const trackCi = new Command('track-ci')
     // --- End Cleanup ---
 
     const workflowYaml = yaml.dump(workflow);
-    const outputPath = path.resolve(projectRoot, '.github', 'workflows', 'trackers.yml');
+    
+    // --- INTELLIGENT OUTPUT PATH DISCOVERY ---
+    let githubDir = await findUp('.github', { type: 'directory' });
+    if (!githubDir) {
+        // If not found, create it at the project root
+        githubDir = path.resolve(projectRoot, '.github');
+        console.log(chalk.yellow('Could not find .github directory. Creating one at project root.'));
+    }
+    const outputPath = path.resolve(githubDir, 'workflows', 'trackers.yml');
+    // --- END DISCOVERY ---
     
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, workflowYaml);
