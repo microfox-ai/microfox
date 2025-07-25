@@ -8,6 +8,8 @@ import { codeCommand } from './commands/code';
 import { installCommand } from './commands/install';
 import { updateCommand } from './commands/update';
 import { version } from '../package.json';
+import { track } from './commands/track.js';
+import { trackCi } from './commands/track-ci.js';
 
 const program = new Command();
 
@@ -17,7 +19,6 @@ program
   .version(version);
 
 program.addCommand(kickstartCommand);
-program.addCommand(addCommand);
 program.addCommand(pushCommand);
 program.addCommand(statusCommand);
 program.addCommand(logsCommand);
@@ -25,6 +26,8 @@ program.addCommand(metricsCommand);
 program.addCommand(codeCommand);
 program.addCommand(installCommand);
 program.addCommand(updateCommand);
+program.addCommand(track);
+program.addCommand(trackCi);
 
 program.action(() => {
   // Show help if no command is provided
