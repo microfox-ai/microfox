@@ -1479,7 +1479,7 @@
         "tags": ["channel"],
         "ai": {
           "systemPrompt": " Use this when searching for channels in general, & when you don't need the full channel information.",
-          "disableTool": true
+          "disableTool": false
         },
         "requestBody": {
           "required": true,
@@ -1572,6 +1572,10 @@
         "summary": "Lists all public and private channels in a Slack workspace.",
         "description": "Retrieves detailed information about all public and private channels in a Slack workspace ( only use this when you need to get full details of a channel ).",
         "tags": ["channel"],
+        "ai": {
+          "systemPrompt": " Use this when complete list of channels with full channel information is needed.",
+          "disableTool": true
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -1955,7 +1959,7 @@
         "tags": ["user"],
         "ai": {
           "systemPrompt": "This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try",
-          "disableTool": true
+          "disableTool": false
         },
         "requestBody": {
           "required": true,
