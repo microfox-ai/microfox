@@ -3,10 +3,10 @@
   "info": {
     "agentName": "slack",
     "agentPath": "@microfox/slack",
-    "title": "Slack",
+    "title": "Slack'd",
     "version": "1.2.0",
     "mcpVersion": "1.0.2",
-    "description": "An agent to interact with Slack workspace using Slack API with powerful tools for messaging, channel management, user management and more",
+    "description": "Interact with Slack via powerful tools for messaging, channel management, user management and more..",
     "iconUrl": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
     "status": "stable",
     "contact": {
