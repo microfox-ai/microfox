@@ -1249,9 +1249,9 @@
         }
       }
     },
-    "/getActiveUsers": {
+    "/listActiveUserInfos": {
       "post": {
-        "operationId": "getActiveUsers",
+        "operationId": "listActiveUserInfos",
         "summary": "Lists all active users in a Slack workspace.",
         "description": "Retrieves a list of all active users in a Slack workspace, excluding any deactivated users. It provides detailed information about each user.",
         "tags": ["user"],
@@ -1471,9 +1471,9 @@
         }
       }
     },
-    "/getChannelsIds": {
+    "/listChannels": {
       "post": {
-        "operationId": "getChannelsIds",
+        "operationId": "listChannels",
         "summary": "Retrieves a map of channel IDs to channel names.",
         "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
         "tags": ["channel"],
@@ -1566,9 +1566,9 @@
         }
       }
     },
-    "/getChannels": {
+    "/getChannelInfos": {
       "post": {
-        "operationId": "getChannels",
+        "operationId": "getChannelInfos",
         "summary": "Lists all public and private channels in a Slack workspace.",
         "description": "Retrieves detailed information about all public and private channels in a Slack workspace ( only use this when you need to get full details of a channel ).",
         "tags": ["channel"],
@@ -1947,9 +1947,9 @@
         }
       }
     },
-    "/getActiveUsersIds": {
+    "/listActiveUsers": {
       "post": {
-        "operationId": "getActiveUsersIds",
+        "operationId": "listActiveUsers",
         "summary": "Retrieves a map of user IDs to user names and emails.",
         "description": "Returns an array of objects, each containing the ID, name, real name, display name, title, and email of an active users in the workspace.",
         "tags": ["user"],
@@ -3033,9 +3033,9 @@
         }
       }
     },
-    "/setReminder": {
+    "/setUserReminder": {
       "post": {
-        "operationId": "setReminder",
+        "operationId": "setUserReminder",
         "summary": "Sets a reminder for a user in Slack.",
         "description": "Creates a new reminder for a specified user in Slack. It allows setting the reminder text and the time when the reminder should be triggered.",
         "tags": ["user", "reminder"],
@@ -3264,9 +3264,9 @@
         }
       }
     },
-    "/messageUsers": {
+    "/messageMultipleUsers": {
       "post": {
-        "operationId": "messageUsers",
+        "operationId": "messageMultipleUsers",
         "summary": "Send a direct message to multiple Slack users with optional templating.",
         "description": "Sends direct messages to multiple Slack users. Supports both simple text messages and templated messages with dynamic content for each user.",
         "tags": ["message", "user", "template"],
