@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.12
+
+### Patch Changes
+
+- 53446d0: Triggered by issue #678: release microfox patch
+
 ## 1.0.11
 
 ### Patch Changes
