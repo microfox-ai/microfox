@@ -37,9 +37,9 @@ export const trackCi = new Command('track-ci')
 
         if (tracker && tracker.config && tracker.config.github) {
           const jobName = tracker.config.github.name.replace(/\s+/g, '-').toLowerCase();
-          
-          // --- Corrected Deep Merging of Triggers ---
           const { on } = tracker.config.github;
+
+          // --- MERGE TRIGGERS (logic is the same) ---
           for (const key of Object.keys(on)) {
             if (key === 'schedule') {
               workflow.on.schedule = [...(workflow.on.schedule || []), ...on[key]];
@@ -55,12 +55,23 @@ export const trackCi = new Command('track-ci')
           }
           // --- End Merging ---
 
-          // --- GENERATE 'IF' CONDITION FOR THE JOB ---
-          const jobEvents = Object.keys(on);
-          const ifCondition = jobEvents.map(event => `github.event_name == '${event}'`).join(' || ');
+          // --- GENERATE PRECISE 'IF' CONDITION FOR THE JOB ---
+          const conditions: string[] = [];
+          if (on.push) {
+            conditions.push("github.event_name == 'push'");
+          }
+          if (on.pull_request) {
+            conditions.push("github.event_name == 'pull_request'");
+          }
+          if (on.schedule) {
+            on.schedule.forEach((s:any) => {
+              conditions.push(`github.event.schedule == '${s.cron}'`);
+            });
+          }
+          const ifCondition = conditions.join(' || ');
           // --- END 'IF' CONDITION ---
 
-          // Define the job, now with the conditional
+          // Define the job, now with the precise conditional
           workflow.jobs[jobName] = {
             'if': ifCondition,
             'runs-on': 'ubuntu-latest',
