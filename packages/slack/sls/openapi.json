@@ -1566,9 +1566,9 @@
         }
       }
     },
-    "/getChannelInfos": {
+    "/listChannelInfos": {
       "post": {
-        "operationId": "getChannelInfos",
+        "operationId": "listChannelInfos",
         "summary": "Lists all public and private channels in a Slack workspace.",
         "description": "Retrieves detailed information about all public and private channels in a Slack workspace ( only use this when you need to get full details of a channel ).",
         "tags": ["channel"],
