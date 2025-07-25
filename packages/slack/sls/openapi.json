@@ -1955,7 +1955,7 @@
       "post": {
         "operationId": "listActiveUsers",
         "summary": "Retrieves a map of user IDs to user names and emails.",
-        "description": "lists active users in a slack workspace by their id, name & email. Reutrn a list of users each containing the ID, name, real name, display name, title, and email.",
+        "description": "Search Users by their name or email - lists active users in a slack workspace by their id, name & email. Reutrn a list of users each containing the ID, name, real name, display name, title, and email.",
         "tags": ["user"],
         "ai": {
           "systemPrompt": "Use this when searching for users in general, This function lists all active users in the workspace and returns a map of their IDs, names, and emails. ALWAYS use this when you need to find a userId by their name or email. If needed, paginate until the userId is found using nextCursor in the response of the last try",
@@ -2612,7 +2612,7 @@
       "post": {
         "operationId": "getUserByEmail",
         "summary": "Searches for a Slack user by their email address.",
-        "description": "Finds a user in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
+        "description": "Get a users Information in a Slack workspace using their email address. Returns a comprehensive user object containing detailed information about the found user.",
         "ai": {
           "systemPrompt": "Provide the `email` of the user to find. DO NOT USE THIS IF YOU DON'T KNOW THE CORRECT EMAIL ADDRESS OF THE USER."
         },
