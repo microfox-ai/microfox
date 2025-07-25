@@ -1478,7 +1478,7 @@
         "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
         "tags": ["channel"],
         "ai": {
-          "systemPrompt": "Lists all public and private channels in the workspace and returns a map of their IDs and names. Use this when searching for channelId by channel name.",
+          "systemPrompt": " Use this when searching for channels in general, & you don't need the full channel information.",
           "disableTool": true
         },
         "requestBody": {
@@ -1570,7 +1570,7 @@
       "post": {
         "operationId": "getChannels",
         "summary": "Lists all public and private channels in a Slack workspace.",
-        "description": "Retrieves detailed information about all public and private channels in a Slack workspace.",
+        "description": "Retrieves detailed information about all public and private channels in a Slack workspace ( only use this when you need to get full details of a channel ).",
         "tags": ["channel"],
         "requestBody": {
           "required": true,
