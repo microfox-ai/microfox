@@ -1,6 +1,6 @@
 {
   "name": "microfox",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Universal CLI tool for creating modern TypeScript packages with npm availability checking",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -39,7 +39,7 @@
     "zod": "^4.0.5"
   },
   "devDependencies": {
-    "@microfox/tracker": "^1.0.1",
+    "@microfox/tracker": "^1.0.2",
     "@microfox/tsconfig": "*",
     "@types/inquirer": "^9.0.8",
     "@types/js-yaml": "^4.0.9",
