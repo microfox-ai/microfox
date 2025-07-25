@@ -39,7 +39,7 @@
     "zod": "^4.0.5"
   },
   "devDependencies": {
-    "@microfox/tracker": "*",
+    "@microfox/tracker": "^1.0.1",
     "@microfox/tsconfig": "*",
     "@types/inquirer": "^9.0.8",
     "@types/js-yaml": "^4.0.9",
