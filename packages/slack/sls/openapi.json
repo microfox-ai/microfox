@@ -2185,7 +2185,7 @@
         "description": "Sends a direct message to a specified Slack user. Returns details about the sent message, including its timestamp and the channel where it was posted.",
         "tags": ["message", "user"],
         "ai": {
-          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U')."
+          "systemPrompt": "To send a direct message, provide the `userId` (starts with 'U'). If unavailable, call listActiveUsers to search for the userId."
         },
         "requestBody": {
           "required": true,
