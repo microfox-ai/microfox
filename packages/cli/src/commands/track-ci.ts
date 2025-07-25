@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { pathToFileURL } from 'url';
 import yaml from 'js-yaml';
-import findUp from 'find-up';
+import { findUp } from 'find-up';
 
 export const trackCi = new Command('track-ci')
   .description('Generate GitHub Actions workflows from tracker scripts.')

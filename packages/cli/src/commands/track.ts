@@ -5,7 +5,7 @@ import path from 'path';
 import { Project } from 'ts-morph';
 import { TrackerContext } from '@microfox/tracker';
 import { pathToFileURL } from 'url';
-import findUp from 'find-up';
+import { findUp } from 'find-up';
 
 export const track = new Command('track')
   .description('Run tracker scripts locally.')
