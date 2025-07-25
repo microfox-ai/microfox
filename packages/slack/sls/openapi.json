@@ -3149,9 +3149,9 @@
         }
       }
     },
-    "/messageChannels": {
+    "/messageMultipleChannels": {
       "post": {
-        "operationId": "messageChannels",
+        "operationId": "messageMultipleChannels",
         "summary": "Send a message to multiple Slack channels.",
         "description": "Sends a text message to multiple Slack channels.",
         "tags": ["message", "channel"],

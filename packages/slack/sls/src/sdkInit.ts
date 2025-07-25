@@ -82,6 +82,7 @@ export const sdkInit = (config: SDKConfig): Record<string, Function> => {
     messageMultipleUsers: client.messageUsers.bind(client),
     listActiveUsers: client.getActiveUsersIds.bind(client),
     listActiveUserInfos: client.getActiveUsers.bind(client),
+    messageMultipleChannels: client.messageChannels.bind(client),
     ...bindAllAvailableMethods(client),
   };
 };
