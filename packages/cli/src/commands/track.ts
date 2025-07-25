@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { glob } from 'glob';
 import path from 'path';
-import { Project } from 'ts-morph';
+import { Project, SourceFile } from 'ts-morph';
 import { TrackerContext } from '@microfox/tracker';
 import { pathToFileURL } from 'url';
 import { findUp } from 'find-up';
@@ -49,11 +49,6 @@ export const track = new Command('track')
           continue;
         }
         
-        // Always use the tsconfig from the project root for monorepo support
-        const tsConfigPath = path.resolve(projectRoot, 'tsconfig.json');
-        
-        const project = new Project({ tsConfigFilePath: tsConfigPath });
-
         const packageJsonPath = await findUp('package.json', { cwd: path.dirname(fullTrackerPath) });
         if (!packageJsonPath) {
           console.error(chalk.red(`  Error: Could not find package.json for tracker: ${trackerPath}`));
@@ -61,7 +56,15 @@ export const track = new Command('track')
         }
         const packageRoot = path.dirname(packageJsonPath);
         
-        const sourceFiles = project.addSourceFilesAtPaths(path.join(packageRoot, tracker.config.target));
+        const tsConfigPath = path.resolve(packageRoot, 'tsconfig.json');
+        
+        const project = new Project({ tsConfigFilePath: tsConfigPath });
+        
+        const sourceFiles: SourceFile[] = [];
+        for (const targetGlob of tracker.config.targets) {
+            const files = project.addSourceFilesAtPaths(path.join(packageRoot, targetGlob));
+            sourceFiles.push(...files);
+        }
 
         const context: TrackerContext = {
           sourceFiles,

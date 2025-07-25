@@ -20,8 +20,8 @@ export interface TrackerContext {
  * The configuration for a tracker.
  */
 export interface TrackerConfig {
-  /** A glob pattern, relative to the package root, to find target files. */
-  target: string;
+  /** An array of glob patterns, relative to the package root, to find target files. */
+  targets: string[];
   /** Optional configuration for generating GitHub Actions. */
   github?: {
     /** The name of the GitHub Actions workflow job. */
