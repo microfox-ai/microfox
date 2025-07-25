@@ -1,0 +1,40 @@
+{
+  "name": "@microfox/tracker",
+  "version": "1.0.0",
+  "description": "A library for creating and running automated codebase trackers.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint \"./src/**/*.ts*\""
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "ts-morph": "^22.0.0"
+  },
+  "devDependencies": {
+    "@microfox/tsconfig": "*",
+    "@types/node": "^20.12.12",
+    "eslint": "^8.57.0",
+    "tsup": "^8.0.2",
+    "typescript": "5.4.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+} 
