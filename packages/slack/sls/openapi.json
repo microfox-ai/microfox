@@ -1474,11 +1474,11 @@
     "/listChannels": {
       "post": {
         "operationId": "listChannels",
-        "summary": "Retrieves a map of channel IDs to channel names.",
-        "description": "Returns an array of minimal objects, each containing the ID and name of a channel in the workspace. This is a helper to get the channel IDs by names.",
+        "summary": "List Slack Channels in a workspace.",
+        "description": "Returns a list of public & private channels each containing the ID and name of a channel in the workspace.",
         "tags": ["channel"],
         "ai": {
-          "systemPrompt": " Use this when searching for channels in general, & you don't need the full channel information.",
+          "systemPrompt": " Use this when searching for channels in general, & when you don't need the full channel information.",
           "disableTool": true
         },
         "requestBody": {
