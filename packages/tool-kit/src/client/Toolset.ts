@@ -375,14 +375,23 @@ export class OpenApiToolset {
 
   isHitlStep(): StopCondition<any> {
     return async s => {
-      const lastStep = s.steps[s.steps.length - 1];
-      if (lastStep?.toolResults && lastStep?.toolResults?.length > 0) {
-        const allToolResults = lastStep.toolResults;
-        if (allToolResults.find(t => t.output._humanIntervention && t)) {
-          return true;
+      try {
+        const lastStep = s.steps[s.steps.length - 1];
+        if (lastStep?.toolResults && lastStep?.toolResults?.length > 0) {
+          const allToolResults = lastStep.toolResults;
+          if (
+            allToolResults.find(
+              t => t && t.output && t.output._humanIntervention,
+            )
+          ) {
+            return true;
+          }
         }
+        return false;
+      } catch (error) {
+        console.error('Error in isHitlStep:', error);
+        return false;
       }
-      return false;
     };
   }
 
