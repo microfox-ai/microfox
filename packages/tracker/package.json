@@ -1,6 +1,6 @@
 {
   "name": "@microfox/tracker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for creating and running automated codebase trackers.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -37,4 +37,4 @@
   "engines": {
     "node": ">=20.0.0"
   }
-} 
+}
