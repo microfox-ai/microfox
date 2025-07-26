@@ -35,7 +35,7 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
     console.log(`Channel #${channelName} created with ID: ${testChannelId}`);
 
     console.log(`Looking up user with email: ${testUserEmail!}`);
-    const searchUserResponse = await client.getUserByEmail(testUserEmail!);
+    const searchUserResponse = await client.getUserByEmail({ email: testUserEmail! });
     if (!searchUserResponse?.id) {
         throw new Error('Failed to find test user.');
     }
@@ -43,14 +43,26 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
     console.log(`Found user with ID: ${testUserId}`);
   }, 30000);
 
+  test('should send a message to the user', async () => {
+    const sendMessage = await client.messageUser({
+      userId: testUserId,
+      text: 'Hello from the Microfox NPM package test!',
+      username: 'Tester',
+      icon_url: 'https://themoondevs.nyc3.cdn.digitaloceanspaces.com/user-images/df19ddf5-2db0-441c-91bf-bd11c676b6a9/slack_logo-3.png',
+    });
+    console.log("sendMessage", sendMessage);
+    expect(sendMessage.ok).toBe(true);
+    console.log('Message sent.');
+  });
+
   afterAll(async () => {
     // Manually archive the channel after tests are complete
   });
 
   test('should add a user to the channel', async () => {
     console.log(`Adding user ${testUserId} to channel ${testChannelId}`);
-    const response = await client.addUserToChannel({ channelId: testChannelId, userId: testUserId });
-    expect(response.ok).toBe(true);
+    const response = await client.addUsersToChannel({ channelId: testChannelId, userIds: [testUserId] });
+    expect(response[0].ok).toBe(true);
     console.log('User added to channel.');
   });
   
@@ -82,15 +94,16 @@ describe.skipIf(!envsAreSet)('MicrofoxSlackClient NPM Package', () => {
   
   test('should list users in the channel', async () => {
     console.log(`Listing users in channel ${testChannelId}`);
-    const userIds = await client.getChannelMembers(testChannelId);
-    expect(userIds).toBeInstanceOf(Array);
-    expect(userIds).toContain(testUserId);
-    console.log(`Found ${userIds?.length} user(s) in the channel.`);
+    const response = await client.getChannelMembers({ channelId: testChannelId });
+    expect(response.members).toBeInstanceOf(Array);
+    expect(response.members).toContain(testUserId);
+    console.log(`Found ${response.members?.length} user(s) in the channel.`);
   });
 
   test('should remove a user from the channel', async () => {
     console.log(`Removing user ${testUserId} from channel ${testChannelId}`);
     const response = await client.removeUserFromChannel({ channelId: testChannelId, userId: testUserId });
+    console.log(response);
     expect(response.ok).toBe(true);
     console.log('User removed from channel.');
   });
