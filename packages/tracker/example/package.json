@@ -1,0 +1,14 @@
+{
+  "name": "test-project-ai-client",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@microfox/tracker": "^1.0.2",
+    "@types/node": "^24.1.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.0-alpha.15",
+    "@microfox/ai-code": "^1.1.1",
+    "dotenv": "^17.2.1"
+  }
+}
