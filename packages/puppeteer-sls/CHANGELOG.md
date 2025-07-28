@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.9
+
+### Patch Changes
+
+- 8146bf7: Changes from PR #684: tracker-live
+
 ## 1.2.8
 
 ### Patch Changes
