@@ -20,10 +20,21 @@ export class ColorPicker {
     options: {
       deltaEThreshold?: number;
       paletteSize?: number;
-    } = {}
+      enableLogs?: boolean;
+    } = { enableLogs: false }
   ): Promise<ExtractedPalette> {
-    const { deltaEThreshold = 0.5, paletteSize = 12 } = options;
+    const {
+      deltaEThreshold = 0.5,
+      paletteSize = 12,
+      enableLogs = false,
+    } = options;
     const logs: string[] = [];
+
+    const log = (message: string) => {
+      if (enableLogs) {
+        logs.push(message);
+      }
+    };
 
     let palette: string[] = [];
     let dominantColor: string | undefined = undefined;
@@ -32,49 +43,52 @@ export class ColorPicker {
     let accessibility: AccessibilityInfo | undefined = undefined;
 
     try {
-      logs.push(
+      log(
         `Starting palette extraction. Options: deltaEThreshold=${deltaEThreshold}, paletteSize=${paletteSize}`
       );
 
       let imageDataArray: Uint8ClampedArray;
       if (typeof imageData === 'string') {
         if (imageData.startsWith('http')) {
-          logs.push(`Input is an image URL. Fetching: ${imageData}`);
-          const response = await fetch(imageData);
+          log(`Input is an image URL. Fetching: ${imageData}`);
+          const response = await fetch(encodeURI(imageData.trim()));
           if (!response.ok) {
             throw new Error(`Failed to fetch image: ${response.statusText}`);
           }
-          const imageBuffer = Buffer.from(await response.arrayBuffer());
+          if (!response.body) {
+            throw new Error('Response body is null');
+          }
+          const chunks = [];
+          for await (const chunk of response.body) {
+            chunks.push(chunk);
+          }
+          const imageBuffer = Buffer.concat(chunks);
           imageDataArray = new Uint8ClampedArray(imageBuffer);
-          logs.push(
-            'Successfully fetched and converted image to Uint8ClampedArray.'
-          );
+          log('Successfully fetched and converted image to Uint8ClampedArray.');
         } else {
-          logs.push('Input is a base64 string. Decoding...');
+          log('Input is a base64 string. Decoding...');
           const buffer = Buffer.from(imageData, 'base64');
           imageDataArray = new Uint8ClampedArray(buffer);
-          logs.push(
+          log(
             `Decoded base64 string to Uint8ClampedArray of length ${imageDataArray.length}.`
           );
         }
       } else if (imageData instanceof ArrayBuffer) {
-        logs.push('Input is an ArrayBuffer. Converting...');
+        log('Input is an ArrayBuffer. Converting...');
         imageDataArray = new Uint8ClampedArray(imageData);
-        logs.push('Converted ArrayBuffer to Uint8ClampedArray.');
+        log('Converted ArrayBuffer to Uint8ClampedArray.');
       } else {
         imageDataArray = imageData;
       }
 
       let rgbArray = ColorRgbUtility.buildRgb(imageDataArray, 5);
-      logs.push(`Built RGB array of ${rgbArray.length} sample pixels.`);
+      log(`Built RGB array of ${rgbArray.length} sample pixels.`);
 
       let quantColors = ColorRgbUtility.quantization(rgbArray, 0);
-      logs.push(
-        `Quantized colors down to ${quantColors.length} primary colors.`
-      );
+      log(`Quantized colors down to ${quantColors.length} primary colors.`);
 
       let orderedByColor = ColorRgbUtility.orderByLuminance(quantColors);
-      logs.push('Sorted quantized colors by luminance.');
+      log('Sorted quantized colors by luminance.');
 
       const distinctColors: RGB[] = [];
       if (orderedByColor.length > 0) {
@@ -83,9 +97,7 @@ export class ColorPicker {
 
         for (let i = 1; i < orderedByColor.length; i++) {
           if (distinctColors.length >= paletteSize) {
-            logs.push(
-              `Reached target palette size of ${paletteSize}. Stopping.`
-            );
+            log(`Reached target palette size of ${paletteSize}. Stopping.`);
             break;
           }
           const currentLab = ColorRgbUtility.rgbToLab(orderedByColor[i]);
@@ -106,12 +118,12 @@ export class ColorPicker {
           }
         }
       }
-      logs.push(
+      log(
         `Filtered down to ${distinctColors.length} perceptually distinct colors.`
       );
 
       palette = distinctColors.map(ColorRgbUtility.rgbToHex);
-      logs.push(`Final palette generated: [${palette.join(', ')}]`);
+      log(`Final palette generated: [${palette.join(', ')}]`);
 
       if (palette.length > 0) {
         const paletteRgb = palette.map((hex) => ({
@@ -128,9 +140,7 @@ export class ColorPicker {
         paletteHsl.sort((a, b) => getVibrancy(b.hsl) - getVibrancy(a.hsl));
         const dominantInfo = paletteHsl[0];
         dominantColor = dominantInfo.hex;
-        logs.push(
-          `Selected most vibrant color as dominantColor: ${dominantColor}`
-        );
+        log(`Selected most vibrant color as dominantColor: ${dominantColor}`);
 
         const remainingColorsHsl = paletteHsl.filter(
           (c) => c.hex !== dominantColor
@@ -145,17 +155,17 @@ export class ColorPicker {
         );
 
         if (dominantLuminance > 0.65) {
-          logs.push(`Dominant color is BRIGHT.`);
+          log(`Dominant color is BRIGHT.`);
           secondaryColor = remainingByLuminance[0]?.hex;
-          logs.push(`-> Secondary (brightest remaining): ${secondaryColor}`);
+          log(`-> Secondary (brightest remaining): ${secondaryColor}`);
         } else if (dominantLuminance < 0.35) {
-          logs.push(`Dominant color is DARK.`);
+          log(`Dominant color is DARK.`);
           secondaryColor = remainingBySaturation[0]?.hex;
-          logs.push(`-> Secondary (most muted): ${secondaryColor}`);
+          log(`-> Secondary (most muted): ${secondaryColor}`);
         } else {
-          logs.push(`Dominant color is MUTED.`);
+          log(`Dominant color is MUTED.`);
           secondaryColor = remainingBySaturation[0]?.hex;
-          logs.push(`-> Secondary (most muted): ${secondaryColor}`);
+          log(`-> Secondary (most muted): ${secondaryColor}`);
         }
 
         const accentCandidates = paletteHsl.filter(
@@ -183,7 +193,7 @@ export class ColorPicker {
           });
 
           accentColor = candidatesWithScores[0]?.hex;
-          logs.push(
+          log(
             `-> Accent (most striking with good contrast): ${accentColor} (vibrancy: ${candidatesWithScores[0]?.vibrancyScore.toFixed(3)}, contrast: ${candidatesWithScores[0]?.contrastWithDominant.toFixed(2)})`
           );
         }
@@ -212,7 +222,7 @@ export class ColorPicker {
               contrastRatio: contrastWithWhite,
             };
           }
-          logs.push(
+          log(
             `Accessibility color is ${
               accessibility.color
             } with contrast ${accessibility.contrastRatio.toFixed(2)}.`
@@ -220,9 +230,7 @@ export class ColorPicker {
         }
       }
     } catch (e: any) {
-      logs.push(
-        `ERROR during palette extraction: ${e.message || 'Unknown error'}`
-      );
+      log(`ERROR during palette extraction: ${e.message || 'Unknown error'}`);
     }
     return {
       palette,
