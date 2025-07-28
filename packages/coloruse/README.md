@@ -1,87 +1,51 @@
 # Coloruse
 
-<!-- Add your project description here -->
-
-A TypeScript SDK for Coloruse.
+A TypeScript SDK for extracting and manipulating colors from images.
 
 ## Installation
 
-\`\`\`bash
+```bash
 npm install @microfox/coloruse
-\`\`\`
+```
 
 ## Quick Start
 
-\`\`\`typescript
-import { ColoruseSdk } from '@microfox/coloruse';
+```typescript
+import { ColorPicker } from '@microfox/coloruse';
 
-// Initialize the SDK
-const sdk = new ColoruseSdk({
-apiKey: 'your-api-key',
-// Add other config options
-});
+// Initialize the Color Picker
+const colorPicker = new ColorPicker();
 
-// Example usage
-const result = await sdk.hello('World');
-console.log(result.data);
-\`\`\`
+// Extract palette from an image URL
+const { palette, dominantColor } =
+  await colorPicker.extractPaletteFromImageData(
+    'https://example.com/image.png'
+  );
 
-## Configuration
+console.log('Palette:', palette);
+console.log('Dominant Color:', dominantColor);
+```
 
-\`\`\`typescript
-interface ColoruseSdkConfig {
-apiKey: string; // Required: Your API key
-baseUrl?: string; // Optional: Custom base URL
-name?: string; // Optional: SDK instance name
-version?: string; // Optional: API version
-}
-\`\`\`
+## API Reference
 
-## Methods
-
-### hello(name: string)
-
-Example method - replace with your own API methods.
-
-\`\`\`typescript
-const result = await sdk.hello('World');
-// Returns: { data: "Hello, World!", success: true, status: 200, message: "Success" }
-\`\`\`
-
-<!--
-## TODO: Add your API documentation here
-
-### getData(id: string)
-\`\`\`typescript
-const data = await sdk.getData('123');
-\`\`\`
-
-### createItem(item: object)
-\`\`\`typescript
-const result = await sdk.createItem({ name: 'Example' });
-\`\`\`
--->
+- [ColorPicker](./docs/ColorPicker.md) - For extracting color palettes from images.
+- [ColorUtility](./docs/ColorUtility.md) - For color conversions and manipulations.
 
 ## Development
 
-\`\`\`bash
-
+```bash
 # Install dependencies
-
 npm install
 
 # Build the project
-
 npm run build
 
 # Run tests
-
 npm test
 
 # Lint code
-
 npm run lint
-\`\`\`
+```
 
 ## License
 

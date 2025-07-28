@@ -28,11 +28,22 @@ export function extractPaletteFromImageData(
   imageData: Uint8ClampedArray,
   options: {
     deltaEThreshold?: number; // Threshold for CIELAB Delta E color similarity (default: 4)
-    paletteSize?: number; // Maximum number of colors in final palette (default: 12)
-  } = {},
+    paletteSize?: number; // Maximum number of colors in final palette (default: 12),
+    enableLogs?: boolean; // Whether to enable logs (default: false)
+  } = { enableLogs: false },
 ): ExtractedPalette {
-  const { deltaEThreshold = 0.5, paletteSize = 12 } = options;
+  const {
+    deltaEThreshold = 0.5,
+    paletteSize = 12,
+    enableLogs = false,
+  } = options;
   const logs: string[] = [];
+
+  const log = (message: string) => {
+    if (enableLogs) {
+      logs.push(message);
+    }
+  };
 
   // --- Color science helper functions ---
   /**
@@ -306,21 +317,21 @@ export function extractPaletteFromImageData(
   let accessibility: AccessibilityInfo | undefined = undefined;
 
   try {
-    logs.push(
+    log(
       `Starting palette extraction. Options: deltaEThreshold=${deltaEThreshold}, paletteSize=${paletteSize}`,
     );
 
     // Step 1: Build a list of RGB values from the image data, sampling for performance
     let rgbArray = buildRgb(imageData, 5);
-    logs.push(`Built RGB array of ${rgbArray.length} sample pixels.`);
+    log(`Built RGB array of ${rgbArray.length} sample pixels.`);
 
     // Step 2: Reduce the number of colors to a manageable palette using Median Cut quantization
     let quantColors = quantization(rgbArray, 0);
-    logs.push(`Quantized colors down to ${quantColors.length} primary colors.`);
+    log(`Quantized colors down to ${quantColors.length} primary colors.`);
 
     // Step 3: Sort the palette by luminance (brightness) to handle filtering predictably
     let orderedByColor = orderByLuminance(quantColors);
-    logs.push('Sorted quantized colors by luminance.');
+    log('Sorted quantized colors by luminance.');
 
     // Step 4: Filter out colors that are too perceptually similar using CIELAB Delta E
     const distinctColors: { r: number; g: number; b: number }[] = [];
@@ -330,7 +341,7 @@ export function extractPaletteFromImageData(
 
       for (let i = 1; i < orderedByColor.length; i++) {
         if (distinctColors.length >= paletteSize) {
-          logs.push(`Reached target palette size of ${paletteSize}. Stopping.`);
+          log(`Reached target palette size of ${paletteSize}. Stopping.`);
           break;
         }
         const currentLab = rgbToLab(orderedByColor[i]);
@@ -350,13 +361,13 @@ export function extractPaletteFromImageData(
         }
       }
     }
-    logs.push(
+    log(
       `Filtered down to ${distinctColors.length} perceptually distinct colors.`,
     );
 
     // Step 5: Convert the final list of distinct RGB colors to hex strings
     palette = distinctColors.map(rgbToHex);
-    logs.push(`Final palette generated: [${palette.join(', ')}]`);
+    log(`Final palette generated: [${palette.join(', ')}]`);
 
     // Step 6: Select dominant, secondary, and accent colors based on vibrancy and contrast rules
     if (palette.length > 0) {
@@ -370,9 +381,7 @@ export function extractPaletteFromImageData(
       paletteHsl.sort((a, b) => getVibrancy(b.hsl) - getVibrancy(a.hsl));
       const dominantInfo = paletteHsl[0];
       dominantColor = dominantInfo.hex;
-      logs.push(
-        `Selected most vibrant color as dominantColor: ${dominantColor}`,
-      );
+      log(`Selected most vibrant color as dominantColor: ${dominantColor}`);
 
       // Create a pool of remaining colors (excluding dominant)
       const remainingColorsHsl = paletteHsl.filter(
@@ -391,19 +400,19 @@ export function extractPaletteFromImageData(
       // Select secondary color based on dominant color characteristics
       if (dominantLuminance > 0.65) {
         // --- Dominant is BRIGHT ---
-        logs.push(`Dominant color is BRIGHT.`);
+        log(`Dominant color is BRIGHT.`);
         secondaryColor = remainingByLuminance[0]?.hex; // Next brightest
-        logs.push(`-> Secondary (brightest remaining): ${secondaryColor}`);
+        log(`-> Secondary (brightest remaining): ${secondaryColor}`);
       } else if (dominantLuminance < 0.35) {
         // --- Dominant is DARK ---
-        logs.push(`Dominant color is DARK.`);
+        log(`Dominant color is DARK.`);
         secondaryColor = remainingBySaturation[0]?.hex; // Most muted
-        logs.push(`-> Secondary (most muted): ${secondaryColor}`);
+        log(`-> Secondary (most muted): ${secondaryColor}`);
       } else {
         // --- Dominant is MUTED/MID-TONE ---
-        logs.push(`Dominant color is MUTED.`);
+        log(`Dominant color is MUTED.`);
         secondaryColor = remainingBySaturation[0]?.hex; // Most muted
-        logs.push(`-> Secondary (most muted): ${secondaryColor}`);
+        log(`-> Secondary (most muted): ${secondaryColor}`);
       }
 
       // c) Select accent color with good contrast, luminance, and median appearance
@@ -435,7 +444,7 @@ export function extractPaletteFromImageData(
 
         // Select the most striking color with good contrast as accent
         accentColor = candidatesWithScores[0]?.hex;
-        logs.push(
+        log(
           `-> Accent (most striking with good contrast): ${accentColor} (vibrancy: ${candidatesWithScores[0]?.vibrancyScore.toFixed(3)}, contrast: ${candidatesWithScores[0]?.contrastWithDominant.toFixed(2)})`,
         );
       }
@@ -460,7 +469,7 @@ export function extractPaletteFromImageData(
             contrastRatio: contrastWithWhite,
           };
         }
-        logs.push(
+        log(
           `Accessibility color is ${
             accessibility.color
           } with contrast ${accessibility.contrastRatio.toFixed(2)}.`,
@@ -468,9 +477,7 @@ export function extractPaletteFromImageData(
       }
     }
   } catch (e: any) {
-    logs.push(
-      `ERROR during palette extraction: ${e.message || 'Unknown error'}`,
-    );
+    log(`ERROR during palette extraction: ${e.message || 'Unknown error'}`);
     // ignore errors, leave colors undefined
   }
   return {
