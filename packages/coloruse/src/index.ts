@@ -1,6 +1,6 @@
 // Main exports for coloruse
-export { ColoruseSdk } from './coloruseSdk';
-export * from './schemas';
+export * from './coloruseSdk';
+export * from './colorUtility';
 
 // Example usage:
 // import { ColoruseSdk } from '@microfox/@microfox/coloruse';
