@@ -1,4 +1,4 @@
-import { JsonSchema } from '../types';
+import { JsonSchema } from '@microfox/types';
 
 /**
  * Merges additional properties into the 'body' part of a given JSON schema.

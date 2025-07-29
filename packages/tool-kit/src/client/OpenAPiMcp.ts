@@ -2,7 +2,6 @@ import { z } from 'zod';
 import {
   OpenAPIDoc,
   OpenAPIOperation,
-  JsonSchema,
   OpenAPIPath,
   FetchOptions,
   APIResponse,
@@ -25,7 +24,7 @@ import { CryptoVault } from '@microfox/crypto-sdk';
 import { convertOpenApiSchemaToZod } from '../parsing/jsonzod';
 import { addPropertiesToBody } from '../parsing/argumentHelpers';
 import zodToJsonSchema from 'zod-to-json-schema';
-import { SecurityAuthSchema } from '@microfox/types';
+import { JsonSchema } from '@microfox/types';
 import { constructHeaders, getAuthOptions } from './headers';
 
 /**
@@ -946,10 +945,7 @@ export class OpenApiMCP {
         let finalAuth: AuthObject | undefined;
 
         // Replace the auth config extraction with getAuthOptions
-        const { packages, customSecrets } = getAuthOptions(
-          this.schema,
-          cleanedOperation,
-        );
+        const { packages, customSecrets } = getAuthOptions(this.schema);
 
         if (!finalAuth) {
           if (toolGetAuth) {
