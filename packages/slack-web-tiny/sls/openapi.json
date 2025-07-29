@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "Microfox Slack Web Tiny API",
     "version": "1.0.0",
@@ -8,7 +8,12 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    }
+    },
+    "packageAuthDetails": [
+      {
+        "packageName": "@microfox/slack-web-tiny"
+      }
+    ]
   },
   "servers": [
     {
@@ -16,13 +21,19 @@
       "description": "Unified wrapper endpoint"
     }
   ],
+  "security": [
+    {
+      "microfoxAuth": []
+    }
+  ],
   "components": {
-    "schemas": {
-      "x-auth-packages": [
-        {
-          "packageName": "@microfox/slack-web-tiny"
-        }
-      ]
+    "securitySchemes": {
+      "microfoxAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-auth-secrets",
+        "description": "Encrypted authentication secrets for Microfox services."
+      }
     }
   },
   "paths": {

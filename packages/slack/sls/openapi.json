@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "agentName": "slack",
     "agentPath": "@microfox/slack",
@@ -12,7 +12,14 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    }
+    },
+    "packageAuthDetails": [
+      {
+        "type": "@microfox/packages",
+        "packageName": "@microfox/slack",
+        "packageConstructor": ["MicrofoxSlackClient"]
+      }
+    ]
   },
   "servers": [
     {
@@ -23,14 +30,24 @@
   "ai": {
     "systemPrompt": "Theese tools can interact with a Slack workspace. It can manage channels, users, send messages, and more. When a user asks to perform an action, first find the necessary IDs (like channel or user IDs) using list or search functions before executing the action."
   },
+  "security": [
+    {
+      "microfoxAuth": []
+    }
+  ],
   "components": {
-    "schemas": {
-      "x-auth-packages": [
-        {
-          "type": "@microfox/packages",
-          "packageName": "@microfox/slack"
+    "securitySchemes": {
+      "microfoxAuth": {
+        "type": "oauth2",
+        "description": "This API uses OAuth 2 with the authorization code grant flow. The 'x-auth-secrets' header contains the encrypted token.",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://slack.com/oauth/v2/authorize",
+            "tokenUrl": "https://slack.com/api/oauth.v2.access",
+            "scopes": {}
+          }
         }
-      ]
+      }
     }
   },
   "paths": {
