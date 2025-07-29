@@ -24,6 +24,7 @@
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
