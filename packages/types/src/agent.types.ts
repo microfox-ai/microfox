@@ -99,7 +99,7 @@ export interface AgentPath {
 }
 
 export interface AgentOpenApi {
-  openapi: string; //"3.0.1",
+  openapi: string; //"3.1.0",
   info: AgentInfo;
   servers?: AgentServers[];
   ai?: AgentPathAiInstruction;
