@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.20
+
+### Patch Changes
+
+- 809553e: fix ts error
+- Updated dependencies [809553e]
+  - @microfox/types@1.0.13
+
 ## 1.1.19
 
 ### Patch Changes

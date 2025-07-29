@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.15
+
+### Patch Changes
+
+- 809553e: fix ts error
+- Updated dependencies [809553e]
+  - @microfox/types@1.0.13
+
 ## 1.0.14
 
 ### Patch Changes

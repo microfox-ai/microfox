@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.15
+
+### Patch Changes
+
+- 809553e: fix ts error
+
 ## 1.0.14
 
 ### Patch Changes
