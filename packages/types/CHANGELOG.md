@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.14
+
+### Patch Changes
+
+- f2836ae: minor fix
+
 ## 1.0.13
 
 ### Patch Changes

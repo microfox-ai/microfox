@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.16
+
+### Patch Changes
+
+- f2836ae: minor fix
+- Updated dependencies [f2836ae]
+  - @microfox/types@1.0.14
+
 ## 1.0.15
 
 ### Patch Changes

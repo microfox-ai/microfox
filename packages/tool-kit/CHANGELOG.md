@@ -1,5 +1,13 @@
 # @microfox/tool-kit
 
+## 1.1.21
+
+### Patch Changes
+
+- f2836ae: minor fix
+- Updated dependencies [f2836ae]
+  - @microfox/types@1.0.14
+
 ## 1.1.20
 
 ### Patch Changes
