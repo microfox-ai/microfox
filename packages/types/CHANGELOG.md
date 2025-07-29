@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.13
+
+### Patch Changes
+
+- 809553e: fix ts error
+
 ## 1.0.12
 
 ### Patch Changes
