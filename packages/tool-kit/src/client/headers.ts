@@ -5,7 +5,7 @@ import {
   OpenAPIOperation,
   OpenAPIPath,
 } from '../types';
-import { SecurityAuthSchema } from '@microfox/types';
+import { MicrofoxPackageAuthDetails } from '@microfox/types';
 
 /**
  * Helper function to resolve a $ref reference in an OpenAPI schema
@@ -84,64 +84,27 @@ function generateOperationId(
 }
 
 /**
- * Extracts auth options from an OpenAPI schema for a specific operation
+ * Extracts auth options from an OpenAPI schema
  * @param schema The complete OpenAPI schema
- * @param operation The operation details or operation ID
  * @returns Auth options including packages and custom secrets
  */
-export function getAuthOptions(
-  schema: OpenAPIDoc,
-  operation: OpenAPIOperation | string,
-): {
+export function getAuthOptions(schema: OpenAPIDoc): {
   packages: { packageName: string; packageConstructor?: any }[];
   customSecrets: any[];
 } {
-  let operationDetails: OpenAPIOperation;
-
-  // If operation is a string (operationId), find the corresponding operation
-  if (typeof operation === 'string') {
-    const foundOperation = findOperationById(schema, operation);
-    if (!foundOperation) {
-      throw new Error(`Operation "${operation}" not found in schema`);
-    }
-    operationDetails = foundOperation;
-  } else {
-    operationDetails = operation;
-  }
-
-  let authConfig: any = operationDetails.security?.authSchema;
-  const resolvedRefs = new Set<string>();
-
-  // Resolve auth config if it's a reference
-  if (typeof authConfig === 'string' && authConfig.startsWith('#/')) {
-    authConfig = resolveRef(authConfig, schema, resolvedRefs);
-  } else if (Array.isArray(authConfig)) {
-    authConfig = authConfig
-      .map((a: any) => {
-        if (typeof a === 'string' && a.startsWith('#/')) {
-          return resolveRef(a, schema, resolvedRefs);
-        } else if (typeof a === 'string' && a.startsWith('x-auth-')) {
-          return schema.components?.schemas?.[a];
-        }
-        return a;
-      })
-      .filter(Boolean)
-      .flat();
-  }
-
-  const authPreset: SecurityAuthSchema['@microfox/packages'][] =
-    authConfig ?? schema.components?.schemas?.['x-auth-packages'] ?? [];
+  const packageAuthDetails: MicrofoxPackageAuthDetails[] =
+    schema.info.packageAuthDetails ?? [];
 
   // Extract packages and custom secrets
-  const packages = authPreset
-    .filter((a: any) => a.packageName !== undefined && a.packageName !== null)
+  const packages = packageAuthDetails
+    .filter(a => a.packageName !== undefined && a.packageName !== null)
     .map(a => ({
       packageName: a.packageName as string,
       packageConstructor: a.packageConstructor,
     }));
 
-  const customSecrets = authPreset
-    .filter((a: any) => a.customSecrets)
+  const customSecrets = packageAuthDetails
+    .filter(a => a.customSecrets)
     .flatMap(a => a.customSecrets);
 
   return {
