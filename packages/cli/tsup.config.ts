@@ -13,7 +13,8 @@ export default defineConfig([
       'src/commands/install.ts',
       'src/commands/update.ts',
       'src/commands/track.ts',
-      'src/commands/track-ci.ts'
+      'src/commands/track-ci.ts',
+      'src/commands/openapi.ts'
     ],
     format: ['cjs', 'esm'],
     dts: true,

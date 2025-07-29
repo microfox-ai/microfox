@@ -35,6 +35,7 @@
     "inquirer": "^12.7.0",
     "js-yaml": "^4.1.0",
     "micromatch": "^4.0.8",
+    "openapi-typescript": "^6.7.5",
     "readline-sync": "^1.4.10",
     "zod": "^4.0.5"
   },
