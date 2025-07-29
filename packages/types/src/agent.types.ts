@@ -1,5 +1,6 @@
 import { AgentCard, TaskState, SecurityScheme } from './a2a.types';
 import { AgentUi } from './ui.types';
+import { JsonSchema } from './openapi.types';
 
 export interface AgentServers {
   url: string;
@@ -40,24 +41,6 @@ export interface AgentInfo {
   license?: {
     name: string;
   };
-}
-
-export interface JsonSchema {
-  type?: string;
-  format?: string;
-  description?: string;
-  properties?: Record<string, JsonSchema>;
-  items?: JsonSchema;
-  required?: string[];
-  enum?: any[];
-  default?: any;
-  additionalProperties?: boolean | JsonSchema;
-  oneOf?: JsonSchema[];
-  anyOf?: JsonSchema[];
-  allOf?: JsonSchema[];
-  $ref?: string;
-  $defs?: Record<string, JsonSchema>;
-  [key: string]: any;
 }
 
 export interface AgentPathAiInstruction {
