@@ -70,11 +70,12 @@ export const trackCi = new Command('track-ci')
           }
           const ifCondition = conditions.join(' || ');
           // --- END 'IF' CONDITION ---
-
+          
           // Define the job, now with the precise conditional
           workflow.jobs[jobName] = {
             'if': ifCondition,
             'runs-on': 'ubuntu-latest',
+            ...(tracker.config.github.env && { env: tracker.config.github.env }),
             steps: [
               { name: 'Checkout Code', uses: 'actions/checkout@v4' },
               { name: 'Setup Node.js', uses: 'actions/setup-node@v4', with: { 'node-version': '20' } },
