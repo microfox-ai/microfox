@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.12
+
+### Patch Changes
+
+- ce4509b: Triggered by issue #688: release @microfox/types patch
+
 ## 1.0.11
 
 ### Patch Changes
