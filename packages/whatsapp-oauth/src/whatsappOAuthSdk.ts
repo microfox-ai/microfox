@@ -18,16 +18,14 @@ export class WhatsappOAuthSdk {
 
   constructor(config: WhatsappOAuthConfig) {
     const validatedConfig = whatsappOAuthConfigSchema.parse(config);
-    this.apiBaseUrl = validatedConfig.apiBaseUrl ?? process.env.WHATSAPP_API_BASE_URL ?? '';
+    this.apiBaseUrl = validatedConfig.apiBaseUrl ?? process.env.WHATSAPP_APP_BASE_URL ?? '';
 
     if (validatedConfig.redis) {
       this.redis = validatedConfig.redis;
     } else {
       const url = validatedConfig.upstashRedisRestUrl
-        ?? process.env.UPSTASH_REDIS_REST_URL
         ?? process.env.WHATSAPP_REDIS_URL;
       const token = validatedConfig.upstashRedisRestToken
-        ?? process.env.UPSTASH_REDIS_REST_TOKEN
         ?? process.env.WHATSAPP_REDIS_TOKEN;
 
       if (!url || !token) {
@@ -63,7 +61,7 @@ export class WhatsappOAuthSdk {
     const verification = await this.crud.set(
       validatedPayload.id!,
       validatedPayload as WhatsAppVerification,
-      { ttl: WHATSAPP_VERIFICATION_CODE_EXPIRATION_TIME_MS / 1000 + 1 }
+      { ttl: WHATSAPP_VERIFICATION_CODE_EXPIRATION_TIME_MS / 1000 }
     );
     return whatsappVerificationSchema.parse(verification);
   }
