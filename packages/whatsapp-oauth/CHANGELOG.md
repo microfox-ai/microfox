@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- bf6dad9: minor fix
+
 ## 1.0.1
 
 ### Patch Changes
