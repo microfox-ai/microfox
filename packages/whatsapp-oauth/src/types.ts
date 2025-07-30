@@ -16,7 +16,6 @@ export const whatsappVerificationSchema = z.object({
   userId: z.string(),
   slug: z.string(),
   code: z.string(),
-  callbackUri: z.string().url(),
   phoneNumber: z.string().optional(),
   createdAt: z.date(),
   verified: z.boolean(),
@@ -31,7 +30,6 @@ export const createVerificationPayloadSchema = z.object({
   userId: z.string(),
   slug: z.string(),
   code: z.string().optional(),
-  callbackUri: z.string().url(),
   createdAt: z.date().optional(),
   verified: z.boolean().optional(),
 });

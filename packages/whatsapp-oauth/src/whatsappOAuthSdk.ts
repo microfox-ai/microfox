@@ -42,11 +42,12 @@ export class WhatsappOAuthSdk {
 
   public getWidgetUrl(
     clientSecretId: string,
+    slug: string,
   ): string {
     const params = new URLSearchParams({
       clientSecretId,
     });
-    return `${this.apiBaseUrl}/widget/whatsapp?${params.toString()}`;
+    return `${this.apiBaseUrl}/widget/${slug}/whatsapp?${params.toString()}`;
   }
 
   async createVerification(payload: CreateVerificationPayload & { metadata?: any }): Promise<WhatsAppVerification> {
@@ -67,7 +68,7 @@ export class WhatsappOAuthSdk {
   }
 
   async getVerification(code: string): Promise<WhatsAppVerification | null> {
-    const records = await this.crud.query(`@code:[${code} ${code}]`);
+    const records = await this.crud.query(`*-${code}`);
     if (!records || records.length === 0) {
       console.log('No verification code found');
       return null;
