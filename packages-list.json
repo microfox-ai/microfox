@@ -89,13 +89,14 @@
     "packages/linkedin-oauth",
     "packages/notion-oauth",
     "packages/reddit-oauth",
-    "packages/slack-oauth"
+    "packages/slack-oauth",
+    "packages/whatsapp-oauth"
   ],
   "unknownPackages": [
     "packages/task-kit",
     "packages/tracker",
     "packages/webhook-core"
   ],
-  "total": 79,
-  "generatedAt": "2025-07-25T13:28:46.286Z"
+  "total": 80,
+  "generatedAt": "2025-07-30T22:05:21.374Z"
 }
