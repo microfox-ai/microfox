@@ -32,6 +32,8 @@ export interface TrackerConfig {
       pull_request?: { branches?: string[]; paths?: string[] };
       schedule?: { cron: string }[];
     };
+    /** Optional environment variables for the GitHub Actions job. */
+    env?: Record<string, string>;
   };
 }
 
