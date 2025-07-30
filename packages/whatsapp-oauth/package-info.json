@@ -1,0 +1,58 @@
+{
+  "name": "@microfox/whatsapp-oauth",
+  "title": "Microfox Whatsapp OAuth",
+  "description": "TypeScript package simplifying Whatsapp Connection",
+  "path": "packages/whatsapp-oauth",
+  "status": "oauthConnector",
+  "authEndpoint": "/connect/whatsapp",
+  "documentation": "https://www.npmjs.com/package/@microfox/whatsapp-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg",
+  "dependencies": ["zod"],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "constructors": [
+    {
+      "name": "WhatsappOAuthSdk",
+      "description": "Create a new Microfox Whatsapp OAuth client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/whatsapp-oauth",
+      "authEndpoint": "/connect/whatsapp",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "WHATSAPP_BUSINESS_PHONE_NUMBER",
+          "displayName": "WhatsApp Business Phone Number",
+          "description": "Your whatsapp business phone number"
+        },
+        {
+          "key": "WHATSAPP_BUSINESS_PHONE_NUMBER_ID",
+          "displayName": "WhatsApp Phone Number ID",
+          "description": "The phone number ID for the WhatsApp Business API (You can find it in the WhatsApp Business API dashboard)"
+        },
+        {
+          "key": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+          "displayName": "WhatsApp Business Account ID",
+          "description": "The business account ID for the WhatsApp Business API (You can find it in the WhatsApp Business API dashboard)"
+        },
+        {
+          "key": "WHATSAPP_API_BASE_URL",
+          "displayName": "WhatsApp API Base URL",
+          "description": "The base URL for the WhatsApp Business Auth API"
+        }
+      ],
+      "functionalities": [
+        "getAuthUrl",
+        "createVerification",
+        "getVerification",
+        "deleteVerification",
+        "getClientSecret"
+      ]
+    }
+  ],
+  "extraInfo": [],
+  "platformType": "communication"
+}
