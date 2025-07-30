@@ -24,32 +24,32 @@
       "requiredKeys": [],
       "internalKeys": [
         {
-          "key": "WHATSAPP_BUSINESS_PHONE_NUMBER",
-          "displayName": "WhatsApp Business Phone Number",
-          "description": "Your whatsapp business phone number"
+          "key": "WHATSAPP_REDIS_URL",
+          "displayName": "WhatsApp Redis URL",
+          "description": "The URL for the Redis instance"
         },
         {
-          "key": "WHATSAPP_BUSINESS_PHONE_NUMBER_ID",
-          "displayName": "WhatsApp Phone Number ID",
-          "description": "The phone number ID for the WhatsApp Business API (You can find it in the WhatsApp Business API dashboard)"
+          "key": "WHATSAPP_REDIS_TOKEN",
+          "displayName": "WhatsApp Redis Token",
+          "description": "The token for the Redis instance"
         },
         {
-          "key": "WHATSAPP_BUSINESS_ACCOUNT_ID",
-          "displayName": "WhatsApp Business Account ID",
-          "description": "The business account ID for the WhatsApp Business API (You can find it in the WhatsApp Business API dashboard)"
-        },
-        {
-          "key": "WHATSAPP_API_BASE_URL",
-          "displayName": "WhatsApp API Base URL",
+          "key": "WHATSAPP_APP_BASE_URL",
+          "displayName": "WhatsApp App Base URL",
           "description": "The base URL for the WhatsApp Business Auth API"
         }
       ],
       "functionalities": [
-        "getAuthUrl",
+        "getWidgetUrl",
         "createVerification",
         "getVerification",
         "deleteVerification",
-        "getClientSecret"
+        "markAsVerified",
+        "updatePhoneNumber",
+        "addOrUpdateMetadata",
+        "processVerification",
+        "setupWebhookHandshakeSubscription",
+        "exchangeCodeForUserIdentity"
       ]
     }
   ],
