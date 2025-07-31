@@ -12,14 +12,7 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    },
-    "packageAuthDetails": [
-      {
-        "type": "@microfox/packages",
-        "packageName": "@microfox/slack",
-        "packageConstructor": ["MicrofoxSlackClient"]
-      }
-    ]
+    }
   },
   "servers": [
     {
@@ -32,23 +25,11 @@
   },
   "security": [
     {
-      "microfoxAuth": []
+      "x-microfox-packages": ["@microfox/slack"]
     }
   ],
   "components": {
-    "securitySchemes": {
-      "microfoxAuth": {
-        "type": "oauth2",
-        "description": "This API uses OAuth 2 with the authorization code grant flow. The 'x-auth-secrets' header contains the encrypted token.",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "https://slack.com/oauth/v2/authorize",
-            "tokenUrl": "https://slack.com/api/oauth.v2.access",
-            "scopes": {}
-          }
-        }
-      }
-    }
+    "securitySchemes": {}
   },
   "paths": {
     "/addUsersToChannel": {
