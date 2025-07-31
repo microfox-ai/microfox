@@ -15,6 +15,7 @@ import {
   getGitHubIdentityInfo,
 } from './helpers/github';
 import { Identity } from './schemas';
+import { convertWhatsappUserToIdentity } from './helpers/whatsapp';
 
 type ProviderConfig = {
   clientId: string;
@@ -22,10 +23,10 @@ type ProviderConfig = {
   redirectUri: string;
 };
 
-export const SupportedProviders = ['google', 'slack', 'reddit', 'github'] as const;
+export const SupportedProviders = ['google', 'slack', 'reddit', 'github', 'whatsapp'] as const;
 
 export class OauthKit {
-  constructor() {}
+  constructor() { }
 
   static async exchangeTokenResponseForIdentity(
     provider: string,
@@ -74,6 +75,9 @@ export class OauthKit {
             `Failed to exchange token response for identity: ${error}`,
           );
         }
+      }
+      case "whatsapp": {
+        return convertWhatsappUserToIdentity(tokenResponse);
       }
       default:
         throw new Error(`Unsupported provider: ${provider}`);
