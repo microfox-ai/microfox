@@ -1,5 +1,11 @@
 # @microfox/rest-sdk
 
+## 1.2.1
+
+### Patch Changes
+
+- 0633823: Changes from PR #699: tracker-live
+
 ## 1.2.0
 
 ### Minor Changes
