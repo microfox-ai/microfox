@@ -17,6 +17,7 @@
     "packages/cli",
     "packages/crypto-sdk",
     "packages/db-upstash",
+    "packages/fontuse",
     "packages/oauth-kit",
     "packages/rest-sdk",
     "packages/serverless-yml",
@@ -97,6 +98,6 @@
     "packages/tracker",
     "packages/webhook-core"
   ],
-  "total": 80,
-  "generatedAt": "2025-07-30T22:05:21.374Z"
+  "total": 81,
+  "generatedAt": "2025-07-31T06:24:45.065Z"
 }
