@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- ec9dd7e: release: Update dependencies for aws-ses and fontuse packages; set @microfox/rest-sdk to version 1.2.1 and add @microfox/db-upstash as a dependency in fontuse.
+
 ## 1.0.2
 
 ### Patch Changes

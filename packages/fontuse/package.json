@@ -1,6 +1,6 @@
 {
   "name": "@microfox/fontuse",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A TypeScript SDK for Fontuse.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
