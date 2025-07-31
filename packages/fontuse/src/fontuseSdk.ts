@@ -54,6 +54,11 @@ export class FontUse {
     return this.crudHash.get(id);
   }
 
+  async getFonts(ids: string[]): Promise<Font[]> {
+    const fonts = await Promise.all(ids.map((id) => this.getFont(id)));
+    return fonts.filter(Boolean) as Font[];
+  }
+
   async getFontUsecase(id: string): Promise<UseCaseMetadata[] | null> {
     // TODO: Add pagination
     const docs = await this.rag.getDocFromRAG(id + '-*', 'fontuse');
@@ -89,9 +94,7 @@ export class FontUse {
       uniqueFontNames.map((fontName) => this.getFont(fontName))
     );
     return usecases.map((usecase) => {
-      const font = fonts.find(
-        (font) => font?.name === usecase.id.split('-')[0]
-      );
+      const font = fonts.find((font) => font?.id === usecase.id.split('-')[0]);
       return {
         ...usecase,
         font,
