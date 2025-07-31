@@ -33,6 +33,11 @@ export interface AgentPathAiInstruction {
   preferredModel?: string;
 }
 
+export interface ApprovalHitlSchema {
+  uiType: 'approval';
+  uiSchema?: JsonSchema;
+}
+
 export interface HitlDetails {
   requiresHITL?: boolean;
   hitlPrompt?: string;
@@ -40,7 +45,11 @@ export interface HitlDetails {
   hitlSchema?: `x-hitl-${string}` | string | JsonSchema;
 }
 
-export type SecurityRequirementObject = Record<string, string[]>;
+export type SecurityRequirementObject =
+  | {
+      [key: string]: string[];
+    }
+  | { 'x-microfox-packages': `@microfox/${string}` };
 
 export interface ResponseObject {
   description: string;
@@ -92,10 +101,7 @@ export interface AgentOpenApi {
   paths: Record<string, AgentPath>;
   components: {
     schemas: {
-      [key: `x-hitl-${string}`]: {
-        uiType: 'approval' | string;
-        uiSchema?: JsonSchema;
-      };
+      [key: `x-hitl-${string}`]: ApprovalHitlSchema;
       [key: string]: any;
     };
     securitySchemes?: {
