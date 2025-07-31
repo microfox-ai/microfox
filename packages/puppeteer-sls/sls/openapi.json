@@ -11,14 +11,7 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    },
-    "packageAuthDetails": [
-      {
-        "packageName": "@microfox/puppeteer-sls",
-        "type": "@microfox/packages",
-        "packageConstructor": ["PuppeteerSLS"]
-      }
-    ]
+    }
   },
   "servers": [
     {
@@ -28,7 +21,7 @@
   ],
   "security": [
     {
-      "microfoxAuth": []
+      "x-microfox-packages": ["@microfox/puppeteer-sls"]
     }
   ],
   "components": {
