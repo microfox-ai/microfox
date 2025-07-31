@@ -7,21 +7,6 @@ export interface AgentServers {
   description: string;
 }
 
-export interface MicrofoxPackageAuthDetails {
-  type?: '@microfox/packages';
-  packageName?: string;
-  packageConstructor?: string[];
-  customSecrets?: {
-    key: string;
-    description: string;
-    required: boolean;
-    type: string;
-    format?: string;
-    enum?: any[];
-    default?: any;
-  }[];
-}
-
 export interface AgentInfo {
   agentName: string;
   agentPath: `@microagent/${string}` | `@microfox/${string}`;
@@ -33,7 +18,6 @@ export interface AgentInfo {
   iconUrl?: string;
   status?: 'stable' | 'semi-stable' | 'beta' | 'experimental';
   agentCard?: AgentCard;
-  packageAuthDetails?: MicrofoxPackageAuthDetails[];
   contact?: {
     name: string;
     email: string;
@@ -49,7 +33,7 @@ export interface AgentPathAiInstruction {
   preferredModel?: string;
 }
 
-export interface MicrofoxHitlDetails {
+export interface HitlDetails {
   requiresHITL?: boolean;
   hitlPrompt?: string;
   hitlPriority?: number;
@@ -74,7 +58,7 @@ export interface AgentPath {
     description: string;
     tags: string[];
     ai?: AgentPathAiInstruction;
-    'x-microfox-hitl'?: MicrofoxHitlDetails;
+    hitl?: HitlDetails;
     security?: SecurityRequirementObject[];
     ui?: AgentUi;
     parameters?: {
