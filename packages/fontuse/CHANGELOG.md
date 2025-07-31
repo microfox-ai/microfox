@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 15bc496: Triggered by issue #701: release @microfox/fontuse
+
 ## 1.0.1
 
 ### Patch Changes
