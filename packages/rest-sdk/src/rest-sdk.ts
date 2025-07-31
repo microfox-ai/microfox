@@ -338,7 +338,7 @@ export const createRestSDK = (config: RestSDKConfig): RestClient => {
       contentType = 'application/json',
       retry = { attempts: 0, delay: 1000, backoff: 2 },
       abortSignal,
-      cache = 'default',
+      cache,
       credentials = 'same-origin',
       keepalive = false,
       mode = 'cors',
@@ -396,7 +396,6 @@ export const createRestSDK = (config: RestSDKConfig): RestClient => {
               : {}),
           },
           body: formattedBody,
-          cache,
           credentials,
           keepalive,
           mode,
@@ -404,6 +403,10 @@ export const createRestSDK = (config: RestSDKConfig): RestClient => {
           referrerPolicy,
           ...(signal ? { signal } : {}),
         };
+
+        if (cache) {
+          fetchOptions.cache = cache;
+        }
 
         const response = await fetch(endpointUrl.toString(), fetchOptions);
 
