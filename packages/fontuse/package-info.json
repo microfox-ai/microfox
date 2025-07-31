@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/@microfox/fontuse",
+  "title": "Fontuse TypeScript SDK",
+  "description": "A TypeScript SDK for Fontuse.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "internal",
+  "documentation": "https://www.npmjs.com/package/@microfox/@microfox/fontuse",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}
