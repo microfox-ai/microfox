@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4
+
+### Patch Changes
+
+- a29d9f6: release: add getFonts method to FontUse class and update font retrieval logic
+
 ## 1.0.3
 
 ### Patch Changes

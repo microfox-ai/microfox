@@ -1,5 +1,15 @@
 # @microfox/tool-kit
 
+## 1.1.22
+
+### Patch Changes
+
+- 2dd01b8: Changes from PR #704: tool-security-schema
+- a0df273: security schema update
+- Updated dependencies [2dd01b8]
+- Updated dependencies [a0df273]
+  - @microfox/types@1.0.15
+
 ## 1.1.21
 
 ### Patch Changes

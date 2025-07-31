@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.15
+
+### Patch Changes
+
+- 2dd01b8: Changes from PR #704: tool-security-schema
+- a0df273: security schema update
+
 ## 1.0.14
 
 ### Patch Changes
