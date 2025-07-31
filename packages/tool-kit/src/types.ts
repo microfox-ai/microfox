@@ -4,9 +4,8 @@ import {
   AgentOpenApi,
   AgentUi,
   JsonSchema,
-  MicrofoxHitlDetails,
+  HitlDetails,
   SecurityRequirementObject,
-  MicrofoxPackageAuthDetails,
 } from '@microfox/types';
 import { z } from 'zod';
 
@@ -82,7 +81,7 @@ export type OpenAPIOperation = {
   tags?: string[];
   ai?: AgentPathAiInstruction;
   security?: SecurityRequirementObject[];
-  'x-microfox-hitl'?: MicrofoxHitlDetails;
+  hitl?: HitlDetails;
   ui?: AgentUi;
   parameters?: OpenAPIParameter[];
   requestBody?: OpenAPIRequestBody;
@@ -160,7 +159,15 @@ export type AuthOptions = {
     packageName: string;
     packageConstructor?: string[];
   }[];
-  customSecrets?: MicrofoxPackageAuthDetails['customSecrets'];
+  customSecrets?:{
+    key: string;
+    description: string;
+    required: boolean;
+    type: string;
+    format?: string;
+    enum?: any[];
+    default?: any;
+  }[];
 };
 
 export type AuthObject = {
