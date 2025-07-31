@@ -945,7 +945,7 @@ export class OpenApiMCP {
         let finalAuth: AuthObject | undefined;
 
         // Replace the auth config extraction with getAuthOptions
-        const { packages, customSecrets } = getAuthOptions(this.schema);
+        const { packages, customSecrets } = getAuthOptions(this.schema, cleanedOperation);
 
         if (!finalAuth) {
           if (toolGetAuth) {
