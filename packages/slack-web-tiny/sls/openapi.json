@@ -8,12 +8,7 @@
     "contact": {
       "name": "Microfox Dev Support",
       "email": "support@microfox.com"
-    },
-    "packageAuthDetails": [
-      {
-        "packageName": "@microfox/slack-web-tiny"
-      }
-    ]
+    }
   },
   "servers": [
     {
@@ -23,18 +18,11 @@
   ],
   "security": [
     {
-      "microfoxAuth": []
+      "x-microfox-packages": ["@microfox/slack-web-tiny"]
     }
   ],
   "components": {
-    "securitySchemes": {
-      "microfoxAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-auth-secrets",
-        "description": "Encrypted authentication secrets for Microfox services."
-      }
-    }
+    "securitySchemes": {}
   },
   "paths": {
     "/sendMessage": {
