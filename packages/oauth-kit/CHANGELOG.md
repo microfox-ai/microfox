@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.1.3
+
+### Patch Changes
+
+- 88d30bf: added whatsapp
+
 ## 1.1.2
 
 ### Patch Changes
