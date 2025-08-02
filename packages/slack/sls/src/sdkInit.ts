@@ -49,10 +49,6 @@ function createClientInstance(constructorName: string, token: string) {
     case 'MicrofoxSlackClient':
       return new MicrofoxSlackClient(token);
 
-    // Add other client types here as needed
-    // case 'AnotherSlackClient':
-    //   return new AnotherSlackClient(token);
-
     default:
       // Default fallback to MicrofoxSlackClient
       return new MicrofoxSlackClient(token);
