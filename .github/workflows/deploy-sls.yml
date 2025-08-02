@@ -35,6 +35,8 @@ jobs:
           TASK_UPSTASH_REDIS_REST_URL: ${{ secrets.TASK_UPSTASH_REDIS_REST_URL }}
           TASK_UPSTASH_REDIS_REST_TOKEN: ${{ secrets.TASK_UPSTASH_REDIS_REST_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MICROFOX_UPSTASH_VECTOR_REST_URL: ${{ secrets.MICROFOX_UPSTASH_VECTOR_REST_URL }}
+          MICROFOX_UPSTASH_VECTOR_REST_TOKEN: ${{ secrets.MICROFOX_UPSTASH_VECTOR_REST_TOKEN }}
           GITHUB_BEFORE: ${{ github.event.before }}
           GITHUB_AFTER: ${{ github.event.after }}
           IS_AUTO_UPDATE: 'false'
