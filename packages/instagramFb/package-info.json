@@ -1,7 +1,7 @@
 {
   "name": "@microfox/instagramFb",
-  "title": "Instagram FB SDK",
-  "description": "A TypeScript SDK for interacting with the Instagram API using OAuth 2.0.  This package simplifies authentication and data access.",
+  "title": "Instagram FB",
+  "description": "A TypeScript SDK for interacting with the Instagram Business API using OAuth 2.0. This package simplifies authentication and data access.",
   "path": "packages/instagramFb",
   "dependencies": ["@microfox/instagramFb-oauth", "zod"],
   "addedDependencies": ["@microfox/instagramFb-oauth"],
@@ -9,7 +9,7 @@
   "status": "stable",
   "authEndpoint": "/connect/instagramFb-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/instagramFb",
-  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/facebook.svg",
   "constructors": [
     {
       "name": "InstagramFbSdk",
@@ -19,12 +19,12 @@
       "authEndpoint": "/connect/instagramFb-oauth",
       "requiredKeys": [
         {
-          "key": "INSTAGRAM_ACCESS_TOKEN",
+          "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram Access Token",
           "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
         },
         {
-          "key": "INSTAGRAM_REFRESH_TOKEN",
+          "key": "INSTAGRAMFB_REFRESH_TOKEN",
           "displayName": "Instagram Refresh Token",
           "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
         }
