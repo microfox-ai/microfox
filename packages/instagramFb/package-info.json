@@ -1,23 +1,34 @@
 {
   "name": "@microfox/instagramFb",
-  "title": "Instagram SDK",
+  "title": "Instagram FB SDK",
   "description": "A TypeScript SDK for interacting with the Instagram API using OAuth 2.0.  This package simplifies authentication and data access.",
   "path": "packages/instagramFb",
   "dependencies": ["@microfox/instagramFb-oauth", "zod"],
   "addedDependencies": ["@microfox/instagramFb-oauth"],
   "authType": "oauth2",
-  "status": "semiStable",
-  "authEndpoint": "/connect/instagramFb",
+  "status": "stable",
+  "authEndpoint": "/connect/instagramFb-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/instagramFb",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "constructors": [
     {
-      "name": "InstagramSDK",
-      "description": "Create a new Instagram SDK client through which you can interact with the API",
+      "name": "InstagramFbSdk",
+      "description": "Create a new Instagram FB SDK client through which you can interact with the API",
       "auth": "oauth2",
       "authSdk": "@microfox/instagramFb-oauth",
-      "authEndpoint": "/connect/instagramFb",
-      "requiredKeys": [],
+      "authEndpoint": "/connect/instagramFb-oauth",
+      "requiredKeys": [
+        {
+          "key": "INSTAGRAM_ACCESS_TOKEN",
+          "displayName": "Instagram Access Token",
+          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
+        },
+        {
+          "key": "INSTAGRAM_REFRESH_TOKEN",
+          "displayName": "Instagram Refresh Token",
+          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+        }
+      ],
       "internalKeys": [
         {
           "key": "INSTAGRAM_CLIENT_ID",
@@ -75,5 +86,5 @@
     "Ensure your application respects these rate limits to avoid being blocked by the API.",
     "For more detailed information about the Instagram Graph API, visit: https://developers.facebook.com/docs/instagram-api/"
   ],
-  "platformType": "communication"
+  "platformType": "social"
 }

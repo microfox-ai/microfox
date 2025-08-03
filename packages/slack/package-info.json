@@ -5,8 +5,8 @@
   "path": "packages/slack",
   "dependencies": ["@slack/web-api", "@microfox/slack-oauth"],
   "status": "stable",
-  "authType": "apikey",
-  "authEndpoint": "/connect/slack",
+  "authType": "oauth2",
+  "authEndpoint": "/connect/slack-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/slack",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/slack-icon.svg",
   "constructors": [

@@ -1,13 +1,13 @@
 {
   "name": "@microfox/instagram",
-  "title": "Microfox Instagram SDK",
+  "title": "Instagram SDK",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
   "dependencies": ["@microfox/instagram-oauth", "zod"],
   "addedDependencies": ["@microfox/instagram-oauth"],
-  "status": "semiStable",
-  "authEndpoint": "/connect/instagram",
+  "status": "stable",
   "authType": "oauth2",
+  "authEndpoint": "/connect/instagram-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/instagram",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "constructors": [
@@ -16,7 +16,19 @@
       "description": "Create a new Microfox Instagram SDK client through which you can interact with the API",
       "auth": "oauth2",
       "authSdk": "@microfox/instagram-oauth",
-      "requiredKeys": [],
+      "authEndpoint": "/connect/instagram-oauth",
+      "requiredKeys": [
+        {
+          "key": "INSTAGRAM_ACCESS_TOKEN",
+          "displayName": "Instagram Access Token",
+          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
+        },
+        {
+          "key": "INSTAGRAM_REFRESH_TOKEN",
+          "displayName": "Instagram Refresh Token",
+          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+        }
+      ],
       "internalKeys": [
         {
           "key": "INSTAGRAM_CLIENT_ID",
