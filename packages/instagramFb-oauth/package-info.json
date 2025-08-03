@@ -1,0 +1,100 @@
+{
+  "name": "@microfox/instagramFb-oauth",
+  "title": "Microfox Instagram FB OAuth",
+  "description": "TypeScript package simplifying Instagram FB OAuth 2.0, providing methods for authorization URL generation, token exchange, validation, and long-lived token conversion.",
+  "path": "packages/instagramFb-oauth",
+  "status": "oauthConnector",
+  "authEndpoint": "/connect/instagramFb",
+  "documentation": "https://www.npmjs.com/package/@microfox/instagramFb-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
+  "dependencies": ["zod"],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "constructors": [
+    {
+      "name": "InstagramFbOAuthSdk",
+      "description": "Create a new Microfox Instagram FB OAuth client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/instagramFb-oauth",
+      "authEndpoint": "/connect/instagramFb",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "INSTAGRAM_FB_CLIENT_ID",
+          "displayName": "Instagram FB Client ID",
+          "description": "Your Instagram FB app's Client ID.",
+          "required": true
+        },
+        {
+          "key": "INSTAGRAM_FB_CLIENT_SECRET",
+          "displayName": "Instagram FB Client Secret",
+          "description": "Your Instagram FB app's Client Secret.",
+          "required": true
+        },
+        {
+          "key": "INSTAGRAM_FB_REDIRECT_URI",
+          "displayName": "Instagram FB Redirect URI",
+          "description": "The redirect URI you configured for your Instagram FB app.",
+          "required": true
+        },
+        {
+          "key": "SCOPES",
+          "displayName": "Instagram FB Scopes",
+          "description": "The scopes for your Instagram FB app.",
+          "required": true
+        }
+      ],
+      "functionalities": [
+        "getAuthUrl",
+        "exchangeCodeForTokens",
+        "getLongLivedToken",
+        "validateAccessToken"
+      ]
+    }
+  ],
+  "extraInfo": [
+    "To obtain OAuth credentials for Instagram FB Business:",
+    "1. Go to https://developers.facebook.com/ and create a new app or select an existing one.",
+    "2. Navigate to 'Products' and add 'Instagram Basic Display' or 'Instagram Graph API'.",
+    "3. Under 'Instagram Basic Display' > 'Basic Display', add your redirect URI.",
+    "4. Go to 'App Settings' > 'Basic' to find your Client ID and Client Secret.",
+    "5. Configure the necessary permissions and scopes for your Instagram Business account.",
+    "",
+    "Environment variables:",
+    "- INSTAGRAM_FB_CLIENT_ID: Your Instagram FB Business app's Client ID",
+    "- INSTAGRAM_FB_CLIENT_SECRET: Your Instagram FB Business app's Client Secret",
+    "- INSTAGRAM_FB_REDIRECT_URI: The redirect URI you configured for your Instagram FB Business app",
+    "",
+    "To use this package:",
+    "1. Install the package: npm install @microfox/instagramFb-oauth",
+    "2. Import and initialize the SDK:",
+    "   import { createInstagramFbOAuth } from '@microfox/instagramFb-oauth';",
+    "   const instagramOAuth = createInstagramFbOAuth({",
+    "     clientId: process.env.INSTAGRAM_FB_CLIENT_ID!,",
+    "     clientSecret: process.env.INSTAGRAM_FB_CLIENT_SECRET!,",
+    "     redirectUri: process.env.INSTAGRAM_FB_REDIRECT_URI!,",
+    "     scopes: ['instagram_basic', 'instagram_content_publish'],",
+    "   });",
+    "3. Generate the authorization URL:",
+    "   const authUrl = instagramOAuth.getAuthUrl();",
+    "4. After the user authorizes, exchange the code for a token:",
+    "   const tokenResponse = await instagramOAuth.exchangeCodeForTokens(code);",
+    "   // This automatically includes both access token and refresh token (long-lived token)",
+    "",
+    "Important notes:",
+    "- Instagram FB Business tokens have expiration times. The exchangeCodeForTokens method automatically converts short-lived tokens to long-lived tokens.",
+    "- Store tokens securely and never expose them in client-side code.",
+    "- Respect Instagram's rate limits and API guidelines.",
+    "- The 'state' parameter in getAuthUrl is optional but recommended for CSRF protection.",
+    "- Ensure your app has the necessary permissions for Instagram Business API access.",
+    "- Long-lived tokens can be refreshed using the refresh token mechanism."
+  ],
+  "keyInstructions": {
+    "link": "https://developers.facebook.com/docs/instagram-basic-display-api/getting-started"
+  },
+  "platformType": "social"
+}

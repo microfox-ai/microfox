@@ -1,0 +1,26 @@
+[
+  {
+    "name": "instagram_basic",
+    "description": "Access basic Instagram account information"
+  },
+  {
+    "name": "instagram_content_publish",
+    "description": "Publish content to Instagram"
+  },
+  {
+    "name": "instagram_manage_comments",
+    "description": "Manage comments on Instagram posts"
+  },
+  {
+    "name": "instagram_manage_insights",
+    "description": "Access Instagram insights and analytics"
+  },
+  {
+    "name": "pages_show_list",
+    "description": "View list of Facebook pages"
+  },
+  {
+    "name": "pages_read_engagement",
+    "description": "Read engagement data from Facebook pages"
+  }
+] 
