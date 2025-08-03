@@ -13,7 +13,7 @@
   "constructors": [
     {
       "name": "InstagramFbSdk",
-      "description": "Create a new Instagram FB SDK client through which you can interact with the instagram business API",
+      "description": "Create a new Instagram FB client through which you can interact with the instagram business API",
       "auth": "oauth2",
       "authSdk": "@microfox/instagramFb-oauth",
       "authEndpoint": "/connect/instagramFb-oauth",
