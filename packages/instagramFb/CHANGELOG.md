@@ -1,5 +1,11 @@
 # @microfox/instagramFb
 
+## 1.3.1
+
+### Patch Changes
+
+- c0998b5: refactor
+
 ## 1.3.0
 
 ### Minor Changes
