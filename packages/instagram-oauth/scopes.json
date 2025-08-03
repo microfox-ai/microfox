@@ -1,0 +1,18 @@
+[
+  {
+    "name": "instagram_business_basic",
+    "description": "Access basic Instagram Business account information"
+  },
+  {
+    "name": "instagram_business_content_publish",
+    "description": "Publish content to Instagram Business account"
+  },
+  {
+    "name": "instagram_business_manage_messages",
+    "description": "Manage messages in Instagram Business account"
+  },
+  {
+    "name": "instagram_business_manage_comments",
+    "description": "Manage comments on Instagram Business posts"
+  }
+] 
