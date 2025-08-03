@@ -1,6 +1,6 @@
 {
   "name": "@microfox/instagramFb-oauth",
-  "title": "Microfox Instagram FB OAuth",
+  "title": "Instagram FB OAuth",
   "description": "TypeScript package simplifying Instagram FB OAuth 2.0, providing methods for authorization URL generation, token exchange, validation, and long-lived token conversion.",
   "path": "packages/instagramFb-oauth",
   "status": "oauthConnector",

@@ -73,11 +73,6 @@
   "extraInfo": [
     "To use this SDK, you need to set up a Facebook Developer account and create an app that uses the Instagram Graph API.",
     "Visit https://developers.facebook.com/ to create your app and obtain the necessary credentials.",
-    "Required environment variables:",
-    "- INSTAGRAM_CLIENT_ID: Your Facebook App ID",
-    "- INSTAGRAM_CLIENT_SECRET: Your Facebook App Secret",
-    "- INSTAGRAM_REDIRECT_URI: Your OAuth callback URL",
-    "- INSTAGRAM_ACCESS_TOKEN: A valid access token for the Instagram Graph API",
     "Make sure to configure the correct permissions and features for your app in the Facebook Developer Console.",
     "This SDK uses OAuth 2.0 for authentication. You need to implement the full OAuth flow in your application to obtain a valid access token.",
     "Rate limits: The API has various rate limits depending on the endpoint. Notable limits include:",
