@@ -43,6 +43,8 @@
     "packages/aws-ses",
     "packages/brave",
     "packages/google-sheets",
+    "packages/instagram",
+    "packages/instagramFb",
     "packages/linkedin-share",
     "packages/puppeteer-sls",
     "packages/slack",
@@ -63,8 +65,6 @@
     "packages/google-calendar",
     "packages/google-drive",
     "packages/google-seo",
-    "packages/instagram",
-    "packages/instagramFb",
     "packages/kling-ai",
     "packages/notion",
     "packages/puppeteer-linkedin",
@@ -99,5 +99,5 @@
     "packages/webhook-core"
   ],
   "total": 81,
-  "generatedAt": "2025-07-31T06:24:45.065Z"
+  "generatedAt": "2025-08-03T22:15:46.103Z"
 }
