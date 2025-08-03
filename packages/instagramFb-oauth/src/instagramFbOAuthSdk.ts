@@ -38,17 +38,7 @@ export class InstagramFbOAuthSdk {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
     this.redirectUri = config.redirectUri;
-    this.scopes = Array.from(
-      new Set([
-        ...(config.scopes || []),
-        InstagramFbScope.INSTAGRAM_BASIC,
-        InstagramFbScope.INSTAGRAM_CONTENT_PUBLISH,
-        InstagramFbScope.INSTAGRAM_MANAGE_COMMENTS,
-        InstagramFbScope.INSTAGRAM_MANAGE_INSIGHTS,
-        InstagramFbScope.PAGES_SHOW_LIST,
-        InstagramFbScope.PAGES_READ_ENGAGEMENT,
-      ]),
-    );
+    this.scopes = config.scopes || [];
     this.state = config.state || this.generateState();
   }
 
