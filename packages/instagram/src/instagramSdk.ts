@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import {
-  InstagramBusinessOAuthSdk,
+  InstagramOAuthSdk,
   InstagramScope,
-} from '@microfox/instagram-business-oauth';
+} from '@microfox/instagram-oauth';
 
 // Zod schemas for input validation
 const InstagramMediaTypeSchema = z
@@ -96,7 +96,7 @@ class InstagramSDK {
   private refreshToken: string;
   private clientId: string;
   private clientSecret: string;
-  private instagramAuth: InstagramBusinessOAuthSdk;
+  private instagramAuth: InstagramOAuthSdk;
 
   constructor(config: {
     accessToken: string;
@@ -110,7 +110,7 @@ class InstagramSDK {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
 
-    this.instagramAuth = new InstagramBusinessOAuthSdk({
+    this.instagramAuth = new InstagramOAuthSdk({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
       redirectUri: config.redirectUri,

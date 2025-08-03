@@ -3,10 +3,10 @@
   "title": "Microfox Instagram SDK",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
-  "dependencies": ["@microfox/instagram-business-oauth", "zod"],
-  "addedDependencies": ["@microfox/instagram-business-oauth"],
+  "dependencies": ["@microfox/instagram-oauth", "zod"],
+  "addedDependencies": ["@microfox/instagram-oauth"],
   "status": "semiStable",
-  "authEndpoint": "/connect/instagram-business-oauth",
+  "authEndpoint": "/connect/instagram",
   "authType": "oauth2",
   "documentation": "https://www.npmjs.com/package/@microfox/instagram",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
@@ -15,7 +15,7 @@
       "name": "InstagramSDK",
       "description": "Create a new Microfox Instagram SDK client through which you can interact with the API",
       "auth": "oauth2",
-      "authSdk": "@microfox/instagram-business-oauth",
+      "authSdk": "@microfox/instagram-oauth",
       "requiredKeys": [],
       "internalKeys": [
         {
