@@ -20,13 +20,8 @@
       "requiredKeys": [
         {
           "key": "INSTAGRAM_ACCESS_TOKEN",
-          "displayName": "Instagram Access Token",
-          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
-        },
-        {
-          "key": "INSTAGRAM_REFRESH_TOKEN",
-          "displayName": "Instagram Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+          "displayName": "Instagram Long-Lived Access Token",
+          "description": "The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests."
         }
       ],
       "internalKeys": [
@@ -42,13 +37,8 @@
         },
         {
           "key": "INSTAGRAM_ACCESS_TOKEN",
-          "displayName": "Instagram Access Token",
-          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
-        },
-        {
-          "key": "INSTAGRAM_REFRESH_TOKEN",
-          "displayName": "Instagram Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+          "displayName": "Instagram Long-Lived Access Token",
+          "description": "The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests."
         },
         {
           "key": "SCOPES",
@@ -88,11 +78,10 @@
     "- INSTAGRAM_CLIENT_ID: Your Instagram app's Client ID",
     "- INSTAGRAM_CLIENT_SECRET: Your Instagram app's Client Secret",
     "- INSTAGRAM_REDIRECT_URI: The OAuth redirect URI for your app",
-    "- INSTAGRAM_ACCESS_TOKEN: The user's access token (obtained through OAuth flow)",
-    "- INSTAGRAM_REFRESH_TOKEN: The user's refresh token (obtained through OAuth flow)",
+    "- INSTAGRAM_ACCESS_TOKEN: The user's long-lived access token (obtained through OAuth flow, valid for 60 days)",
     "",
     "Authentication:",
-    "This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the initial access token and refresh token. The SDK handles token refreshing automatically.",
+    "This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the long-lived access token. The SDK automatically converts short-lived tokens to long-lived tokens (valid for 60 days).",
     "",
     "Rate Limits:",
     "Instagram API has rate limits that vary by endpoint. Monitor your usage and implement appropriate error handling and backoff strategies. Use the getContentPublishingLimit method to check your current rate limit status for content publishing.",

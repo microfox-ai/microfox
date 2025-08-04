@@ -22,11 +22,6 @@
           "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram Access Token",
           "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
-        },
-        {
-          "key": "INSTAGRAMFB_REFRESH_TOKEN",
-          "displayName": "Instagram Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
         }
       ],
       "internalKeys": [
@@ -44,11 +39,6 @@
           "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram Access Token",
           "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
-        },
-        {
-          "key": "INSTAGRAMFB_REFRESH_TOKEN",
-          "displayName": "Instagram Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
         },
         {
           "key": "SCOPES",
