@@ -16,7 +16,7 @@ export class InstagramfbOAuthSdk {
   
   private readonly clientId: string;
   private readonly clientSecret: string;
-  private readonly redirectUri: string;
+  private readonly redirectUri?: string;
   private readonly scopes: string[];
   private state: string;
 
@@ -27,13 +27,6 @@ export class InstagramfbOAuthSdk {
   constructor(config: InstagramfbAuthConfig) {
     if (!config.clientId) throw new Error('Client ID is required');
     if (!config.clientSecret) throw new Error('Client Secret is required');
-    if (!config.redirectUri) throw new Error('Redirect URI is required');
-
-    try {
-      new URL(config.redirectUri);
-    } catch {
-      throw new Error('Invalid redirect URI');
-    }
 
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
@@ -50,7 +43,7 @@ export class InstagramfbOAuthSdk {
   public getAuthUrl(state?: string): string {
     const authSearchParams = new URLSearchParams({
       client_id: this.clientId,
-      redirect_uri: this.redirectUri,
+      redirect_uri: this.redirectUri || '',
       state: state || this.state,
       scope: this.scopes.join(','),
       response_type: 'code',
@@ -75,7 +68,7 @@ export class InstagramfbOAuthSdk {
       client_id: this.clientId,
       client_secret: this.clientSecret,
       code,
-      redirect_uri: this.redirectUri,
+      redirect_uri: this.redirectUri || '',
       grant_type: 'authorization_code',
     });
 

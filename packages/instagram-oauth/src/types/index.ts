@@ -1,7 +1,7 @@
 export interface InstagramAuthConfig {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
+  redirectUri?: string;
   scopes?: InstagramScope[];
   state?: string;
 }

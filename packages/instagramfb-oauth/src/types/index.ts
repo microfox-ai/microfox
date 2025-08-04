@@ -1,7 +1,7 @@
 export interface InstagramfbAuthConfig {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
+  redirectUri?: string;
   scopes?: string[];
   state?: string;
 }
