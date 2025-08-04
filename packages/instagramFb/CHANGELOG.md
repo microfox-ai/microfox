@@ -1,4 +1,4 @@
-# @microfox/instagramFb
+# @microfox/instagramfb
 
 ## 1.3.1
 
@@ -15,7 +15,7 @@
 ### Patch Changes
 
 - Updated dependencies [b34aa2e]
-  - @microfox/instagramFb-oauth@1.2.0
+  - @microfox/instagramfb-oauth@1.2.0
 
 ## 1.2.0
 
@@ -26,7 +26,7 @@
 ### Patch Changes
 
 - Updated dependencies [16d112d]
-  - @microfox/instagramFb-oauth@1.1.0
+  - @microfox/instagramfb-oauth@1.1.0
 
 ## 1.1.1
 
@@ -34,7 +34,7 @@
 
 - 7cd211d: Changes from PR #251: brave
 - Updated dependencies [7cd211d]
-  - @microfox/instagramFb-business-oauth@1.0.2
+  - @microfox/instagramfb-business-oauth@1.0.2
 
 ## 1.1.0
 

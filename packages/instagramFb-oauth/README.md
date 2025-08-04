@@ -1,4 +1,4 @@
-# @microfox/instagramFb-oauth
+# @microfox/instagramfb-oauth
 
 A robust TypeScript SDK for Instagram and Facebook Business OAuth 2.0 authentication and API integration. This package provides a simple and type-safe way to handle OAuth flows for Instagram Business accounts through the Facebook Graph API v22.0, enabling seamless integration with Instagram's business features.
 
@@ -18,11 +18,11 @@ A robust TypeScript SDK for Instagram and Facebook Business OAuth 2.0 authentica
 ## Installation
 
 ```bash
-npm install @microfox/instagramFb-oauth
+npm install @microfox/instagramfb-oauth
 # or
-yarn add @microfox/instagramFb-oauth
+yarn add @microfox/instagramfb-oauth
 # or
-pnpm add @microfox/instagramFb-oauth
+pnpm add @microfox/instagramfb-oauth
 ```
 
 ## Prerequisites
@@ -41,28 +41,28 @@ Before using this SDK, you need to:
 
 ```typescript
 import {
-  InstagramFbOAuthSdk,
-  InstagramFbScope,
-} from '@microfox/instagramFb-oauth';
+  InstagramfbOAuthSdk,
+  InstagramfbScope,
+} from '@microfox/instagramfb-oauth';
 
-const oauth = new InstagramFbOAuthSdk({
+const oauth = new InstagramfbOAuthSdk({
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
   redirectUri: 'https://your-app.com/callback',
   scopes: [
-    InstagramFbScope.INSTAGRAM_BASIC,
-    InstagramFbScope.INSTAGRAM_CONTENT_PUBLISH,
-    InstagramFbScope.INSTAGRAM_MANAGE_COMMENTS,
-    InstagramFbScope.INSTAGRAM_MANAGE_INSIGHTS,
-    InstagramFbScope.PAGES_SHOW_LIST,
-    InstagramFbScope.PAGES_READ_ENGAGEMENT,
+    InstagramfbScope.INSTAGRAM_BASIC,
+    InstagramfbScope.INSTAGRAM_CONTENT_PUBLISH,
+    InstagramfbScope.INSTAGRAM_MANAGE_COMMENTS,
+    InstagramfbScope.INSTAGRAM_MANAGE_INSIGHTS,
+    InstagramfbScope.PAGES_SHOW_LIST,
+    InstagramfbScope.PAGES_READ_ENGAGEMENT,
   ],
 });
 ```
 
 ### Available Scopes
 
-The SDK provides the following scopes through the `InstagramFbScope` enum:
+The SDK provides the following scopes through the `InstagramfbScope` enum:
 
 - `INSTAGRAM_BASIC`: Access basic Instagram profile information
 - `INSTAGRAM_CONTENT_PUBLISH`: Publish content to Instagram
@@ -117,7 +117,7 @@ const businessAccount = await oauth.getInstagramAccount(accessToken);
 ### Constructor
 
 ```typescript
-new InstagramFbOAuthSdk(config: InstagramFbAuthConfig)
+new InstagramfbOAuthSdk(config: InstagramfbAuthConfig)
 ```
 
 #### Config Options

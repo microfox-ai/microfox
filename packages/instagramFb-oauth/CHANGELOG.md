@@ -1,4 +1,4 @@
-# @microfox/instagramFb-oauth
+# @microfox/instagramfb-oauth
 
 ## 1.0.1
 

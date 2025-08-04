@@ -1,22 +1,22 @@
 {
-  "name": "@microfox/instagramFb",
+  "name": "@microfox/instagramfb",
   "title": "Instagram FB",
   "description": "A TypeScript SDK for interacting with the Instagram Business API using OAuth 2.0. This package simplifies authentication and data access.",
-  "path": "packages/instagramFb",
-  "dependencies": ["@microfox/instagramFb-oauth", "zod"],
-  "addedDependencies": ["@microfox/instagramFb-oauth"],
+  "path": "packages/instagramfb",
+  "dependencies": ["@microfox/instagramfb-oauth", "zod"],
+  "addedDependencies": ["@microfox/instagramfb-oauth"],
   "authType": "oauth2",
   "status": "stable",
-  "authEndpoint": "/connect/instagramFb-oauth",
-  "documentation": "https://www.npmjs.com/package/@microfox/instagramFb",
+  "authEndpoint": "/connect/instagramfb-oauth",
+  "documentation": "https://www.npmjs.com/package/@microfox/instagramfb",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/facebook.svg",
   "constructors": [
     {
-      "name": "InstagramFbSdk",
+      "name": "InstagramfbSdk",
       "description": "Create a new Instagram FB client through which you can interact with the instagram business API",
       "auth": "oauth2",
-      "authSdk": "@microfox/instagramFb-oauth",
-      "authEndpoint": "/connect/instagramFb-oauth",
+      "authSdk": "@microfox/instagramfb-oauth",
+      "authEndpoint": "/connect/instagramfb-oauth",
       "requiredKeys": [
         {
           "key": "INSTAGRAMFB_ACCESS_TOKEN",

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { InstagramFbOAuthSdk, InstagramFbScope } from '@microfox/instagramFb-oauth';
+import { InstagramfbOAuthSdk, InstagramfbScope } from '@microfox/instagramfb-oauth';
 
 // Define Zod schemas for various data structures
 const CommentSchema = z.object({
@@ -63,8 +63,8 @@ const StatusCodeEnum = z.enum([
 ]);
 
 // Define the main SDK class
-export class InstagramFbSdk {
-  private oauth: InstagramFbOAuthSdk;
+export class InstagramfbSdk {
+  private oauth: InstagramfbOAuthSdk;
   private accessToken: string;
   private apiVersion: string;
 
@@ -75,17 +75,17 @@ export class InstagramFbSdk {
     accessToken: string;
     apiVersion?: string;
   }) {
-    this.oauth = new InstagramFbOAuthSdk({
+    this.oauth = new InstagramfbOAuthSdk({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
       redirectUri: config.redirectUri,
       scopes: [
-        InstagramFbScope.INSTAGRAM_BASIC,
-        InstagramFbScope.INSTAGRAM_CONTENT_PUBLISH,
-        InstagramFbScope.INSTAGRAM_MANAGE_COMMENTS,
-        InstagramFbScope.INSTAGRAM_MANAGE_INSIGHTS,
-        InstagramFbScope.PAGES_SHOW_LIST,
-        InstagramFbScope.PAGES_READ_ENGAGEMENT,
+        InstagramfbScope.INSTAGRAM_BASIC,
+        InstagramfbScope.INSTAGRAM_CONTENT_PUBLISH,
+        InstagramfbScope.INSTAGRAM_MANAGE_COMMENTS,
+        InstagramfbScope.INSTAGRAM_MANAGE_INSIGHTS,
+        InstagramfbScope.PAGES_SHOW_LIST,
+        InstagramfbScope.PAGES_READ_ENGAGEMENT,
       ],
     });
     this.accessToken = config.accessToken;
@@ -306,12 +306,12 @@ export type MediaType = z.infer<typeof MediaTypeEnum>;
 export type StatusCode = z.infer<typeof StatusCodeEnum>;
 
 // Function to create the SDK instance
-export function createInstagramFbSdk(config: {
+export function createInstagramfbSdk(config: {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
   accessToken: string;
   apiVersion?: string;
 }) {
-  return new InstagramFbSdk(config);
+  return new InstagramfbSdk(config);
 }

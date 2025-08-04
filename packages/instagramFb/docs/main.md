@@ -5,7 +5,7 @@ A TypeScript SDK for interacting with the Instagram API using OAuth 2.0. This pa
 ## Installation
 
 ```bash
-npm install @microfox/instagramFb
+npm install @microfox/instagramfb
 ```
 
 ## Environment Variables

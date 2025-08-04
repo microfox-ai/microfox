@@ -5,17 +5,17 @@ A TypeScript SDK for interacting with the Instagram API using OAuth 2.0. This pa
 ## Installation
 
 ```bash
-npm install @microfox/instagramFb
+npm install @microfox/instagramfb
 ```
 
 ## Environment Variables
 
 The following environment variables are used by this SDK:
 
-- `INSTAGRAM_CLIENT_ID`: Your Facebook App ID. Obtain this from your Facebook Developer account. (Required)
-- `INSTAGRAM_CLIENT_SECRET`: Your Facebook App Secret. Obtain this from your Facebook Developer account. (Required)
-- `INSTAGRAM_REDIRECT_URI`: Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization. (Required)
-- `INSTAGRAM_ACCESS_TOKEN`: A valid access token for the Instagram Graph API. Obtain this through the OAuth flow. (Required)
+- `INSTAGRAMFB_CLIENT_ID`: Your Facebook App ID. Obtain this from your Facebook Developer account. (Required)
+- `INSTAGRAMFB_CLIENT_SECRET`: Your Facebook App Secret. Obtain this from your Facebook Developer account. (Required)
+- `INSTAGRAMFB_REDIRECT_URI`: Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization. (Required)
+- `INSTAGRAMFB_ACCESS_TOKEN`: A valid access token for the Instagram Graph API. Obtain this through the OAuth flow. (Required)
 
 ## Additional Information
 
@@ -25,13 +25,13 @@ Visit https://developers.facebook.com/ to create your app and obtain the necessa
 
 Required environment variables:
 
-- INSTAGRAM_CLIENT_ID: Your Facebook App ID
+- INSTAGRAMFB_CLIENT_ID: Your Facebook App ID
 
-- INSTAGRAM_CLIENT_SECRET: Your Facebook App Secret
+- INSTAGRAMFB_CLIENT_SECRET: Your Facebook App Secret
 
-- INSTAGRAM_REDIRECT_URI: Your OAuth callback URL
+- INSTAGRAMFB_REDIRECT_URI: Your OAuth callback URL
 
-- INSTAGRAM_ACCESS_TOKEN: A valid access token for the Instagram Graph API
+- INSTAGRAMFB_ACCESS_TOKEN: A valid access token for the Instagram Graph API
 
 Make sure to configure the correct permissions and features for your app in the Facebook Developer Console.
 

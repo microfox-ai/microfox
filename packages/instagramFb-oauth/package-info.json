@@ -1,11 +1,11 @@
 {
-  "name": "@microfox/instagramFb-oauth",
+  "name": "@microfox/instagramfb-oauth",
   "title": "Instagram FB OAuth",
   "description": "TypeScript package simplifying Instagram FB OAuth 2.0, providing methods for authorization URL generation, token exchange, validation, and long-lived token conversion.",
-  "path": "packages/instagramFb-oauth",
+  "path": "packages/instagramfb-oauth",
   "status": "oauthConnector",
-  "authEndpoint": "/connect/instagramFb",
-  "documentation": "https://www.npmjs.com/package/@microfox/instagramFb-oauth",
+  "authEndpoint": "/connect/instagramfb",
+  "documentation": "https://www.npmjs.com/package/@microfox/instagramfb-oauth",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "dependencies": ["zod"],
   "devDependencies": [
@@ -16,11 +16,11 @@
   ],
   "constructors": [
     {
-      "name": "InstagramFbOAuthSdk",
+      "name": "InstagramfbOAuthSdk",
       "description": "Create a new Microfox Instagram FB OAuth client through which you can interact with the API",
       "auth": "oauth2",
-      "authSdk": "@microfox/instagramFb-oauth",
-      "authEndpoint": "/connect/instagramFb",
+      "authSdk": "@microfox/instagramfb-oauth",
+      "authEndpoint": "/connect/instagramfb",
       "requiredKeys": [],
       "internalKeys": [
         {
@@ -80,10 +80,10 @@
     "- INSTAGRAM_FB_REDIRECT_URI: The redirect URI you configured for your Instagram FB Business app",
     "",
     "To use this package:",
-    "1. Install the package: npm install @microfox/instagramFb-oauth",
+    "1. Install the package: npm install @microfox/instagramfb-oauth",
     "2. Import and initialize the SDK:",
-    "   import { createInstagramFbOAuth } from '@microfox/instagramFb-oauth';",
-    "   const instagramOAuth = createInstagramFbOAuth({",
+    "   import { createInstagramfbOAuth } from '@microfox/instagramfb-oauth';",
+    "   const instagramOAuth = createInstagramfbOAuth({",
     "     clientId: process.env.INSTAGRAM_FB_CLIENT_ID!,",
     "     clientSecret: process.env.INSTAGRAM_FB_CLIENT_SECRET!,",
     "     redirectUri: process.env.INSTAGRAM_FB_REDIRECT_URI!,",

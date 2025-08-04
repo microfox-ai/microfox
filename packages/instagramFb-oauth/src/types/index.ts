@@ -1,4 +1,4 @@
-export interface InstagramFbAuthConfig {
+export interface InstagramfbAuthConfig {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
@@ -6,7 +6,7 @@ export interface InstagramFbAuthConfig {
   state?: string;
 }
 
-export enum InstagramFbScope {
+export enum InstagramfbScope {
   INSTAGRAM_BASIC = 'instagram_basic',
   INSTAGRAM_CONTENT_PUBLISH = 'instagram_content_publish',
   INSTAGRAM_MANAGE_COMMENTS = 'instagram_manage_comments',

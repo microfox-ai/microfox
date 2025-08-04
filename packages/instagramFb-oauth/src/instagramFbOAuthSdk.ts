@@ -1,10 +1,10 @@
 import {
-  InstagramFbAuthConfig,
-  InstagramFbScope,
+  InstagramfbAuthConfig,
+  InstagramfbScope,
 } from './types';
 import { tokenResponseSchema, errorResponseSchema } from './schemas/index';
 
-export class InstagramFbOAuthSdk {
+export class InstagramfbOAuthSdk {
   private static readonly AUTH_BASE_URL =
     'https://www.facebook.com/v23.0/dialog/oauth';
   private static readonly TOKEN_URL =
@@ -21,10 +21,10 @@ export class InstagramFbOAuthSdk {
   private state: string;
 
   /**
-   * Creates a new InstagramFbOAuthSdk instance
+   * Creates a new InstagramfbOAuthSdk instance
    * @param config The configuration object for Instagram FB Business OAuth
    */
-  constructor(config: InstagramFbAuthConfig) {
+  constructor(config: InstagramfbAuthConfig) {
     if (!config.clientId) throw new Error('Client ID is required');
     if (!config.clientSecret) throw new Error('Client Secret is required');
     if (!config.redirectUri) throw new Error('Redirect URI is required');
@@ -57,7 +57,7 @@ export class InstagramFbOAuthSdk {
       display: 'page',
     });
 
-    return `${InstagramFbOAuthSdk.AUTH_BASE_URL}?${authSearchParams.toString()}`;
+    return `${InstagramfbOAuthSdk.AUTH_BASE_URL}?${authSearchParams.toString()}`;
   }
 
   /**
@@ -80,7 +80,7 @@ export class InstagramFbOAuthSdk {
       grant_type: 'authorization_code',
     });
 
-    const response = await fetch(InstagramFbOAuthSdk.TOKEN_URL, {
+    const response = await fetch(InstagramfbOAuthSdk.TOKEN_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -130,7 +130,7 @@ export class InstagramFbOAuthSdk {
     });
 
     const response = await fetch(
-      `${InstagramFbOAuthSdk.LONG_LIVED_TOKEN_URL}?${params.toString()}`,
+      `${InstagramfbOAuthSdk.LONG_LIVED_TOKEN_URL}?${params.toString()}`,
       {
         method: 'GET',
         headers: {
@@ -169,7 +169,7 @@ export class InstagramFbOAuthSdk {
     instagramAccountId: string;
   }> {
     const response = await fetch(
-      `${InstagramFbOAuthSdk.ME_URL}?fields=id,name,access_token,instagram_business_account&access_token=${accessToken}`,
+      `${InstagramfbOAuthSdk.ME_URL}?fields=id,name,access_token,instagram_business_account&access_token=${accessToken}`,
     );
 
     const data = await response.json();
@@ -201,6 +201,6 @@ export class InstagramFbOAuthSdk {
   }
 }
 
-export function createInstagramFbOAuth(config: InstagramFbAuthConfig): InstagramFbOAuthSdk {
-  return new InstagramFbOAuthSdk(config);
+export function createInstagramfbOAuth(config: InstagramfbAuthConfig): InstagramfbOAuthSdk {
+  return new InstagramfbOAuthSdk(config);
 }
