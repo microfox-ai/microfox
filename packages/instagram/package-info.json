@@ -1,6 +1,6 @@
 {
   "name": "@microfox/instagram",
-  "title": "Instagram SDK",
+  "title": "Instagram",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
   "dependencies": ["@microfox/instagram-oauth", "zod"],
@@ -39,11 +39,6 @@
           "key": "INSTAGRAM_CLIENT_SECRET",
           "displayName": "Instagram Client Secret",
           "description": "Your Instagram app's Client Secret. Obtain this from your app's settings on the Facebook Developer platform. Keep this value secure."
-        },
-        {
-          "key": "INSTAGRAM_REDIRECT_URI",
-          "displayName": "Instagram Redirect URI",
-          "description": "The OAuth redirect URI configured for your app on the Facebook Developer platform. This URI must match the one used during the OAuth flow."
         },
         {
           "key": "INSTAGRAM_ACCESS_TOKEN",

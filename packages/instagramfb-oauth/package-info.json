@@ -36,12 +36,6 @@
           "required": true
         },
         {
-          "key": "INSTAGRAMFB_REDIRECT_URI",
-          "displayName": "Instagram FB Redirect URI",
-          "description": "The redirect URI you configured for your Instagram FB app.",
-          "required": true
-        },
-        {
           "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram FB Access Token",
           "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."

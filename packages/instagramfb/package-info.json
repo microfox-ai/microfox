@@ -41,11 +41,6 @@
           "description": "Your Facebook App Secret. Obtain this from your Facebook Developer account."
         },
         {
-          "key": "INSTAGRAMFB_REDIRECT_URI",
-          "displayName": "Instagram Redirect URI",
-          "description": "Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization."
-        },
-        {
           "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram Access Token",
           "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
