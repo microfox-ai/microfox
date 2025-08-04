@@ -13,7 +13,7 @@
   "constructors": [
     {
       "name": "InstagramSDK",
-      "description": "Create a new Microfox Instagram SDK client through which you can interact with the API",
+      "description": "Create a new Microfox Instagram SDK client through which you can interact with the Instagram Graph API",
       "auth": "oauth2",
       "authSdk": "@microfox/instagram-oauth",
       "authEndpoint": "/connect/instagram-oauth",
