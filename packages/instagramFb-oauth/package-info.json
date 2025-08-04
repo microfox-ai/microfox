@@ -24,22 +24,32 @@
       "requiredKeys": [],
       "internalKeys": [
         {
-          "key": "INSTAGRAM_FB_CLIENT_ID",
+          "key": "INSTAGRAMFB_CLIENT_ID",
           "displayName": "Instagram FB Client ID",
           "description": "Your Instagram FB app's Client ID.",
           "required": true
         },
         {
-          "key": "INSTAGRAM_FB_CLIENT_SECRET",
+          "key": "INSTAGRAMFB_CLIENT_SECRET",
           "displayName": "Instagram FB Client Secret",
           "description": "Your Instagram FB app's Client Secret.",
           "required": true
         },
         {
-          "key": "INSTAGRAM_FB_REDIRECT_URI",
+          "key": "INSTAGRAMFB_REDIRECT_URI",
           "displayName": "Instagram FB Redirect URI",
           "description": "The redirect URI you configured for your Instagram FB app.",
           "required": true
+        },
+        {
+          "key": "INSTAGRAMFB_ACCESS_TOKEN",
+          "displayName": "Instagram FB Access Token",
+          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
+        },
+        {
+          "key": "INSTAGRAMFB_REFRESH_TOKEN",
+          "displayName": "Instagram FB Refresh Token",
+          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
         },
         {
           "key": "SCOPES",

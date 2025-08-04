@@ -31,24 +31,29 @@
       ],
       "internalKeys": [
         {
-          "key": "INSTAGRAM_CLIENT_ID",
+          "key": "INSTAGRAMFB_CLIENT_ID",
           "displayName": "Instagram Client ID",
           "description": "Your Facebook App ID. Obtain this from your Facebook Developer account."
         },
         {
-          "key": "INSTAGRAM_CLIENT_SECRET",
+          "key": "INSTAGRAMFB_CLIENT_SECRET",
           "displayName": "Instagram Client Secret",
           "description": "Your Facebook App Secret. Obtain this from your Facebook Developer account."
         },
         {
-          "key": "INSTAGRAM_REDIRECT_URI",
+          "key": "INSTAGRAMFB_REDIRECT_URI",
           "displayName": "Instagram Redirect URI",
           "description": "Your OAuth callback URL. This is the URL where Facebook will redirect the user after authorization."
         },
         {
-          "key": "INSTAGRAM_ACCESS_TOKEN",
+          "key": "INSTAGRAMFB_ACCESS_TOKEN",
           "displayName": "Instagram Access Token",
-          "description": "A valid access token for the Instagram Graph API. Obtain this through the OAuth flow."
+          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
+        },
+        {
+          "key": "INSTAGRAMFB_REFRESH_TOKEN",
+          "displayName": "Instagram Refresh Token",
+          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
         }
       ],
       "functionalities": [

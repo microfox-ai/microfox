@@ -54,5 +54,9 @@
   {
     "name": "pages_read_user_content",
     "description": "Read user content on Facebook pages"
+  },
+  {
+    "name": "pages_user_gender",
+    "description": "Read the gender of the user who has liked your Facebook page"
   }
 ]
