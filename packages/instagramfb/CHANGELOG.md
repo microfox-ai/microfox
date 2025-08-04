@@ -1,5 +1,13 @@
 # @microfox/instagramfb
 
+## 1.3.2
+
+### Patch Changes
+
+- 9fdbbb4: rename package
+- Updated dependencies [9fdbbb4]
+  - @microfox/instagramfb-oauth@1.0.1
+
 ## 1.3.1
 
 ### Patch Changes

@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- 9fdbbb4: rename package
+
+## 1.0.1
+
+### Patch Changes
+
 - 9b26126: minor fox
 
 ## 1.2.0
