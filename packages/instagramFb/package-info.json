@@ -54,6 +54,12 @@
           "key": "INSTAGRAMFB_REFRESH_TOKEN",
           "displayName": "Instagram Refresh Token",
           "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+        },
+        {
+          "key": "SCOPES",
+          "displayName": "Instagram FB Scopes",
+          "description": "The scopes for your Instagram FB app.",
+          "required": true
         }
       ],
       "functionalities": [
