@@ -6,13 +6,13 @@ import { tokenResponseSchema, errorResponseSchema } from './schemas/index';
 
 export class InstagramFbOAuthSdk {
   private static readonly AUTH_BASE_URL =
-    'https://www.facebook.com/v22.0/dialog/oauth';
+    'https://www.facebook.com/v23.0/dialog/oauth';
   private static readonly TOKEN_URL =
-    'https://graph.facebook.com/v22.0/oauth/access_token';
+    'https://graph.facebook.com/v23.0/oauth/access_token';
   private static readonly LONG_LIVED_TOKEN_URL =
-    'https://graph.facebook.com/v22.0/oauth/access_token';
+    'https://graph.facebook.com/v23.0/oauth/access_token';
   private static readonly ME_URL =
-    'https://graph.facebook.com/v22.0/me/accounts';
+    'https://graph.facebook.com/v23.0/me/accounts';
   
   private readonly clientId: string;
   private readonly clientSecret: string;
@@ -55,7 +55,6 @@ export class InstagramFbOAuthSdk {
       scope: this.scopes.join(','),
       response_type: 'code',
       display: 'page',
-      extras: JSON.stringify({ setup: { channel: 'IG_API_ONBOARDING' } }),
     });
 
     return `${InstagramFbOAuthSdk.AUTH_BASE_URL}?${authSearchParams.toString()}`;
