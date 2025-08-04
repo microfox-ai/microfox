@@ -37,13 +37,8 @@
         },
         {
           "key": "INSTAGRAMFB_ACCESS_TOKEN",
-          "displayName": "Instagram FB Access Token",
-          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
-        },
-        {
-          "key": "INSTAGRAMFB_REFRESH_TOKEN",
-          "displayName": "Instagram FB Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+          "displayName": "Instagram FB Long-Lived Access Token",
+          "description": "The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests."
         },
         {
           "key": "SCOPES",
@@ -85,17 +80,18 @@
     "   });",
     "3. Generate the authorization URL:",
     "   const authUrl = instagramOAuth.getAuthUrl();",
-    "4. After the user authorizes, exchange the code for a token:",
+    "4. After the user authorizes, exchange the code for a long-lived token:",
     "   const tokenResponse = await instagramOAuth.exchangeCodeForTokens(code);",
-    "   // This automatically includes both access token and refresh token (long-lived token)",
+    "   // This automatically converts short-lived tokens to long-lived tokens (valid for 60 days)",
     "",
     "Important notes:",
-    "- Instagram FB Business tokens have expiration times. The exchangeCodeForTokens method automatically converts short-lived tokens to long-lived tokens.",
+    "- Instagram FB OAuth uses long-lived access tokens (valid for 60 days) instead of refresh tokens.",
+    "- The exchangeCodeForTokens method automatically converts short-lived tokens to long-lived tokens.",
     "- Store tokens securely and never expose them in client-side code.",
     "- Respect Instagram's rate limits and API guidelines.",
     "- The 'state' parameter in getAuthUrl is optional but recommended for CSRF protection.",
     "- Ensure your app has the necessary permissions for Instagram Business API access.",
-    "- Long-lived tokens can be refreshed using the refresh token mechanism."
+    "- Long-lived tokens can be refreshed using the refreshToken method to extend their validity."
   ],
   "keyInstructions": {
     "link": "https://developers.facebook.com/docs/instagram-basic-display-api/getting-started"

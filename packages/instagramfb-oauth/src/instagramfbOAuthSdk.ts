@@ -61,14 +61,13 @@ export class InstagramfbOAuthSdk {
   }
 
   /**
-   * Exchanges an authorization code for access tokens
+   * Exchanges an authorization code for a long-lived access token
    * @param code The authorization code received from Instagram's OAuth callback
-   * @returns A promise that resolves to the token response containing access_token and refresh_token
+   * @returns A promise that resolves to the token response containing long-lived access_token
    * @throws Error if the token exchange fails
    */
   public async exchangeCodeForTokens(code: string): Promise<{
     accessToken: string;
-    refreshToken: string;
     expiresIn: number;
     dataAccessExpirationTime: number | null;
   }> {
@@ -99,13 +98,12 @@ export class InstagramfbOAuthSdk {
 
     const tokenResponse = tokenResponseSchema.parse(data);
     
-    // Automatically get long-lived token as refresh token
+    // Automatically get long-lived token
     const longLivedTokenResponse = await this.getLongLivedToken(tokenResponse.access_token);
     
     return {
-      accessToken: tokenResponse.access_token,
-      refreshToken: longLivedTokenResponse.accessToken,
-      expiresIn: tokenResponse.expires_in,
+      accessToken: longLivedTokenResponse.accessToken,
+      expiresIn: longLivedTokenResponse.expiresIn,
       dataAccessExpirationTime:
         tokenResponse.data_access_expiration_time || null,
     };
