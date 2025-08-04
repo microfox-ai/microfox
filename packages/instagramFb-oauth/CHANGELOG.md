@@ -1,5 +1,11 @@
 # @microfox/instagramFb-oauth
 
+## 1.0.1
+
+### Patch Changes
+
+- 9b26126: minor fox
+
 ## 1.2.0
 
 ### Minor Changes
