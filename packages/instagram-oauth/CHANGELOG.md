@@ -1,5 +1,11 @@
 # @microfox/instagram-oauth
 
+## 1.0.3
+
+### Patch Changes
+
+- 3909761: patch fixes
+
 ## 1.0.2
 
 ### Patch Changes
