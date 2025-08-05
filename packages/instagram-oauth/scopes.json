@@ -14,5 +14,9 @@
   {
     "name": "instagram_business_manage_comments",
     "description": "Manage comments on Instagram Business posts"
+  },
+  {
+    "name": "instagram_business_manage_insights",
+    "description": "Access Instagram Business insights and analytics"
   }
-] 
+]
