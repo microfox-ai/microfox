@@ -16,6 +16,7 @@ import {
 } from './helpers/github';
 import { Identity } from './schemas';
 import { convertWhatsappUserToIdentity } from './helpers/whatsapp';
+import { convertInstagramIdentityToIdentity, getInstagramIdentityInfo } from './helpers/instagram';
 
 type ProviderConfig = {
   clientId: string;
@@ -23,7 +24,7 @@ type ProviderConfig = {
   redirectUri: string;
 };
 
-export const SupportedProviders = ['google', 'slack', 'reddit', 'github', 'whatsapp'] as const;
+export const SupportedProviders = ['google', 'slack', 'reddit', 'github', 'whatsapp', 'instagram'] as const;
 
 export class OauthKit {
   constructor() { }
@@ -70,6 +71,17 @@ export class OauthKit {
           const identityInfo = await getGitHubIdentityInfo(tokenResponse);
           console.log('identityInfo', identityInfo);
           return convertGitHubIdentityToIdentity(identityInfo);
+        } catch (error) {
+          throw new Error(
+            `Failed to exchange token response for identity: ${error}`,
+          );
+        }
+      }
+      case "instagram": {
+        try {
+          const identityInfo = await getInstagramIdentityInfo(tokenResponse);
+          console.log('identityInfo', identityInfo);
+          return convertInstagramIdentityToIdentity(identityInfo);
         } catch (error) {
           throw new Error(
             `Failed to exchange token response for identity: ${error}`,
