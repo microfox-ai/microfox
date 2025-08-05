@@ -1,5 +1,11 @@
 # @microfox/oauth-kit
 
+## 1.1.4
+
+### Patch Changes
+
+- 3909761: patch fixes
+
 ## 1.1.3
 
 ### Patch Changes
