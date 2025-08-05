@@ -590,41 +590,6 @@ class InstagramSDK {
     );
   }
 
-  async uploadVideo(
-    containerId: string,
-    videoFile: File,
-    offset: number,
-  ): Promise<any> {
-    await this.ensureValidToken();
-
-    const url = `https://rupload.facebook.com/ig-api-upload/${containerId}`;
-    const headers = {
-      Authorization: `Bearer ${this.accessToken}`,
-      offset: offset.toString(),
-      file_size: videoFile.size.toString(),
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: videoFile,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Video upload error: ${errorData.error.message}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Video upload failed: ${error.message}`);
-      }
-      throw new Error('An unknown error occurred during video upload');
-    }
-  }
-
   async getComments(mediaId: string): Promise<any> {
     return await this.makeRequest(`/${mediaId}/comments`, 'GET');
   }
