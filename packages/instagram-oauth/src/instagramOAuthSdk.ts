@@ -1,4 +1,4 @@
-import { InstagramAuthConfig, InstagramScope } from './types';
+import { InstagramAuthConfig } from './types';
 import { tokenResponseSchema, errorResponseSchema } from './schemas/index';
 
 export class InstagramOAuthSdk {
@@ -28,12 +28,7 @@ export class InstagramOAuthSdk {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
     this.redirectUri = config.redirectUri;
-    this.scopes = Array.from(
-      new Set([
-        ...(config.scopes || []),
-        InstagramScope.INSTAGRAM_BUSINESS_BASIC,
-      ]),
-    );
+    this.scopes = config.scopes || [];
     this.state = config.state || this.generateState();
   }
 
