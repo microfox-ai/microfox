@@ -8,15 +8,13 @@ A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.
 npm install @microfox/instagram
 ```
 
-## Environment Variables
-
-The following environment variables are used by this SDK:
+### Required Environment Variables:
 
 - `INSTAGRAM_CLIENT_ID`: Your Instagram app's Client ID. Obtain this from your app's settings on the Facebook Developer platform. (Required)
 - `INSTAGRAM_CLIENT_SECRET`: Your Instagram app's Client Secret. Obtain this from your app's settings on the Facebook Developer platform. Keep this value secure. (Required)
 - `INSTAGRAM_REDIRECT_URI`: The OAuth redirect URI configured for your app on the Facebook Developer platform. This URI must match the one used during the OAuth flow. (Required)
-- `INSTAGRAM_ACCESS_TOKEN`: The user's access token obtained through the OAuth flow. This token is used to authenticate API requests. (Required)
-- `INSTAGRAM_REFRESH_TOKEN`: The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires. (Required)
+- `INSTAGRAM_ACCESS_TOKEN`: The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests. (Required)
+
 
 ## Additional Information
 
@@ -42,13 +40,11 @@ Environment variables:
 
 - INSTAGRAM_REDIRECT_URI: The OAuth redirect URI for your app
 
-- INSTAGRAM_ACCESS_TOKEN: The user's access token (obtained through OAuth flow)
-
-- INSTAGRAM_REFRESH_TOKEN: The user's refresh token (obtained through OAuth flow)
+- INSTAGRAM_ACCESS_TOKEN: The user's long-lived access token (obtained through OAuth flow, valid for 60 days)
 
 Authentication:
 
-This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the initial access token and refresh token. The SDK handles token refreshing automatically.
+This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the long-lived access token. The SDK automatically converts short-lived tokens to long-lived tokens (valid for 60 days).
 
 Rate Limits:
 
