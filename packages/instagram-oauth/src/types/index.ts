@@ -11,6 +11,7 @@ export enum InstagramScope {
   INSTAGRAM_BUSINESS_CONTENT_PUBLISH = 'instagram_business_content_publish',
   INSTAGRAM_BUSINESS_MANAGE_MESSAGES = 'instagram_business_manage_messages',
   INSTAGRAM_BUSINESS_MANAGE_COMMENTS = 'instagram_business_manage_comments',
+  INSTAGRAM_BUSINESS_MANAGE_INSIGHTS = 'instagram_business_manage_insights',
 }
 
 export interface TokenResponse {
