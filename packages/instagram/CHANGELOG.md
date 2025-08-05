@@ -1,5 +1,11 @@
 # @microfox/instagram
 
+## 1.3.3
+
+### Patch Changes
+
+- 438189f: added more functionalities
+
 ## 1.3.2
 
 ### Patch Changes
