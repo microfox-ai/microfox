@@ -91,6 +91,120 @@ const InstagramOEmbedSchema = z
   })
   .describe('Schema for retrieving oEmbed data for an Instagram post');
 
+// New schemas for Welcome Message Flows
+const InstagramQuickReplySchema = z.object({
+  content_type: z.literal('text').describe('Type of quick reply (currently only text is supported)'),
+  title: z.string().describe('Text shown in the quick reply button'),
+  payload: z.string().describe('Content sent via webhook when this quick reply is selected'),
+});
+
+const InstagramWelcomeMessageSchema = z.object({
+  text: z.string().describe('The welcome message text'),
+  quick_replies: z.array(InstagramQuickReplySchema).optional().describe('Array of quick reply options'),
+});
+
+const InstagramWelcomeMessageFlowSchema = z.object({
+  eligible_platforms: z.array(z.literal('instagram')).describe('Platforms where the welcome message can be shown (only Instagram is supported)'),
+  name: z.string().describe('Name of the welcome message flow'),
+  welcome_message_flow: z.array(z.object({
+    message: InstagramWelcomeMessageSchema,
+  })).describe('Array of message objects containing the welcome message and quick replies'),
+});
+
+const InstagramWelcomeMessageFlowUpdateSchema = z.object({
+  flow_id: z.string().describe('ID of the flow to update'),
+  name: z.string().optional().describe('New name for the flow'),
+  welcome_message: z.any().optional().describe('Updated welcome message content'),
+  platforms: z.array(z.string()).optional().describe('Updated eligible platforms'),
+});
+
+// Enhanced Insights schemas
+const InstagramInsightsMetricSchema = z.enum([
+  'reach',
+  'follower_count',
+  'website_clicks',
+  'profile_views',
+  'online_followers',
+  'accounts_engaged',
+  'total_interactions',
+  'likes',
+  'comments',
+  'shares',
+  'saves',
+  'replies',
+  'engaged_audience_demographics',
+  'reached_audience_demographics',
+  'follower_demographics',
+  'follows_and_unfollows',
+  'profile_links_taps',
+  'views',
+  'threads_likes',
+  'threads_replies',
+  'reposts',
+  'quotes',
+  'threads_followers',
+  'threads_follower_demographics',
+  'content_views',
+  'threads_views',
+  'threads_clicks',
+]).describe('Available Instagram insights metrics (updated to match current API)');
+
+const InstagramEnhancedInsightsSchema = z.object({
+  metric: z.array(InstagramInsightsMetricSchema).describe('Array of metric names to retrieve'),
+  period: z.enum(['day', 'week', 'days_28', 'lifetime']).describe('Time period for the metrics'),
+  since: z.string().optional().describe('Start date for the insights period (YYYY-MM-DD)'),
+  until: z.string().optional().describe('End date for the insights period (YYYY-MM-DD)'),
+}).describe('Enhanced schema for retrieving Instagram insights with date ranges');
+
+// Mentions API schemas
+const InstagramMentionReplySchema = z.object({
+  media_id: z.string().optional().describe('ID of the media where the mention occurred'),
+  comment_id: z.string().optional().describe('ID of the comment where the mention occurred'),
+  message: z.string().describe('Reply message to the mention'),
+}).refine((data) => {
+  // Either media_id or comment_id must be provided
+  return data.media_id || data.comment_id;
+}, {
+  message: "Either media_id or comment_id must be provided",
+  path: [],
+}).describe('Schema for replying to Instagram mentions');
+
+const InstagramMentionFiltersSchema = z.object({
+  limit: z.number().optional().describe('Number of mentions to retrieve'),
+  after: z.string().optional().describe('Cursor for pagination'),
+  before: z.string().optional().describe('Cursor for pagination'),
+}).describe('Schema for filtering mentions');
+
+// Conversations API schemas
+const InstagramConversationFiltersSchema = z.object({
+  platform: z.literal('instagram').optional().describe('Platform filter (only Instagram is supported)'),
+  user_id: z.string().optional().describe('Instagram-scoped ID for specific user conversation'),
+  limit: z.number().optional().describe('Number of conversations to retrieve'),
+  after: z.string().optional().describe('Cursor for pagination'),
+  before: z.string().optional().describe('Cursor for pagination'),
+}).describe('Schema for filtering conversations');
+
+const InstagramMessageFieldsSchema = z.object({
+  fields: z.array(z.enum([
+    'id',
+    'created_time',
+    'from',
+    'to',
+    'message',
+    'to',
+    'from',
+    'message'
+  ])).optional().describe('Fields to retrieve for messages'),
+}).describe('Schema for message field selection');
+
+const InstagramConversationFieldsSchema = z.object({
+  fields: z.array(z.enum([
+    'id',
+    'updated_time',
+    'messages'
+  ])).optional().describe('Fields to retrieve for conversations'),
+}).describe('Schema for conversation field selection');
+
 class InstagramSDK {
   private accessToken: string;
   private baseUrl = 'https://graph.instagram.com';
@@ -117,6 +231,7 @@ class InstagramSDK {
         InstagramScope.INSTAGRAM_BUSINESS_CONTENT_PUBLISH,
         InstagramScope.INSTAGRAM_BUSINESS_MANAGE_MESSAGES,
         InstagramScope.INSTAGRAM_BUSINESS_MANAGE_COMMENTS,
+        InstagramScope.INSTAGRAM_BUSINESS_MANAGE_INSIGHTS,
       ],
     });
   }
@@ -617,6 +732,449 @@ class InstagramSDK {
       'GET',
     );
   }
+
+  // Welcome Message Flows Methods
+  /**
+   * Creates a new welcome message flow for Instagram ads
+   * @param flowData The welcome message flow configuration
+   * @returns Promise that resolves to the created flow ID
+   */
+  async createWelcomeMessageFlow(
+    flowData: z.infer<typeof InstagramWelcomeMessageFlowSchema>,
+  ): Promise<{ flow_id: string }> {
+    const validatedData = InstagramWelcomeMessageFlowSchema.parse(flowData);
+    return await this.makeRequest('/me/welcome_message_flows', 'POST', validatedData);
+  }
+
+  /**
+   * Gets all welcome message flows for the authenticated user
+   * @param limit Optional limit on the number of flows to return
+   * @returns Promise that resolves to an array of welcome message flows
+   */
+  async getWelcomeMessageFlows(limit?: number): Promise<any[]> {
+    const queryParams = limit ? `?limit=${limit}` : '';
+    return await this.makeRequest(`/me/welcome_message_flows${queryParams}`, 'GET');
+  }
+
+  /**
+   * Gets a specific welcome message flow by ID
+   * @param flowId The ID of the flow to retrieve
+   * @returns Promise that resolves to the welcome message flow details
+   */
+  async getWelcomeMessageFlow(flowId: string): Promise<any> {
+    return await this.makeRequest(`/me/welcome_message_flows?flow_id=${flowId}`, 'GET');
+  }
+
+  /**
+   * Updates an existing welcome message flow
+   * @param flowId The ID of the flow to update
+   * @param updates The updates to apply to the flow
+   * @returns Promise that resolves to success status
+   */
+  async updateWelcomeMessageFlow(
+    flowId: string,
+    updates: Partial<{
+      name: string;
+      welcome_message: any;
+      platforms: string[];
+    }>,
+  ): Promise<{ success: boolean }> {
+    const updateData = {
+      flow_id: flowId,
+      ...updates,
+    };
+    return await this.makeRequest('/me/welcome_message_flows', 'POST', updateData);
+  }
+
+  /**
+   * Deletes a welcome message flow
+   * @param flowId The ID of the flow to delete
+   * @returns Promise that resolves to success status
+   */
+  async deleteWelcomeMessageFlow(flowId: string): Promise<{ success: boolean }> {
+    return await this.makeRequest('/me/welcome_message_flows', 'DELETE', {
+      flow_id: flowId,
+    });
+  }
+
+  // Enhanced Insights Methods
+  /**
+   * Gets enhanced insights for media with date ranges and more metrics
+   * @param mediaId The ID of the media to get insights for
+   * @param insightsData Enhanced insights configuration with date ranges
+   * @returns Promise that resolves to enhanced insights data
+   */
+  async getEnhancedMediaInsights(
+    mediaId: string,
+    insightsData: z.infer<typeof InstagramEnhancedInsightsSchema>,
+  ): Promise<any> {
+    const validatedData = InstagramEnhancedInsightsSchema.parse(insightsData);
+    const queryParams = new URLSearchParams({
+      metric: validatedData.metric.join(','),
+      period: validatedData.period,
+      ...(validatedData.since && { since: validatedData.since }),
+      ...(validatedData.until && { until: validatedData.until }),
+    }).toString();
+    return await this.makeRequest(`/${mediaId}/insights?${queryParams}`, 'GET');
+  }
+
+  /**
+   * Gets enhanced insights for account with date ranges and more metrics
+   * @param accountId The ID of the account to get insights for
+   * @param insightsData Enhanced insights configuration with date ranges
+   * @returns Promise that resolves to enhanced insights data
+   */
+  async getEnhancedAccountInsights(
+    accountId: string,
+    insightsData: z.infer<typeof InstagramEnhancedInsightsSchema>,
+  ): Promise<any> {
+    const validatedData = InstagramEnhancedInsightsSchema.parse(insightsData);
+    const queryParams = new URLSearchParams({
+      metric: validatedData.metric.join(','),
+      period: validatedData.period,
+      ...(validatedData.since && { since: validatedData.since }),
+      ...(validatedData.until && { until: validatedData.until }),
+    }).toString();
+    return await this.makeRequest(`/${accountId}/insights?${queryParams}`, 'GET');
+  }
+
+  /**
+   * Gets available insights metrics for the authenticated account
+   * @param accountId The ID of the account
+   * @returns Promise that resolves to available metrics
+   */
+  async getAvailableInsightsMetrics(accountId: string): Promise<any> {
+    return await this.makeRequest(`/${accountId}/insights?metric=reach&period=day`, 'GET');
+  }
+
+  // Mentions API Methods
+  /**
+   * Gets media objects where the Instagram Business account has been tagged or @mentioned
+   * @param accountId The Instagram Business account ID
+   * @param filters Optional filters for pagination and limiting results
+   * @returns Promise that resolves to mentions data
+   */
+  async getMentions(
+    accountId: string,
+    filters?: z.infer<typeof InstagramMentionFiltersSchema>,
+  ): Promise<any> {
+    const queryParams = new URLSearchParams();
+    
+    if (filters) {
+      const validatedFilters = InstagramMentionFiltersSchema.parse(filters);
+      if (validatedFilters.limit) {
+        queryParams.append('limit', validatedFilters.limit.toString());
+      }
+      if (validatedFilters.after) {
+        queryParams.append('after', validatedFilters.after);
+      }
+      if (validatedFilters.before) {
+        queryParams.append('before', validatedFilters.before);
+      }
+    }
+
+    const endpoint = `/${accountId}/tags${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Replies to a mention in a comment or media caption
+   * @param accountId The Instagram Business account ID
+   * @param replyData The reply data including message and target (media_id or comment_id)
+   * @returns Promise that resolves to the reply result
+   */
+  async replyToMention(
+    accountId: string,
+    replyData: z.infer<typeof InstagramMentionReplySchema>,
+  ): Promise<any> {
+    const validatedData = InstagramMentionReplySchema.parse(replyData);
+    return await this.makeRequest(`/${accountId}/mentions`, 'POST', validatedData);
+  }
+
+  /**
+   * Gets detailed information about a specific mention
+   * @param accountId The Instagram Business account ID
+   * @param mediaId The ID of the media where the mention occurred
+   * @returns Promise that resolves to detailed mention information
+   */
+  async getMentionDetails(accountId: string, mediaId: string): Promise<any> {
+    return await this.makeRequest(`/${mediaId}?fields=id,caption,media_type,media_url,permalink,timestamp,username`, 'GET');
+  }
+
+  /**
+   * Gets all mentions for the authenticated account with pagination
+   * @param accountId The Instagram Business account ID
+   * @param options Optional parameters for pagination and filtering
+   * @returns Promise that resolves to all mentions with pagination info
+   */
+  async getAllMentions(
+    accountId: string,
+    options?: {
+      limit?: number;
+      after?: string;
+      before?: string;
+    },
+  ): Promise<{
+    data: any[];
+    paging?: {
+      cursors?: {
+        before?: string;
+        after?: string;
+      };
+      next?: string;
+      previous?: string;
+    };
+  }> {
+    const filters: z.infer<typeof InstagramMentionFiltersSchema> = {};
+    
+    if (options?.limit) filters.limit = options.limit;
+    if (options?.after) filters.after = options.after;
+    if (options?.before) filters.before = options.before;
+
+    return await this.getMentions(accountId, filters);
+  }
+
+  // Conversations API Methods
+  /**
+   * Gets a list of conversations for the Instagram professional account
+   * @param accountId The Instagram professional account ID
+   * @param filters Optional filters for platform, user_id, and pagination
+   * @returns Promise that resolves to conversations data
+   */
+  async getConversations(
+    accountId: string,
+    filters?: z.infer<typeof InstagramConversationFiltersSchema>,
+  ): Promise<{
+    data: Array<{
+      id: string;
+      updated_time: string;
+    }>;
+  }> {
+    const queryParams = new URLSearchParams();
+    
+    if (filters) {
+      const validatedFilters = InstagramConversationFiltersSchema.parse(filters);
+      if (validatedFilters.platform) {
+        queryParams.append('platform', validatedFilters.platform);
+      }
+      if (validatedFilters.user_id) {
+        queryParams.append('user_id', validatedFilters.user_id);
+      }
+      if (validatedFilters.limit) {
+        queryParams.append('limit', validatedFilters.limit.toString());
+      }
+      if (validatedFilters.after) {
+        queryParams.append('after', validatedFilters.after);
+      }
+      if (validatedFilters.before) {
+        queryParams.append('before', validatedFilters.before);
+      }
+    }
+
+    const endpoint = `/${accountId}/conversations${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Gets conversations for the authenticated user (using /me endpoint)
+   * @param filters Optional filters for platform, user_id, and pagination
+   * @returns Promise that resolves to conversations data
+   */
+  async getMyConversations(
+    filters?: z.infer<typeof InstagramConversationFiltersSchema>,
+  ): Promise<{
+    data: Array<{
+      id: string;
+      updated_time: string;
+    }>;
+  }> {
+    const queryParams = new URLSearchParams();
+    
+    if (filters) {
+      const validatedFilters = InstagramConversationFiltersSchema.parse(filters);
+      if (validatedFilters.platform) {
+        queryParams.append('platform', validatedFilters.platform);
+      }
+      if (validatedFilters.user_id) {
+        queryParams.append('user_id', validatedFilters.user_id);
+      }
+      if (validatedFilters.limit) {
+        queryParams.append('limit', validatedFilters.limit.toString());
+      }
+      if (validatedFilters.after) {
+        queryParams.append('after', validatedFilters.after);
+      }
+      if (validatedFilters.before) {
+        queryParams.append('before', validatedFilters.before);
+      }
+    }
+
+    const endpoint = `/me/conversations${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Gets a conversation with a specific user
+   * @param accountId The Instagram professional account ID
+   * @param userId The Instagram-scoped ID for the specific user
+   * @returns Promise that resolves to the conversation data
+   */
+  async getConversationWithUser(
+    accountId: string,
+    userId: string,
+  ): Promise<{
+    data: Array<{
+      id: string;
+    }>;
+  }> {
+    const queryParams = new URLSearchParams({
+      user_id: userId,
+    });
+
+    const endpoint = `/${accountId}/conversations?${queryParams.toString()}`;
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Gets messages in a specific conversation
+   * @param conversationId The conversation ID
+   * @returns Promise that resolves to messages data
+   */
+  async getConversationMessages(conversationId: string): Promise<{
+    messages: {
+      data: Array<{
+        id: string;
+        created_time: string;
+      }>;
+    };
+    id: string;
+  }> {
+    const endpoint = `/${conversationId}?fields=messages`;
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Gets detailed information about a specific message
+   * @param messageId The message ID
+   * @param fields Optional array of fields to retrieve
+   * @returns Promise that resolves to detailed message information
+   */
+  async getMessageDetails(
+    messageId: string,
+    fields?: z.infer<typeof InstagramMessageFieldsSchema>,
+  ): Promise<{
+    id: string;
+    created_time: string;
+    from?: {
+      username: string;
+      id: string;
+    };
+    to?: {
+      data: Array<{
+        username: string;
+        id: string;
+      }>;
+    };
+    message?: string;
+  }> {
+    let endpoint = `/${messageId}`;
+    
+    if (fields) {
+      const validatedFields = InstagramMessageFieldsSchema.parse(fields);
+      if (validatedFields.fields && validatedFields.fields.length > 0) {
+        endpoint += `?fields=${validatedFields.fields.join(',')}`;
+      }
+    }
+
+    return await this.makeRequest(endpoint, 'GET');
+  }
+
+  /**
+   * Gets all conversations with pagination support
+   * @param accountId The Instagram professional account ID
+   * @param options Optional parameters for filtering and pagination
+   * @returns Promise that resolves to all conversations with pagination info
+   */
+  async getAllConversations(
+    accountId: string,
+    options?: {
+      platform?: 'instagram';
+      user_id?: string;
+      limit?: number;
+      after?: string;
+      before?: string;
+    },
+  ): Promise<{
+    data: Array<{
+      id: string;
+      updated_time: string;
+    }>;
+    paging?: {
+      cursors?: {
+        before?: string;
+        after?: string;
+      };
+      next?: string;
+      previous?: string;
+    };
+  }> {
+    const filters: z.infer<typeof InstagramConversationFiltersSchema> = {};
+    
+    if (options?.platform) filters.platform = options.platform;
+    if (options?.user_id) filters.user_id = options.user_id;
+    if (options?.limit) filters.limit = options.limit;
+    if (options?.after) filters.after = options.after;
+    if (options?.before) filters.before = options.before;
+
+    return await this.getConversations(accountId, filters);
+  }
+
+  /**
+   * Gets recent messages from a conversation (last 20 messages only)
+   * @param conversationId The conversation ID
+   * @param fields Optional array of fields to retrieve for each message
+   * @returns Promise that resolves to recent messages with details
+   */
+  async getRecentMessages(
+    conversationId: string,
+    fields?: z.infer<typeof InstagramMessageFieldsSchema>,
+  ): Promise<{
+    messages: {
+      data: Array<{
+        id: string;
+        created_time: string;
+        from?: {
+          username: string;
+          id: string;
+        };
+        to?: {
+          data: Array<{
+            username: string;
+            id: string;
+          }>;
+        };
+        message?: string;
+      }>;
+    };
+    id: string;
+  }> {
+    // First get message IDs
+    const messagesData = await this.getConversationMessages(conversationId);
+    
+    // Then get details for each message (limited to 20 most recent)
+    const messageDetails = await Promise.all(
+      messagesData.messages.data.slice(0, 20).map(async (message) => {
+        return await this.getMessageDetails(message.id, fields);
+      })
+    );
+
+    return {
+      messages: {
+        data: messageDetails,
+      },
+      id: conversationId,
+    };
+  }
 }
 
 export function createInstagramSDK(config: {
@@ -636,4 +1194,15 @@ export {
   InstagramPrivateReplySchema,
   InstagramInsightsSchema,
   InstagramOEmbedSchema,
+  InstagramQuickReplySchema,
+  InstagramWelcomeMessageSchema,
+  InstagramWelcomeMessageFlowSchema,
+  InstagramWelcomeMessageFlowUpdateSchema,
+  InstagramInsightsMetricSchema,
+  InstagramEnhancedInsightsSchema,
+  InstagramMentionReplySchema,
+  InstagramMentionFiltersSchema,
+  InstagramConversationFiltersSchema,
+  InstagramMessageFieldsSchema,
+  InstagramConversationFieldsSchema,
 };
