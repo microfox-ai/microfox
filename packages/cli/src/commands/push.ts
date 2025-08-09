@@ -121,7 +121,7 @@ async function pushAction(): Promise<void> {
 
       const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
       if (!projectId) {
-        console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json or set env MICROFOX_PROJECT_ID.'));
+        console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json.'));
         process.exit(1);
       }
 
