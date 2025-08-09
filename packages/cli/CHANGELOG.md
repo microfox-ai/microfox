@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.17
+
+### Patch Changes
+
+- c73096d: update agent deployments status commands
+
 ## 1.0.16
 
 ### Patch Changes
