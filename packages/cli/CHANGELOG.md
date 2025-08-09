@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.16
+
+### Patch Changes
+
+- 30fcd0e: updated push script
+
 ## 1.0.15
 
 ### Patch Changes
