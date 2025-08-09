@@ -1,5 +1,7 @@
 import chromium from '@sparticuz/chromium';
 import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 
 // Check if running locally
 const isLocal = process.env.IS_OFFLINE || process.env.SERVERLESS_OFFLINE;
@@ -93,6 +95,13 @@ export const puppeteerLaunchProps = async (
       }
     }
 
+    if (platform === 'win32') {
+      const tempPath = path.join(os.tmpdir(), 'sparticuz-chromium');
+      if (!fs.existsSync(tempPath)) {
+        fs.mkdirSync(tempPath, { recursive: true });
+      }
+    }
+
     if (!executablePath) {
       console.error(
         'Could not find Chrome in default locations. Please install Chrome or specify the path manually via the CHROME_EXECUTABLE_PATH environment variable.',
@@ -106,6 +115,9 @@ export const puppeteerLaunchProps = async (
 
   const finalHeadless = isLocal || _isLocal ? (headless ?? false) : true;
 
+  const tempDir = os.tmpdir();
+  const userDataDir = fs.mkdtempSync(path.join(tempDir, 'puppeteer-'));
+
   const args = finalHeadless
     ? chromium.args
     : chromium.args.filter(arg => !arg.startsWith('--headless'));
@@ -115,11 +127,12 @@ export const puppeteerLaunchProps = async (
   return {
     args: [
       ...args,
+      `--user-data-dir=${userDataDir}`,
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
-    ],
+    ].concat(finalHeadless ? [] : [`--user-data-dir=${userDataDir}`]),
     defaultViewport: {
       width: defaultViewport?.width || 1920,
       height: defaultViewport?.height || 1080,
