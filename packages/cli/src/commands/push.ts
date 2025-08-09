@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import axios from 'axios';
 import FormData from 'form-data';
 import archiver from 'archiver';
+import micromatch from 'micromatch';
 
 const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?: string, port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -23,6 +24,38 @@ const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?:
     return `https://${normalizedMode}-v1-cicd.microfox.app/api/deployments/new-agent-cli`;
   }
 }
+
+interface FileDirectory {
+  type: 'file' | 'directory';
+  name: string;
+  path: string;
+  content?: string;
+  children?: FileDirectory[];
+}
+
+const getDirectoryFiles = (dir: string, basePath: string = '', ignorePatterns: string[]): FileDirectory[] => {
+  const structure: FileDirectory[] = [];
+  const items = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const item of items) {
+    const relativePath = path.join(basePath, item.name);
+    if (micromatch.isMatch(relativePath, ignorePatterns)) {
+      continue;
+    }
+
+    if (item.isDirectory()) {
+      structure.push(...getDirectoryFiles(path.join(dir, item.name), relativePath, ignorePatterns));
+    } else {
+      structure.push({
+        type: 'file',
+        name: item.name,
+        path: relativePath.replace(/\\/g, '/'),
+        content: fs.readFileSync(path.join(dir, item.name), 'utf-8'),
+      });
+    }
+  }
+  return structure;
+};
 
 async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Promise<string> {
   const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'microfox-'));
@@ -67,54 +100,118 @@ async function pushAction(): Promise<void> {
   console.log(chalk.cyan('🚀 Pushing your agent to Microfox...'));
 
   const microfoxConfig = JSON.parse(fs.readFileSync(microfoxConfigPath, 'utf-8'));
-
-  const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(microfoxConfig.ignorePatterns || [])];
+  const apiMode = microfoxConfig.apiMode || microfoxConfig.API_MODE;
+  const apiVersion = microfoxConfig.apiVersion || microfoxConfig.API_VERSION;
+  const apiLocalPort = microfoxConfig.port || microfoxConfig.PORT;
+  const isV2 = (typeof apiVersion === 'string' ? apiVersion.toLowerCase() === 'v2' : false);
 
   try {
-    console.log(chalk.blue('📦 Bundling your agent as a ZIP archive...'));
-    const zipPath = await createZipArchive(cwd, ignorePatterns);
+    if (isV2) {
+      const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(microfoxConfig.ignorePatterns || [])];
 
-    console.log(chalk.blue('🚚 Uploading archive to Microfox...'));
-    const form = new FormData();
-    form.append('archive', fs.createReadStream(zipPath), {
-      filename: 'archive.zip',
-      contentType: 'application/zip',
-    });
+      console.log(chalk.blue('📦 Bundling your agent as a ZIP archive...'));
+      const zipPath = await createZipArchive(cwd, ignorePatterns);
 
-    const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
-    if (!projectId) {
-      console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json or set env MICROFOX_PROJECT_ID.'));
-      process.exit(1);
-    }
+      console.log(chalk.blue('🚚 Uploading archive to Microfox...'));
+      const form = new FormData();
+      form.append('archive', fs.createReadStream(zipPath), {
+        filename: 'archive.zip',
+        contentType: 'application/zip',
+      });
 
-    const headers = {
-      ...form.getHeaders(),
-      'x-project-id': projectId,
-    } as Record<string, string>;
-
-    const apiMode = microfoxConfig.apiMode || microfoxConfig.API_MODE;
-    const apiVersion = microfoxConfig.apiVersion || microfoxConfig.API_VERSION;
-    const apiLocalPort = microfoxConfig.port || microfoxConfig.PORT;
-    const response = await axios.post(API_ENDPOINT_MAPPER({ mode: apiMode, version: apiVersion, port: apiLocalPort }), form, {
-      headers,
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity,
-    });
-
-    if (response.status >= 200 && response.status < 300) {
-      console.log(chalk.green('✅ Deployment request accepted!'));
-      if (response.data?.deploymentId) {
-        console.log(chalk.green(`   Deployment ID: ${response.data.deploymentId}`));
-      } else if (response.data?.runId) {
-        console.log(chalk.green(`   Run ID: ${response.data.runId}`));
+      const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
+      if (!projectId) {
+        console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json or set env MICROFOX_PROJECT_ID.'));
+        process.exit(1);
       }
-      if (response.data?.message) {
-        console.log(chalk.green(`   Message: ${response.data.message}`));
+
+      const headers = {
+        ...form.getHeaders(),
+        'x-project-id': projectId,
+      } as Record<string, string>;
+
+      const response = await axios.post(
+        API_ENDPOINT_MAPPER({ mode: apiMode, version: 'v2', port: apiLocalPort }),
+        form,
+        {
+          headers,
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+        }
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        console.log(chalk.green('✅ Deployment request accepted!'));
+        if (response.data?.deploymentId) {
+          console.log(chalk.green(`   Deployment ID: ${response.data.deploymentId}`));
+        } else if (response.data?.runId) {
+          console.log(chalk.green(`   Run ID: ${response.data.runId}`));
+        }
+        if (response.data?.message) {
+          console.log(chalk.green(`   Message: ${response.data.message}`));
+        }
+      } else {
+        console.error(chalk.red(`❌ Deployment failed with status: ${response.status}`));
+        console.error(response.data);
+        process.exit(1);
       }
     } else {
-      console.error(chalk.red(`❌ Deployment failed with status: ${response.status}`));
-      console.error(response.data);
-      process.exit(1);
+      // v1: old behavior without ZIP
+      let agentApiKey: string | undefined;
+      const envPath = path.join(cwd, 'env.json');
+      if (fs.existsSync(envPath)) {
+        try {
+          const envConfig = JSON.parse(fs.readFileSync(envPath, 'utf-8')) as { AGENT_API_KEY?: string };
+          agentApiKey = envConfig.AGENT_API_KEY;
+        } catch (e) {
+          console.warn(chalk.yellow('⚠️  Could not read or parse `env.json`. The AGENT_API_KEY will not be sent.'));
+        }
+      }
+
+      const stage = microfoxConfig.stage || 'prod';
+      const defaultIgnore = [
+        'node_modules/**',
+        '.git/**',
+        'dist/**',
+        '.build/**',
+        '.serverless/**',
+        '.DS_Store',
+        'package-lock.json',
+        'pnpm-lock.yaml',
+      ];
+      const ignored: string[] = microfoxConfig.ignored || [];
+      const allIgnored = [...defaultIgnore, ...ignored];
+
+      const files: FileDirectory[] = getDirectoryFiles(cwd, '', allIgnored);
+
+      console.log(chalk.blue('📦 Bundling and deploying your agent (v1)...'));
+      const response = await axios.post(
+        API_ENDPOINT_MAPPER({ mode: apiMode, version: 'v1', port: apiLocalPort }),
+        {
+          stage,
+          isLocal: false,
+          dir: files,
+        },
+        {
+          headers: {
+            ...(agentApiKey ? { 'x-agent-api-key': agentApiKey } : {}),
+          },
+        }
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        console.log(chalk.green('✅ Deployment successful!'));
+        if (response.data?.runId) {
+          console.log(chalk.green(`   Run ID: ${response.data.runId}`));
+        }
+        if (response.data?.message) {
+          console.log(chalk.green(`   Message: ${response.data.message}`));
+        }
+      } else {
+        console.error(chalk.red(`❌ Deployment failed with status: ${response.status}`));
+        console.error(response.data);
+        process.exit(1);
+      }
     }
   } catch (error) {
     console.error(chalk.red('❌ An error occurred during deployment:'));
