@@ -1,5 +1,6 @@
 import chromium from '@sparticuz/chromium';
 import * as fs from 'fs';
+import * as os from 'os';
 
 // Check if running locally
 const isLocal = process.env.IS_OFFLINE || process.env.SERVERLESS_OFFLINE;
@@ -111,6 +112,7 @@ export const puppeteerLaunchProps = async (
     : chromium.args.filter(arg => !arg.startsWith('--headless'));
 
   console.log('executablePath', executablePath, finalHeadless);
+  const tempdir = process.env.PUPPETEER_TMP_DIR ?? os.tmpdir();
 
   return {
     args: [
@@ -126,5 +128,6 @@ export const puppeteerLaunchProps = async (
     },
     executablePath,
     headless: finalHeadless,
+    ...(tempdir ? { userDataDir: tempdir } : {}),
   };
 };
