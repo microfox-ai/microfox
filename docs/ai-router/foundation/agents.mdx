@@ -1,0 +1,183 @@
+---
+title: 'Agents & Agent Handlers'
+sidebarTitle: 'Agents'
+description: 'Learn about agents, execution context, path definitions, and agent-to-agent communication.'
+---
+
+## What are Agents?
+
+Agents are the primary handlers in your AI Router application. They are async functions that receive a context object and can interact with users through response streams, call other agents, or invoke tools. Agents form the core of your AI application's logic and decision-making capabilities.
+
+```typescript
+router.agent('/path', async ctx => {
+  // Agent logic here
+  ctx.response.write({ type: 'text', text: 'Hello from agent!' });
+});
+```
+
+## Path Definitions
+
+Paths in AI Router follow a hierarchical structure similar to web routing. They can be static or dynamic:
+
+### Static Paths
+
+```typescript
+router.agent('/dashboard', async ctx => {
+  // Handle dashboard requests
+});
+
+router.agent('/api/users', async ctx => {
+  // Handle user API requests
+});
+```
+
+### Dynamic Paths with Parameters
+
+Paths can include dynamic parameters using `:paramName` syntax:
+
+```typescript
+router.agent('/users/:userId', async ctx => {
+  const { userId } = ctx.request.params;
+  ctx.response.write({ type: 'text', text: `Loading user: ${userId}` });
+});
+
+router.agent('/posts/:postId/comments/:commentId', async ctx => {
+  const { postId, commentId } = ctx.request.params;
+  // Handle specific comment
+});
+```
+
+### Path Resolution
+
+When calling agents, paths are resolved relative to the current agent's path:
+
+```typescript
+router.agent('/parent', async ctx => {
+  // Call a sibling agent
+  await ctx.next.callAgent('/sibling', { data: 'hello' });
+
+  // Call a child agent
+  await ctx.next.callAgent('child', { data: 'hello' });
+
+  // Call an absolute path from root
+  await ctx.next.callAgent('/@/root-agent', { data: 'hello' });
+});
+```
+
+## Agent-to-Agent Communication
+
+Agents can call other agents using the `ctx.next.callAgent()` method. This enables complex workflows and delegation of tasks.
+
+### Basic Agent Calls
+
+```typescript
+router.agent('/orchestrator', async ctx => {
+  // Call another agent and wait for result
+  const result = await ctx.next.callAgent('/worker', { task: 'process-data' });
+
+  if (result.ok) {
+    ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+  } else {
+    ctx.logger.error('Worker failed:', result.error);
+  }
+});
+
+router.agent('/worker', async ctx => {
+  const { task } = ctx.request.params;
+  return `Processed: ${task}`;
+});
+```
+
+### Chaining Multiple Agents
+
+```typescript
+router.agent('/workflow', async ctx => {
+  // Step 1: Validate input
+  const validation = await ctx.next.callAgent('/validate', ctx.request.params);
+  if (!validation.ok) {
+    return ctx.response.write({ type: 'text', text: 'Validation failed' });
+  }
+
+  // Step 2: Process data
+  const processing = await ctx.next.callAgent('/process', validation.data);
+  if (!processing.ok) {
+    return ctx.response.write({ type: 'text', text: 'Processing failed' });
+  }
+
+  // Step 3: Generate response
+  const response = await ctx.next.callAgent('/generate', processing.data);
+  ctx.response.write({ type: 'text', text: response.data });
+});
+```
+
+## Execution Context
+
+The **execution context** is an internal system that tracks the current execution state of your AI application. It's automatically managed by the router and provides crucial information about:
+
+- **Current Path**: The path of the agent currently being executed
+- **Call Depth**: How deep the agent-to-agent call chain is (prevents infinite loops)
+- **Handler Path Stack**: A stack of all handler paths in the current execution chain
+
+```typescript
+router.agent('/debug', async ctx => {
+  // Access execution context information
+  const currentPath = ctx.executionContext.currentPath;
+  const callDepth = ctx.executionContext.callDepth;
+  const pathStack = ctx.executionContext.handlerPathStack;
+
+  ctx.logger.log(`Executing at path: ${currentPath}, depth: ${callDepth}`);
+});
+```
+
+### Call Depth Protection
+
+The router automatically prevents infinite loops by tracking call depth. When an agent calls another agent, the call depth increases. If it exceeds the configured maximum (default: 10), the router throws a `MaxCallDepthExceededError`.
+
+```typescript
+const router = new AiRouter({
+  maxCallDepth: 5, // Customize maximum call depth
+});
+```
+
+## How Parameters are Handled
+
+Understanding how data flows into your agents is key. `ai-router` provides two main ways to pass parameters:
+
+1.  **Initial Request**: When you first call `router.handle(path, context)`, any properties in the request body (besides `messages`) are treated as potential parameters. If an agent on the matched path is exposed as a tool (using `.actAsTool()`) with an `inputSchema`, the router will validate the request body against that schema and make the parsed parameters available in `ctx.request.params`.
+
+2.  **Agent-to-Agent Calls**: When one agent calls another using `ctx.next.callAgent(path, params)`, the `params` object is passed directly to the next agent and becomes available in its context at `ctx.request.params`.
+
+This mechanism allows for type-safe and validated data transfer throughout your entire agentic system.
+
+AI Router provides two main ways to pass parameters to agents:
+
+### Example
+
+These are parameters extracted from the URL path or passed during agent-to-agent calls:
+
+```typescript
+router.agent('/users/:userId/profile/:section', async ctx => {
+  // Parameter from request body
+  const { chatSessionId } = ctx.request;
+
+  // Parameters from URL path
+  const { userId, section } = ctx.request.params;
+
+  // Parameters from agent call
+  const { customData } = ctx.request.params;
+
+  ctx.response.write({
+    type: 'text',
+    text: `User ${userId}, section ${section}, data: ${customData}`,
+  });
+});
+```
+
+## Next Steps
+
+- Learn about [State Management](/ai-router/foundation/state) for shared data across agents
+- Explore [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- Understand [Tools](/ai-router/foundation/tools) for reusable functionality
+- See [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- Check [Error Handling](/ai-router/advanced/error-handling) for robust applications
+- Review [Best Practices](/ai-router/advanced/best-practices) for building robust applications

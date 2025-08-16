@@ -1,0 +1,111 @@
+---
+title: 'Migrating from LangGraph to AI Router'
+sidebarTitle: 'LangGraph Migration'
+description: 'Step-by-step guide to migrate from LangGraph to AI Router for web applications.'
+---
+
+## Migration Path from LangGraph
+
+If you're currently using LangGraph and want to migrate to AI Router:
+
+### 1. **Convert Python Agents to TypeScript**
+
+```python
+# LangGraph (Python)
+@agent
+def code_generator(state):
+    # Python logic
+    return {"code": generated_code}
+```
+
+```typescript
+// AI Router (TypeScript)
+router.agent('/code-generator', async ctx => {
+  // TypeScript logic
+  const code = await generateCode(ctx.request.params);
+  ctx.state.generatedCode = code;
+});
+```
+
+### 2. **Replace Graph Edges with Express.js Routing**
+
+```python
+# LangGraph (Python)
+workflow = StateGraph(AgentState)
+workflow.add_node("code_generator", code_generator)
+workflow.add_node("test_generator", test_generator)
+workflow.add_edge("code_generator", "test_generator")
+```
+
+```typescript
+// AI Router (TypeScript)
+router.agent('/code-generator', async ctx => {
+  const code = await generateCode(ctx.request.params);
+  ctx.state.generatedCode = code;
+
+  // Call next agent
+  await ctx.next.callAgent('/test-generator');
+});
+
+router.agent('/test-generator', async ctx => {
+  const code = ctx.state.generatedCode;
+  const tests = await generateTests(code);
+  ctx.response.write({ type: 'text', text: tests });
+});
+```
+
+### 3. **Convert State Management**
+
+```python
+# LangGraph (Python)
+class AgentState(TypedDict):
+    messages: list
+    code: str
+    tests: str
+```
+
+```typescript
+// AI Router (TypeScript)
+interface AgentState {
+  messages: Message[];
+  generatedCode?: string;
+  tests?: string;
+}
+
+// Access via ctx.state
+router.agent('/example', async ctx => {
+  ctx.state.generatedCode = 'const x = 1;';
+  // State is automatically shared between agents
+});
+```
+
+## Key Differences to Consider
+
+### State Management
+
+- **LangGraph**: Complex state management with TypedDict classes
+- **AI Router**: Simple shared state object accessible via `ctx.state`
+
+### Routing
+
+- **LangGraph**: Graph-based edges and nodes
+- **AI Router**: Express.js-style routing with familiar patterns
+
+### Language
+
+- **LangGraph**: Python-based with limited TypeScript support
+- **AI Router**: Native TypeScript/JavaScript throughout
+
+### Integration
+
+- **LangGraph**: Backend-focused, requires custom frontend integration
+- **AI Router**: Native Vercel AI SDK integration for full-stack applications
+
+## Migration Checklist
+
+- [ ] Convert Python agents to TypeScript functions
+- [ ] Replace graph edges with Express.js routing
+- [ ] Migrate state management to shared state object
+- [ ] Update frontend integration to use Vercel AI SDK
+- [ ] Test agent communication and state sharing
+- [ ] Deploy to Vercel instead of custom infrastructure

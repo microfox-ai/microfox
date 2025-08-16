@@ -1,0 +1,283 @@
+---
+title: 'Context Object'
+description: 'Learn about the context object and how to use it in your agents.'
+---
+
+## The Context Object
+
+Every agent receives a rich context object that provides access to all the information and utilities needed to handle requests. The context object is the primary interface between your agent logic and the ai-router system.
+
+### Context Structure
+
+```typescript
+interface AiContext<Metadata, Parts, Tools, State> {
+  request: {
+    messages: UIMessage<Metadata, Parts, Tools>[]; // Message history
+    params?: Record<string, any>; // Dynamic path parameters
+    [key: string]: any; // Additional request data
+  };
+  state: State; // Shared state object
+  executionContext: {
+    currentPath?: string; // Current execution path
+    callDepth?: number; // Current call depth
+    handlerPathStack?: string[]; // Stack of handler paths
+  };
+  requestId: string; // Unique request identifier
+  logger: AiLogger; // Structured logger
+  response: AiStreamWriter<Metadata, Parts, Tools>; // Stream writer
+  next: NextHandler<Metadata, Parts, Tools, State>; // Next handler utilities
+}
+```
+
+## Key Context Properties
+
+### Request Data
+
+The `request` object contains all the information about the current request:
+
+```typescript
+router.agent('/example', async ctx => {
+  // Access message history
+  const messages = ctx.request.messages;
+  const lastMessage = messages[messages.length - 1];
+
+  // Access path parameters
+  const { userId } = ctx.request.params;
+
+  // Access custom request data
+  const sessionId = ctx.request.sessionId;
+});
+```
+
+**Properties:**
+
+- `messages`: Array of UI messages from the conversation history
+- `params`: Dynamic path parameters extracted from the route (e.g., `:userId` becomes `ctx.request.params.userId`)
+- `[key: string]: any`: Additional request data passed from the client
+
+### Shared State
+
+The `state` object provides a shared, mutable state that persists for the lifetime of a single request. This is perfect for passing data between agents without consuming LLM tokens:
+
+```typescript
+router.agent('/step1', async ctx => {
+  // Store data in shared state
+  ctx.state.userData = await fetchUserData();
+  ctx.state.timestamp = Date.now();
+});
+
+router.agent('/step2', async ctx => {
+  // Access data from previous agent
+  const userData = ctx.state.userData;
+  const timestamp = ctx.state.timestamp;
+});
+```
+
+**Key Benefits:**
+
+- **Token Optimization**: Data stored in state doesn't consume LLM tokens
+- **Type Safety**: Full TypeScript support with custom state types
+- **Request Scoped**: State is isolated to each request
+- **Mutable**: Can be modified by any agent in the request chain
+
+### Execution Context
+
+The `executionContext` provides information about the current execution state:
+
+```typescript
+router.agent('/debug', async ctx => {
+  // Log current execution information
+  ctx.logger.log(`Current path: ${ctx.executionContext.currentPath}`);
+  ctx.logger.log(`Call depth: ${ctx.executionContext.callDepth}`);
+  ctx.logger.log(`Request ID: ${ctx.requestId}`);
+});
+```
+
+**Properties:**
+
+- `currentPath`: The current execution path
+- `callDepth`: Current depth of agent-to-agent calls (for preventing infinite loops)
+- `handlerPathStack`: Stack of handler paths for debugging
+
+### Request Identification
+
+```typescript
+router.agent('/tracking', async ctx => {
+  // Unique identifier for this request
+  const requestId = ctx.requestId;
+
+  // Structured logger with automatic request context
+  ctx.logger.log('Processing request');
+  ctx.logger.error('An error occurred');
+});
+```
+
+**Properties:**
+
+- `requestId`: Unique identifier for the entire request chain
+- `logger`: Structured logger that automatically includes request context
+
+### Response Stream
+
+The `response` object provides methods for streaming data back to the client:
+
+```typescript
+router.agent('/streaming', async ctx => {
+  // Basic text streaming
+  ctx.response.write({ type: 'text', text: 'Hello' });
+
+  // Advanced streaming with metadata
+  ctx.response.writeMessageMetadata({
+    stage: 'processing',
+    progress: 50,
+  });
+
+  // Custom tool calls
+  ctx.response.writeCustomTool({
+    toolName: 'calculator',
+    input: { a: 5, b: 3 },
+    output: { result: 8 },
+  });
+});
+```
+
+**Available Methods:**
+
+- `write()`: Write text or data to the stream
+- `writeMessageMetadata()`: Write metadata about the message
+- `writeCustomTool()`: Write custom tool calls and results
+- `writeObjectAsTool()`: Write object generation results as tools
+
+### Next Handler
+
+The `next` object provides utilities for agent-to-agent communication:
+
+```typescript
+router.agent('/orchestrator', async ctx => {
+  // Call another agent
+  const result = await ctx.next.callAgent('/worker', { task: 'process' });
+
+  // Call a tool
+  const toolResult = await ctx.next.callTool('/calculator', { a: 5, b: 3 });
+
+  // Expose an agent as a tool for LLM function calling
+  const agentTool = ctx.next.agentAsTool('/research');
+});
+```
+
+**Available Methods:**
+
+- `callAgent(path, params?)`: Call another agent with optional parameters
+- `callTool(path, params)`: Call a tool with parameters
+- `agentAsTool(path, definition?)`: Expose an agent as a tool for LLM function calling
+
+## Context Usage Patterns
+
+### Basic Agent Pattern
+
+```typescript
+router.agent('/basic', async ctx => {
+  // 1. Extract parameters
+  const { query } = ctx.request.params;
+
+  // 2. Process the request
+  const result = await processQuery(query);
+
+  // 3. Store in state for other agents
+  ctx.state.processedResult = result;
+
+  // 4. Stream response
+  ctx.response.write({ type: 'text', text: result });
+});
+```
+
+### Multi-Step Workflow Pattern
+
+```typescript
+router.agent('/workflow', async ctx => {
+  // Step 1: Initialize
+  ctx.state.step = 'initializing';
+  ctx.response.write({ type: 'text', text: 'Starting workflow...' });
+
+  // Step 2: Call specialized agent
+  await ctx.next.callAgent('/specialized', { data: ctx.request.params });
+
+  // Step 3: Process results
+  const finalResult = await processResults(ctx.state);
+
+  // Step 4: Stream final response
+  ctx.response.write({ type: 'text', text: finalResult });
+});
+```
+
+### Error Handling Pattern
+
+```typescript
+router.agent('/robust', async ctx => {
+  try {
+    // Your agent logic
+    const result = await riskyOperation();
+    ctx.response.write({ type: 'text', text: result });
+  } catch (error) {
+    // Log error with context
+    ctx.logger.error('Agent error:', error);
+
+    // Stream error response
+    ctx.response.write({
+      type: 'text',
+      text: 'An error occurred while processing your request.',
+    });
+  }
+});
+```
+
+### Debugging Pattern
+
+```typescript
+router.agent('/debug', async ctx => {
+  // Log execution context
+  ctx.logger.log('Execution context:', {
+    path: ctx.executionContext.currentPath,
+    depth: ctx.executionContext.callDepth,
+    requestId: ctx.requestId,
+    params: ctx.request.params,
+  });
+
+  // Log state (be careful with sensitive data)
+  ctx.logger.log('Current state keys:', Object.keys(ctx.state));
+
+  // Continue with normal processing
+  ctx.response.write({ type: 'text', text: 'Debug information logged' });
+});
+```
+
+## Type Safety
+
+The context object is fully typed, allowing you to define custom types for better development experience:
+
+```typescript
+// Define custom types
+interface MyMetadata {
+  userId: string;
+  sessionId: string;
+}
+
+interface MyState {
+  userData?: UserData;
+  processingStage: 'idle' | 'processing' | 'complete';
+}
+
+// Use typed router
+const router = new AiRouter<MyMetadata, any, any, MyState>();
+
+router.agent('/typed', async ctx => {
+  // Full type safety
+  const userId = ctx.request.messages[0]?.metadata?.userId;
+  ctx.state.processingStage = 'processing';
+
+  // TypeScript will catch errors
+  // ctx.state.invalidProperty = 'error'; // ❌ Type error
+});
+```
+
+This comprehensive context system provides everything you need to build sophisticated, multi-agent AI applications with proper separation of concerns and excellent developer experience.

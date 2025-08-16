@@ -1,0 +1,267 @@
+---
+title: 'State Management'
+description: 'Learn how to manage shared state across agents and middleware in AI Router.'
+---
+
+## Overview
+
+In a multi-agent system, you often need to pass information between agents. Passing this data through LLM tool parameters is inefficient and costly, as it consumes valuable tokens.
+
+AI Router includes a `state` object in its context, similar to the `context` in Express.js. This allows you to pass data between agents and middleware on the backend without ever exposing it to the LLM. It's the perfect solution for token optimization and efficient inter-agent communication.
+
+## Basic State Usage
+
+The `ctx.state` object is shared across the entire request lifecycle and persists through agent-to-agent calls:
+
+```typescript
+router.agent('/step1', async ctx => {
+  // Store data in shared state
+  ctx.state.userData = { id: '123', name: 'John' };
+  ctx.state.timestamp = Date.now();
+
+  await ctx.next.callAgent('/step2');
+});
+
+router.agent('/step2', async ctx => {
+  // Access data from previous agent
+  const { userData, timestamp } = ctx.state;
+
+  ctx.response.write({
+    type: 'text',
+    text: `Processing ${userData.name} at ${timestamp}`,
+  });
+});
+```
+
+## State in Middleware
+
+Middleware can initialize state that agents can later access:
+
+```typescript
+const userMiddleware = async (ctx, next) => {
+  // Fetch user data and store in state
+  const userId = ctx.request.headers?.['x-user-id'];
+  if (userId) {
+    ctx.state.user = await db.getUser(userId);
+    ctx.state.permissions = await db.getUserPermissions(userId);
+  }
+
+  await next();
+};
+
+router.use('*', userMiddleware);
+
+router.agent('/protected', async ctx => {
+  const { user, permissions } = ctx.state;
+
+  if (!user) {
+    return ctx.response.write({ type: 'text', text: 'Unauthorized' });
+  }
+
+  ctx.response.write({
+    type: 'text',
+    text: `Welcome ${user.name}, you have ${permissions.length} permissions`,
+  });
+});
+```
+
+## State for Data Collection
+
+Use state to collect data across multiple agents in a workflow:
+
+```typescript
+router.agent('/data-collector', async ctx => {
+  // Collect data and store in state
+  ctx.state.collectedData = await fetchData();
+  ctx.state.metadata = { timestamp: Date.now() };
+});
+
+router.agent('/data-processor', async ctx => {
+  // Process data from state
+  const { collectedData, metadata } = ctx.state;
+  const processed = await processData(collectedData);
+
+  ctx.response.write({
+    type: 'text',
+    text: `Processed ${processed.length} items`,
+  });
+});
+```
+
+## State for Caching
+
+Store expensive computations or API calls in state to avoid repetition:
+
+```typescript
+const cacheMiddleware = async (ctx, next) => {
+  // Initialize cache in state
+  ctx.state.cache = new Map();
+  await next();
+};
+
+router.use('*', cacheMiddleware);
+
+router.agent('/expensive-operation', async ctx => {
+  const { cache } = ctx.state;
+  const key = 'expensive-computation';
+
+  if (!cache.has(key)) {
+    const result = await performExpensiveComputation();
+    cache.set(key, result);
+  }
+
+  const result = cache.get(key);
+  ctx.response.write({ type: 'text', text: `Result: ${result}` });
+});
+```
+
+## State for Workflow Tracking
+
+Track workflow progress and maintain context across complex operations:
+
+```typescript
+router.agent('/workflow-start', async ctx => {
+  // Initialize workflow state
+  ctx.state.workflow = {
+    id: generateId(),
+    status: 'started',
+    steps: ['validation', 'processing', 'completion'],
+    completedSteps: [],
+    errors: [],
+  };
+
+  await ctx.next.callAgent('/workflow-validation');
+});
+
+router.agent('/workflow-validation', async ctx => {
+  const { workflow } = ctx.state;
+
+  try {
+    // Perform validation
+    await validateData();
+    workflow.completedSteps.push('validation');
+    workflow.status = 'validated';
+
+    await ctx.next.callAgent('/workflow-processing');
+  } catch (error) {
+    workflow.errors.push(error.message);
+    workflow.status = 'failed';
+  }
+});
+
+router.agent('/workflow-processing', async ctx => {
+  const { workflow } = ctx.state;
+
+  if (workflow.status === 'failed') {
+    return ctx.response.write({
+      type: 'text',
+      text: `Workflow failed: ${workflow.errors.join(', ')}`,
+    });
+  }
+
+  // Continue processing...
+});
+```
+
+## Best Practices
+
+### 1. Initialize State Early
+
+Initialize state in middleware or early in your agent chain:
+
+```typescript
+const initStateMiddleware = async (ctx, next) => {
+  ctx.state = {
+    requestId: generateId(),
+    startTime: Date.now(),
+    user: null,
+    cache: new Map(),
+  };
+  await next();
+};
+```
+
+### 2. Use Descriptive Keys
+
+Use clear, descriptive keys for state properties:
+
+```typescript
+// Good
+ctx.state.userProfile = userData;
+ctx.state.apiCache = new Map();
+
+// Avoid
+ctx.state.u = userData;
+ctx.state.c = new Map();
+```
+
+### 3. Clean Up Sensitive Data
+
+Remove sensitive data from state when no longer needed:
+
+```typescript
+router.agent('/secure-operation', async ctx => {
+  // Use sensitive data
+  const { sensitiveToken } = ctx.state;
+  await performSecureOperation(sensitiveToken);
+
+  // Clean up
+  delete ctx.state.sensitiveToken;
+});
+```
+
+### 4. Validate State Access
+
+Check if state properties exist before using them:
+
+```typescript
+router.agent('/safe-agent', async ctx => {
+  const userData = ctx.state.userData;
+
+  if (!userData) {
+    return ctx.response.write({
+      type: 'text',
+      text: 'User data not available',
+    });
+  }
+
+  // Use userData safely
+});
+```
+
+## State vs Parameters
+
+Understanding when to use state vs parameters is crucial:
+
+### Use State For:
+
+- Data that persists across multiple agents
+- Expensive computations you want to cache
+- User context and permissions
+- Workflow progress tracking
+- Sensitive data that shouldn't be exposed to LLMs
+
+### Use Parameters For:
+
+- Data specific to a single agent call
+- Input that needs validation
+- Data that should be exposed to LLMs
+- Configuration that varies per call
+
+```typescript
+// Use parameters for agent-specific data
+await ctx.next.callAgent('/process-user', {
+  userId: '123',
+  action: 'update',
+});
+
+// Use state for shared context
+ctx.state.userContext = await getUserContext('123');
+await ctx.next.callAgent('/process-user');
+```
+
+## Next Steps
+
+- Learn about [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- Explore [Tools](/ai-router/foundation/tools) for reusable functionality
+- Understand [Advanced Routing](/ai-router/advanced/routing) for complex scenarios

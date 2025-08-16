@@ -1,0 +1,15 @@
+---
+title: 'Next Handler'
+description: 'API reference for the next handler.'
+---
+
+The `next` object provides methods for agent-to-agent communication:
+
+```typescript
+interface NextHandler<Metadata, Parts, Tools, State> {
+  callAgent(path: string, params?: Record<string, any>): Promise<Result>;
+  callTool(path: string, params: any): Promise<Result>;
+  attachTool(path: string): Tool<any, any>; // Use to expose a standard .tool() to an LLM.
+  agentAsTool(path: string, definition?: Tool<any, any>): Tool<any, any>; // Use to expose another .agent() as a tool to an LLM.
+}
+```

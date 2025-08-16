@@ -1,0 +1,98 @@
+---
+title: 'Key Advantages'
+description: 'Key advantages of using AI Router for building AI applications.'
+---
+
+### 1. **Modularity**
+
+Each agent is self-contained and reusable:
+
+```typescript
+// Reuse the code generator as a tool in other agents
+router.agent('/blog-writer', async ctx => {
+  const { topic } = ctx.request.params;
+
+  // Use the code generator as a tool
+  const codeExample = await ctx.next.callAgent('/code-generator', {
+    requirements: `Generate a code example for ${topic}`,
+  });
+
+  // Write blog with code example
+  const blog = await writeBlog(topic, codeExample);
+  ctx.response.write({ type: 'text', text: blog });
+});
+```
+
+### 2. **Middleware for Cross-Cutting Concerns**
+
+Handle authentication, logging, and context injection:
+
+```typescript
+// Global middleware
+router.use('*', async (ctx, next) => {
+  // Authentication
+  const user = await authenticate(ctx.request.headers.authorization);
+  ctx.state.user = user;
+
+  // Logging
+  console.log(`${user.id} accessing ${ctx.request.path}`);
+
+  // Inject user context
+  ctx.request.messages.unshift({
+    role: 'system',
+    content: `You are helping ${user.name} with their project.`,
+  });
+
+  await next();
+});
+```
+
+### 3. **State Management**
+
+Share data between agents without token overhead:
+
+```typescript
+router.agent('/step1', async ctx => {
+  // Fetch expensive data
+  const userData = await fetchUserData(ctx.state.user.id);
+  ctx.state.userData = userData; // Not sent to LLM, saving tokens
+
+  await ctx.next.callAgent('/step2');
+});
+
+router.agent('/step2', async ctx => {
+  // Access the data without re-fetching
+  const userData = ctx.state.userData;
+  // Process with userData
+});
+```
+
+### 4. **Mid-Step Resuming for Human-in-the-Loop Support**
+
+Handle complex workflows that need human approval:
+
+```typescript
+router.agent('/financial-transaction', async ctx => {
+  const { amount, recipient } = ctx.request.params;
+
+  // Request human approval
+  ctx.response.write({
+    type: 'tool-call',
+    toolName: 'confirmTransaction',
+    args: {
+      amount,
+      recipient,
+      resumePath: '/financial-transaction/execute',
+    },
+  });
+});
+
+router.agent('/financial-transaction/execute', async ctx => {
+  // Execute after approval
+  const result = await executeTransaction(ctx.request.params);
+  ctx.response.write({
+    type: 'text',
+    text: `Transaction completed: ${result.id}`,
+  });
+});
+```
