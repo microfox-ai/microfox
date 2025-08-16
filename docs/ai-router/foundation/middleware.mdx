@@ -1,0 +1,354 @@
+---
+title: 'Middleware'
+description: 'Learn how to use middleware for cross-cutting concerns in AI Router.'
+---
+
+## Overview
+
+Middleware functions are at the heart of AI Router's flexibility. These are functions that run before your agent handlers, giving you powerful hooks to modify the context or perform cross-cutting operations. This is incredibly useful for:
+
+- **Authentication & Authorization**: Checking permissions before an agent can run
+- **Dynamic Context Injection**: Fetching data from a database, like a user's chat history, and injecting it into the agent's context
+- **Dynamic Tool Creation**: Attaching specific tools to an agent based on the user's session or permissions
+- **Logging & Analytics**: Tracing requests as they move through the agentic system
+- **State Initialization**: Setting up shared state for the request
+
+## Basic Middleware
+
+Middleware functions receive a context object and a `next` function. They can modify the context before calling `next()` to continue the execution chain:
+
+```typescript
+const loggingMiddleware = async (ctx, next) => {
+  console.log(`Processing request at: ${ctx.executionContext.currentPath}`);
+  await next();
+  console.log(`Request completed`);
+};
+
+router.use('*', loggingMiddleware);
+```
+
+## Authentication Middleware
+
+One of the most common uses of middleware is authentication:
+
+```typescript
+const authMiddleware = async (ctx, next) => {
+  const token = ctx.request.headers?.authorization;
+  if (!token) {
+    throw new Error('Unauthorized');
+  }
+
+  // Validate token and inject user data into context
+  try {
+    const user = await validateToken(token);
+    ctx.state.user = user;
+    await next();
+  } catch (error) {
+    throw new Error('Invalid token');
+  }
+};
+
+// Apply middleware to specific paths
+router.use('/protected/*', authMiddleware);
+
+router.agent('/protected/dashboard', async ctx => {
+  const { user } = ctx.state;
+  ctx.response.write({
+    type: 'text',
+    text: `Welcome to your dashboard, ${user.name}!`,
+  });
+});
+```
+
+## Dynamic Context Injection
+
+Middleware can fetch data and inject it into the agent's context:
+
+```typescript
+// Middleware to fetch a user's chat history from a database
+const historyMiddleware = async (ctx, next) => {
+  const sessionId = ctx.request.headers['x-session-id'];
+  if (sessionId) {
+    const history = await db.getHistory(sessionId);
+    // Prepend the history to the current request's messages
+    ctx.request.messages = [...history, ...ctx.request.messages];
+  }
+  await next();
+};
+
+// Apply this middleware to all agent routes
+router.use('*', historyMiddleware);
+```
+
+## Dynamic Tool Creation
+
+Middleware can attach specific tools to an agent based on the user's session or permissions:
+
+```typescript
+const toolMiddleware = async (ctx, next) => {
+  const { user } = ctx.state;
+
+  // Attach tools based on user permissions
+  if (user.permissions.includes('admin')) {
+    ctx.tools = {
+      ...ctx.tools,
+      adminTool: ctx.next.agentAsTool('/admin/operations'),
+    };
+  }
+
+  if (user.permissions.includes('analytics')) {
+    ctx.tools = {
+      ...ctx.tools,
+      analyticsTool: ctx.next.agentAsTool('/analytics/reports'),
+    };
+  }
+
+  await next();
+};
+
+router.use('/dashboard/*', toolMiddleware);
+```
+
+## State Initialization
+
+Middleware can set up shared state for the request:
+
+```typescript
+const initStateMiddleware = async (ctx, next) => {
+  // Initialize state with request metadata
+  ctx.state = {
+    requestId: generateId(),
+    startTime: Date.now(),
+    user: null,
+    cache: new Map(),
+  };
+  await next();
+};
+
+router.use('*', initStateMiddleware);
+```
+
+## Error Handling Middleware
+
+Middleware can catch and handle errors:
+
+```typescript
+const errorHandlingMiddleware = async (ctx, next) => {
+  try {
+    await next();
+  } catch (error) {
+    ctx.logger.error('Request failed:', error);
+
+    // Send error response
+    ctx.response.write({
+      type: 'text',
+      text: 'An error occurred while processing your request.',
+    });
+  }
+};
+
+router.use('*', errorHandlingMiddleware);
+```
+
+## Rate Limiting Middleware
+
+Implement rate limiting to protect your agents:
+
+```typescript
+const rateLimitMap = new Map();
+
+const rateLimitMiddleware = async (ctx, next) => {
+  const userId = ctx.state.user?.id || ctx.request.headers['x-user-id'];
+  const key = `rate_limit:${userId}`;
+
+  const now = Date.now();
+  const windowMs = 60000; // 1 minute
+  const maxRequests = 10;
+
+  const userRequests = rateLimitMap.get(key) || [];
+  const recentRequests = userRequests.filter(time => now - time < windowMs);
+
+  if (recentRequests.length >= maxRequests) {
+    throw new Error('Rate limit exceeded');
+  }
+
+  recentRequests.push(now);
+  rateLimitMap.set(key, recentRequests);
+
+  await next();
+};
+
+router.use('*', rateLimitMiddleware);
+```
+
+## Conditional Middleware
+
+Apply middleware conditionally based on request properties:
+
+```typescript
+const conditionalMiddleware = async (ctx, next) => {
+  // Only apply to specific user agents
+  const userAgent = ctx.request.headers['user-agent'];
+  if (userAgent?.includes('Mobile')) {
+    ctx.state.isMobile = true;
+    ctx.state.mobileOptimizations = true;
+  }
+
+  await next();
+};
+
+router.use('*', conditionalMiddleware);
+```
+
+## Middleware Chaining
+
+You can chain multiple middleware functions:
+
+```typescript
+const validateInputMiddleware = async (ctx, next) => {
+  // Validate input parameters
+  const { required } = ctx.request.params;
+  if (!required) {
+    throw new Error('Required parameter missing');
+  }
+  await next();
+};
+
+const transformDataMiddleware = async (ctx, next) => {
+  // Transform data before processing
+  if (ctx.request.params.data) {
+    ctx.request.params.data = JSON.parse(ctx.request.params.data);
+  }
+  await next();
+};
+
+// Apply multiple middleware in sequence
+router.use('/api/*', validateInputMiddleware);
+router.use('/api/*', transformDataMiddleware);
+```
+
+## Path-Specific Middleware
+
+Apply middleware to specific path patterns:
+
+```typescript
+// Apply to all paths starting with /api
+router.use('/api/*', apiMiddleware);
+
+// Apply to specific agent paths
+router.use('/users/:id/*', userSpecificMiddleware);
+
+// Apply to all paths (global middleware)
+router.use('*', globalMiddleware);
+```
+
+## Resumability Middleware
+
+Middleware can handle resumable workflows:
+
+```typescript
+// Middleware that resumes to a certain point if there is a resumable path
+const resumeMiddleware = async (ctx, next) => {
+  if (ctx.request.resumePath) {
+    // If there's a resume path, call the agent and stop further execution
+    return ctx.next.callAgent(ctx.request.resumePath);
+  }
+  // Otherwise, continue to the next handler in the chain
+  await next();
+};
+
+router.use('/', resumeMiddleware);
+```
+
+## Best Practices
+
+### 1. Order Matters
+
+Middleware executes in the order they're registered. Put global middleware first:
+
+```typescript
+// Global middleware first
+router.use('*', loggingMiddleware);
+router.use('*', authMiddleware);
+
+// Path-specific middleware after
+router.use('/api/*', apiMiddleware);
+router.use('/admin/*', adminMiddleware);
+```
+
+### 2. Always Call Next()
+
+Make sure to call `next()` in your middleware, or the request will hang:
+
+```typescript
+const goodMiddleware = async (ctx, next) => {
+  // Do something before
+  await next();
+  // Do something after
+};
+
+const badMiddleware = async (ctx, next) => {
+  // This will hang the request
+  // await next(); // Missing!
+};
+```
+
+### 3. Handle Errors Gracefully
+
+Use try-catch blocks in middleware that might fail:
+
+```typescript
+const robustMiddleware = async (ctx, next) => {
+  try {
+    await next();
+  } catch (error) {
+    ctx.logger.error('Middleware error:', error);
+    // Don't re-throw unless you want to stop execution
+  }
+};
+```
+
+### 4. Keep Middleware Focused
+
+Each middleware should have a single responsibility:
+
+```typescript
+// Good: Single responsibility
+const authMiddleware = async (ctx, next) => {
+  // Only handles authentication
+  const token = ctx.request.headers?.authorization;
+  if (!token) throw new Error('Unauthorized');
+  ctx.state.user = await validateToken(token);
+  await next();
+};
+
+// Avoid: Multiple responsibilities
+const badMiddleware = async (ctx, next) => {
+  // Handles auth, logging, rate limiting, and more
+  // Too many responsibilities
+};
+```
+
+### 5. Use State for Cross-Middleware Communication
+
+Share data between middleware using state:
+
+```typescript
+const userMiddleware = async (ctx, next) => {
+  ctx.state.user = await getUser(ctx.request.headers);
+  await next();
+};
+
+const permissionMiddleware = async (ctx, next) => {
+  const { user } = ctx.state; // Access data from previous middleware
+  ctx.state.permissions = await getPermissions(user.id);
+  await next();
+};
+```
+
+## Next Steps
+
+- Learn about [State Management](/ai-router/foundation/state) for shared data
+- Explore [Tools](/ai-router/foundation/tools) for reusable functionality
+- Understand [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- See [Error Handling](/ai-router/advanced/error-handling) for robust applications

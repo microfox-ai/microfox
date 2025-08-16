@@ -1,0 +1,94 @@
+---
+title: 'Examples'
+description: 'Explore practical examples of using ai-router.'
+---
+
+### Multi-Agent Workflow
+
+```typescript
+import { AiRouter } from '@microfox/ai-router';
+import { generateText } from 'ai';
+import { z } from 'zod';
+
+const workflow = new AiRouter();
+
+// Receptionist agent that routes to specialized agents
+workflow
+  .actAsTool('/', {
+    description: 'Routes requests to appropriate specialized agents',
+    inputSchema: z.object({ task: z.string() }),
+  })
+  .agent('/', async ctx => {
+    const { task } = ctx.request.params;
+
+    ctx.response.write({ type: 'text', text: 'Analyzing your request...\n' });
+
+    const { toolCalls } = await generateText({
+      model: openai('gpt-4'),
+      prompt: `Route this task to the appropriate agent: ${task}`,
+      tools: {
+        codeGenerator: ctx.next.agentAsTool('/code'),
+        dataAnalyzer: ctx.next.agentAsTool('/analyze'),
+        documentWriter: ctx.next.agentAsTool('/write'),
+      },
+    });
+
+    ctx.response.write({ type: 'text', text: 'Task routed successfully!' });
+  });
+
+// Specialized agents
+workflow.agent('/code', codeAgent);
+workflow.agent('/analyze', analyzeAgent);
+workflow.agent('/write', writeAgent);
+```
+
+### RESTful API with AI
+
+```typescript
+import { AiRouter } from '@microfox/ai-router';
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+const api = new AiRouter();
+
+// Middleware for authentication
+api.use('*', async (ctx, next) => {
+  const token = ctx.request.headers?.authorization;
+  if (!token) {
+    throw new Error('Unauthorized');
+  }
+  await next();
+});
+
+// A specific tool for searching users, which is better for the LLM to use
+api.tool(
+  '/search/users',
+  {
+    schema: z.object({
+      query: z.string().describe('The search query for users'),
+    }),
+    description: 'Searches for users based on a query.',
+  },
+  async (ctx, params) => {
+    // In a real app, you would have database logic here
+    // return await db.searchUsers(params.query);
+    return { users: [{ id: '123', name: 'John Doe' }] };
+  },
+);
+
+// AI-powered search
+api.agent('/search', async ctx => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Fulfill this search request: ${query}`,
+    tools: {
+      userSearch: ctx.next.attachTool('/search/users'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```

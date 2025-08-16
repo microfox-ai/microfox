@@ -1,0 +1,406 @@
+---
+title: 'Best Practices'
+sidebarTitle: 'Best Practices'
+description: 'Learn best practices for building robust and maintainable AI Router applications.'
+---
+
+## Best Practices
+
+This guide covers essential best practices for building robust, maintainable, and scalable AI Router applications.
+
+### 1. Error Handling
+
+Always handle errors gracefully in your agents:
+
+```typescript
+router.agent('/robust-agent', async ctx => {
+  try {
+    const result = await ctx.next.callAgent('/worker', ctx.request.params);
+    if (!result.ok) {
+      ctx.logger.error('Worker failed:', result.error);
+      return ctx.response.write({ type: 'text', text: 'Operation failed' });
+    }
+    ctx.response.write({ type: 'text', text: result.data });
+  } catch (error) {
+    ctx.logger.error('Unexpected error:', error);
+    ctx.response.write({ type: 'text', text: 'Internal error occurred' });
+  }
+});
+```
+
+### 2. Logging
+
+Use the structured logger for debugging and monitoring:
+
+```typescript
+router.agent('/logged-agent', async ctx => {
+  ctx.logger.log('Starting agent execution');
+  ctx.logger.log('Parameters:', ctx.request.params);
+
+  // ... agent logic ...
+
+  ctx.logger.log('Agent execution completed');
+});
+```
+
+### 3. State Management
+
+Use shared state for data that needs to persist across multiple agents:
+
+```typescript
+router.agent('/data-collector', async ctx => {
+  // Collect data and store in state
+  ctx.state.collectedData = await fetchData();
+  ctx.state.metadata = { timestamp: Date.now() };
+});
+
+router.agent('/data-processor', async ctx => {
+  // Process data from state
+  const { collectedData, metadata } = ctx.state;
+  const processed = await processData(collectedData);
+
+  ctx.response.write({
+    type: 'text',
+    text: `Processed ${processed.length} items`,
+  });
+});
+```
+
+### 4. Path Organization
+
+Organize your paths logically to make your application easier to understand:
+
+```typescript
+// Good organization
+router.agent('/api/users/:id', async ctx => {
+  /* ... */
+});
+router.agent('/api/users/:id/profile', async ctx => {
+  /* ... */
+});
+router.agent('/api/users/:id/settings', async ctx => {
+  /* ... */
+});
+
+// Avoid deep nesting unless necessary
+router.agent('/api/v1/users/:id/profile/settings/notifications', async ctx => {
+  /* ... */
+});
+```
+
+### 5. Agent Design Principles
+
+#### Single Responsibility
+
+Each agent should have a single, well-defined purpose:
+
+```typescript
+// Good: Single responsibility
+router.agent('/validate-user', async ctx => {
+  // Only handles user validation
+});
+
+router.agent('/process-payment', async ctx => {
+  // Only handles payment processing
+});
+
+// Avoid: Multiple responsibilities
+router.agent('/user-workflow', async ctx => {
+  // Don't mix validation, processing, and response generation
+});
+```
+
+#### Reusability
+
+Design agents to be reusable across different contexts:
+
+```typescript
+router.agent('/format-data', async ctx => {
+  const { data, format } = ctx.request.params;
+
+  switch (format) {
+    case 'json':
+      return JSON.stringify(data);
+    case 'xml':
+      return convertToXml(data);
+    default:
+      return data;
+  }
+});
+```
+
+### 6. Performance Considerations
+
+#### Async Operations
+
+Always use async/await for operations that return promises:
+
+```typescript
+router.agent('/data-fetcher', async ctx => {
+  // Good: Proper async handling
+  const data = await fetchData();
+  const processed = await processData(data);
+
+  ctx.response.write({ type: 'text', text: processed });
+});
+```
+
+#### Resource Management
+
+Clean up resources and handle timeouts appropriately:
+
+```typescript
+router.agent('/file-processor', async ctx => {
+  let fileHandle;
+  try {
+    fileHandle = await openFile(ctx.request.params.filename);
+    const content = await fileHandle.read();
+    return processContent(content);
+  } finally {
+    if (fileHandle) {
+      await fileHandle.close();
+    }
+  }
+});
+```
+
+### 7. Security Best Practices
+
+#### Input Validation
+
+Always validate and sanitize inputs:
+
+```typescript
+router.agent('/user-input', async ctx => {
+  const { userInput } = ctx.request.params;
+
+  // Validate input
+  if (!userInput || userInput.length > 1000) {
+    return ctx.response.write({
+      type: 'text',
+      text: 'Invalid input provided',
+    });
+  }
+
+  // Sanitize input
+  const sanitized = sanitizeInput(userInput);
+
+  // Process sanitized input
+  const result = await processInput(sanitized);
+  ctx.response.write({ type: 'text', text: result });
+});
+```
+
+#### Authentication and Authorization
+
+Implement proper authentication checks:
+
+```typescript
+router.agent('/protected-resource', async ctx => {
+  // Check authentication
+  if (!ctx.request.headers.authorization) {
+    return ctx.response.write({
+      type: 'text',
+      text: 'Authentication required',
+    });
+  }
+
+  // Verify permissions
+  const user = await verifyToken(ctx.request.headers.authorization);
+  if (!user.hasPermission('read:resource')) {
+    return ctx.response.write({
+      type: 'text',
+      text: 'Insufficient permissions',
+    });
+  }
+
+  // Process request
+  const data = await fetchProtectedData();
+  ctx.response.write({ type: 'text', text: data });
+});
+```
+
+### 8. Testing Strategies
+
+#### Unit Testing Agents
+
+Test individual agents in isolation:
+
+```typescript
+// test/agents/validate-user.test.ts
+describe('validate-user agent', () => {
+  it('should validate valid user data', async () => {
+    const mockCtx = createMockContext({
+      params: { userId: '123', email: 'test@example.com' },
+    });
+
+    await validateUserAgent(mockCtx);
+
+    expect(mockCtx.response.getContent()).toContain('User validated');
+  });
+
+  it('should reject invalid email', async () => {
+    const mockCtx = createMockContext({
+      params: { userId: '123', email: 'invalid-email' },
+    });
+
+    await validateUserAgent(mockCtx);
+
+    expect(mockCtx.response.getContent()).toContain('Invalid email');
+  });
+});
+```
+
+#### Integration Testing
+
+Test agent-to-agent communication:
+
+```typescript
+// test/integration/workflow.test.ts
+describe('user registration workflow', () => {
+  it('should complete full registration process', async () => {
+    const router = createTestRouter();
+
+    const result = await router.handleRequest({
+      path: '/register',
+      params: { email: 'test@example.com', password: 'secure123' },
+    });
+
+    expect(result).toContain('Registration successful');
+  });
+});
+```
+
+### 9. Monitoring and Observability
+
+#### Structured Logging
+
+Use structured logging for better debugging:
+
+```typescript
+router.agent('/monitored-agent', async ctx => {
+  const startTime = Date.now();
+
+  ctx.logger.log('Agent started', {
+    path: ctx.executionContext.currentPath,
+    params: ctx.request.params,
+    timestamp: startTime,
+  });
+
+  try {
+    const result = await processRequest(ctx.request.params);
+
+    ctx.logger.log('Agent completed successfully', {
+      duration: Date.now() - startTime,
+      resultSize: result.length,
+    });
+
+    ctx.response.write({ type: 'text', text: result });
+  } catch (error) {
+    ctx.logger.error('Agent failed', {
+      error: error.message,
+      duration: Date.now() - startTime,
+    });
+
+    throw error;
+  }
+});
+```
+
+#### Metrics Collection
+
+Track important metrics for your application:
+
+```typescript
+router.agent('/metrics-agent', async ctx => {
+  // Increment request counter
+  ctx.metrics.increment('requests.total');
+
+  const startTime = Date.now();
+
+  try {
+    const result = await processRequest(ctx.request.params);
+
+    // Record success metrics
+    ctx.metrics.increment('requests.success');
+    ctx.metrics.histogram('request.duration', Date.now() - startTime);
+
+    ctx.response.write({ type: 'text', text: result });
+  } catch (error) {
+    // Record error metrics
+    ctx.metrics.increment('requests.error');
+    ctx.metrics.increment(`requests.error.${error.name}`);
+
+    throw error;
+  }
+});
+```
+
+### 10. Documentation
+
+#### Code Comments
+
+Add meaningful comments to complex logic:
+
+```typescript
+router.agent('/complex-processor', async ctx => {
+  // Step 1: Validate and normalize input data
+  const normalizedData = await normalizeInput(ctx.request.params);
+
+  // Step 2: Apply business rules and transformations
+  const transformedData = await applyBusinessRules(normalizedData);
+
+  // Step 3: Generate response with proper formatting
+  const response = await formatResponse(transformedData);
+
+  ctx.response.write({ type: 'text', text: response });
+});
+```
+
+#### API Documentation
+
+Document your agents when exposing them as tools:
+
+```typescript
+router
+  .agent('/user-management', async ctx => {
+    const { action, userId, data } = ctx.request.params;
+
+    switch (action) {
+      case 'create':
+        return await createUser(data);
+      case 'update':
+        return await updateUser(userId, data);
+      case 'delete':
+        return await deleteUser(userId);
+      default:
+        throw new Error(`Unknown action: ${action}`);
+    }
+  })
+  .actAsTool({
+    schema: z.object({
+      action: z.enum(['create', 'update', 'delete']),
+      userId: z.string().optional(),
+      data: z.record(z.any()).optional(),
+    }),
+    description: 'Manage user operations including create, update, and delete',
+    examples: [
+      {
+        input: {
+          action: 'create',
+          data: { name: 'John Doe', email: 'john@example.com' },
+        },
+        output: 'User created successfully',
+      },
+    ],
+  });
+```
+
+## Next Steps
+
+- Review [Agents & Agent Handlers](/ai-router/foundation/agents) for core concepts
+- Learn about [State Management](/ai-router/foundation/state) for shared data
+- Explore [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- Understand [Tools](/ai-router/foundation/tools) for reusable functionality
+- See [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- Check [Error Handling](/ai-router/advanced/error-handling) for robust applications

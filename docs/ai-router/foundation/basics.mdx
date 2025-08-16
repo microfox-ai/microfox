@@ -1,0 +1,231 @@
+---
+title: 'Routing'
+description: 'Learn the fundamental concepts of ai-router and how to get started.'
+---
+
+## The AiRouter Class
+
+The `AiRouter` is the core class that orchestrates your entire AI application. It manages the routing stack, handles requests, and provides the execution context for your agents and tools.
+
+```typescript
+import { AiRouter } from '@microfox/ai-router';
+
+// Create a new router instance
+const router = new AiRouter<Metadata, Parts, Tools, State>(options?);
+```
+
+**Generic Parameters:**
+
+- `Metadata`: Custom metadata type for UI messages
+- `Parts`: Custom parts type for UI messages
+- `Tools`: Custom tools type for UI messages
+- `State`: Type for the shared state object
+
+**Options:**
+
+- `maxCallDepth`: Maximum agent-to-agent call depth (default: 10)
+- `logger`: Custom logger implementation
+
+## Mounting & Routing
+
+`ai-router` uses a hierarchical routing system inspired by Express.js, but adapted for AI applications. This allows you to build complex, multi-agent systems with clear separation of concerns.
+
+### Express.js vs ai-router Routing
+
+**Express.js Pattern:**
+
+```typescript
+// Express.js - HTTP routing
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  res.json({ user: getUser(userId) });
+});
+
+app.get('/users/:id/posts', (req, res) => {
+  const userId = req.params.id;
+  res.json({ posts: getUserPosts(userId) });
+});
+```
+
+**ai-router Pattern:**
+
+```typescript
+// ai-router - AI agent routing
+router.agent('/users/:id', async ctx => {
+  const userId = ctx.request.params.id;
+  ctx.response.write({ type: 'text', text: `User info: ${getUser(userId)}` });
+});
+
+router.agent('/users/:id/posts', async ctx => {
+  const userId = ctx.request.params.id;
+  ctx.response.write({ type: 'text', text: `Posts: ${getUserPosts(userId)}` });
+});
+```
+
+### Hierarchical Agent Composition
+
+You can mount sub-agents to create a hierarchy of specialized agents:
+
+```typescript
+// Main router
+const mainRouter = new AiRouter();
+
+// Sub-agent for code generation
+const codeAgent = new AiRouter();
+codeAgent.agent('/', async ctx => {
+  ctx.response.write({ type: 'text', text: 'Generating code...' });
+});
+
+// Sub-agent for testing
+const testAgent = new AiRouter();
+testAgent.agent('/', async ctx => {
+  ctx.response.write({ type: 'text', text: 'Running tests...' });
+});
+
+// Mount sub-agents to main router
+mainRouter.use('/code', codeAgent);
+mainRouter.use('/test', testAgent);
+
+// Main agent that orchestrates the workflow
+mainRouter.agent('/', async ctx => {
+  // Call sub-agents
+  await ctx.next.callAgent('/code');
+  await ctx.next.callAgent('/test');
+});
+```
+
+### Dynamic Path Parameters
+
+Like Express.js, ai-router supports dynamic path parameters using `:paramName` syntax:
+
+```typescript
+router.agent('/projects/:projectId', async ctx => {
+  const { projectId } = ctx.request.params;
+  ctx.response.write({
+    type: 'text',
+    text: `Working on project: ${projectId}`,
+  });
+});
+
+router.agent('/projects/:projectId/files/:fileId', async ctx => {
+  const { projectId, fileId } = ctx.request.params;
+  ctx.response.write({
+    type: 'text',
+    text: `File ${fileId} in project ${projectId}`,
+  });
+});
+```
+
+## The Context Object
+
+Every agent receives a rich context object that provides access to all the information and utilities needed to handle requests. The context object is the primary interface between your agent logic and the ai-router system.
+
+For detailed information about the context object, its properties, and usage patterns, see the [Context Object](/ai-router/foundation/context) documentation.
+
+## Next.js App Router Integration
+
+ai-router integrates seamlessly with Next.js App Router, allowing you to serve your entire AI system through a single API endpoint.
+
+<CodeGroup>
+  ```typescript Basic Integration
+  // app/api/chat/route.ts
+  import { AiRouter } from '@microfox/ai-router';
+
+const router = new AiRouter();
+
+router.agent('/', async ctx => {
+ctx.response.write({ type: 'text', text: 'Hello from ai-router!' });
+});
+
+export async function POST(request: Request) {
+const body = await request.json();
+const { messages, ...restOfBody } = body;
+
+    const response = router.handle('/', {
+      request: {
+        ...restOfBody,
+        messages: messages || [],
+      },
+    });
+
+    return response;
+
+}
+
+````
+
+```typescript Dynamic Route Integration
+// app/api/ai/[[...slug]]/route.ts
+import { AiRouter } from '@microfox/ai-router';
+
+const router = new AiRouter();
+
+// Define agents for different paths
+router.agent('/code', async ctx => {
+  ctx.response.write({ type: 'text', text: 'Code generation agent' });
+});
+
+router.agent('/analyze', async ctx => {
+  ctx.response.write({ type: 'text', text: 'Data analysis agent' });
+});
+
+export async function POST(
+  request: Request,
+  { params }: { params: { slug: string[] } },
+) {
+  // Convert URL slug to path
+  const path = `/${(params.slug || []).join('/')}`;
+
+  const body = await request.json();
+  const { messages, ...restOfBody } = body;
+
+  const response = router.handle(path, {
+    request: {
+      ...restOfBody,
+      messages: messages || [],
+    },
+  });
+
+  return response;
+}
+````
+
+```typescript Frontend Integration
+// app/page.tsx
+'use client';
+
+import { useChat } from 'ai/react';
+
+export default function Chat() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    api: '/api/ai', // Single endpoint for all AI functionality
+  });
+
+  return (
+    <div>
+      {messages.map((message) => (
+        <div key={message.id}>
+          {message.role}: {message.content}
+        </div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Ask me anything..."
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  );
+}
+```
+
+</CodeGroup>
+
+## Streaming Support
+
+ai-router provides comprehensive streaming support built on top of the Vercel AI SDK v5. This enables real-time, interactive AI experiences where responses are delivered as they're generated.
+
+For detailed information about streaming capabilities, helper functions, and integration patterns, see the [Streaming Support](/ai-router/foundation/stream) documentation.

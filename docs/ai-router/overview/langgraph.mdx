@@ -1,0 +1,58 @@
+---
+title: 'AI Router vs LangGraph'
+description: 'Comparison between LangGraph and AI Router for multi-agent workflows.'
+---
+
+While LangGraph offers a solution for multi-agent workflows, it has significant limitations for full-stack applications:
+
+1. **Python-heavy**: While langgraph.js exists, its not designed for typescript based framework
+2. **Backend-focused**: Not designed for Next.js and modern web frameworks
+3. **Complex setup**: Requires significant infrastructure changes
+4. **No frontend integration**: Doesn't work seamlessly with Vercel AI SDK
+5. **Learning curve**: Steep learning curve for web developers
+
+### Features Comparison
+
+AI Router is a more suitable solution for modern web applications compared to LangGraph, especially when working with TypeScript, Next.js, and the Vercel AI SDK.
+
+| Feature                  | LangGraph              | AI Router                    |
+| ------------------------ | ---------------------- | ---------------------------- |
+| **Language**             | Python heavy           | TypeScript/JavaScript        |
+| **Framework**            | Backend-focused        | Full-stack (Next.js first)   |
+| **Learning Curve**       | Steep (new paradigm)   | Familiar (Express.js style)  |
+| **Frontend Integration** | None                   | Native Vercel AI SDK support |
+| **Deployment**           | Complex infrastructure | Simple Vercel deployment     |
+| **Type Safety**          | Limited                | Full TypeScript support      |
+| **Middleware**           | Custom implementation  | Express.js style middleware  |
+| **State Management**     | Complex                | Simple shared state object   |
+
+### Choose AI Router when:
+
+<CardGroup cols={2}>
+<Card title="Full-stack Development" icon="triangle">
+  Building full-stack web applications with Next.js & Vercel AI SDK
+</Card>
+
+<Card title="TypeScript/JavaScript" icon="code">
+  Need Type Safety throughout your stack & follow standard web development
+  patterns
+</Card>
+
+<Card title="Express.js Patterns" icon="route">
+  Want familiar Express.js patterns for routing & agentic architecture
+</Card>
+
+<Card title="Agent Sub-agent Architecture" icon="split">
+  Require Agent as Tool architecture based on Google's Agent Development Kit
+</Card>
+</CardGroup>
+
+## Migration from LangGraph
+
+For detailed migration instructions from LangGraph to AI Router, see our [LangGraph Migration Guide](/ai-router/advanced/langgraph-migration).
+
+## Conclusion
+
+AI Router provides a more suitable solution for modern web applications compared to LangGraph, especially when working with TypeScript, Next.js, and the Vercel AI SDK.
+
+While LangGraph excels in Python-based enterprise environments, AI Router offers a more familiar and integrated experience for full-stack web developers.

@@ -1,92 +1,108 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Microfox",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Introduction",
         "groups": [
           {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
+            "group": "Get Started",
+            "pages": ["index", "intro/quickstart"]
           },
           {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
+            "group": "About",
+            "pages": ["intro/roadmap", "intro/reach-out"]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Micro SDKs",
+        "icon": "box",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Overview",
+            "pages": ["micro-sdks/index"]
+          }
+        ]
+      },
+      {
+        "tab": "Code Loop",
+        "icon": "infinity",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["code-loop/index"]
+          }
+        ]
+      },
+      {
+        "tab": "X Framework",
+        "icon": "superscript",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["x-framework/index"]
+          }
+        ]
+      },
+      {
+        "tab": "AI Router",
+        "icon": "split",
+        "groups": [
+          {
+            "group": "Getting Started",
             "pages": [
-              "api-reference/introduction"
+              "ai-router/overview/why",
+              "ai-router/overview/quickstart",
+              "ai-router/overview/langgraph",
+              "ai-router/overview/core-principles"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Foundation",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "ai-router/foundation/basics",
+              "ai-router/foundation/agents",
+              "ai-router/foundation/middleware",
+              "ai-router/foundation/state",
+              "ai-router/foundation/tools",
+              "ai-router/foundation/agent-as-tool",
+              "ai-router/foundation/stream"
+            ]
+          },
+          {
+            "group": "Advanced Usage",
+            "pages": [
+              "ai-router/advanced/advanced-usage",
+              "ai-router/advanced/structuring-applications",
+              "ai-router/advanced/langgraph-migration",
+              "ai-router/overview/coming-soon"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": ["ai-router/examples"]
+          },
+          {
+            "group": "API Reference",
+            "pages": [
+              "ai-router/api-reference/router",
+              "ai-router/api-reference/context-object",
+              "ai-router/api-reference/next-handler",
+              "ai-router/api-reference/error-types"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -95,33 +111,41 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Blog",
+        "href": "https://microfox.app/blog"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/microfox-ai"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "App",
+      "href": "https://microfox.app"
     }
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/microfoxai",
+      "github": "https://github.com/microfox-ai",
+      "linkedin": "https://www.linkedin.com/company/microfoxautomates",
+      "discord": "https://discord.gg/microfox"
     }
   }
 }

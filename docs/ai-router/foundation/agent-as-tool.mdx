@@ -1,0 +1,48 @@
+## Agent as Tool Pattern
+
+The Agent as Tool pattern allows you to expose any agent as a reusable tool that can be used by other agents. This creates a powerful orchestration paradigm where complex workflows can be built by composing simpler, specialized agents.
+
+### Step 1: Exposing Agents as Tools
+
+First, define your agent and expose it as a tool using `.actAsTool()`:
+
+```typescript
+import { z } from 'zod';
+
+// Define a reusable "research" agent
+router
+  .agent('/research', async ctx => {
+    const { query } = ctx.request.params;
+    const summary = await researchService.search(query);
+    return summary;
+  })
+  .actAsTool({
+    description: 'Performs web research on a specific topic.',
+    inputSchema: z.object({ query: z.string() }),
+  });
+```
+
+The `.actAsTool()` method takes:
+
+- `description`: A clear description of what the tool does
+- `inputSchema`: A Zod schema defining the expected input parameters
+
+### Step 2: Using the Exposed Tool
+
+Now you can use this exposed tool within other agents:
+
+```typescript
+// Use the research agent as a tool within another agent
+router.agent('/blog-writer', async ctx => {
+  const { topic } = ctx.request.params;
+
+  // Use the research agent as a Tool
+  const text = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}`,
+    tools: {
+      research: ctx.next.agentAsTool('/research'),
+    },
+  });
+});
+```

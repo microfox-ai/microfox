@@ -1,0 +1,248 @@
+---
+title: 'Streaming Support'
+description: 'Learn about streaming support in ai-router and how to use it effectively.'
+---
+
+## Streaming Support with AI SDK v5
+
+ai-router is built on top of the Vercel AI SDK v5 and provides native streaming support through the `ctx.response.write` method and helper functions. This enables real-time, interactive AI experiences where responses are delivered as they're generated.
+
+## Basic Streaming
+
+The foundation of streaming in ai-router is the `ctx.response.write` method, which allows you to stream data chunks to the client:
+
+```typescript
+router.agent('/stream', async ctx => {
+  // Stream text chunks
+  ctx.response.write({ type: 'text', text: 'Starting...' });
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  ctx.response.write({ type: 'text', text: 'Processing...' });
+
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  ctx.response.write({ type: 'text', text: 'Complete!' });
+});
+```
+
+## Advanced Streaming with Helper Functions
+
+The `StreamWriter` class from `@helper.ts` provides additional streaming capabilities for more complex scenarios.
+
+### Message Metadata
+
+You can stream metadata about the message being generated:
+
+```typescript
+router.agent('/metadata-stream', async ctx => {
+  // Write message metadata
+  ctx.response.writeMessageMetadata({
+    processingStage: 'initialization',
+    timestamp: Date.now(),
+    userId: ctx.request.userId,
+  });
+
+  // Stream content
+  ctx.response.write({ type: 'text', text: 'Processing your request...' });
+
+  // Update metadata
+  ctx.response.writeMessageMetadata({
+    processingStage: 'complete',
+    timestamp: Date.now(),
+  });
+});
+```
+
+### Custom Tool Calls
+
+Stream custom tool calls and their results:
+
+```typescript
+router.agent('/tool-stream', async ctx => {
+  // Write custom tool calls
+  ctx.response.writeCustomTool({
+    toolName: 'dataProcessor',
+    input: { query: 'process data' },
+    output: { result: 'processed data' },
+  });
+
+  // Stream additional content
+  ctx.response.write({ type: 'text', text: 'Tool execution completed.' });
+});
+```
+
+## Merge Streaming with AI SDK helpers
+
+ai-router seamlessly integrates with the Vercel AI SDK's streaming functions.
+
+### Text Streaming
+
+```typescript
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+router.agent('/ai-text-stream', async ctx => {
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: 'Write a story about a robot learning to love',
+  });
+
+  ctx.response.merge(
+    stream.toUIMessageStream({ sendFinish: false, sendStart: false }),
+  );
+});
+```
+
+### Object Streaming
+
+```typescript
+import { streamObject } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+router.agent('/ai-object-stream', async ctx => {
+  const stream = streamObject({
+    model: openai('gpt-4'),
+    prompt: 'Generate a user profile',
+    schema: z.object({
+      name: z.string(),
+      age: z.number(),
+      interests: z.array(z.string()),
+    }),
+  });
+
+  ctx.response.merge(
+    stream.toUIMessageStream({ sendFinish: false, sendStart: false }),
+  );
+});
+```
+
+## Real-World Streaming Patterns
+
+### Progressive Code Generation
+
+```typescript
+router.agent('/code-stream', async ctx => {
+  const { prompt } = ctx.request.params;
+
+  ctx.response.write({ type: 'text', text: 'Planning code structure...\n' });
+
+  // Generate code structure
+  const structure = await generateCodeStructure(prompt);
+  ctx.response.write({ type: 'text', text: 'Structure planned.\n' });
+
+  // Generate code progressively
+  for (const section of structure.sections) {
+    ctx.response.write({
+      type: 'text',
+      text: `Generating ${section.name}...\n`,
+    });
+
+    const code = await generateCodeSection(section);
+    ctx.response.write({ type: 'text', text: code + '\n' });
+  }
+
+  ctx.response.write({ type: 'text', text: 'Code generation complete!' });
+});
+```
+
+### Multi-Agent Streaming Workflow
+
+```typescript
+router.agent('/workflow-stream', async ctx => {
+  ctx.response.write({ type: 'text', text: 'Starting workflow...\n' });
+
+  // Step 1: Analysis
+  ctx.response.write({ type: 'text', text: 'Step 1: Analyzing request...\n' });
+  await ctx.next.callAgent('/analyze', ctx.request.params);
+
+  // Step 2: Processing
+  ctx.response.write({ type: 'text', text: 'Step 2: Processing data...\n' });
+  await ctx.next.callAgent('/process', ctx.request.params);
+
+  // Step 3: Generation
+  ctx.response.write({
+    type: 'text',
+    text: 'Step 3: Generating response...\n',
+  });
+  await ctx.next.callAgent('/generate', ctx.request.params);
+
+  ctx.response.write({
+    type: 'text',
+    text: 'Workflow completed successfully!',
+  });
+});
+```
+
+### Error Handling in Streams
+
+```typescript
+router.agent('/error-stream', async ctx => {
+  try {
+    ctx.response.write({ type: 'text', text: 'Starting operation...\n' });
+
+    // Simulate a risky operation
+    const result = await riskyOperation();
+
+    ctx.response.write({ type: 'text', text: 'Operation successful!\n' });
+    ctx.response.write({ type: 'text', text: `Result: ${result}` });
+  } catch (error) {
+    // Stream error information
+    ctx.response.write({
+      type: 'text',
+      text: `Error occurred: ${error.message}\n`,
+    });
+
+    // Log error with context
+    ctx.logger.error('Stream error:', error);
+  }
+});
+```
+
+## Performance Considerations
+
+### Chunk Size Optimization
+
+```typescript
+router.agent('/optimized-stream', async ctx => {
+  const largeText = generateLargeText();
+  const chunkSize = 100; // Optimal chunk size
+
+  for (let i = 0; i < largeText.length; i += chunkSize) {
+    const chunk = largeText.slice(i, i + chunkSize);
+    ctx.response.write({ type: 'text', text: chunk });
+
+    // Small delay to prevent overwhelming the client
+    await new Promise(resolve => setTimeout(resolve, 10));
+  }
+});
+```
+
+### Backpressure Handling
+
+```typescript
+router.agent('/backpressure-stream', async ctx => {
+  const data = await fetchLargeDataset();
+
+  // Process data in batches to handle backpressure
+  const batchSize = 50;
+  for (let i = 0; i < data.length; i += batchSize) {
+    const batch = data.slice(i, i + batchSize);
+
+    // Process batch
+    const processedBatch = await processBatch(batch);
+
+    // Stream results
+    ctx.response.write({
+      type: 'text',
+      text: `Processed ${i + batch.length} of ${data.length} items\n`,
+    });
+
+    // Allow time for client to process
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+});
+```
+
+This streaming architecture ensures that your AI responses are delivered in real-time, providing a smooth user experience while maintaining the flexibility to handle complex multi-agent workflows. The combination of basic streaming, advanced helper functions, and AI SDK integration gives you powerful tools for building responsive AI applications.
