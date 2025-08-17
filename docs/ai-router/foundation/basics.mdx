@@ -94,28 +94,6 @@ mainRouter.agent('/', async ctx => {
 });
 ```
 
-### Dynamic Path Parameters
-
-Like Express.js, ai-router supports dynamic path parameters using `:paramName` syntax:
-
-```typescript
-router.agent('/projects/:projectId', async ctx => {
-  const { projectId } = ctx.request.params;
-  ctx.response.write({
-    type: 'text',
-    text: `Working on project: ${projectId}`,
-  });
-});
-
-router.agent('/projects/:projectId/files/:fileId', async ctx => {
-  const { projectId, fileId } = ctx.request.params;
-  ctx.response.write({
-    type: 'text',
-    text: `File ${fileId} in project ${projectId}`,
-  });
-});
-```
-
 ## The Context Object
 
 Every agent receives a rich context object that provides access to all the information and utilities needed to handle requests. The context object is the primary interface between your agent logic and the ai-router system.
