@@ -1,5 +1,39 @@
 # @microfox/tool-kit
 
+## 1.1.22
+
+### Patch Changes
+
+- 2dd01b8: Changes from PR #704: tool-security-schema
+- a0df273: security schema update
+- Updated dependencies [2dd01b8]
+- Updated dependencies [a0df273]
+  - @microfox/types@1.0.15
+
+## 1.1.21
+
+### Patch Changes
+
+- f2836ae: minor fix
+- Updated dependencies [f2836ae]
+  - @microfox/types@1.0.14
+
+## 1.1.20
+
+### Patch Changes
+
+- 809553e: fix ts error
+- Updated dependencies [809553e]
+  - @microfox/types@1.0.13
+
+## 1.1.19
+
+### Patch Changes
+
+- 11847b6: Triggered by issue #689: release @microfox/tool-kit patch
+- Updated dependencies [ce4509b]
+  - @microfox/types@1.0.12
+
 ## 1.1.18
 
 ### Patch Changes

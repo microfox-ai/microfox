@@ -1,6 +1,6 @@
 {
   "name": "@microfox/instagram",
-  "version": "1.3.0",
+  "version": "1.3.3",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -14,7 +14,10 @@
     "build:watch": "tsup --watch",
     "clean": "rm -rf dist",
     "lint": "eslint \"./**/*.ts*\"",
-    "prettier-check": "prettier --check \"./**/*.ts*\""
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "exports": {
     "./package.json": "./package.json",
@@ -24,14 +27,17 @@
     }
   },
   "dependencies": {
-    "@microfox/instagram-business-oauth": "^1.2.0",
-    "zod": "^3.24.3"
+    "@microfox/instagram-oauth": "*",
+    "zod": "^3.24.3",
+    "dotenv": "^16.4.0"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
     "@types/node": "^18",
     "tsup": "^8",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -51,7 +57,6 @@
     "instagram",
     "graph api",
     "typescript",
-    "oauth2",
     "microfox",
     "sdk"
   ]

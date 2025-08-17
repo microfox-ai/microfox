@@ -17,6 +17,7 @@
     "packages/cli",
     "packages/crypto-sdk",
     "packages/db-upstash",
+    "packages/fontuse",
     "packages/oauth-kit",
     "packages/rest-sdk",
     "packages/serverless-yml",
@@ -42,6 +43,8 @@
     "packages/aws-ses",
     "packages/brave",
     "packages/google-sheets",
+    "packages/instagram",
+    "packages/instagramfb",
     "packages/linkedin-share",
     "packages/puppeteer-sls",
     "packages/slack",
@@ -62,8 +65,6 @@
     "packages/google-calendar",
     "packages/google-drive",
     "packages/google-seo",
-    "packages/instagram",
-    "packages/instagram-fb",
     "packages/kling-ai",
     "packages/notion",
     "packages/puppeteer-linkedin",
@@ -84,18 +85,19 @@
     "packages/github-oauth",
     "packages/google",
     "packages/google-oauth",
-    "packages/instagram-business-oauth",
-    "packages/instagram-fb-business-oauth",
+    "packages/instagram-oauth",
+    "packages/instagramfb-oauth",
     "packages/linkedin-oauth",
     "packages/notion-oauth",
     "packages/reddit-oauth",
-    "packages/slack-oauth"
+    "packages/slack-oauth",
+    "packages/whatsapp-oauth"
   ],
   "unknownPackages": [
     "packages/task-kit",
     "packages/tracker",
     "packages/webhook-core"
   ],
-  "total": 79,
-  "generatedAt": "2025-07-25T13:28:46.286Z"
+  "total": 81,
+  "generatedAt": "2025-08-03T22:15:46.103Z"
 }

@@ -1,5 +1,6 @@
-import { AgentCard, TaskState } from './a2a.types';
+import { AgentCard, TaskState, SecurityScheme } from './a2a.types';
 import { AgentUi } from './ui.types';
+import { JsonSchema } from './openapi.types';
 
 export interface AgentServers {
   url: string;
@@ -26,53 +27,36 @@ export interface AgentInfo {
   };
 }
 
-type JsonSchema = {
-  type?: string;
-  format?: string;
-  description?: string;
-  properties?: Record<string, JsonSchema>;
-  items?: JsonSchema;
-  required?: string[];
-  enum?: any[];
-  default?: any;
-  additionalProperties?: boolean | JsonSchema;
-  oneOf?: JsonSchema[];
-  anyOf?: JsonSchema[];
-  allOf?: JsonSchema[];
-  $ref?: string;
-  $defs?: Record<string, JsonSchema>;
-  [key: string]: any;
-};
-
 export interface AgentPathAiInstruction {
   systemPrompt?: string;
   disableTool?: boolean; // false by default
   preferredModel?: string;
 }
 
-export interface AgentPathSecurity {
-  requiresAuth?: boolean;
-  authSchema?: `x-auth-${string}`[] | string[] | JsonSchema[]; // $ref to a schema in the components.schemas (x-auth-packages by default)
+export interface ApprovalHitlSchema {
+  uiType: 'approval';
+  uiSchema?: JsonSchema;
+}
+
+export interface HitlDetails {
   requiresHITL?: boolean;
   hitlPrompt?: string;
   hitlPriority?: number;
-  hitlSchema?: `x-hitl-${string}` | string | JsonSchema; // $ref to a schema in the components.schemas (x-hitl-packages by default)
+  hitlSchema?: `x-hitl-${string}` | string | JsonSchema;
 }
 
-export interface SecurityAuthSchema {
-  '@microfox/packages': {
-    type?: '@microfox/packages';
-    packageName?: string;
-    packageConstructor?: string[];
-    customSecrets?: {
-      key: string;
-      description: string;
-      required: boolean;
-      type: string;
-      format?: string;
-      enum?: any[];
-      default?: any;
-    }[];
+export type SecurityRequirementObject =
+  | {
+      [key: string]: string[];
+    }
+  | { 'x-microfox-packages': `@microfox/${string}` };
+
+export interface ResponseObject {
+  description: string;
+  content?: {
+    [mediaType: string]: {
+      schema?: JsonSchema;
+    };
   };
 }
 
@@ -83,56 +67,45 @@ export interface AgentPath {
     description: string;
     tags: string[];
     ai?: AgentPathAiInstruction;
-    security?: AgentPathSecurity;
+    hitl?: HitlDetails;
+    security?: SecurityRequirementObject[];
     ui?: AgentUi;
     parameters?: {
       name: string;
       in: 'query' | 'header' | 'path' | 'cookie';
       description: string;
       required: boolean;
-      schema: Record<string, any>;
+      schema: JsonSchema;
     }[];
     requestBody?: {
       required?: boolean;
-      content:
-        | {
-            'application/json': {
-              schema: JsonSchema;
-            };
-          }
-        | {
-            'application/x-www-form-urlencoded': {
-              schema: Record<string, any>;
-            };
-          }
-        | {
-            'multipart/form-data': {
-              schema: Record<string, any>;
-            };
-          };
+      content: {
+        [mediaType: string]: {
+          schema: JsonSchema;
+        };
+      };
     };
     responses?: {
-      [key: string]: JsonSchema;
+      [key: string]: ResponseObject | { $ref: string };
     };
   };
 }
 
 export interface AgentOpenApi {
-  openapi: string; //"3.0.1",
+  openapi: string; //"3.1.0",
   info: AgentInfo;
   servers?: AgentServers[];
   ai?: AgentPathAiInstruction;
-  security?: AgentPathSecurity;
+  security?: SecurityRequirementObject[];
   ui?: AgentUi;
   paths: Record<string, AgentPath>;
   components: {
     schemas: {
-      [key: `x-auth-${string}`]: SecurityAuthSchema['@microfox/packages'][];
-      [key: `x-hitl-${string}`]: {
-        uiType: 'approval' | string;
-        uiSchema?: JsonSchema;
-      };
+      [key: `x-hitl-${string}`]: ApprovalHitlSchema;
       [key: string]: any;
+    };
+    securitySchemes?: {
+      [key: string]: SecurityScheme | { $ref: string };
     };
   };
   tags: {

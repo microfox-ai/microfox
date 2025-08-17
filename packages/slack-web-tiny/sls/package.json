@@ -19,11 +19,12 @@
   "dependencies": {
     "@microfox/crypto-sdk": "^1.0.3",
     "@microfox/slack-web-tiny": "^1.2.4",
-    "@microfox/tool-core": "latest",
+    "@microfox/tool-core": "^1.0.16",
     "aws-lambda": "^1.0.7",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",

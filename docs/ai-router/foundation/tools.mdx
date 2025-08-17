@@ -1,0 +1,389 @@
+---
+title: 'Tools'
+description: 'Learn how to create and use tools for reusable functionality in AI Router.'
+---
+
+## Overview
+
+Tools are functions that agents can call to perform specific tasks. They provide:
+
+- **Type Safety**: Zod schemas for parameter validation
+- **Reusability**: Tools can be called by multiple agents
+- **Composability**: Tools can call other tools or agents
+- **Modularity**: Encapsulate complex functionality in reusable components
+
+## Basic Tool Definition
+
+Tools are defined using the `router.tool()` method with a schema and execution function:
+
+```typescript
+import { z } from 'zod';
+
+router.tool(
+  '/calculator',
+  {
+    schema: z.object({
+      a: z.number(),
+      b: z.number(),
+      operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
+    }),
+    description: 'Performs basic arithmetic operations',
+  },
+  async (ctx, params) => {
+    const { a, b, operation } = params;
+
+    switch (operation) {
+      case 'add':
+        return a + b;
+      case 'subtract':
+        return a - b;
+      case 'multiply':
+        return a * b;
+      case 'divide':
+        if (b === 0) throw new Error('Division by zero');
+        return a / b;
+    }
+  },
+);
+```
+
+## Using Tools in Agents
+
+Agents can call tools using `ctx.next.callTool()`:
+
+```typescript
+router.agent('/math-agent', async ctx => {
+  const result = await ctx.next.callTool('/calculator', {
+    a: 5,
+    b: 3,
+    operation: 'add',
+  });
+
+  if (result.ok) {
+    ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+  } else {
+    ctx.logger.error('Calculator failed:', result.error);
+  }
+});
+```
+
+## Attaching Tools to LLM Functions
+
+One of the most powerful features of AI Router is the ability to attach tools to LLM functions like `generateText` and `streamText`. This allows the LLM to dynamically decide which tools to call based on the user's request, creating intelligent, tool-using agents.
+
+### Basic Tool Attachment
+
+You can attach tools to LLM functions using `ctx.next.attachTool()` for individual tools or `ctx.next.agentAsTool()` for agents:
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+router.agent('/smart-assistant', async ctx => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Answer this question: ${query}`,
+    tools: {
+      // Attach a specific tool
+      calculator: ctx.next.attachTool('/calculator'),
+      // Attach an agent as a tool
+      researcher: ctx.next.agentAsTool('/research'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+### Tool Composition
+
+You can compose multiple tools and agents for complex workflows:
+
+```typescript
+router.agent('/workflow-orchestrator', async ctx => {
+  const { task } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Complete this task: ${task}`,
+    tools: {
+      // Data gathering tools
+      webSearch: ctx.next.agentAsTool('/web-search'),
+      databaseQuery: ctx.next.attachTool('/database/query'),
+
+      // Processing tools
+      dataAnalyzer: ctx.next.agentAsTool('/data-analysis'),
+      imageProcessor: ctx.next.attachTool('/image/process'),
+
+      // Output tools
+      reportGenerator: ctx.next.agentAsTool('/report-generation'),
+      emailSender: ctx.next.attachTool('/email/send'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+### Optimize for Token Usage
+
+Be mindful of token usage when attaching many tools:
+
+```typescript
+// Only attach relevant tools based on the request
+router.agent('/efficient-assistant', async ctx => {
+  const { query, category } = ctx.request.params;
+
+  let tools: Record<string, any> = {};
+
+  // Attach tools based on request category
+  switch (category) {
+    case 'math':
+      tools.calculator = ctx.next.attachTool('/calculator');
+      break;
+    case 'weather':
+      tools.weather = ctx.next.attachTool('/weather');
+      break;
+    case 'research':
+      tools.researcher = ctx.next.agentAsTool('/research');
+      break;
+    default:
+      // Attach all tools for general queries
+      tools = {
+        calculator: ctx.next.attachTool('/calculator'),
+        weather: ctx.next.attachTool('/weather'),
+        researcher: ctx.next.agentAsTool('/research'),
+      };
+  }
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: query,
+    tools,
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+## Tool Attachment vs Direct Tool Calls
+
+**Use Tool Attachment when:**
+
+- You want the LLM to intelligently decide which tools to use
+- The user's request is ambiguous or could benefit from multiple tools
+- You're building conversational interfaces
+- You want to reduce the complexity of your agent logic
+
+**Use Direct Tool Calls when:**
+
+- You know exactly which tool to call based on the request
+- You need precise control over tool execution order
+- You're building deterministic workflows
+- You want to minimize LLM token usage
+
+```typescript
+// Direct tool call - deterministic
+router.agent('/deterministic', async ctx => {
+  const { a, b, operation } = ctx.request.params;
+  const result = await ctx.next.callTool('/calculator', { a, b, operation });
+  ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+});
+
+// Tool attachment - intelligent
+router.agent('/intelligent', async ctx => {
+  const { query } = ctx.request.params;
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: query,
+    tools: {
+      calculator: ctx.next.attachTool('/calculator'),
+      weather: ctx.next.attachTool('/weather'),
+    },
+  });
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+## Factory-Based Tools
+
+Tools can be created dynamically using factory functions:
+
+```typescript
+router.tool('/dynamic-tool', ctx => {
+  // Access context to create dynamic tools
+  const { user } = ctx.state;
+
+  return {
+    description: `A tool for user ${user?.name || 'anonymous'}`,
+    inputSchema: z.object({
+      message: z.string(),
+      priority: z.enum(['low', 'medium', 'high']).optional(),
+    }),
+    execute: async params => {
+      const { message, priority = 'medium' } = params;
+      return `Processed message: "${message}" with priority: ${priority}`;
+    },
+  };
+});
+```
+
+## Tool Parameter Validation
+
+Tools automatically validate parameters against their schema:
+
+```typescript
+router.tool(
+  '/user-validator',
+  {
+    schema: z.object({
+      email: z.string().email(),
+      age: z.number().min(18).max(120),
+      preferences: z.array(z.string()).optional(),
+    }),
+    description: 'Validates user data',
+  },
+  async (ctx, params) => {
+    // Parameters are already validated by the schema
+    const { email, age, preferences } = params;
+
+    // Additional business logic validation
+    if (email.includes('test')) {
+      throw new Error('Test emails are not allowed');
+    }
+
+    return {
+      valid: true,
+      user: { email, age, preferences: preferences || [] },
+    };
+  },
+);
+```
+
+## Best Practices
+
+### 1. Use Descriptive Names and Descriptions
+
+Make tools easy to understand and use:
+
+```typescript
+// Good
+router.tool('/calculate-monthly-payment', {
+  description:
+    'Calculates monthly mortgage payment based on principal, rate, and term',
+  // ...
+});
+
+// Avoid
+router.tool('/calc', {
+  description: 'Does math',
+  // ...
+});
+```
+
+### 2. Validate Input Thoroughly
+
+Use comprehensive schemas to catch errors early:
+
+```typescript
+router.tool('/user-creator', {
+  schema: z.object({
+    email: z.string().email(),
+    name: z.string().min(1).max(100),
+    age: z.number().int().positive().max(120),
+    preferences: z
+      .object({
+        newsletter: z.boolean(),
+        theme: z.enum(['light', 'dark', 'auto']),
+      })
+      .optional(),
+  }),
+  // ...
+});
+```
+
+### 3. Handle Errors Gracefully
+
+Provide meaningful error messages and handle edge cases:
+
+```typescript
+router.tool('/file-processor', {
+  // ...
+  async (ctx, params) => {
+    try {
+      const { filePath } = params;
+
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found: ${filePath}`);
+      }
+
+      const content = await fs.promises.readFile(filePath, 'utf8');
+      return processFile(content);
+    } catch (error) {
+      ctx.logger.error('File processing failed:', error);
+      throw new Error(`Failed to process file: ${error.message}`);
+    }
+  },
+});
+```
+
+### 4. Keep Tools Focused
+
+Each tool should have a single, well-defined responsibility:
+
+```typescript
+// Good: Single responsibility
+router.tool('/email-validator', {
+  description: 'Validates email format and checks if domain exists',
+  // ...
+});
+
+// Avoid: Multiple responsibilities
+router.tool('/user-manager', {
+  description: 'Creates, updates, deletes, validates, and processes users',
+  // ...
+});
+```
+
+### 5. Use TypeScript for Better Type Safety
+
+Define types for your tool parameters and return values:
+
+```typescript
+interface CalculatorParams {
+  a: number;
+  b: number;
+  operation: 'add' | 'subtract' | 'multiply' | 'divide';
+}
+
+interface CalculatorResult {
+  result: number;
+  operation: string;
+}
+
+router.tool<CalculatorParams, CalculatorResult>(
+  '/calculator',
+  {
+    schema: z.object({
+      a: z.number(),
+      b: z.number(),
+      operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
+    }),
+    description: 'Performs basic arithmetic operations',
+  },
+  async (ctx, params) => {
+    // TypeScript will provide full type safety here
+    const { a, b, operation } = params;
+    // ...
+  },
+);
+```
+
+## Next Steps
+
+- Learn about [State Management](/ai-router/foundation/state) for shared data
+- Explore [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- Understand [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- See [Error Handling](/ai-router/advanced/error-handling) for robust applications

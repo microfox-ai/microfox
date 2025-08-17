@@ -10,6 +10,7 @@ import { updateCommand } from './commands/update';
 import { version } from '../package.json';
 import { track } from './commands/track.js';
 import { trackCi } from './commands/track-ci.js';
+import { openapi } from './commands/openapi.js';
 
 const program = new Command();
 
@@ -28,6 +29,7 @@ program.addCommand(installCommand);
 program.addCommand(updateCommand);
 program.addCommand(track);
 program.addCommand(trackCi);
+program.addCommand(openapi);
 
 program.action(() => {
   // Show help if no command is provided

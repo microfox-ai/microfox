@@ -3,8 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { STAGE } from './constants';
 import { createClient } from '@supabase/supabase-js';
-import { embed } from '../../../embeddings/geminiEmbed';
+import { embed } from '../../../embeddings/geminiEmbed'; // Keep Gemini for Supabase
 import { OpenAPIDoc } from './types';
+import { RagUpstashSdk } from '@microfox/rag-upstash';
 
 interface FunctionMetadata {
   name: string;
@@ -13,7 +14,7 @@ interface FunctionMetadata {
   stage: string;
   type: string;
   docs: string | null;
-  embedding: number[] | null;
+  embedding: number[] | null; // Keep for Supabase
   api_type: string;
   metadata: {
     description?: string;
@@ -25,6 +26,91 @@ interface FunctionMetadata {
       output: string;
     };
   };
+}
+
+// Initialize RAG client - uses environment variables UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN
+const ragClient = new RagUpstashSdk({
+  upstashUrl: process.env.MICROFOX_UPSTASH_VECTOR_REST_URL || "",
+  upstashToken: process.env.MICROFOX_UPSTASH_VECTOR_REST_TOKEN || "",
+});
+
+/**
+ * Sync embeddings to Upstash RAG for efficient querying
+ * @param {string} packageName - Name of the package
+ * @param {string} baseUrl - Base URL of the API
+ * @param {string} stage - Deployment stage
+ * @param {any[]} endpoints - Array of endpoint data to sync
+ * @param {any} mcpData - MCP data to sync
+ * @returns {Promise<boolean>} - Success status
+ */
+async function syncEmbeddingsToUpstash(
+  packageName: string,
+  baseUrl: string,
+  stage: string,
+  endpoints: Array<{
+    id: string;
+    endpoint_path: string;
+    http_method: string;
+    doc_text: string;
+    embedding: number[]; // Keep for Supabase reference
+    metadata: any;
+  }>,
+  mcpData?: any
+): Promise<boolean> {
+  try {
+    console.log(`Syncing ${endpoints.length} endpoints and MCP data to Upstash RAG for ${packageName}...`);
+
+    // 1. Sync API endpoints to package-specific namespace
+    if (endpoints.length > 0) {
+      const endpointDocs = endpoints.map(endpoint => ({
+        id: endpoint.id,
+        doc: endpoint.doc_text, // Upstash will handle embedding internally
+        metadata: {
+          type: 'api_embedding',
+          package_name: packageName,
+          base_url: baseUrl,
+          endpoint_path: endpoint.endpoint_path,
+          http_method: endpoint.http_method,
+          stage: stage,
+          api_type: 'package-sls',
+          supabase_id: endpoint.id,
+          supabase_table: 'api_embeddings'
+        }
+      }));
+
+      const endpointNamespace = 'api-embeddings';
+      const endpointResult = await ragClient.feedDocsToRAG(endpointDocs, endpointNamespace);
+      console.log(`Successfully synced ${endpointResult.length} endpoints to Upstash RAG namespace: ${endpointNamespace}`);
+    }
+
+    // 2. Sync MCP data to global namespace
+    if (mcpData) {
+      const mcpDoc = {
+        id: `mcp-${packageName}`,
+        doc: mcpData.docs || `MCP Package: ${packageName}`,
+        metadata: {
+          type: 'api_mcp',
+          package_name: packageName,
+          name: mcpData.name,
+          base_url: baseUrl,
+          stage: stage,
+          function_type: mcpData.type,
+          api_type: 'package-sls',
+          supabase_id: mcpData.id,
+          supabase_table: 'api_mcps'
+        }
+      };
+
+      const mcpNamespace = 'api-mcps';
+      const mcpResult = await ragClient.feedDocsToRAG([mcpDoc], mcpNamespace);
+      console.log(`Successfully synced MCP data to Upstash RAG namespace: ${mcpNamespace}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.error(`Error syncing embeddings to Upstash RAG for ${packageName}:`, error);
+    return false;
+  }
 }
 
 /**
@@ -369,7 +455,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                   base_url: baseUrl,
                   endpoint_path: path,
                   http_method: method.toUpperCase(),
-                  embedding,
+                  embedding: embedding,
                   metadata,
                   updated_at: new Date().toISOString(),
                 })
@@ -399,7 +485,7 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
                   stage: STAGE.toUpperCase(),
                   schema_path: null,
                   doc_text: docText,
-                  embedding,
+                  embedding: embedding,
                   metadata,
                 });
 
@@ -464,6 +550,47 @@ async function deployPackageSls(packagePath: string): Promise<boolean> {
         }
       }
       // --- End of new logic section ---
+
+      // Sync successful endpoints to Upstash RAG
+      if (results.success > 0) {
+        console.log('Syncing all embeddings to Upstash RAG...');
+
+        // Fetch all endpoints for this package to sync to Upstash
+        const { data: allEndpoints, error: fetchError } = await supabase
+          .from('api_embeddings')
+          .select('id, endpoint_path, http_method, doc_text, embedding, metadata')
+          .eq('package_name', packageName);
+
+        // Filter out endpoints without embeddings
+        const endpointsWithEmbeddings = (allEndpoints || []).filter(endpoint =>
+          endpoint.embedding && endpoint.embedding.length > 0
+        );
+
+        if (endpointsWithEmbeddings.length > 0) {
+          // Get MCP data for this package
+          const { data: mcpData, error: mcpError } = await supabase
+            .from('api_mcps')
+            .select('*')
+            .eq('package_name', packageName)
+            .maybeSingle();
+
+          if (mcpError) {
+            console.error('Error fetching MCP data for Upstash sync:', mcpError);
+          }
+
+          const syncSuccess = await syncEmbeddingsToUpstash(
+            packageName,
+            baseUrl,
+            STAGE.toUpperCase(),
+            endpointsWithEmbeddings,
+            mcpData
+          );
+
+          if (!syncSuccess) {
+            console.warn('Failed to sync embeddings to Upstash RAG, but deployment completed');
+          }
+        }
+      }
 
       // Return based on overall results
       if (results.failed > 0) {

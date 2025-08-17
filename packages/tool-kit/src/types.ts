@@ -1,10 +1,11 @@
 import { Tool as AiTool, ToolSet as AiToolSet } from 'ai';
 import {
-  AgentPathSecurity,
   AgentPathAiInstruction,
   AgentOpenApi,
   AgentUi,
-  SecurityAuthSchema,
+  JsonSchema,
+  HitlDetails,
+  SecurityRequirementObject,
 } from '@microfox/types';
 import { z } from 'zod';
 
@@ -27,25 +28,6 @@ export type HttpMethod = (typeof HTTP_METHODS)[number];
 
 // Type for form values
 export type FormValues = Record<string, string>;
-
-// Remove external package imports and define our own types
-export type JsonSchema = {
-  type?: string;
-  format?: string;
-  description?: string;
-  properties?: Record<string, JsonSchema>;
-  items?: JsonSchema | JsonSchema[]; // Allow items to be either a single schema or array of schemas
-  required?: string[];
-  enum?: any[];
-  default?: any;
-  additionalProperties?: boolean | JsonSchema;
-  oneOf?: JsonSchema[];
-  anyOf?: JsonSchema[];
-  allOf?: JsonSchema[];
-  $ref?: string;
-  $defs?: Record<string, JsonSchema>;
-  [key: string]: any;
-};
 
 export type OpenAPISchema = {
   type?: string;
@@ -98,7 +80,8 @@ export type OpenAPIOperation = {
   operationId?: string;
   tags?: string[];
   ai?: AgentPathAiInstruction;
-  security?: AgentPathSecurity;
+  security?: SecurityRequirementObject[];
+  hitl?: HitlDetails;
   ui?: AgentUi;
   parameters?: OpenAPIParameter[];
   requestBody?: OpenAPIRequestBody;
@@ -174,9 +157,17 @@ export type SchemaConfig = {
 export type AuthOptions = {
   packages?: {
     packageName: string;
-    packageConstructor?: string;
+    packageConstructor?: string[];
   }[];
-  customSecrets?: SecurityAuthSchema['@microfox/packages']['customSecrets'];
+  customSecrets?:{
+    key: string;
+    description: string;
+    required: boolean;
+    type: string;
+    format?: string;
+    enum?: any[];
+    default?: any;
+  }[];
 };
 
 export type AuthObject = {

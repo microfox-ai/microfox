@@ -1,22 +1,29 @@
 {
   "name": "@microfox/instagram",
-  "title": "Microfox Instagram SDK",
+  "title": "Instagram",
   "description": "A TypeScript SDK for interacting with the Instagram Graph API using OAuth 2.0.",
   "path": "packages/instagram",
-  "dependencies": ["@microfox/instagram-business-oauth", "zod"],
-  "addedDependencies": ["@microfox/instagram-business-oauth"],
-  "status": "semiStable",
-  "authEndpoint": "/connect/instagram-business-oauth",
+  "dependencies": ["@microfox/instagram-oauth", "zod"],
+  "addedDependencies": ["@microfox/instagram-oauth"],
+  "status": "stable",
   "authType": "oauth2",
+  "authEndpoint": "/connect/instagram-oauth",
   "documentation": "https://www.npmjs.com/package/@microfox/instagram",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/instagram-icon.svg",
   "constructors": [
     {
       "name": "InstagramSDK",
-      "description": "Create a new Microfox Instagram SDK client through which you can interact with the API",
+      "description": "Create a new Microfox Instagram SDK client through which you can interact with the Instagram Graph API",
       "auth": "oauth2",
-      "authSdk": "@microfox/instagram-business-oauth",
-      "requiredKeys": [],
+      "authSdk": "@microfox/instagram-oauth",
+      "authEndpoint": "/connect/instagram-oauth",
+      "requiredKeys": [
+        {
+          "key": "INSTAGRAM_ACCESS_TOKEN",
+          "displayName": "Instagram Long-Lived Access Token",
+          "description": "The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests."
+        }
+      ],
       "internalKeys": [
         {
           "key": "INSTAGRAM_CLIENT_ID",
@@ -29,36 +36,53 @@
           "description": "Your Instagram app's Client Secret. Obtain this from your app's settings on the Facebook Developer platform. Keep this value secure."
         },
         {
-          "key": "INSTAGRAM_REDIRECT_URI",
-          "displayName": "Instagram Redirect URI",
-          "description": "The OAuth redirect URI configured for your app on the Facebook Developer platform. This URI must match the one used during the OAuth flow."
-        },
-        {
           "key": "INSTAGRAM_ACCESS_TOKEN",
-          "displayName": "Instagram Access Token",
-          "description": "The user's access token obtained through the OAuth flow. This token is used to authenticate API requests."
+          "displayName": "Instagram Long-Lived Access Token",
+          "description": "The user's long-lived access token obtained through the OAuth flow. This token is valid for 60 days and is used to authenticate API requests."
         },
         {
-          "key": "INSTAGRAM_REFRESH_TOKEN",
-          "displayName": "Instagram Refresh Token",
-          "description": "The user's refresh token obtained through the OAuth flow. This token is used to refresh the access token when it expires."
+          "key": "SCOPES",
+          "displayName": "Instagram Scopes",
+          "description": "The scopes for your Instagram app.",
+          "required": true
         }
       ],
       "functionalities": [
         "createMediaContainer",
         "getMediaContainerStatus",
+        "triggerMediaPublish",
         "publishMedia",
+        "publishCarousel",
         "getContentPublishingLimit",
-        "uploadVideo",
         "getComments",
         "replyToComment",
+        "replyToSpecificComment",
         "hideComment",
         "toggleComments",
         "deleteComment",
         "sendPrivateReply",
+        "getUserInfo",
         "getMediaInsights",
         "getAccountInsights",
-        "getOEmbedData"
+        "createWelcomeMessageFlow",
+        "getWelcomeMessageFlows",
+        "getWelcomeMessageFlow",
+        "updateWelcomeMessageFlow",
+        "deleteWelcomeMessageFlow",
+        "getEnhancedMediaInsights",
+        "getEnhancedAccountInsights",
+        "getAvailableInsightsMetrics",
+        "getMentions",
+        "replyToMention",
+        "getMentionDetails",
+        "getAllMentions",
+        "getConversations",
+        "getMyConversations",
+        "getConversationWithUser",
+        "getConversationMessages",
+        "getMessageDetails",
+        "getAllConversations",
+        "getRecentMessages"
       ]
     }
   ],
@@ -75,11 +99,10 @@
     "- INSTAGRAM_CLIENT_ID: Your Instagram app's Client ID",
     "- INSTAGRAM_CLIENT_SECRET: Your Instagram app's Client Secret",
     "- INSTAGRAM_REDIRECT_URI: The OAuth redirect URI for your app",
-    "- INSTAGRAM_ACCESS_TOKEN: The user's access token (obtained through OAuth flow)",
-    "- INSTAGRAM_REFRESH_TOKEN: The user's refresh token (obtained through OAuth flow)",
+    "- INSTAGRAM_ACCESS_TOKEN: The user's long-lived access token (obtained through OAuth flow, valid for 60 days)",
     "",
     "Authentication:",
-    "This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the initial access token and refresh token. The SDK handles token refreshing automatically.",
+    "This SDK uses OAuth 2.0 for authentication. You need to implement the OAuth flow in your application to obtain the long-lived access token. The SDK automatically converts short-lived tokens to long-lived tokens (valid for 60 days).",
     "",
     "Rate Limits:",
     "Instagram API has rate limits that vary by endpoint. Monitor your usage and implement appropriate error handling and backoff strategies. Use the getContentPublishingLimit method to check your current rate limit status for content publishing.",

@@ -1,0 +1,37 @@
+---
+title: 'AiRouter Class'
+description: 'API reference for the main AiRouter class.'
+---
+
+### Constructor
+
+```typescript
+new AiRouter<Metadata, Parts, Tools, State>(options?)
+```
+
+**Options:**
+
+- `maxCallDepth`: Maximum agent-to-agent call depth (default: 10)
+- `logger`: Custom logger implementation
+
+### Methods
+
+##### `agent(path, ...handlers)`
+
+Register agent handlers for a path.
+
+##### `tool(path, options, handler)` or `tool(path, factory)`
+
+Register a tool handler.
+
+##### `use(path, middleware)`
+
+Register middleware for a path.
+
+##### `actAsTool(path, definition)`
+
+Pre-define an agent as a tool for LLM function calling.
+
+##### `handle(path, context)`
+
+Process a request and return a streaming response.

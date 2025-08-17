@@ -1,5 +1,23 @@
 # @microfox/cli
 
+## 1.0.17
+
+### Patch Changes
+
+- c73096d: update agent deployments status commands
+
+## 1.0.16
+
+### Patch Changes
+
+- 30fcd0e: updated push script
+
+## 1.0.15
+
+### Patch Changes
+
+- 809553e: fix ts error
+
 ## 1.0.14
 
 ### Patch Changes

@@ -82,7 +82,7 @@ export class S3Space {
     fileInfoWithFileBuffer?: {
       fileName: string;
       fileType: string;
-      fileBuffer: any;
+      fileBuffer: Buffer;
     };
     userId?: string;
     folder?: string;
@@ -126,6 +126,7 @@ export class S3Space {
       return res;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -184,13 +185,16 @@ export class S3Space {
             folder || this.folder
           }/${encodeURI(file.name || file.fileName)}`;
     }
+    const cdnBaseUrl = this.cdnEndpoint.startsWith('http')
+      ? this.cdnEndpoint
+      : `https://${this.bucket}.${this.cdnEndpoint}`;
     return userId
-      ? `https://${this.bucket}.${this.cdnEndpoint}/${
-          folder || this.folder
-        }/${userId}/${encodeURI(file.name || file.fileName)}`
-      : `https://${this.bucket}.${this.cdnEndpoint}/${
-          folder || this.folder
-        }/${encodeURI(file.name || file.fileName)}`;
+      ? `${cdnBaseUrl}/${folder || this.folder}/${userId}/${encodeURI(
+          file.name || file.fileName
+        )}`
+      : `${cdnBaseUrl}/${folder || this.folder}/${encodeURI(
+          file.name || file.fileName
+        )}`;
   }
 
   /**

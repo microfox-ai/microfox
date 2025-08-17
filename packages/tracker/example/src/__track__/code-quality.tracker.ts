@@ -3,7 +3,7 @@ import type { TrackerLogic } from '@microfox/tracker';
 import * as path from 'path';
 
 const logic: TrackerLogic = async ({ project, log }) => {
-    log.info('Running code quality tracker...');
+    log.info('Running code quality checks...');
     
     const sourceFiles = project.getSourceFiles();
     let issuesFound = 0;
@@ -40,12 +40,16 @@ export default defineTracker(
         // This tracker targets all .ts files in the src directory, excluding trackers
         targets: ['src/**/*.ts', '!src/__track__/**/*.ts'],
         github: {
-            name: 'code-quality-check',
+            name: 'Run Code Quality Checks',
             on: {
-                schedule: [
-                    { cron: '0 2 * * 1' } // Runs every Monday at 2 AM
-                ],
-            }
+                push: {
+                    branches: ['main'],
+                },
+            },
+            env: {
+                NODE_ENV: 'test',
+                API_KEY: '${{ secrets.API_KEY }}',
+            },
         }
     },
     logic

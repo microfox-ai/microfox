@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "Chrome Browser use",
     "version": "1.2.0",
@@ -19,14 +19,13 @@
       "description": "Unified wrapper endpoint"
     }
   ],
-  "components": {
-    "schemas": {
-      "x-auth-packages": [
-        {
-          "packageName": "@microfox/puppeteer-sls"
-        }
-      ]
+  "security": [
+    {
+      "x-microfox-packages": ["@microfox/puppeteer-sls"]
     }
+  ],
+  "components": {
+    "securitySchemes": {}
   },
   "paths": {
     "/extractImagesFromURL": {

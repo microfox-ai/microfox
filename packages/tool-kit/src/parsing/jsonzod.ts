@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { JsonSchema } from '../types';
+import { JsonSchema } from '@microfox/types';
 
 /**
  * Convert OpenAPI schema to Zod schema

@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.16
+
+### Patch Changes
+
+- 871a88d: Changes from PR #706: tool-security-schema
+
+## 1.0.15
+
+### Patch Changes
+
+- 2dd01b8: Changes from PR #704: tool-security-schema
+- a0df273: security schema update
+
+## 1.0.14
+
+### Patch Changes
+
+- f2836ae: minor fix
+
+## 1.0.13
+
+### Patch Changes
+
+- 809553e: fix ts error
+
+## 1.0.12
+
+### Patch Changes
+
+- ce4509b: Triggered by issue #688: release @microfox/types patch
+
 ## 1.0.11
 
 ### Patch Changes

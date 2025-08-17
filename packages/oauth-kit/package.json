@@ -1,6 +1,6 @@
 {
   "name": "@microfox/oauth-kit",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "A central OAuth kit for building OAuth integrations in Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -30,12 +30,14 @@
     "deploy:sls": "ts-node src/agents/slsfox/deploy/ci.ts",
     "gen:sls": "ts-node src/agents/slsfox/genSls.ts",
     "api:query": "ts-node src/embeddings/queryApis.ts",
+    "sync:upstash": "ts-node src/embeddings/syncExistingToUpstash.ts",
     "mcp:start": "ts-node src/mcp/server.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.10",
     "@ai-sdk/google": "^1.2.12",
     "@microfox/crypto-sdk": "^1.1.0",
+    "@microfox/rag-upstash": "^1.1.2",
     "@microfox/serpapi": "1.0.2",
     "@microfox/tavily": "1.0.2",
     "@modelcontextprotocol/sdk": "^1.13.2",

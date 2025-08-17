@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 66a94f8: Changes from PR #715: fixes
+- 7ab7390: Triggered by issue #716: release @microfox/s3-space
+
 ## 1.1.0
 
 ### Minor Changes

@@ -15,6 +15,8 @@ import {
   getGitHubIdentityInfo,
 } from './helpers/github';
 import { Identity } from './schemas';
+import { convertWhatsappUserToIdentity } from './helpers/whatsapp';
+import { convertInstagramIdentityToIdentity, getInstagramIdentityInfo } from './helpers/instagram';
 
 type ProviderConfig = {
   clientId: string;
@@ -22,10 +24,10 @@ type ProviderConfig = {
   redirectUri: string;
 };
 
-export const SupportedProviders = ['google', 'slack', 'reddit', 'github'] as const;
+export const SupportedProviders = ['google', 'slack', 'reddit', 'github', 'whatsapp', 'instagram'] as const;
 
 export class OauthKit {
-  constructor() {}
+  constructor() { }
 
   static async exchangeTokenResponseForIdentity(
     provider: string,
@@ -74,6 +76,20 @@ export class OauthKit {
             `Failed to exchange token response for identity: ${error}`,
           );
         }
+      }
+      case "instagram": {
+        try {
+          const identityInfo = await getInstagramIdentityInfo(tokenResponse);
+          console.log('identityInfo', identityInfo);
+          return convertInstagramIdentityToIdentity(identityInfo);
+        } catch (error) {
+          throw new Error(
+            `Failed to exchange token response for identity: ${error}`,
+          );
+        }
+      }
+      case "whatsapp": {
+        return convertWhatsappUserToIdentity(tokenResponse);
       }
       default:
         throw new Error(`Unsupported provider: ${provider}`);

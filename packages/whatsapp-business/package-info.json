@@ -13,8 +13,9 @@
     {
       "name": "WhatsAppBusinessSDK",
       "description": "Create a new WhatsApp Business SDK through which you can operate WhatsApp Business API",
-      "auth": "apikey",
-      "apiType": "bot_token",
+      "auth": "oauth2",
+      "authSdk": "@microfox/whatsapp-oauth",
+      "authEndpoint": "/connect/whatsapp-oauth",
       "requiredKeys": [
         {
           "key": "WHATSAPP_BUSINESS_PHONE_NUMBER",

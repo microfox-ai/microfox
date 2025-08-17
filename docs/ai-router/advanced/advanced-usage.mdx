@@ -1,0 +1,321 @@
+---
+title: 'Advanced Usage'
+description: 'Explore advanced features for building complex multi-agent systems.'
+---
+
+### Agent-to-Agent Communication
+
+Agents can call other agents using the `next` object:
+
+```typescript
+router.agent('/orchestrator', async ctx => {
+  // Call another agent
+  const result = await ctx.next.callAgent('/worker', { task: 'process-data' });
+
+  if (result.ok) {
+    ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+  }
+});
+
+router.agent('/worker', async ctx => {
+  const { task } = ctx.request.params;
+  return `Processed: ${task}`;
+});
+```
+
+#### Calling Parent/Sibling Agents from Sub-Agents
+
+When working with nested routers (sub-agents), you might need to call an agent outside of the current router's scope (e.g., a sibling or parent agent). To do this, you can use an absolute path starting with `@/`. This tells the router to resolve the path from the root of the entire application, rather than relative to the current agent's path.
+
+```typescript
+// In a sub-agent mounted at /code-generator/validator
+router.agent('/', async ctx => {
+  // ... some logic
+  // Call the receptionist agent, which is mounted at the root level
+  await ctx.next.callAgent('@/receptionist', { task: 'new task' });
+});
+```
+
+### Using Agents as Tools
+
+Agents can be exposed as tools for LLM function calling:
+
+```typescript
+// Define the code generator agent as a tool at /code-generator
+router.actAsTool('/code-generator', {
+  description: 'Generates code based on requirements',
+  inputSchema: z.object({
+    requirements: z.string().describe('Code requirements'),
+  }),
+});
+
+// The actual agent implementation when the registeres tool is called.
+router.agent('/code-generator', async ctx => {
+  const { requirements } = ctx.request.params;
+
+  // Generate code using an LLM
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Generate code for: ${requirements}`,
+    tools: {
+      // Expose other agents as tools
+      analyzer: ctx.next.agentAsTool('/code-analyzer'),
+      validator: ctx.next.agentAsTool('/code-validator'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+### Dynamic Path Parameters
+
+Support for dynamic routing with parameter extraction:
+
+```typescript
+router.agent('/users/:userId/profile', async ctx => {
+  const { userId } = ctx.request.params;
+  ctx.response.write({
+    type: 'text',
+    text: `Loading profile for user: ${userId}`,
+  });
+});
+
+router.tool(
+  '/posts/:postId/comments/:commentId',
+  {
+    schema: z.object({
+      action: z.enum(['read', 'update', 'delete']),
+    }),
+    description: 'Manage post comments',
+  },
+  async (ctx, params) => {
+    const { postId, commentId } = ctx.request.params;
+    const { action } = params;
+
+    return `Performing ${action} on comment ${commentId} of post ${postId}`;
+  },
+);
+```
+
+### State Management
+
+Share state across agents and middleware:
+
+```typescript
+interface AppState {
+  userSession: string;
+  requestCount: number;
+}
+
+const router = new AiRouter<any, any, any, AppState>();
+
+const sessionMiddleware = async (ctx, next) => {
+  // Initialize state
+  if (!ctx.state.userSession) {
+    ctx.state.userSession = generateId();
+    ctx.state.requestCount = 0;
+  }
+
+  ctx.state.requestCount++;
+  await next();
+};
+
+router.agent('/dashboard', async ctx => {
+  ctx.response.write({
+    type: 'text',
+    text: `Session: ${ctx.state.userSession}, Requests: ${ctx.state.requestCount}`,
+  });
+});
+```
+
+### Error Handling
+
+The router provides structured error handling:
+
+```typescript
+router.agent('/protected', async ctx => {
+  try {
+    // Your agent logic
+    const result = await riskyOperation();
+    ctx.response.write({ type: 'text', text: result });
+  } catch (error) {
+    ctx.logger.error('Agent error:', error);
+    ctx.response.write({
+      type: 'text',
+      text: 'An error occurred while processing your request.',
+    });
+  }
+});
+```
+
+### Advanced Tool Attachment Patterns
+
+#### Conditional Tool Attachment
+
+You can conditionally attach tools based on context:
+
+```typescript
+router.agent('/contextual-assistant', async ctx => {
+  const { query, userRole } = ctx.request.params;
+
+  // Build tools object conditionally
+  const tools: Record<string, any> = {
+    calculator: ctx.next.attachTool('/calculator'),
+  };
+
+  // Only attach admin tools for admin users
+  if (userRole === 'admin') {
+    tools.adminOperations = ctx.next.agentAsTool('/admin/operations');
+    tools.userManagement = ctx.next.attachTool('/admin/users');
+  }
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: query,
+    tools,
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+## Tool Composition
+
+Tools can be composed to create complex functionality:
+
+```typescript
+// Base tool for data transformation
+router.tool(
+  '/data-transformer',
+  {
+    schema: z.object({
+      data: z.any(),
+      transform: z.enum(['uppercase', 'lowercase', 'reverse']),
+    }),
+    description: 'Transforms data in various ways',
+  },
+  async (ctx, params) => {
+    const { data, transform } = params;
+
+    switch (transform) {
+      case 'uppercase':
+        return typeof data === 'string' ? data.toUpperCase() : data;
+      case 'lowercase':
+        return typeof data === 'string' ? data.toLowerCase() : data;
+      case 'reverse':
+        return typeof data === 'string'
+          ? data.split('').reverse().join('')
+          : data;
+    }
+  },
+);
+
+// Composed tool that uses multiple transformations
+router.tool(
+  '/advanced-transformer',
+  {
+    schema: z.object({
+      data: z.string(),
+      transformations: z.array(z.enum(['uppercase', 'lowercase', 'reverse'])),
+    }),
+    description: 'Applies multiple transformations to data',
+  },
+  async (ctx, params) => {
+    const { data, transformations } = params;
+
+    let result = data;
+    for (const transform of transformations) {
+      const transformResult = await ctx.next.callTool('/data-transformer', {
+        data: result,
+        transform,
+      });
+      result = transformResult.data;
+    }
+
+    return result;
+  },
+);
+```
+
+## Tool with State Access
+
+Tools can access and modify shared state:
+
+```typescript
+router.tool(
+  '/cache-manager',
+  {
+    schema: z.object({
+      key: z.string(),
+      value: z.any().optional(),
+      action: z.enum(['get', 'set', 'delete']),
+    }),
+    description: 'Manages shared cache state',
+  },
+  async (ctx, params) => {
+    const { key, value, action } = params;
+
+    // Initialize cache if it doesn't exist
+    if (!ctx.state.cache) {
+      ctx.state.cache = new Map();
+    }
+
+    switch (action) {
+      case 'get':
+        return ctx.state.cache.get(key) || null;
+      case 'set':
+        ctx.state.cache.set(key, value);
+        return { success: true, key, value };
+      case 'delete':
+        const deleted = ctx.state.cache.delete(key);
+        return { success: deleted, key };
+    }
+  },
+);
+```
+
+## Tool Testing
+
+Tools can be tested independently:
+
+```typescript
+// Tool definition
+router.tool(
+  '/string-processor',
+  {
+    schema: z.object({
+      text: z.string(),
+      operations: z.array(z.enum(['trim', 'uppercase', 'lowercase'])),
+    }),
+    description: 'Processes strings with multiple operations',
+  },
+  async (ctx, params) => {
+    const { text, operations } = params;
+
+    let result = text;
+    for (const operation of operations) {
+      switch (operation) {
+        case 'trim':
+          result = result.trim();
+          break;
+        case 'uppercase':
+          result = result.toUpperCase();
+          break;
+        case 'lowercase':
+          result = result.toLowerCase();
+          break;
+      }
+    }
+
+    return result;
+  },
+);
+
+// Test the tool
+const testResult = await router.callTool('/string-processor', {
+  text: '  Hello World  ',
+  operations: ['trim', 'uppercase'],
+});
+console.log(testResult); // "HELLO WORLD"
+```

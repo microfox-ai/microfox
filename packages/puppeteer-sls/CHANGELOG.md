@@ -1,5 +1,11 @@
 # @microfox/puppeteer-sls
 
+## 1.2.10
+
+### Patch Changes
+
+- b69bc33: Triggered by issue #718: release @microfox/puppeteer-sls patch
+
 ## 1.2.9
 
 ### Patch Changes

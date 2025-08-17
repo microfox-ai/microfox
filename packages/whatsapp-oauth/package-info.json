@@ -1,0 +1,58 @@
+{
+  "name": "@microfox/whatsapp-oauth",
+  "title": "Microfox Whatsapp OAuth",
+  "description": "TypeScript package simplifying Whatsapp Connection",
+  "path": "packages/whatsapp-oauth",
+  "status": "oauthConnector",
+  "authEndpoint": "/connect/whatsapp",
+  "documentation": "https://www.npmjs.com/package/@microfox/whatsapp-oauth",
+  "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/whatsapp-icon.svg",
+  "dependencies": ["zod"],
+  "devDependencies": [
+    "@microfox/tsconfig",
+    "@types/node",
+    "tsup",
+    "typescript"
+  ],
+  "constructors": [
+    {
+      "name": "WhatsappOAuthSdk",
+      "description": "Create a new Microfox Whatsapp OAuth client through which you can interact with the API",
+      "auth": "oauth2",
+      "authSdk": "@microfox/whatsapp-oauth",
+      "authEndpoint": "/connect/whatsapp",
+      "requiredKeys": [],
+      "internalKeys": [
+        {
+          "key": "WHATSAPP_REDIS_URL",
+          "displayName": "WhatsApp Redis URL",
+          "description": "The URL for the Redis instance"
+        },
+        {
+          "key": "WHATSAPP_REDIS_TOKEN",
+          "displayName": "WhatsApp Redis Token",
+          "description": "The token for the Redis instance"
+        },
+        {
+          "key": "WHATSAPP_APP_BASE_URL",
+          "displayName": "WhatsApp App Base URL",
+          "description": "The base URL for the WhatsApp Business Auth API"
+        }
+      ],
+      "functionalities": [
+        "getWidgetUrl",
+        "createVerification",
+        "getVerification",
+        "deleteVerification",
+        "markAsVerified",
+        "updatePhoneNumber",
+        "addOrUpdateMetadata",
+        "processVerification",
+        "setupWebhookHandshakeSubscription",
+        "exchangeCodeForUserIdentity"
+      ]
+    }
+  ],
+  "extraInfo": [],
+  "platformType": "communication"
+}

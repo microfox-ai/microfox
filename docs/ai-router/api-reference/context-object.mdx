@@ -1,0 +1,27 @@
+---
+title: 'Context Object'
+description: 'API reference for the context object.'
+---
+
+The context object passed to agents and middleware contains:
+
+```typescript
+interface AiContext<Metadata, Parts, Tools, State> {
+  request: {
+    messages: UIMessage<Metadata, Parts, Tools>[]; // UIMessage is a type from the Vercel AI SDK
+    params?: Record<string, any>;
+    path?: string;
+    [key: string]: any;
+  };
+  state: State;
+  executionContext: {
+    currentPath?: string;
+    callDepth?: number;
+    handlerPathStack?: string[];
+  };
+  requestId: string;
+  logger: AiLogger;
+  response: AiStreamWriter<Metadata, Parts, Tools>;
+  next: NextHandler<Metadata, Parts, Tools, State>;
+}
+```

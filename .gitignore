@@ -23,3 +23,5 @@ packages/*/codegen-report.md
 env.json
 .build
 .serverless
+
+*.plan
