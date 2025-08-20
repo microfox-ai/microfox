@@ -4,6 +4,8 @@ sidebarTitle: 'Overview'
 description: 'Overview of AI Router and why it exists.'
 ---
 
+Ai-Router is a framework for **orchestrating structured, multi-agent AI systems**. Heavily inspired by the simplicity and power of [Express.js](https://expressjs.com/) & Agent as Tool approach of Google's [Agent Development kit Adk](https://google.github.io/adk-docs/).
+
 ## The Problem: Why AI Router is needed
 
 Modern AI applications, especially those using helpers like the Vercel AI SDK's `useChat`, typically connect the frontend to a single backend API endpoint. This creates a significant challenge: how do you manage a complex, multi-agent system through that single route?
@@ -50,8 +52,6 @@ The routing is handled internally, using path-like parameters sent in the reques
 Your frontend communicates with one endpoint, while your backend remains modular, organized, and scalable.
 
 ### Core Design Principles
-
-Ai-Router is a powerful, composable router framework for building structured, multi-agent AI applications. Heavily inspired by the simplicity and power of [Express.js](https://expressjs.com/) & Agent as Tool approach of Google's Agent Development kit [Adk](https://google.github.io/adk-docs/),
 
 `ai-router` brings a familiar middleware-style architecture to the world of AI assistants. It provides a robust foundation for orchestrating complex AI workflows with multiple agents, tools, and dynamic routing, all while integrating seamlessly with the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).
 
@@ -107,8 +107,8 @@ Built specifically for modern web applications:
 
 - **TypeScript native**: Full type safety
 - **Next.js optimized**: Works seamlessly with App Router
-- **Vercel AI SDK integration**: Native streaming support
-- **Frontend-friendly**: Designed for `useChat` and similar patterns
+- **AI SDK integration**: Designed for `useChat` and similar patterns
+- **Streaming support**: Native streaming support
 
 <Card
   title="LangGraph vs AI Router : The better choice for full-stack applications"
@@ -125,7 +125,7 @@ Built specifically for modern web applications:
   <Card
     title="Quickstart"
     icon="rocket"
-    href="/ai-router/overview/quickstart"
+    href="/ai-router/foundation/basics"
   >
     Get up and running with AI Router in minutes. Learn the basics and build your first agent.
   </Card>
