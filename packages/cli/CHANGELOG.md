@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.18
+
+### Patch Changes
+
+- 45320e6: added init command with npm publishing workflows
+
 ## 1.0.17
 
 ### Patch Changes
