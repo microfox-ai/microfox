@@ -1,0 +1,45 @@
+name: Release Snapshot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-snapshot:
+    name: Release Snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Add npm auth token
+        run: npm config set //registry.npmjs.org/:_authToken "${NPM_TOKEN_ELEVATED}"
+        env:
+          NPM_TOKEN_ELEVATED: ${{secrets.NPM_TOKEN_ELEVATED}}
+
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${{ github.sha }} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Version Packages
+        run: npm run changeset version --snapshot ${SHORT_SHA}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish Snapshot Release
+        run: npm run changeset publish --no-git-tag --tag snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}

@@ -1,0 +1,59 @@
+name: Scheduled Release
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  check:
+    name: Check for changesets
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      has_changesets: ${{ steps.check-changesets.outputs.has_changesets }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Check for changeset files
+        id: check-changesets
+        run: |
+          changeset_count=$(find .changeset -name "*.md" -not -name "README.md" | wc -l)
+          echo "Found $changeset_count changeset files"
+          echo "has_changesets=$([[ $changeset_count -gt 0 ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: check
+    if: needs.check.outputs.has_changesets == 'true'
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run ci:release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}

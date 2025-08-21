@@ -1,0 +1,102 @@
+name: Detect Changes and Create Changeset
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  detect-changes:
+    if: github.event_name == 'push' && (startsWith(github.event.head_commit.message, 'Merge pull request ') || startsWith(github.event.head_commit.message, 'release:')) && !contains(github.event.head_commit.message, '/changeset-release/')
+    runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v46.0.1
+        with:
+          files: |
+            packages/*/**
+          files_ignore: |
+            packages/*/node_modules/**
+            packages/*/dist/**
+            packages/*/build/**
+
+      - name: Create Changeset
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          CHANGED_LINES=$(git diff --stat $BEFORE_SHA $AFTER_SHA -- 'packages/' | awk '{s+=$1} END {print s}')
+          CHANGED_LINES=${CHANGED_LINES:-0}
+
+          if [ "$CHANGED_LINES" -gt 1000 ]; then
+            VERSION_TYPE="major"
+          elif [ "$CHANGED_LINES" -gt 100 ]; then
+            VERSION_TYPE="minor"
+          else
+            VERSION_TYPE="patch"
+          fi
+
+          AFFECTED_PACKAGES=$(git diff --name-only $BEFORE_SHA $AFTER_SHA -- 'packages/' | sed -n 's;^packages/\\([^/]*\\)/.*;\\1;p' | sort -u)
+
+          if [ -z "$AFFECTED_PACKAGES" ]; then
+            echo "No packages affected by this merge commit. Exiting changeset creation."
+            exit 0
+          fi
+
+          CHANGESET_DIR=".changeset"
+          mkdir -p "$CHANGESET_DIR"
+          CHANGESET_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g' | head -c 10)
+          CHANGESET_FILE="$CHANGESET_DIR/generated-$CHANGESET_ID.md"
+          echo "---" > "$CHANGESET_FILE"
+          for PACKAGE in $AFFECTED_PACKAGES; do
+            echo "\"$(echo $PACKAGE | sed 's/\"/\\\"/g')\": $VERSION_TYPE" >> "$CHANGESET_FILE"
+          done
+          echo "---" >> "$CHANGESET_FILE"
+          echo "" >> "$CHANGESET_FILE"
+          PR_NUMBER=$(echo "$COMMIT_MESSAGE" | sed -n 's/Merge pull request #\\([0-9]*\\).*/\\1/p')
+          COMMIT_TITLE=$(echo "$COMMIT_MESSAGE" | head -n 1)
+          if [ -n "$PR_NUMBER" ]; then
+            PR_INFO=$(echo "$COMMIT_MESSAGE" | sed -n 's/Merge pull request #[0-9]* from .*\\/\\(.*\\)/\\1/p' | head -n 1)
+            SUMMARY="Changes from PR #$PR_NUMBER: ${PR_INFO:-$COMMIT_TITLE}"
+          else
+            SUMMARY="$COMMIT_TITLE"
+          fi
+          echo "$SUMMARY" >> "$CHANGESET_FILE"
+
+      - name: Commit Changes
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          if git status --porcelain | grep -E '(\\.changeset/|CHANGELOG.md)'; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .changeset/ CHANGELOG.md
+            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | sed -n 's/Merge pull request #\\([0-9]*\\).*/\\1/p')
+            COMMIT_MSG="chore: add changeset(s) and update changelog"
+            if [ -n "$PR_NUMBER" ]; then
+              COMMIT_MSG="$COMMIT_MSG for PR #$PR_NUMBER"
+            fi
+            git commit -m "$COMMIT_MSG"
+            git push
+          fi
