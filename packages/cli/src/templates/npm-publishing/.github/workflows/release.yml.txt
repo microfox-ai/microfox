@@ -16,6 +16,9 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -28,13 +31,18 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm i
+
+      - name: Make release script executable
+        run: chmod +x ./scripts/release.sh
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: npm run ci:release
+          version: npm run ci:version
+          publish: ./scripts/release.sh ${{ github.event.before }} ${{ github.event.after }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}

@@ -2,8 +2,13 @@ name: Scheduled Release
 
 on:
   schedule:
+    # Run every hour at minute 0
     - cron: '0 * * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -24,6 +29,7 @@ jobs:
       - name: Check for changeset files
         id: check-changesets
         run: |
+          # Count markdown files in .changeset folder excluding README.md
           changeset_count=$(find .changeset -name "*.md" -not -name "README.md" | wc -l)
           echo "Found $changeset_count changeset files"
           echo "has_changesets=$([[ $changeset_count -gt 0 ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
@@ -47,13 +53,15 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: npm ci
+        run: |
+          npm i
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
+          version: npm run ci:version
           publish: npm run ci:release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}
