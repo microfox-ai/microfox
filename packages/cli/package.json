@@ -1,6 +1,6 @@
 {
   "name": "microfox",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Universal CLI tool for creating modern TypeScript packages with npm availability checking",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
