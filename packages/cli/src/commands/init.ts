@@ -11,7 +11,16 @@ const NPM_PUBLISHING_CONFIG = {
     'ci:version': 'changeset version && npm install',
   },
   devDependencies: {
-    '@changesets/cli': '^2.27.1',
+    '@changesets/cli': '^2.27.10',
+    "eslint": "8.57.1",
+    "prettier": "^3.3.3",
+    "tsup": "^8",
+    "turbo": "2.3.3",
+    "typescript": "5.6.3"
+  },
+  packageManager: 'npm@10.2.4',
+  engines: {
+    node: '>=20.0.0',
   },
 };
 
@@ -27,7 +36,7 @@ async function initAction(options: { experimental?: boolean }) {
     );
     return;
   }
-  
+
   const { feature } = await inquirer.prompt([
     {
       type: 'list',
@@ -39,7 +48,7 @@ async function initAction(options: { experimental?: boolean }) {
 
   if (feature === 'NPM Publishing Workflows') {
     console.log(chalk.green('Initializing NPM Publishing Workflows...'));
-    
+
     const templateDir = path.resolve(__dirname, 'npm-publishing');
     const targetDir = process.cwd();
 
@@ -64,9 +73,22 @@ function copyTemplates(src: string, dest: string) {
       fs.mkdirSync(destPath, { recursive: true });
       copyTemplates(srcPath, destPath);
     } else if (entry.name.endsWith('.txt')) {
-      const templateContent = fs.readFileSync(srcPath, 'utf-8');
-      fs.writeFileSync(destPath, templateContent);
-      console.log(chalk.green(`✅ Created ${path.relative(process.cwd(), destPath)}`));
+      if (fs.existsSync(destPath)) {
+        console.log(
+          chalk.yellow(
+            `File ${path.relative(
+              process.cwd(),
+              destPath
+            )} already exists. Skipping.`
+          )
+        );
+      } else {
+        const templateContent = fs.readFileSync(srcPath, 'utf-8');
+        fs.writeFileSync(destPath, templateContent);
+        console.log(
+          chalk.green(`✅ Created ${path.relative(process.cwd(), destPath)}`)
+        );
+      }
     }
   }
 }
@@ -87,16 +109,28 @@ async function updatePackageJson(targetDir: string) {
   }
 
   packageJson.scripts = {
-    ...packageJson.scripts,
     ...NPM_PUBLISHING_CONFIG.scripts,
+    ...packageJson.scripts,
   };
 
   packageJson.devDependencies = {
-    ...packageJson.devDependencies,
     ...NPM_PUBLISHING_CONFIG.devDependencies,
+    ...packageJson.devDependencies,
   };
 
-  await fs.promises.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  if (!packageJson.packageManager) {
+    packageJson.packageManager = NPM_PUBLISHING_CONFIG.packageManager;
+  }
+
+  packageJson.engines = {
+    ...NPM_PUBLISHING_CONFIG.engines,
+    ...packageJson.engines,
+  };
+
+  await fs.promises.writeFile(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2)
+  );
 
   console.log(chalk.green('`package.json` updated successfully!'));
 }
