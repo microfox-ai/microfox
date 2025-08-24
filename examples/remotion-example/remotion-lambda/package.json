@@ -1,0 +1,63 @@
+{
+  "name": "@microfox/remotion-lambda",
+  "version": "1.0.0",
+  "description": "A package to choreograph Remotion Lambda deployments and renders.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "npm run build -- --watch",
+    "remotion": "remotion studio --port 9001",
+    "deploy-site": "cd src/remotion && remotion lambda sites create --site-name dynamic-video"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.57.0",
+    "@remotion/lambda": "4.0.340",
+    "@remotion/media-parser": "4.0.340",
+    "@remotion/media-utils": "4.0.340",
+    "assemblyai": "^4.14.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "^4.0.340",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.0.10"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@remotion/tailwind-v4": "^4.0.340",
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.8",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^9.32.0",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.11",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "remotion",
+    "typescript",
+    "api",
+    "sdk"
+  ]
+}
