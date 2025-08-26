@@ -15,6 +15,3 @@ export * from './templates';
 
 // Main composition component
 export { Composition } from './components/Composition';
-
-// Initialize component registry
-import './core/registry/registerComponents';

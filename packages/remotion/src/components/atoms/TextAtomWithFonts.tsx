@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BaseRenderableProps } from '../../core/types';
 import { ComponentConfig } from '../../core/types';
-import { useFontLoader } from '../../hooks/useFontLoader';
-import { getFontFamilyCSS } from '../../utils/fontUtils';
+import { useFont } from '../../hooks/useFontLoader';
+
+// Simplified font loading approach - similar to Remotion Google Fonts:
+// const { fontFamily } = useFont('Inter', { weights: ['400', '700'] });
+// 
+// The fontFamily value is now directly usable in CSS:
+// style={{ fontFamily }}
 
 interface FontConfig {
     family: string;
@@ -38,7 +43,7 @@ interface TextAtomProps extends BaseRenderableProps {
  * Enhanced TextAtom with comprehensive dynamic font loading capabilities
  * 
  * Features:
- * - Dynamic Google Font loading
+ * - Dynamic Google Font loading with simplified API
  * - Loading states with visual indicators
  * - Error handling with fallbacks
  * - Multiple font weights and subsets support
@@ -46,65 +51,37 @@ interface TextAtomProps extends BaseRenderableProps {
  * - Graceful degradation to system fonts
  */
 export const Atom: React.FC<TextAtomProps> = ({ data }) => {
-    const [fontFamily, setFontFamily] = useState<string>('sans-serif');
     const [isFontLoading, setIsFontLoading] = useState(false);
-    const [fontError, setFontError] = useState<Error | null>(null);
 
-    const {
-        loadFont,
-        isFontReady,
-        getFontError,
-        loadingFonts,
-        errorFonts,
-    } = useFontLoader({
-        onLoad: (family) => {
-            console.log(`Font ${family} loaded successfully`);
-            setIsFontLoading(false);
-            setFontError(null);
-        },
-        onError: (family, error) => {
-            console.warn(`Font ${family} failed to load:`, error);
-            setFontError(error);
-            setIsFontLoading(false);
-        },
-    });
+    // Font loading logic - now returns fontFamily CSS value directly
+    const { isLoaded, error, isReady, fontFamily } = useFont(
+        data.font?.family || 'Inter',
+        {
+            weights: data.font?.weights || ['400'],
+            subsets: data.font?.subsets || ['latin'],
+            display: data.font?.display || 'swap',
+            preload: data.font?.preload !== false,
+            onLoad: (family, cssValue) => {
+                console.log(`Font ${family} loaded successfully with CSS value: ${cssValue}`);
+                setIsFontLoading(false);
+            },
+            onError: (family, error) => {
+                console.warn(`Font ${family} failed to load:`, error);
+                setIsFontLoading(false);
+            },
+        }
+    );
 
-    // Load font when component mounts or font config changes
+    // Update loading state when font status changes
     useEffect(() => {
         if (data.font?.family) {
-            const fontFamilyName = data.font.family;
-
-            if (!isFontReady(fontFamilyName)) {
+            if (isReady || isLoaded) {
+                setIsFontLoading(false);
+            } else if (!isReady && !isLoaded && !error) {
                 setIsFontLoading(true);
-                loadFont(fontFamilyName, {
-                    weights: data.font.weights || ['400'],
-                    subsets: data.font.subsets || ['latin'],
-                    display: data.font.display || 'swap',
-                    preload: data.font.preload !== false,
-                });
-            } else {
-                setIsFontLoading(false);
             }
         }
-    }, [data.font, loadFont, isFontReady]);
-
-    // Update font family when font is ready or on error
-    useEffect(() => {
-        if (data.font?.family) {
-            const fontFamilyName = data.font.family;
-
-            if (isFontReady(fontFamilyName)) {
-                setFontFamily(getFontFamilyCSS(fontFamilyName, data.fallbackFonts));
-                setIsFontLoading(false);
-                setFontError(null);
-            } else if (errorFonts.has(fontFamilyName)) {
-                const error = getFontError(fontFamilyName);
-                setFontError(error || null);
-                setFontFamily(getFontFamilyCSS('sans-serif', data.fallbackFonts));
-                setIsFontLoading(false);
-            }
-        }
-    }, [data.font, data.fallbackFonts, isFontReady, errorFonts, getFontError]);
+    }, [data.font, isReady, isLoaded, error]);
 
     // Enhanced style with font loading support
     const enhancedStyle: React.CSSProperties = {
@@ -126,7 +103,7 @@ export const Atom: React.FC<TextAtomProps> = ({ data }) => {
     }
 
     // Error state
-    if (fontError && data.errorState?.showErrorIndicator) {
+    if (error && data.errorState?.showErrorIndicator) {
         return (
             <div style={enhancedStyle} className={data.className}>
                 <span style={data.errorState.errorStyle}>
@@ -141,8 +118,8 @@ export const Atom: React.FC<TextAtomProps> = ({ data }) => {
             style={enhancedStyle}
             className={data.className}
             data-font-loading={isFontLoading}
-            data-font-loaded={isFontReady(data.font?.family || '')}
-            data-font-error={!!fontError}
+            data-font-loaded={isReady || isLoaded}
+            data-font-error={!!error}
             data-font-family={data.font?.family || 'system'}
         >
             {data.text}

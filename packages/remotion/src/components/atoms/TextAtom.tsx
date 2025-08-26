@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { BaseRenderableProps } from '../../core/types';
 import { ComponentConfig } from '../../core/types';
 import { useFont } from '../../hooks/useFontLoader';
-import { getFontFamilyCSS } from '../../utils/fontUtils';
+
+// Simplified font loading approach - similar to Remotion Google Fonts:
+// const { fontFamily } = useFont('Inter', { weights: ['400', '700'] });
+// 
+// The fontFamily value is now directly usable in CSS:
+// style={{ fontFamily }}
 
 interface TextAtomData {
     text: string;
@@ -23,11 +28,10 @@ interface TextAtomProps extends BaseRenderableProps {
 }
 
 export const Atom: React.FC<TextAtomProps> = ({ data }) => {
-    const [fontFamily, setFontFamily] = useState<string>('sans-serif');
     const [isFontLoading, setIsFontLoading] = useState(false);
 
-    // Font loading logic
-    const { isLoaded, error, isReady } = useFont(
+    // Font loading logic - now returns fontFamily CSS value directly
+    const { isLoaded, error, isReady, fontFamily } = useFont(
         data.font?.family || 'Inter',
         {
             weights: data.font?.weights || ['400'],
@@ -41,11 +45,10 @@ export const Atom: React.FC<TextAtomProps> = ({ data }) => {
         if (data.font?.family) {
             setIsFontLoading(true);
             if (isReady || isLoaded) {
-                setFontFamily(getFontFamilyCSS(data.font.family, data.fallbackFonts));
                 setIsFontLoading(false);
             }
         }
-    }, [data.font, isReady, isLoaded, data.fallbackFonts]);
+    }, [data.font, isReady, isLoaded]);
 
     // Enhanced style with font loading support
     const enhancedStyle: React.CSSProperties = {
@@ -58,8 +61,6 @@ export const Atom: React.FC<TextAtomProps> = ({ data }) => {
     // Show loading state or error handling
     if (error) {
         console.warn(`Font loading error for ${data.font?.family}:`, error);
-        // Fallback to system fonts
-        setFontFamily(getFontFamilyCSS('sans-serif', data.fallbackFonts));
     }
 
     return (

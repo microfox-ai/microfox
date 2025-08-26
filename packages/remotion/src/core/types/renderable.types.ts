@@ -64,7 +64,17 @@ export interface BaseComponentData {
   data?: RenderableData;
   context?: RenderableContext;
   childrenData?: RenderableComponentData[];
+  effects?: BaseEffect[];
 }
+
+export type BaseEffect =
+  | string
+  | {
+      id: string;
+      componentId: string;
+      data?: RenderableData;
+      context?: RenderableContext;
+    };
 
 export type ComponentType =
   | 'atom'
@@ -126,7 +136,7 @@ export interface BaseRenderableProps {
   type: ComponentType;
   data?: RenderableData;
   context?: InternalRenderableContext;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export interface BaseRenderableData extends BaseComponentData {

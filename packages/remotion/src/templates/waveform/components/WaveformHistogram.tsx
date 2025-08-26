@@ -19,6 +19,7 @@ export interface WaveformHistogramDataProps {
     multiplier?: number;
     horizontalSymmetry?: boolean; // Mirror left-right
     verticalMirror?: boolean; // Mirror up-down
+    waveDirection?: 'right-to-left' | 'left-to-right';
     histogramStyle?: 'centered' | 'full-width';
 
     // Animation
@@ -56,6 +57,7 @@ export const WaveformHistogram: React.FC<WaveformHistogramProps> = ({ data }) =>
         gradientEndColor,
         gradientDirection = 'vertical',
         gradientStyle = 'normal',
+        waveDirection = 'right-to-left',
     } = data;
     return (
         <Waveform config={config} className={className} style={style}>
@@ -74,6 +76,7 @@ export const WaveformHistogram: React.FC<WaveformHistogramProps> = ({ data }) =>
                 gradientDirection={gradientDirection}
                 multiplier={multiplier}
                 gradientStyle={gradientStyle}
+                waveDirection={waveDirection}
             />
         </Waveform>
     );
@@ -95,6 +98,7 @@ const WaveformHistogramContent: React.FC<Omit<WaveformHistogramDataProps, 'confi
     gradientDirection,
     multiplier,
     gradientStyle,
+    waveDirection,
 }) => {
     const { waveformData, width, height } = useWaveformContext();
 
@@ -106,10 +110,12 @@ const WaveformHistogramContent: React.FC<Omit<WaveformHistogramDataProps, 'confi
         );
     }
 
+    let directedWaveformData = waveDirection === 'left-to-right' ? waveformData.slice(1).reverse() : waveformData;
+
     // Prepare frequencies for display
     const frequencies = horizontalSymmetry
-        ? [...waveformData, ...waveformData.slice(1).reverse()]
-        : Array(multiplier).fill(waveformData).flat();
+        ? [...directedWaveformData, ...directedWaveformData.slice(1).reverse()]
+        : Array(multiplier).fill(directedWaveformData).flat();
 
 
     // Render bars component

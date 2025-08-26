@@ -29,7 +29,10 @@ export interface LayoutConstraints {
   rows?: number;
 }
 
+import { RenderableComponentData } from './renderable.types';
+
 export interface CompositionContext {
+  childrenData?: RenderableComponentData[];
   width: number;
   height: number;
   duration: number;

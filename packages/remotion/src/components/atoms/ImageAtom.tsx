@@ -1,5 +1,5 @@
-import React from 'react';
-import { Img } from 'remotion';
+import React, { useMemo } from 'react';
+import { Img, staticFile } from 'remotion';
 import { BaseRenderableProps } from '../../core/types';
 import { ComponentConfig } from '../../core/types';
 
@@ -12,7 +12,15 @@ interface ImageAtomProps extends BaseRenderableProps {
 }
 
 export const Atom: React.FC<ImageAtomProps> = ({ data }) => {
-    return <Img className={data.className} src={data.src} style={data.style} />;
+
+    const source = useMemo(() => {
+        if (data.src.startsWith('http')) {
+            return data.src;
+        }
+        return staticFile(data.src);
+    }, [data.src]);
+
+    return <Img className={data.className} src={source} style={data.style} crossOrigin='anonymous' />;
 };
 
 // Static config for ImageAtom

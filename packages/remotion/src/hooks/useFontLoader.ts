@@ -3,17 +3,18 @@ import {
   loadGoogleFont,
   loadMultipleFonts,
   isFontLoaded,
+  getLoadedFontFamily,
   FontLoadingOptions,
 } from '../utils/fontUtils';
 
 export interface UseFontLoaderOptions {
   preload?: boolean;
-  onLoad?: (fontFamily: string) => void;
+  onLoad?: (fontFamily: string, cssValue: string) => void;
   onError?: (fontFamily: string, error: Error) => void;
 }
 
 export interface FontLoaderState {
-  loadedFonts: Set<string>;
+  loadedFonts: Map<string, string>; // fontFamily -> CSS value
   loadingFonts: Set<string>;
   errorFonts: Map<string, Error>;
 }
@@ -23,7 +24,7 @@ export interface FontLoaderState {
  */
 export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
   const [state, setState] = useState<FontLoaderState>({
-    loadedFonts: new Set(),
+    loadedFonts: new Map(),
     loadingFonts: new Set(),
     errorFonts: new Map(),
   });
@@ -32,12 +33,14 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
     async (
       fontFamily: string,
       fontOptions: FontLoadingOptions = {}
-    ): Promise<void> => {
+    ): Promise<string> => {
+      const fontKey = `${fontFamily}-${JSON.stringify(fontOptions)}`;
+
       if (
-        state.loadedFonts.has(fontFamily) ||
+        state.loadedFonts.has(fontKey) ||
         state.loadingFonts.has(fontFamily)
       ) {
-        return;
+        return state.loadedFonts.get(fontKey) || `"${fontFamily}", sans-serif`;
       }
 
       setState((prev) => ({
@@ -46,17 +49,24 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
       }));
 
       try {
-        await loadGoogleFont(fontFamily, fontOptions);
+        const cssValue = await loadGoogleFont(fontFamily, fontOptions);
 
-        setState((prev) => ({
-          ...prev,
-          loadedFonts: new Set(prev.loadedFonts).add(fontFamily),
-          loadingFonts: new Set(
-            [...prev.loadingFonts].filter((f) => f !== fontFamily)
-          ),
-        }));
+        if (cssValue !== null) {
+          setState((prev) => ({
+            ...prev,
+            loadedFonts: new Map(prev.loadedFonts).set(fontKey, cssValue),
+            loadingFonts: new Set(
+              [...prev.loadingFonts].filter((f) => f !== fontFamily)
+            ),
+          }));
 
-        options.onLoad?.(fontFamily);
+          options.onLoad?.(fontFamily, cssValue);
+          return cssValue;
+        } else {
+          throw new Error(
+            `Font Package @remotion/google-fonts/${fontFamily} not found`
+          );
+        }
       } catch (error) {
         const errorObj =
           error instanceof Error ? error : new Error(String(error));
@@ -70,6 +80,10 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
         }));
 
         options.onError?.(fontFamily, errorObj);
+
+        // Return fallback
+        const fallbackValue = `"${fontFamily}", sans-serif`;
+        return fallbackValue;
       }
     },
     [state.loadedFonts, state.loadingFonts, options]
@@ -78,14 +92,16 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
   const loadMultipleFonts = useCallback(
     async (
       fonts: Array<{ family: string; options?: FontLoadingOptions }>
-    ): Promise<void> => {
-      const fontsToLoad = fonts.filter(
-        ({ family }) =>
-          !state.loadedFonts.has(family) && !state.loadingFonts.has(family)
-      );
+    ): Promise<Map<string, string>> => {
+      const fontsToLoad = fonts.filter(({ family, options = {} }) => {
+        const fontKey = `${family}-${JSON.stringify(options)}`;
+        return (
+          !state.loadedFonts.has(fontKey) && !state.loadingFonts.has(family)
+        );
+      });
 
       if (fontsToLoad.length === 0) {
-        return;
+        return state.loadedFonts;
       }
 
       // Add all fonts to loading state
@@ -98,14 +114,21 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
       }));
 
       try {
-        await loadMultipleFonts(fontsToLoad);
+        const fontMap = await loadMultipleFonts(fontsToLoad);
+
+        // Update state with new fonts using proper keys
+        const newFontsMap = new Map<string, string>();
+        fontsToLoad.forEach(({ family, options = {} }) => {
+          const fontKey = `${family}-${JSON.stringify(options)}`;
+          const cssValue = fontMap.get(family);
+          if (cssValue) {
+            newFontsMap.set(fontKey, cssValue);
+          }
+        });
 
         setState((prev) => ({
           ...prev,
-          loadedFonts: new Set([
-            ...prev.loadedFonts,
-            ...fontsToLoad.map((f) => f.family),
-          ]),
+          loadedFonts: new Map([...prev.loadedFonts, ...newFontsMap]),
           loadingFonts: new Set(
             [...prev.loadingFonts].filter(
               (f) => !fontsToLoad.some((ftl) => ftl.family === f)
@@ -113,7 +136,14 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
           ),
         }));
 
-        fontsToLoad.forEach(({ family }) => options.onLoad?.(family));
+        fontsToLoad.forEach(({ family }) => {
+          const cssValue = fontMap.get(family);
+          if (cssValue) {
+            options.onLoad?.(family, cssValue);
+          }
+        });
+
+        return fontMap;
       } catch (error) {
         const errorObj =
           error instanceof Error ? error : new Error(String(error));
@@ -129,21 +159,41 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
         }));
 
         options.onError?.('multiple', errorObj);
+
+        // Return current loaded fonts
+        return state.loadedFonts;
       }
     },
     [state.loadedFonts, state.loadingFonts, options]
   );
 
   const isFontReady = useCallback(
-    (fontFamily: string): boolean => {
-      return state.loadedFonts.has(fontFamily);
+    (fontFamily: string, options: FontLoadingOptions = {}): boolean => {
+      const fontKey = `${fontFamily}-${JSON.stringify(options)}`;
+      return state.loadedFonts.has(fontKey);
     },
     [state.loadedFonts]
   );
 
   const areFontsReady = useCallback(
-    (fontFamilies: string[]): boolean => {
-      return fontFamilies.every((family) => state.loadedFonts.has(family));
+    (
+      fontFamilies: Array<{ family: string; options?: FontLoadingOptions }>
+    ): boolean => {
+      return fontFamilies.every(({ family, options = {} }) => {
+        const fontKey = `${family}-${JSON.stringify(options)}`;
+        return state.loadedFonts.has(fontKey);
+      });
+    },
+    [state.loadedFonts]
+  );
+
+  const getFontFamily = useCallback(
+    (
+      fontFamily: string,
+      options: FontLoadingOptions = {}
+    ): string | undefined => {
+      const fontKey = `${fontFamily}-${JSON.stringify(options)}`;
+      return state.loadedFonts.get(fontKey);
     },
     [state.loadedFonts]
   );
@@ -173,6 +223,7 @@ export const useFontLoader = (options: UseFontLoaderOptions = {}) => {
     loadMultipleFonts,
     isFontReady,
     areFontsReady,
+    getFontFamily,
     getFontError,
     clearErrors,
   };
@@ -185,15 +236,22 @@ export const useFont = (
   fontFamily: string,
   options: FontLoadingOptions & UseFontLoaderOptions = {}
 ) => {
-  const { loadFont, isFontReady, getFontError, ...rest } =
+  const { loadFont, isFontReady, getFontFamily, getFontError, ...rest } =
     useFontLoader(options);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // Initialize fontFamilyValue from cache if available, otherwise use fallback
+  const initialFontFamily =
+    getFontFamily(fontFamily, options) || `"${fontFamily}", sans-serif`;
+  const [fontFamilyValue, setFontFamilyValue] =
+    useState<string>(initialFontFamily);
+
   useEffect(() => {
     const loadFontAsync = async () => {
       try {
-        await loadFont(fontFamily, options);
+        const cssValue = await loadFont(fontFamily, options);
+        setFontFamilyValue(cssValue);
         setIsLoaded(true);
         setError(null);
       } catch (err) {
@@ -202,17 +260,22 @@ export const useFont = (
       }
     };
 
-    if (!isFontReady(fontFamily)) {
+    if (!isFontReady(fontFamily, options)) {
       loadFontAsync();
     } else {
+      const cachedValue = getFontFamily(fontFamily, options);
+      if (cachedValue) {
+        setFontFamilyValue(cachedValue);
+      }
       setIsLoaded(true);
     }
-  }, [fontFamily, loadFont, isFontReady, options]);
+  }, [fontFamily, loadFont, isFontReady, getFontFamily, options]);
 
   return {
     isLoaded,
     error,
-    isReady: isFontReady(fontFamily),
+    isReady: isFontReady(fontFamily, options),
+    fontFamily: fontFamilyValue,
     ...rest,
   };
 };

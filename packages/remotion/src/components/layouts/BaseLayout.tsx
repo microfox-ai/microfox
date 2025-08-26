@@ -6,7 +6,7 @@ interface BaseLayoutProps extends BaseRenderableProps {
     children?: ReactNode;
 }
 
-export const Layout: React.FC<BaseLayoutProps> = ({ children, data, context }) => {
+export const Layout: React.FC<BaseLayoutProps> = ({ id, children, data, context }) => {
     const { containerProps, childrenProps } = data || {
         containerProps: {},
         childrenProps: [],
@@ -14,10 +14,11 @@ export const Layout: React.FC<BaseLayoutProps> = ({ children, data, context }) =
     const childrenArray = Children.toArray(children);
 
     return (
-        <AbsoluteFill {...containerProps} style={{
-            ...context?.boundaries,
-            ...containerProps.style,
-        }}>
+        <AbsoluteFill
+            {...containerProps} style={{
+                ...context?.boundaries,
+                ...containerProps.style,
+            }}>
             {childrenArray.map((child, index) => (
                 <div
                     key={index}

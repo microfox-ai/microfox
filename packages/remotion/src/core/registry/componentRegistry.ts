@@ -26,6 +26,22 @@ class ComponentRegistryManager {
     }
   }
 
+  registerEffect(
+    name: string,
+    component: React.ComponentType<any>,
+    config: ComponentConfig = { displayName: '' },
+    packageName?: string
+  ): void {
+    // Effects are registered as layout components since they use the same rendering logic
+    this.registerComponent(
+      name?.includes('effect-') ? name : `effect-${name}`,
+      component,
+      'layout',
+      config,
+      packageName
+    );
+  }
+
   getComponent(name: string): React.ComponentType<any> | undefined {
     return this.registry[name]?.component;
   }
@@ -95,6 +111,15 @@ export const registerComponent = (
     config,
     packageName
   );
+};
+
+export const registerEffect = (
+  name: string,
+  component: React.ComponentType<any>,
+  config: ComponentConfig = { displayName: '' },
+  packageName?: string
+) => {
+  componentRegistry.registerEffect(name, component, config, packageName);
 };
 
 export const registerPackage = (

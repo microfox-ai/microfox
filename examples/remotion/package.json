@@ -15,7 +15,7 @@
     "@microfox/remotion": "*",
     "@remotion/bundler": "4.0.340",
     "@remotion/cli": "4.0.340",
-    "@remotion/google-fonts": "4.0.340",
+    "@remotion/google-fonts": "^4.0.340",
     "@remotion/lambda": "4.0.340",
     "@remotion/paths": "4.0.340",
     "@remotion/player": "4.0.340",
