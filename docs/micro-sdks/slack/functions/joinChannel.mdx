@@ -1,0 +1,35 @@
+---
+title: 'joinChannel'
+description: 'Joins a channel.'
+---
+
+The `joinChannel` method joins a channel.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    await client.joinChannel({ channelId: 'C12345678' });
+    console.log('Successfully joined channel.');
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        The ID of the channel to join.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `ConversationsJoinResponse` object.

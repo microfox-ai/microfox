@@ -1,0 +1,35 @@
+---
+title: 'getUserByEmail'
+description: 'Finds a user by their email address.'
+---
+
+The `getUserByEmail` method finds a user by their email address.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const user = await client.getUserByEmail({ email: 'name@example.com' });
+    console.log(user);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="email" type="string" required>
+        The email address of the user to find.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `user` object.

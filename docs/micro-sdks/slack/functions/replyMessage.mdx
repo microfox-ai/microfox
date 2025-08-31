@@ -1,0 +1,51 @@
+---
+title: 'replyMessage'
+description: 'Replies to a message in a thread.'
+---
+
+The `replyMessage` method replies to a message in a thread.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    await client.replyMessage({
+      channelId: 'C12345678',
+      thread_ts: '1234567890.123456',
+      text: 'This is a reply.',
+    });
+    console.log('Reply sent.');
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        The ID of the channel where the message is.
+    </Property>
+    <Property name="thread_ts" type="string" required>
+        The timestamp of the message to reply to, establishing the thread.
+    </Property>
+    <Property name="text" type="string" required>
+        The text of the reply.
+    </Property>
+    <Property name="username" type="string">
+        Optional custom username for the message.
+    </Property>
+    <Property name="icon_url" type="string">
+        Optional URL to an image to use as the icon for the message.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `ChatPostMessageResponse` object.

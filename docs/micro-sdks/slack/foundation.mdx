@@ -1,0 +1,96 @@
+---
+title: 'Foundation'
+description: 'A deep dive into the core concepts, design, and best practices for using the @microfox/slack SDK.'
+---
+
+## Design Philosophy
+
+The `@microfox/slack` SDK is designed to be a thin, intuitive, and type-safe wrapper around the official Slack Web API. Our goal is to reduce boilerplate and improve developer experience without obscuring the underlying API's behavior.
+
+-   **Mirrors the Official API:** The client's structure (`client.namespace.method`) is designed to directly correspond to the official Slack API documentation. If you know how to use Slack's API, you'll feel right at home with this SDK. For example, the `chat.postMessage` API endpoint is accessible via `client.chat.postMessage()`.
+-   **Type Safety First:** We leverage TypeScript to provide strong, end-to-end typings for all API method parameters and responses. This helps you catch bugs early, enables powerful editor autocompletion, and makes the code easier to refactor and maintain.
+-   **Minimal Abstraction:** The SDK handles authentication and the direct HTTP communication, but it doesn't try to fundamentally change how the Slack API works. What you send is what Slack receives, and the response object you get back closely mirrors the JSON response from Slack, just with added types.
+
+## Handling API Responses
+
+Every method in the SDK returns a `Promise` that resolves to a typed object based on Slack's response. A crucial property to check on every response is `ok`.
+
+```typescript
+const response = await client.chat.postMessage({ ... });
+
+if (response.ok) {
+  // The request was successful
+  console.log('Message sent! Timestamp:', response.ts);
+} else {
+  // The request failed
+  // The `error` property contains the reason from Slack's API
+  console.error('Failed to send message:', response.error);
+}
+```
+
+Always check the `ok` property before attempting to access the successful payload of a response.
+
+## Understanding Rate Limits
+
+The Slack API enforces rate limits to prevent abuse and ensure high availability. Limits are applied per-method and are divided into different "tiers." When you exceed a limit, the API will respond with an `HTTP 429 Too Many Requests` error and a `Retry-After` header indicating how many seconds you should wait before trying again.
+
+While this SDK does not have automatic retry logic built-in, it transparently passes back the information you need to build your own.
+
+```typescript
+try {
+  const result = await client.chat.postMessage({ ... });
+} catch (error) {
+  if (error.code === 'slack_error_rate_limited') {
+    const retryAfter = error.data.retry_after; // Time in seconds to wait
+    console.log(`Rate limited. Retrying after ${retryAfter} seconds...`);
+    // Implement your retry logic here, e.g., using setTimeout
+  }
+}
+```
+
+## Working with Pagination
+
+Many Slack API methods that return a list of items (like `users.list` or `conversations.history`) are paginated. This means you may need to make multiple API calls to retrieve all the items.
+
+The Slack API uses a cursor-based pagination system. A successful response from a paginated method will include a `response_metadata` object containing a `next_cursor`. If this cursor is present, it means there are more pages of results.
+
+Here's how you can fetch all members of a channel:
+
+```typescript
+async function getAllChannelMembers(channelId: string) {
+  let allMembers: string[] = [];
+  let cursor: string | undefined = undefined;
+
+  while (true) {
+    const response = await client.conversations.members({
+      channel: channelId,
+      cursor: cursor,
+      limit: 200 // Fetch up to 200 members per call
+    });
+
+    if (!response.ok || !response.members) {
+      throw new Error(`Failed to fetch members: ${response.error}`);
+    }
+
+    allMembers = allMembers.concat(response.members);
+
+    // If there's no next_cursor, we're done
+    if (!response.response_metadata?.next_cursor) {
+      break;
+    }
+
+    // Otherwise, use the new cursor for the next request
+    cursor = response.response_metadata.next_cursor;
+  }
+  
+  console.log(`Found ${allMembers.length} members in channel ${channelId}.`);
+  return allMembers;
+}
+```
+
+## Best Practices
+
+-   **Secure Your Token:** Never commit your bot token directly into your source code. Use environment variables (e.g., `process.env.SLACK_BOT_TOKEN`) to keep it secure.
+-   **Reuse the Client:** Instantiate the `MicrofoxSlackClient` once and reuse the instance throughout your application. This is more efficient than creating a new client for every request.
+-   **Specify Scopes Narrowly:** When configuring your Slack App, only request the permissions (scopes) that your app absolutely needs to function. This is a security best practice.
+-   **Check the `ok` Flag:** Always check the `ok` property on the response object to handle potential API errors gracefully.

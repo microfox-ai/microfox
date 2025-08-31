@@ -1,0 +1,47 @@
+---
+title: 'getUserChannels'
+description: 'Fetches a list of conversations a user is a member of.'
+---
+
+The `getUserChannels` method fetches a list of conversations a user is a member of.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const { channels } = await client.getUserChannels({ userId: 'U12345678' });
+    console.log(channels);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="userId" type="string" required>
+        The ID of the user to fetch conversations for.
+    </Property>
+    <Property name="cursor" type="string">
+        A cursor to the next page of results.
+    </Property>
+    <Property name="limit" type="number">
+        The maximum number of conversations to return.
+    </Property>
+    <Property name="types" type="('public_channel' | 'private_channel' | 'mpim' | 'im')[]">
+        An array of conversation types to include.
+    </Property>
+    <Property name="excludeArchived" type="boolean">
+        Whether to exclude archived conversations.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an object with `channels` and `nextCursor` properties.

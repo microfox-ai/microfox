@@ -1,0 +1,124 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step guide to install, configure, and use the @microfox/slack SDK to build your first integration.'
+---
+
+## Prerequisites
+
+Before you begin, you will need:
+-   **Node.js:** Version 16.x or later.
+-   **A Slack Workspace:** You need a workspace where you have permission to install apps.
+-   **A Slack Bot Token:** The following steps will guide you through creating one.
+
+## 1. Create a Slack App
+
+First, you need to create a Slack App to get your API credentials.
+
+1.  Navigate to the [Slack API website](https://api.slack.com/apps) and click **"Create New App"**.
+2.  Choose **"From scratch"**, give your app a name (e.g., "My Notifier Bot"), and select the workspace you want to install it in.
+3.  After creating the app, you'll be on the app's settings page. Go to **"OAuth & Permissions"** in the sidebar.
+4.  Scroll down to the **"Scopes"** section. Scopes define what your app is allowed to do. For our example, we need to add the following **Bot Token Scopes**:
+    -   `chat:write`: To send messages.
+    -   `reactions:write`: To add reactions to messages.
+    -   `users:read.email`: To find users by their email address.
+5.  Scroll back to the top and click **"Install App to Workspace"**. Authorize the app.
+6.  You will now see a **"Bot User OAuth Token"** on the same page. It will start with `xoxb-`. Copy this token; this is what you will use to initialize the client.
+
+## 2. Installation
+
+Add the `@microfox/slack` package to your project:
+<CodeGroup>
+```bash npm
+npm install @microfox/slack
+```
+```bash yarn
+yarn add @microfox/slack
+```
+```bash pnpm
+pnpm add @microfox/slack
+```
+</CodeGroup>
+
+## 3. Your First Automation Script
+
+Let's create a script that performs a common workflow:
+1.  Initializes the Slack client.
+2.  Finds a specific user by their email address.
+3.  Sends a direct message to that user.
+4.  Adds a reaction to the message it just sent.
+
+Create a new file named `notify.ts` and add the following code. Remember to replace the placeholder values.
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+// Best practice: Store your token in an environment variable
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN || 'YOUR_SLACK_BOT_TOKEN';
+// The email of the user you want to message
+const USER_EMAIL = 'user@example.com'; 
+
+// 1. Initialize the client
+const client = new MicrofoxSlackClient({
+  token: SLACK_BOT_TOKEN,
+});
+
+async function findAndNotifyUser() {
+  try {
+    console.log(`Looking for user: ${USER_EMAIL}`);
+    // 2. Find the user by email
+    const userResponse = await client.users.lookupByEmail({
+      email: USER_EMAIL,
+    });
+
+    if (!userResponse.ok || !userResponse.user) {
+      throw new Error(`Could not find user: ${userResponse.error}`);
+    }
+    
+    const userId = userResponse.user.id;
+    console.log(`Found user ID: ${userId}`);
+
+    // 3. Send a direct message to the user
+    console.log('Sending message...');
+    const messageResponse = await client.chat.postMessage({
+      channel: userId, // Use the user's ID to send a DM
+      text: 'Hello! This is an automated notification from our new bot. :wave:',
+    });
+
+    if (!messageResponse.ok || !messageResponse.ts || !messageResponse.channel) {
+      throw new Error(`Could not send message: ${messageResponse.error}`);
+    }
+    
+    console.log('Message sent successfully.');
+    
+    // 4. Add a reaction to the message
+    console.log('Adding reaction...');
+    await client.reactions.add({
+      channel: messageResponse.channel, // Channel where the message was sent
+      timestamp: messageResponse.ts,    // Timestamp of the message
+      name: 'robot_face',               // The emoji to react with
+    });
+
+    console.log('Reaction added! Automation complete.');
+
+  } catch (error) {
+    console.error('An error occurred:', error.message);
+  }
+}
+
+findAndNotifyUser();
+```
+
+### Running the Script
+Set your environment variable and run the script using `ts-node`:
+
+```bash
+export SLACK_BOT_TOKEN="xoxb-YOUR-TOKEN-HERE"
+ts-node notify.ts
+```
+
+Check Slack! The user you specified should have received a direct message with a :robot_face: reaction from your bot.
+
+## Next Steps
+You've now successfully built and run a Slack integration!
+-   **Explore the API:** Browse the **API Reference** to discover all the available methods.
+-   **Learn the Concepts:** Read the **[Foundation](/micro-sdks/slack/foundation)** guide to learn about best practices, rate limiting, and pagination.

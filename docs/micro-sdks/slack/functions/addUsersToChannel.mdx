@@ -1,0 +1,47 @@
+---
+title: 'addUsersToChannel'
+description: 'Adds multiple users to a Slack channel.'
+---
+
+The `addUsersToChannel` function adds multiple users to a Slack channel at once. It efficiently handles bulk user additions with automatic fallback to individual invites if needed.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
+
+async function addMultipleUsers() {
+  try {
+    const results = await client.addUsersToChannel({
+      channelId: 'C1234567890',
+      userIds: ['U1234567890', 'U0987654321', 'U1122334455']
+    });
+    
+    console.log(`Successfully processed ${results.length} invite requests`);
+    results.forEach((result, index) => {
+      console.log(`User ${index + 1}: ${result.ok ? 'Success' : 'Failed'}`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+addMultipleUsers();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        The ID of the channel to add users to. Channel IDs start with 'C'.
+    </Property>
+    <Property name="userIds" type="string[]" required>
+        Array of user IDs to add to the channel. User IDs start with 'U'.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an array of `ConversationsInviteResponse` objects representing the invite responses for each user.

@@ -1,0 +1,47 @@
+---
+title: 'messageChannel'
+description: 'Sends a message to a channel.'
+---
+
+The `messageChannel` method sends a message to a channel.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    await client.messageChannel({
+      channelId: 'C12345678',
+      text: 'Hello, world!',
+    });
+    console.log('Message sent.');
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        The ID of the channel to message.
+    </Property>
+    <Property name="text" type="string" required>
+        The text of the message to send.
+    </Property>
+    <Property name="username" type="string">
+        Optional custom username for the message.
+    </Property>
+    <Property name="icon_url" type="string">
+        Optional URL to an image to use as the icon for the message.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `ChatPostMessageResponse` object.

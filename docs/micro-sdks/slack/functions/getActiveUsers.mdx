@@ -1,0 +1,47 @@
+---
+title: 'getActiveUsers'
+description: 'Retrieves a list of all active (non-deleted) users in a Slack workspace.'
+---
+
+The `getActiveUsers` function retrieves a list of all active (non-deleted) users in a Slack workspace.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
+
+async function logActiveUsers() {
+  try {
+    const users = await client.getActiveUsers({ limit: 50, includeBots: true });
+    if (users) {
+      users.forEach(user => {
+        console.log(user.real_name);
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+logActiveUsers();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="includeBots" type="boolean">
+        Whether to include bots in the list. Defaults to `false`.
+    </Property>
+    <Property name="cursor" type="string">
+        A cursor to the next page of results.
+    </Property>
+    <Property name="limit" type="number">
+        The maximum number of users to return. Defaults to 100.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an array of `user` objects. A `user` object contains information about a Slack workspace user.
