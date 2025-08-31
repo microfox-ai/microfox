@@ -1,0 +1,121 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step guide to configuring AWS and using the SDK to send your first emails with Amazon SES.'
+---
+
+## Prerequisites
+
+Before you begin, you must have the following set up in your AWS account:
+
+-   **Node.js:** Version 16.x or later.
+-   **An AWS Account:** With billing enabled.
+-   **An IAM User:** You need an IAM user with programmatic access (an Access Key ID and Secret Access Key).
+-   **SES Permissions:** The IAM user must have a policy attached that grants permissions to use SES. A minimal policy would be `AmazonSESFullAccess`. For better security, create a custom policy with only the permissions you need, like `ses:SendEmail` and `ses:SendRawEmail`.
+-   **A Verified Sender Identity:** You cannot send emails *from* an address until you've proven you own it. In the Amazon SES console, go to **"Verified identities"** and verify either a specific email address or an entire domain.
+
+## 1. Configure Your AWS Credentials
+
+The SDK, like the official AWS SDK, will automatically look for credentials in your environment. The recommended way to provide them is by setting environment variables:
+
+```bash
+export AWS_ACCESS_KEY_ID="YOUR_ACCESS_KEY_ID"
+export AWS_SECRET_ACCESS_KEY="YOUR_SECRET_ACCESS_KEY"
+export AWS_REGION="us-east-1" # Or your preferred AWS region
+```
+
+## 2. Installation
+
+Add the `@microfox/aws-ses` package to your project:
+<CodeGroup>
+```bash npm
+npm install @microfox/aws-ses
+```
+```bash yarn
+yarn add @microfox/aws-ses
+```
+```bash pnpm
+pnpm add @microfox/aws-ses
+```
+</CodeGroup>
+
+## 3. Your First Email Script
+
+Let's create a script that demonstrates how to send both a simple text email and a more complex HTML email with an attachment.
+
+Create a new file named `mailer.ts`.
+
+```typescript
+import { createSESSdk } from '@microfox/aws-ses';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// 1. Initialize the SDK client. It automatically picks up credentials
+//    from your environment variables.
+const ses = createSESSdk();
+
+// IMPORTANT: Replace with your verified sender email address.
+const SENDER_EMAIL = 'sender@your-verified-domain.com';
+
+async function main() {
+  try {
+    // --- Example 1: Sending a simple text email ---
+    console.log('Sending a simple text email...');
+    await ses.sendEmail({
+      to: ['recipient1@example.com'],
+      from: SENDER_EMAIL,
+      subject: 'A Simple Test Email',
+      text: 'Hello from the @microfox/aws-ses SDK!',
+    });
+    console.log('Simple email sent successfully.');
+
+    // --- Example 2: Sending an HTML email with an attachment ---
+    console.log('\nSending an HTML email with an attachment...');
+    
+    // Create a dummy attachment file
+    const attachmentPath = path.join(__dirname, 'invoice.txt');
+    fs.writeFileSync(attachmentPath, 'This is a test invoice.');
+
+    // Read the file into a buffer
+    const attachmentContent = fs.readFileSync(attachmentPath);
+
+    await ses.sendEmail({
+      to: ['recipient2@example.com'],
+      cc: ['cc-recipient@example.com'],
+      from: SENDER_EMAIL,
+      subject: 'Your Invoice is Attached',
+      html: `
+        <h1>Invoice Details</h1>
+        <p>Hello,</p>
+        <p>Please find your invoice attached to this email.</p>
+        <p>Thank you!</p>
+      `,
+      attachments: [
+        {
+          filename: 'invoice.txt',
+          content: attachmentContent,
+        },
+      ],
+    });
+    console.log('HTML email with attachment sent successfully.');
+
+  } catch (error) {
+    console.error('An error occurred while sending email:', error);
+  }
+}
+
+main();
+```
+
+### Running the Script
+Make sure your environment variables are set, then run the script with `ts-node`:
+
+```bash
+ts-node mailer.ts
+```
+
+Check the recipient inboxes! You should see the two emails you sent.
+
+## Next Steps
+You've now successfully configured your environment and sent emails using the SDK.
+-   **Explore the API:** Check out the **API Reference** for `sendEmail`, `sendBulkEmails`, and more.
+-   **Learn Advanced Concepts:** Read the **[Foundation](/micro-sdks/aws-ses/foundation)** guide to learn about sending templated emails and best practices for deliverability.

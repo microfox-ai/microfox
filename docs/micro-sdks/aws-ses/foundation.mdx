@@ -1,0 +1,89 @@
+---
+title: 'Foundation'
+description: 'A deep dive into the core concepts, features, and best practices for using Amazon SES with the @microfox/aws-ses SDK.'
+---
+
+## Core Concepts
+
+The `@microfox/aws-ses` SDK simplifies the use of the official AWS SDK v3 by providing a higher-level client. It focuses on the most common email-sending tasks, making them accessible through a clean and intuitive API.
+
+### How It Works
+When you call a method like `ses.sendEmail()`, the SDK performs the following steps under the hood:
+1.  Constructs the appropriate `Command` object required by the `@aws-sdk/client-sesv2` (e.g., `SendEmailCommand`).
+2.  Populates the command's input with the parameters you provided, translating the simplified format into the structure AWS expects. For emails with attachments, it correctly builds the raw MIME message.
+3.  Initializes the official `SESv2Client` using the credentials from your environment.
+4.  Sends the command to the Amazon SES API endpoint.
+5.  Returns a simplified `Promise` that resolves on success or rejects with a descriptive error on failure.
+
+## Sending Templated Emails
+
+For sending personalized emails to a large number of recipients, using SES Templates is highly efficient. It allows you to define a template in SES and then just send the dynamic data for each recipient, reducing the amount of data sent in each API call.
+
+**Step 1: Create a Template in AWS**
+First, you must create an email template in the Amazon SES console. A template consists of a subject line and an HTML/text body with placeholder variables.
+
+Example Template:
+-   **Template Name:** `WelcomeUser`
+-   **Subject:** `Welcome to Our Service, {{name}}!`
+-   **HTML Body:** `<h1>Hi {{name}},</h1><p>Thanks for signing up. We're excited to have you!</p>`
+
+**Step 2: Send with the SDK**
+Use the `sendBulkTemplatedEmail` method to send an email using your template.
+
+```typescript
+import { createSESSdk } from '@microfox/aws-ses';
+
+const ses = createSESSdk();
+
+async function sendWelcomeEmails() {
+  await ses.sendBulkTemplatedEmail({
+    from: 'sender@your-verified-domain.com',
+    template: 'WelcomeUser', // The name of your SES template
+    destinations: [
+      {
+        to: ['alice@example.com'],
+        // The keys here must match the placeholders in your template
+        templateData: { name: 'Alice' },
+      },
+      {
+        to: ['bob@example.com'],
+        templateData: { name: 'Bob' },
+      },
+    ],
+    // Optional: Default data if a destination is missing a value
+    defaultTemplateData: { name: 'Valued Customer' },
+  });
+}
+```
+
+## Handling Attachments
+
+The `sendEmail` method accepts an `attachments` array to send files. Each attachment object in the array must have a `filename` and `content`.
+
+-   **`filename`**: The name of the file as it should appear in the email client (e.g., `'invoice.pdf'`).
+-   **`content`**: The raw content of the file, typically as a `Buffer`.
+
+You can easily read a file from your disk and send it:
+```typescript
+import * as fs from 'fs';
+
+const fileContent = fs.readFileSync('./path/to/your/file.pdf');
+
+await ses.sendEmail({
+  // ... to, from, subject ...
+  attachments: [
+    {
+      filename: 'document.pdf',
+      content: fileContent,
+    },
+  ],
+});
+```
+
+## Best Practices
+
+-   **IAM Security:** Always follow the principle of least privilege. Create a dedicated IAM user for your application and attach a policy that *only* grants the SES permissions it needs (e.g., `ses:SendEmail`). Do not use your root AWS account credentials.
+-   **Sender Verification:** To improve deliverability and comply with anti-spam laws, verify your entire domain with SES, not just individual email addresses. This allows you to send from any address on that domain.
+-   **Monitor Your Sending Quotas:** AWS SES imposes sending quotas (e.g., emails per day, emails per second). You can monitor your usage in the SES console. If you need higher limits, you can request an increase from AWS support.
+-   **Handle Bounces and Complaints:** A high bounce or complaint rate can damage your sender reputation and lead to your account being suspended. Configure SES to send notifications about bounces and complaints to an SNS topic so you can process them and remove invalid email addresses from your mailing lists.
+-   **Use a "Reply-To" Address:** For transactional emails, it's good practice to set a `replyTo` address. This ensures that if a user replies to your email, it goes to a monitored inbox instead of a "no-reply" address.

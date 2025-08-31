@@ -1,0 +1,58 @@
+---
+title: 'sendEmail'
+description: 'Sends a single email using the provided parameters.'
+---
+
+The `sendEmail` function sends a single email to a specified recipient using the AWS SES service.
+
+## Usage
+
+```typescript
+// Sending a plain text email
+await ses.sendEmail({
+  sender: 'sender@example.com',
+  recipient: 'recipient@example.com',
+  subject: 'Hello from SES!',
+  bodyText: 'This is a plain text email body.',
+});
+
+// Sending an HTML email
+await ses.sendEmail({
+  sender: 'sender@example.com',
+  recipient: 'recipient@example.com',
+  subject: 'Hello from SES!',
+  bodyHtml: '<body>This is an HTML email body.</body>',
+});
+```
+
+## Arguments
+
+<Properties>
+    <Property name="params" type="object" required>
+        Parameters for sending the email.
+        <Properties>
+            <Property name="sender" type="string" required>
+                Email address of the sender (must be verified in AWS SES).
+            </Property>
+            <Property name="recipient" type="string" required>
+                Email address of the recipient.
+            </Property>
+            <Property name="displayName" type="string">
+                Display name for the sender (e.g., "John Doe" &lt;john@example.com&gt;).
+            </Property>
+            <Property name="subject" type="string" required>
+                Subject line of the email.
+            </Property>
+            <Property name="bodyText" type="string">
+                Plain text version of the email body.
+            </Property>
+            <Property name="bodyHtml" type="string">
+                HTML version of the email body.
+            </Property>
+        </Properties>
+    </Property>
+</Properties>
+
+## Response
+
+This function returns a `Promise<SendEmailResponse>` which resolves to the `SendEmailResponse` object from the AWS SES API.
