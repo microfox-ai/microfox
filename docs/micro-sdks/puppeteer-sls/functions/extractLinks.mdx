@@ -1,0 +1,44 @@
+---
+title: 'extractLinks'
+description: 'The `extractLinks` function scrapes all the hyperlinks from a given webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function extractLinks(
+  url: string
+): Promise<string[]>
+```
+
+The `extractLinks` function navigates to a URL and extracts the `href` attribute from every anchor (`<a>`) tag on the page. This is useful for web crawling, link checking, or sitemap generation.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage from which to extract links.
+
+## Returns
+
+- **`Promise<string[]>`**: A Promise that resolves to an array of strings, where each string is a URL found on the page.
+
+## Example Usage
+
+```typescript
+import { extractLinks } from '@microfox/puppeteer-sls';
+
+async function scrapeLinks() {
+  const url = 'https://www.google.com';
+  try {
+    const links = await extractLinks(url);
+    console.log('Found Links:', links);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+scrapeLinks();
+```
+
+## Related Functions
+
+- `extractLinksFromUrl`: This is an alias for `extractLinks`.

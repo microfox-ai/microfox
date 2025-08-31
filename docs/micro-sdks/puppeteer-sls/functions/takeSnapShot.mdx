@@ -1,0 +1,47 @@
+---
+title: 'takeSnapShot'
+description: 'The `takeSnapShot` function captures a screenshot of a webpage and returns it as a Buffer.'
+---
+
+## Function Signature
+
+```typescript
+async function takeSnapShot(
+  url: string,
+  options?: puppeteer.ScreenshotOptions
+): Promise<Buffer>
+```
+
+The `takeSnapShot` function navigates to a URL, captures a screenshot of the page, and returns the image as a `Buffer`. This is useful for visual regression testing, creating thumbnails, or archiving visual content.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage to capture.
+- **`options`** (puppeteer.ScreenshotOptions, optional): An optional object of Puppeteer screenshot options. For example, you can specify `{ fullPage: true }` to capture the entire scrollable page. For a full list of options, please refer to the [Puppeteer API documentation](https://pptr.dev/api/puppeteer.page.screenshot).
+
+## Returns
+
+- **`Promise<Buffer>`**: A Promise that resolves to a `Buffer` containing the screenshot image data.
+
+## Example Usage
+
+```typescript
+import { takeSnapShot } from '@microfox/puppeteer-sls';
+import * as fs from 'fs';
+
+async function captureHomepage() {
+  const url = 'https://www.google.com';
+  try {
+    // Capture a full-page screenshot
+    const imageBuffer = await takeSnapShot(url, { fullPage: true });
+
+    // Save the screenshot to a file
+    fs.writeFileSync('google-homepage.png', imageBuffer);
+    console.log('Screenshot saved as google-homepage.png');
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+captureHomepage();
+```

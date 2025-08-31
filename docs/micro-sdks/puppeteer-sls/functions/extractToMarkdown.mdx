@@ -1,0 +1,40 @@
+---
+title: 'extractToMarkdown'
+description: 'The `extractToMarkdown` function converts the content of a webpage into a clean, readable Markdown format.'
+---
+
+## Function Signature
+
+```typescript
+async function extractToMarkdown(
+  url: string
+): Promise<string>
+```
+
+The `extractToMarkdown` function fetches a webpage and converts its main content into Markdown. This is particularly useful for content extraction, archiving, or feeding webpage data into language models.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage you want to convert to Markdown.
+
+## Returns
+
+- **`Promise<string>`**: A Promise that resolves to the Markdown representation of the webpage's content.
+
+## Example Usage
+
+```typescript
+import { extractToMarkdown } from '@microfox/puppeteer-sls';
+
+async function getArticleInMarkdown() {
+  const url = 'https://example-blog.com/some-article';
+  try {
+    const markdownContent = await extractToMarkdown(url);
+    console.log('Markdown Content:\n', markdownContent);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+getArticleInMarkdown();
+```

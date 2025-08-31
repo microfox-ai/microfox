@@ -1,0 +1,40 @@
+---
+title: 'colorExtract'
+description: 'The `colorExtract` function identifies the dominant colors of a webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function colorExtract(
+  url: string
+): Promise<string[]>
+```
+
+The `colorExtract` function analyzes the visual elements of a webpage and identifies its dominant colors. This is useful for design analysis, theme extraction, or building tools that adapt to a site's color palette.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage to analyze.
+
+## Returns
+
+- **`Promise<string[]>`**: A Promise that resolves to an array of strings, where each string is a dominant color in hexadecimal format (e.g., `#1A2B3C`).
+
+## Example Usage
+
+```typescript
+import { colorExtract } from '@microfox/puppeteer-sls';
+
+async function getWebsiteColors() {
+  const url = 'https://www.google.com';
+  try {
+    const colors = await colorExtract(url);
+    console.log('Dominant Colors:', colors);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+getWebsiteColors();
+```

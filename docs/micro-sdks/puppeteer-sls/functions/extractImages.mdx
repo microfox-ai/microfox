@@ -1,0 +1,44 @@
+---
+title: 'extractImages'
+description: 'The `extractImages` function scrapes all the image sources from a given webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function extractImages(
+  url: string
+): Promise<string[]>
+```
+
+The `extractImages` function navigates to a URL and extracts the `src` attribute from every image (`<img>`) tag on the page. This is useful for building image scrapers, archiving visual content, or analyzing a webpage's imagery.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage from which to extract image sources.
+
+## Returns
+
+- **`Promise<string[]>`**: A Promise that resolves to an array of strings, where each string is an image URL found on the page.
+
+## Example Usage
+
+```typescript
+import { extractImages } from '@microfox/puppeteer-sls';
+
+async function scrapeImages() {
+  const url = 'https://www.google.com';
+  try {
+    const images = await extractImages(url);
+    console.log('Found Images:', images);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+scrapeImages();
+```
+
+## Related Functions
+
+- `extractImagesFromURL`: This is an alias for `extractImages`.

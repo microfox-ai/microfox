@@ -1,0 +1,56 @@
+---
+title: 'openPage'
+description: 'The `openPage` function launches a new browser instance, opens a new page, and navigates to a specified URL.'
+---
+
+## Function Signature
+
+```typescript
+async function openPage(
+  url: string
+): Promise<{
+  browser: Browser;
+  page: Page;
+}>
+```
+
+The `openPage` function is a fundamental part of `@microfox/puppeteer-sls`. It simplifies the process of initializing a browser and navigating to a URL, which is the first step in most browser automation tasks.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage you want to open.
+
+## Returns
+
+- **`Promise<{ browser: Browser; page: Page }>`**: A Promise that resolves to an object containing the Puppeteer `browser` and `page` instances.
+
+## Example Usage
+
+```typescript
+import { openPage } from '@microfox/puppeteer-sls';
+import { Browser, Page } from 'puppeteer';
+
+async function navigateToGoogle() {
+  let browser: Browser | null = null;
+  try {
+    const result = await openPage('https://www.google.com');
+    browser = result.browser;
+    const page: Page = result.page;
+
+    console.log('Successfully navigated to:', await page.title());
+
+    // You can now interact with the page, for example, take a screenshot
+    await page.screenshot({ path: 'google.png' });
+    console.log('Screenshot saved as google.png');
+
+  } catch (error) {
+    console.error('An error occurred:', error);
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
+}
+
+navigateToGoogle();
+```

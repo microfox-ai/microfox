@@ -1,0 +1,40 @@
+---
+title: 'extractHTML'
+description: 'The `extractHTML` function retrieves the full HTML content of a specified webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function extractHTML(
+  url: string
+): Promise<string>
+```
+
+The `extractHTML` function navigates to a given URL and returns its complete HTML source code. This is useful when you need the raw HTML for parsing or analysis.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage from which you want to extract the HTML.
+
+## Returns
+
+- **`Promise<string>`**: A Promise that resolves to the full HTML content of the page.
+
+## Example Usage
+
+```typescript
+import { extractHTML } from '@microfox/puppeteer-sls';
+
+async function getPageSource() {
+  const url = 'https://www.google.com';
+  try {
+    const html = await extractHTML(url);
+    console.log('HTML Source:\n', html);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+getPageSource();
+```
