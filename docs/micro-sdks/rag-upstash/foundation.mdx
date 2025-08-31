@@ -1,0 +1,104 @@
+---
+title: 'Foundation'
+description: 'A deep dive into the core concepts of RAG, metadata filtering, and advanced usage of the @microfox/rag--upstash SDK.'
+---
+
+## What is Retrieval-Augmented Generation (RAG)?
+
+Retrieval-Augmented Generation is a powerful technique for building AI applications that can reason about private or specific information. It bridges the gap between the general knowledge of a Large Language Model (LLM) and the specific context of your domain.
+
+The process works in two main stages:
+
+1.  **Retrieval:** When a user asks a question, the system first searches a private knowledge base (in our case, an Upstash Vector database) to find documents or text snippets that are semantically relevant to the question. This is the stage that `@microfox/rag-upstash` is designed to handle.
+2.  **Generation:** The retrieved documents are then combined with the original user question and passed as context in a prompt to an LLM. The LLM uses this context to generate a comprehensive and accurate answer.
+
+This approach allows you to build AI that is grounded in facts from your own data, reducing hallucinations and enabling it to answer questions about topics it wasn't originally trained on.
+
+## Advanced Metadata Filtering
+
+One of the most powerful features of this SDK is the simplified metadata filtering. While Upstash Vector supports a [JVector-like filter syntax](https://docs.upstash.com/vector/features/filtering), this SDK provides a more intuitive, function-based way to build these complex filter strings.
+
+The two main functions are `createFilter` and `FilterHelpers`.
+
+-   `createFilter(field, operator, value)`: Creates a single filter condition.
+-   `FilterHelpers.AND(...)`: Combines multiple filters with a logical AND.
+-   `FilterHelpers.OR(...)`: Combines multiple filters with a logical OR.
+
+You can nest these helpers to create highly specific queries.
+
+### Example: Complex Filtering
+
+Let's find documents that are either from the `'website'` **OR** authored by `'john'`.
+
+```typescript
+import { createFilter, FilterHelpers } from '@microfox/rag-upstash';
+
+// Condition 1: source = 'website'
+const fromWebsite = createFilter('source', '=', 'website');
+
+// Condition 2: author = 'john'
+const byJohn = createFilter('author', '=', 'john');
+
+// Combine them with OR
+const combinedFilter = FilterHelpers.OR(fromWebsite, byJohn);
+
+// This 'combinedFilter' object can now be passed to the `filter`
+// property in the `queryDocsFromRAG` method.
+// It will generate the string: `(source = "website") OR (author = "john")`
+```
+
+### Example: Nested Filtering
+
+Let's find documents from the `'website'` that were created **after** a certain timestamp **AND** are **NOT** authored by `'jane'`.
+
+```typescript
+import { createFilter, FilterHelpers } from '@microfox/rag-upstash';
+
+const afterTimestamp = createFilter('createdAt', '>', 1675209600);
+const fromWebsite = createFilter('source', '=', 'website');
+const notByJane = createFilter('author', '!=', 'jane');
+
+// Combine all three conditions with AND
+const nestedFilter = FilterHelpers.AND(
+  fromWebsite,
+  afterTimestamp,
+  notByJane
+);
+
+// Generates: `(source = "website") AND (createdAt > 1675209600) AND (author != "jane")`
+```
+
+## Using Namespaces
+
+Namespaces in Upstash Vector act like separate containers for your data within a single index. They are useful for multi-tenant applications or for isolating different knowledge bases.
+
+All methods in the `RagUpstashSdk` accept an optional `namespace` string as their final argument.
+
+```typescript
+// Feed documents into a specific tenant's namespace
+await sdk.feedDocsToRAG(docs, 'tenant-123');
+
+// Query only within that tenant's namespace
+const results = await sdk.queryDocsFromRAG(query, 'tenant-123');
+```
+
+## Advanced Usage: Direct Client Access
+
+The `RagUpstashSdk` provides simplified, document-centric methods like `feedDocsToRAG`. However, it also exposes all the methods of the underlying `@upstash/vector` `Index` class directly.
+
+You might want to use these direct methods if you need more control, for example:
+-   If you are generating vector embeddings outside of Upstash and want to `upsert` them directly.
+-   To use more advanced features like `queryMany` or `resumableQuery`.
+-   To perform an `update` operation on a vector's metadata without re-indexing its data.
+
+```typescript
+// Bypassing the simplified helper to use the core client method directly
+await sdk.upsert([
+  {
+    id: 'custom-vec-001',
+    vector: [0.1, 0.2, 0.3, ...], // Your pre-computed embedding
+    metadata: { source: 'external' }
+  }
+]);
+```
+For details on these methods, refer to the official [`@upstash/vector` documentation](https://docs.upstash.com/vector).
