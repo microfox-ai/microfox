@@ -1,0 +1,32 @@
+[
+  {
+    "name": "rag-upstash",
+    "categories": ["Database", "AI"],
+    "auto-update": true
+  },
+  {
+    "name": "brave",
+    "categories": ["Research"],
+    "auto-update": true
+  },
+  {
+    "name": "db-upstash",
+    "categories": ["Database"],
+    "auto-update": false
+  },
+  {
+    "name": "puppeteer-sls",
+    "categories": ["Research"],
+    "auto-update": false
+  },
+  {
+    "name": "slack",
+    "categories": ["Communication"],
+    "auto-update": false
+  },
+  {
+    "name": "aws-ses",
+    "categories": ["Communication"],
+    "auto-update": false
+  }
+]
