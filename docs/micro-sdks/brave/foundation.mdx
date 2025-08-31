@@ -1,0 +1,135 @@
+---
+title: 'Foundation'
+description: 'A deep dive into the advanced features of the @microfox/brave SDK, including batch processing and the middleware system.'
+---
+
+## Understanding Search Verticals
+
+The Brave Search API is not a single endpoint, but a collection of specialized "verticals," each tailored to a specific type of content. The `@microfox/brave` SDK provides a dedicated method for each of these verticals, ensuring that the parameters and response shapes are correctly typed for the content you're working with.
+
+-   **`webSearch`**: The standard search engine for web pages.
+-   **`imageSearch`**: For finding images.
+-   **`videoSearch`**: For finding videos.
+-   **`newsSearch`**: For retrieving recent news articles.
+-   **`localPoiSearch` / `localDescriptionsSearch`**: For finding local businesses and points of interest.
+-   **`summarizerSearch`**: For getting an AI-powered summary of a URL.
+-   **`suggestSearch`**: For autocompletion and search suggestions.
+-   **`spellcheckSearch`**: For checking spelling.
+
+Each of these methods takes a specific set of parameters relevant to its vertical (e.g., `imageSearch` has parameters for aspect ratio and color that `webSearch` does not). Refer to the API reference for the specific options available for each.
+
+## Advanced Batch Processing
+
+The `batchProcess` method is designed to help you manage API usage and respect rate limits when you need to perform multiple searches in a short period.
+
+By default, it adds a 1-second (1000ms) delay between each request in the batch to prevent you from hitting the API too quickly. You can customize this delay and also monitor the progress.
+
+### Example: Custom Delay and Progress Tracking
+
+```typescript
+import { createBraveSDK } from '@microfox/brave';
+
+const brave = createBraveSDK();
+
+async function runMonitoredBatch() {
+  const queries = ['AI', 'Web Dev', 'Serverless', 'TypeScript', 'Rust'];
+  
+  await brave.batchProcess(
+    // Map our array of strings to the request format
+    queries.map(q => ({ type: 'web', params: { q } })),
+    {
+      delay: 500, // Set a 500ms delay between requests
+      onProgress: (completed, total) => {
+        console.log(`Progress: ${completed} of ${total} searches complete.`);
+      },
+    }
+  );
+
+  console.log('Batch processing finished.');
+}
+```
+
+## The Middleware System
+
+For truly advanced use cases, the SDK includes a middleware system that allows you to intercept and modify requests before they are sent. A middleware is a function that receives the request details and can return a modified version of them.
+
+This is incredibly powerful for implementing cross-cutting concerns like:
+-   Custom logging
+-   Caching
+-   Request retries
+-   Dynamically modifying request headers or parameters
+
+### Example: Creating a Logging Middleware
+
+Let's create a simple middleware that logs the URL of every outgoing request to the console.
+
+```typescript
+import { createBraveSDK, MiddlewareFunction } from '@microfox/brave';
+
+// Define our logging middleware
+const loggingMiddleware: MiddlewareFunction = async (request) => {
+  console.log(`[Logger] Sending request to: ${request.url.toString()}`);
+  
+  // Middleware must always return the request object
+  return request; 
+};
+
+const brave = createBraveSDK();
+
+// Register the middleware with the client instance
+brave.use(loggingMiddleware);
+
+// Now, every search call will be logged
+await brave.webSearch({ q: 'hello world' });
+// Console output: [Logger] Sending request to: https://api.search.brave.com/res/v1/web/search?q=hello+world
+```
+
+### Example: A Caching Middleware (Conceptual)
+
+Here is a more advanced conceptual example of how you could implement a simple in-memory cache to avoid re-running the same search.
+
+```typescript
+import { createBraveSDK, MiddlewareFunction } from '@microfox/brave';
+
+const cache = new Map<string, any>();
+
+const cachingMiddleware: MiddlewareFunction = async (request) => {
+  const cacheKey = request.url.toString();
+
+  // If the result is in our cache, throw a special error
+  // to stop the request from being sent.
+  if (cache.has(cacheKey)) {
+    const cachedResult = cache.get(cacheKey);
+    // We can throw an error with a specific structure
+    // to pass the cached data back to our main logic.
+    throw { type: 'CACHE_HIT', data: cachedResult };
+  }
+  
+  return request;
+};
+
+const brave = createBraveSDK();
+brave.use(cachingMiddleware);
+
+async function performCachedSearch(query: string) {
+  try {
+    const results = await brave.webSearch({ q: query });
+    // If the request was successful, store the result in the cache
+    cache.set(`https://api.search.brave.com/res/v1/web/search?q=${query.replace(' ', '+')}`, results);
+    console.log('[API] Fetched from API');
+    return results;
+  } catch (error) {
+    // If we get our special cache hit error, return the cached data
+    if (error.type === 'CACHE_HIT') {
+      console.log('[CACHE] Fetched from cache');
+      return error.data;
+    }
+    // Otherwise, re-throw the error
+    throw error;
+  }
+}
+
+await performCachedSearch('typescript'); // Fetches from API
+await performCachedSearch('typescript'); // Fetches from cache
+```
+This demonstrates the flexibility of the middleware system for implementing complex, custom logic.

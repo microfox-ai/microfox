@@ -1,0 +1,53 @@
+---
+title: 'Overview'
+description: 'A powerful and type-safe TypeScript SDK for the Brave Search API, providing access to web, image, video, news, and local search.'
+---
+
+## A Unified SDK for the Brave Search API
+
+`@microfox/brave` is a comprehensive TypeScript SDK for interacting with the Brave Search API. It provides a simple, unified interface for all of Brave's search verticals, including web, images, videos, news, and more, all with the benefits of strong type safety.
+
+### What Problem Does It Solve?
+The Brave Search API offers a wide range of search capabilities across different endpoints. Interacting with them directly requires managing an HTTP client, handling authentication for each request, and manually typing the various query parameters and response structures for each search vertical.
+
+This SDK simplifies this entire process by:
+-   **Providing a Single Client:** A single, easy-to-configure client provides access to all search types.
+-   **Offering a Type-Safe Interface:** All methods, parameters, and responses are fully typed, enabling autocompletion and preventing common bugs.
+-   **Including Built-in Batch Processing:** A powerful `batchProcess` method makes it easy to run multiple queries sequentially while respecting API rate limits.
+-   **Featuring a Middleware System:** Allows for custom logic, such as logging or caching, to be injected into the request pipeline.
+
+### Who Is This For?
+This package is ideal for developers who want to integrate real-world search capabilities into their applications, such as:
+-   AI agents that need to browse the web to find up-to-date information.
+-   Applications that need to search for images, videos, or news articles.
+-   Developer tools that require search suggestions or spell-checking functionality.
+-   Services that need to find local points of interest or business information.
+
+### High-Level Architecture
+The SDK provides a central client that routes requests to the appropriate Brave Search API endpoint based on the method you call.
+
+```mermaid
+graph TD;
+    subgraph Your Application
+        A[Your Code] --> B{BraveSDK Client};
+    end
+
+    B --> C[/web/search];
+    B --> D[/images/search];
+    B --> E[/videos/search];
+    B --> F[...]
+
+    subgraph Brave Search API
+        C & D & E & F
+    end
+
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+```
+
+### Key Features
+-   **Complete API Coverage:** Supports all Brave Search API verticals: Web, Image, Video, News, Suggest, Spellcheck, Summarizer, and Local Search.
+-   **Robust Batch Processing:** Execute multiple queries of different types in a single batch operation with configurable delays.
+-   **Extensible Middleware:** Intercept and modify requests using a flexible middleware system.
+-   **TypeScript First:** Written in TypeScript with Zod schemas for robust validation and type safety.
+
+This documentation provides a comprehensive **[Getting Started](/micro-sdks/brave/getting-started)** guide and an in-depth look at the package's **[Foundation](/micro-sdks/brave/foundation)** to help you master the SDK's advanced features.

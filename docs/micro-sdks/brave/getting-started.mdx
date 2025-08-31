@@ -1,0 +1,144 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step guide to installing and using the @microfox/brave SDK to perform your first web searches.'
+---
+
+## Prerequisites
+
+Before you begin, you will need:
+-   **Node.js:** Version 16.x or later.
+-   **A Brave Search API Key:** You can get a free API key from the [Brave Developer portal](https://brave.com/search/api/).
+
+## 1. Installation
+
+Add the `@microfox/brave` package to your project using your preferred package manager.
+
+<CodeGroup>
+```bash npm
+npm install @microfox/brave
+```
+```bash yarn
+yarn add @microfox/brave
+```
+```bash pnpm
+pnpm add @microfox/brave
+```
+</CodeGroup>
+
+## 2. Setting Up the SDK Client
+
+Create a new file for your script (e.g., `search.ts`). It's best practice to provide your API key via an environment variable.
+
+```typescript
+import { createBraveSDK } from '@microfox/brave';
+
+// The client will automatically use the BRAVE_API_KEY environment variable.
+// You can also pass it directly: createBraveSDK({ apiKey: 'YOUR_KEY' })
+const brave = createBraveSDK();
+```
+
+## 3. Performing Searches
+
+The SDK provides a separate method for each search vertical. Let's try a few.
+
+### Example 1: Web Search
+Let's find the top 3 search results for "Latest AI developments".
+
+```typescript
+async function performWebSearch() {
+  console.log('--- Performing Web Search ---');
+  try {
+    const results = await brave.webSearch({
+      q: 'Latest AI developments',
+      count: 3,
+    });
+    // The results object is fully typed and contains a wealth of information
+    results.web?.results?.forEach((result) => {
+      console.log(`- ${result.title} (${result.url})`);
+    });
+  } catch (error) {
+    console.error('Web search failed:', error);
+  }
+}
+```
+
+### Example 2: Image Search
+Now let's find a picture of a cat.
+
+```typescript
+async function performImageSearch() {
+  console.log('\n--- Performing Image Search ---');
+  try {
+    const results = await brave.imageSearch({
+      q: 'cute cat',
+      safesearch: 'strict',
+    });
+    // The first result's source URL
+    const firstImageUrl = results.results?.[0]?.properties?.url;
+    console.log('Found an image:', firstImageUrl);
+  } catch (error) {
+    console.error('Image search failed:', error);
+  }
+}
+```
+
+## 4. Using Batch Processing
+
+The `batchProcess` method is a powerful feature for running multiple queries of different types in a controlled sequence. This is useful for respecting API rate limits.
+
+Let's search for both news about "Tesla" and videos about "Web Development" in one operation.
+
+```typescript
+async function performBatchSearch() {
+  console.log('\n--- Performing Batch Search ---');
+  try {
+    const [newsResults, videoResults] = await brave.batchProcess([
+      {
+        type: 'news',
+        params: { q: 'Tesla' },
+      },
+      {
+        type: 'video',
+        params: { q: 'Web Development' },
+      },
+    ]);
+
+    console.log(`Found ${newsResults.results?.length} news articles about Tesla.`);
+    console.log(`Found a video about Web Development: ${videoResults.results?.[0]?.url}`);
+    
+  } catch (error) {
+    console.error('Batch search failed:', error);
+  }
+}
+```
+
+### Running the Script
+Create a main function to run all examples, set your environment variable, and run the script with `ts-node`.
+
+`search.ts` (full file)
+```typescript
+import { createBraveSDK } from '@microfox/brave';
+
+const brave = createBraveSDK();
+
+// ... (paste the 3 async functions from above here)
+
+async function main() {
+  await performWebSearch();
+  await performImageSearch();
+  await performBatchSearch();
+}
+
+main();
+```
+
+```bash
+export BRAVE_API_KEY="YOUR_API_KEY"
+ts-node search.ts
+```
+You'll see the output from all three search operations printed to your console.
+
+## Next Steps
+You have now successfully performed single and batch searches with the `@microfox/brave` SDK.
+-   **Explore Search Verticals:** Check out the API Reference for all the other search types and their specific parameters.
+-   **Learn Advanced Concepts:** Read the **[Foundation](/micro-sdks/brave/foundation)** guide to learn about the middleware system for advanced request handling.
