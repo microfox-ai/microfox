@@ -1,6 +1,7 @@
 import { registerComponent } from '../../core';
 import { WaveformCircle } from './components/WaveformCircle';
 import { WaveformHistogram } from './components/WaveformHistogram';
+import { WaveformHistogramRanged } from './components/WaveformHistogramRanged';
 import { WaveformLine } from './components/WaveformLine';
 
 // Main Waveform component and types
@@ -31,6 +32,12 @@ export type {
   WaveformHistogramDataProps,
 } from './components/WaveformHistogram';
 
+export { WaveformHistogramRanged } from './components/WaveformHistogramRanged';
+export type {
+  WaveformHistogramRangedProps,
+  WaveformHistogramRangedDataProps,
+} from './components/WaveformHistogramRanged';
+
 export { WaveformCircle } from './components/WaveformCircle';
 export type {
   WaveformCircleProps,
@@ -46,6 +53,10 @@ registerComponent('WaveformLine', WaveformLine, 'atom', {
 
 registerComponent('WaveformHistogram', WaveformHistogram, 'atom', {
   displayName: 'WaveformHistogram',
+});
+
+registerComponent('WaveformHistogramRanged', WaveformHistogramRanged, 'atom', {
+  displayName: 'WaveformHistogramRanged',
 });
 
 registerComponent('WaveformCircle', WaveformCircle, 'atom', {

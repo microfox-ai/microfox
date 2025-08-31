@@ -17,7 +17,6 @@ export const EffectWrapper: React.FC<EffectWrapperProps> = ({
         return children;
     }
 
-    console.log("EffectWrapper", context.timing);
     // Apply effects in order (first effect wraps the children, subsequent effects wrap the previous result)
     let wrappedContent = children;
 

@@ -4,6 +4,7 @@ import {
   visualizeAudioWaveform,
   visualizeAudio,
 } from '@remotion/media-utils';
+import { staticFile } from 'remotion';
 
 // Hook configuration interface
 export interface UseWaveformDataConfig {
@@ -29,6 +30,12 @@ export interface UseWaveformDataReturn {
   audioData: any;
   isLoading: boolean;
   error: string | null;
+  bass: number | null;
+  bassValues?: number[] | null;
+  mid: number | null;
+  midValues?: number[] | null;
+  treble: number | null;
+  trebleValues?: number[] | null;
 }
 
 // Validate that numberOfSamples is a power of 2
@@ -80,8 +87,15 @@ export const useWaveformData = (
     return numberOfSamples;
   }, [numberOfSamples]);
 
+  const source = useMemo(() => {
+    if (audioSrc.startsWith('http')) {
+      return audioSrc;
+    }
+    return staticFile(audioSrc);
+  }, [audioSrc]);
+
   // Get audio data
-  const audioData = useAudioData(audioSrc);
+  const audioData = useAudioData(source);
 
   // Calculate adjusted frame for posterize effect
   const adjustedFrame = useMemo(() => {
@@ -122,9 +136,28 @@ export const useWaveformData = (
   ]);
 
   // Generate frequency data and amplitudes
-  const { frequencyData, amplitudes } = useMemo(() => {
+  const {
+    frequencyData,
+    amplitudes,
+    bass,
+    mid,
+    treble,
+    bassValues,
+    midValues,
+    trebleValues,
+  } = useMemo(() => {
     if (!audioData || !includeFrequencyData) {
-      return { frequencyData: null, amplitudes: null };
+      //console.log('No audio data or frequency data requested');
+      return {
+        frequencyData: null,
+        amplitudes: null,
+        bass: null,
+        mid: null,
+        treble: null,
+        bassValues: null,
+        midValues: null,
+        trebleValues: null,
+      };
     }
 
     try {
@@ -134,6 +167,37 @@ export const useWaveformData = (
         audioData,
         numberOfSamples: validatedNumberOfSamples,
       });
+
+      // Calculate frequency bands
+      const { sampleRate } = audioData;
+      const bassValues: number[] = [];
+      const midValues: number[] = [];
+      const trebleValues: number[] = [];
+
+      for (let i = 0; i < frequencyData.length; i++) {
+        const freq = (i * sampleRate) / (2 * frequencyData.length);
+        const value = frequencyData[i];
+
+        if (freq >= 0 && freq < 250) {
+          bassValues.push(value * 2.5);
+        } else if (freq >= 250 && freq < 4000) {
+          midValues.push(value * 3);
+          midValues.push(value * 4.5);
+          midValues.push(value * 5);
+        } else if (freq >= 4000 && freq < sampleRate / 2) {
+          trebleValues.push(value * 30);
+        }
+      }
+
+      // Averaging the frequency values within each band simplifies the data to a single,
+      // representative number. This is useful for creating smoother and more stable visualizations
+      // that react to the overall energy of a frequency range, rather than noisy, rapid fluctuations.
+      const getAverage = (arr: number[]) =>
+        arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+      const bass = getAverage(bassValues);
+      const mid = getAverage(midValues);
+      const treble = getAverage(trebleValues);
 
       // Convert frequency data to decibel-scaled amplitudes
       const amplitudes = frequencyData.map((value) => {
@@ -147,10 +211,25 @@ export const useWaveformData = (
         return Math.max(0, Math.min(1, scaled));
       });
 
-      return { frequencyData, amplitudes };
+      return {
+        frequencyData,
+        amplitudes,
+        bass,
+        mid,
+        treble,
+        bassValues,
+        midValues,
+        trebleValues: trebleValues.reverse(),
+      };
     } catch (error) {
       console.error('Error generating frequency data:', error);
-      return { frequencyData: null, amplitudes: null };
+      return {
+        frequencyData: null,
+        amplitudes: null,
+        bass: null,
+        mid: null,
+        treble: null,
+      };
     }
   }, [
     audioData,
@@ -176,5 +255,11 @@ export const useWaveformData = (
     audioData,
     isLoading,
     error,
+    bass,
+    bassValues,
+    mid,
+    midValues,
+    treble,
+    trebleValues,
   };
 };

@@ -39,6 +39,12 @@ export interface WaveformContextType {
     config: WaveformConfig;
     width: number;
     height: number;
+    bass: number | null;
+    mid: number | null;
+    treble: number | null;
+    bassValues?: number[] | null;
+    midValues?: number[] | null;
+    trebleValues?: number[] | null;
 }
 
 // Create context
@@ -72,7 +78,7 @@ export const Waveform: React.FC<WaveformProps> = ({
     const { width: videoWidth, height: videoHeight, fps } = useVideoConfig();
 
     // Use custom hook to get waveform data
-    const { waveformData, frequencyData, amplitudes, audioData } = useWaveformData({
+    const { waveformData, frequencyData, amplitudes, audioData, bass, mid, treble, bassValues, midValues, trebleValues } = useWaveformData({
         audioSrc: config.audioSrc,
         numberOfSamples: config.numberOfSamples || 128,
         windowInSeconds: config.windowInSeconds || 1 / fps,
@@ -99,6 +105,12 @@ export const Waveform: React.FC<WaveformProps> = ({
         config,
         width,
         height,
+        bass,
+        mid,
+        treble,
+        bassValues,
+        midValues,
+        trebleValues,
     };
 
     return (

@@ -100,9 +100,12 @@ const WaveformHistogramContent: React.FC<Omit<WaveformHistogramDataProps, 'confi
     gradientStyle,
     waveDirection,
 }) => {
-    const { waveformData, width, height } = useWaveformContext();
+    const { waveformData, frequencyData, amplitudes, width, height } = useWaveformContext();
 
-    if (!waveformData) {
+    // Use amplitudes if available, otherwise fall back to waveformData
+    const dataToUse = amplitudes || waveformData;
+
+    if (!dataToUse) {
         return (
             <div className="flex items-center justify-center w-full h-full text-gray-500">
                 Loading histogram...
@@ -110,12 +113,12 @@ const WaveformHistogramContent: React.FC<Omit<WaveformHistogramDataProps, 'confi
         );
     }
 
-    let directedWaveformData = waveDirection === 'left-to-right' ? waveformData.slice(1).reverse() : waveformData;
+    let directedData = waveDirection === 'left-to-right' ? dataToUse.slice(1).reverse() : dataToUse;
 
     // Prepare frequencies for display
     const frequencies = horizontalSymmetry
-        ? [...directedWaveformData, ...directedWaveformData.slice(1).reverse()]
-        : Array(multiplier).fill(directedWaveformData).flat();
+        ? [...directedData, ...directedData.slice(1).reverse()]
+        : Array(multiplier).fill(directedData).flat();
 
 
     // Render bars component

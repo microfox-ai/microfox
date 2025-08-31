@@ -82,6 +82,7 @@ export const Atom: React.FC<AudioAtomProps> = ({ data }) => {
         return staticFile(data.src);
     }, [data.src]);
 
+    console.log('source', source);
     return (
         <Audio
             src={source}
