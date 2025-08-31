@@ -1,0 +1,34 @@
+---
+title: 'Overview'
+description: 'A high-level, object-oriented SDK for Upstash Redis that provides powerful data structures and utilities like CRUD, indexing, and rate limiting.'
+---
+
+## High-Level Data Structures for Upstash Redis
+
+`@microfox/db-upstash` is a powerful TypeScript SDK that supercharges your Upstash Redis database. It moves beyond simple key-value operations by providing a suite of high-level, object-oriented classes that enable structured, queryable, and efficient data management.
+
+### What Problem Does It Solve?
+
+While Redis is incredibly fast and versatile, using it effectively for complex applications requires careful data modeling and often a lot of boilerplate code. Developers frequently need to:
+-   Manually serialize and deserialize JSON objects.
+-   Build and maintain their own secondary indexes for querying.
+-   Implement common patterns like rate limiting or paginated job tracking from scratch.
+-   Handle the complexities of atomic multi-step operations.
+
+`@microfox/db-upstash` abstracts these challenges away, providing robust, pre-built solutions for common data patterns, allowing you to build faster and with more confidence.
+
+### Who Is This For?
+This package is ideal for developers building applications on a serverless stack (or any Node.js environment) who need more than just a basic cache from Redis. Use it if you want to:
+-   Use Upstash Redis as a primary database for structured objects (e.g., user profiles, product catalogs, articles).
+-   Efficiently query and sort your data without implementing custom indexing logic.
+-   Implement robust, Redis-backed rate limiting for your APIs.
+-   Track the progress of long-running, stateful operations.
+
+### Key Features & When to Use Which Class
+
+-   **`CrudStore`**: The most powerful class. Use this when you need to manage a collection of objects that require efficient querying, sorting, and pagination. It uses secondary indexes for performance. **(Recommended for most use cases)**.
+-   **`CrudHash`**: A simpler class for managing individual objects. Use this for things like user sessions or shopping carts where you primarily access items by their ID and perform atomic field updates. Avoid this for large collections that need to be queried.
+-   **`Ratelimit`**: A straightforward implementation of a fixed-window rate limiter. Use this to protect your API endpoints from abuse.
+-   **`Paginator`**: A utility for tracking the state of long-running, multi-step processes or background jobs.
+
+This documentation provides a comprehensive **[Getting Started](/micro-sdks/db-upstash/getting-started)** guide, an in-depth look at the package's **[Foundation](/micro-sdks/db-upstash/foundation)**, and a detailed API Reference to help you get the most out of `@microfox/db-upstash`.
