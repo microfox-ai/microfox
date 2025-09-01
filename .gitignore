@@ -25,3 +25,8 @@ env.json
 .serverless
 
 *.plan
+
+/examples/remotion/out/*
+/examples/remotion/public/*
+/examples/remotion/out
+/examples/remotion/public
