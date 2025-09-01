@@ -100,14 +100,16 @@ async function pushAction(): Promise<void> {
   console.log(chalk.cyan('🚀 Pushing your agent to Microfox...'));
 
   const microfoxConfig = JSON.parse(fs.readFileSync(microfoxConfigPath, 'utf-8'));
-  const apiMode = microfoxConfig.apiMode || microfoxConfig.API_MODE;
-  const apiVersion = microfoxConfig.apiVersion || microfoxConfig.API_VERSION;
-  const apiLocalPort = microfoxConfig.port || microfoxConfig.PORT;
+  const deploymentConfig = microfoxConfig.deployment || {};
+
+  const apiMode = deploymentConfig.apiMode || microfoxConfig.apiMode || microfoxConfig.API_MODE;
+  const apiVersion = deploymentConfig.apiVersion || microfoxConfig.apiVersion || microfoxConfig.API_VERSION;
+  const apiLocalPort = deploymentConfig.port || microfoxConfig.port || microfoxConfig.PORT;
   const isV2 = (typeof apiVersion === 'string' ? apiVersion.toLowerCase() === 'v2' : false);
 
   try {
     if (isV2) {
-      const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(microfoxConfig.ignorePatterns || [])];
+      const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(deploymentConfig.ignorePatterns || microfoxConfig.ignorePatterns || [])];
 
       console.log(chalk.blue('📦 Bundling your agent as a ZIP archive...'));
       const zipPath = await createZipArchive(cwd, ignorePatterns);
@@ -118,6 +120,9 @@ async function pushAction(): Promise<void> {
         filename: 'archive.zip',
         contentType: 'application/zip',
       });
+      if (microfoxConfig.publish) {
+        form.append('publish', JSON.stringify(microfoxConfig.publish));
+      }
 
       const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
       if (!projectId) {
@@ -168,7 +173,7 @@ async function pushAction(): Promise<void> {
         }
       }
 
-      const stage = microfoxConfig.stage || 'prod';
+      const stage = deploymentConfig.stage || microfoxConfig.stage || 'prod';
       const defaultIgnore = [
         'node_modules/**',
         '.git/**',
@@ -179,7 +184,7 @@ async function pushAction(): Promise<void> {
         'package-lock.json',
         'pnpm-lock.yaml',
       ];
-      const ignored: string[] = microfoxConfig.ignored || [];
+      const ignored: string[] = deploymentConfig.ignorePatterns || microfoxConfig.ignored || [];
       const allIgnored = [...defaultIgnore, ...ignored];
 
       const files: FileDirectory[] = getDirectoryFiles(cwd, '', allIgnored);
@@ -191,6 +196,7 @@ async function pushAction(): Promise<void> {
           stage,
           isLocal: false,
           dir: files,
+          publish: microfoxConfig.publish,
         },
         {
           headers: {
