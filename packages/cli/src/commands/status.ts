@@ -37,13 +37,19 @@ async function getIdentifier(promptLabel: 'Run ID' | 'Deployment ID', provided?:
   
 
 async function fetchV1Status(runId: string, cfg: any) {
-  const base = ENDPOINT_BASE({ mode: cfg.apiMode || cfg.API_MODE, version: 'v1', port: cfg.port || cfg.PORT });
+  const deploymentConfig = cfg.deployment || {};
+  const mode = deploymentConfig.apiMode || cfg.apiMode || cfg.API_MODE;
+  const port = deploymentConfig.port || cfg.port || cfg.PORT;
+  const base = ENDPOINT_BASE({ mode, version: 'v1', port });
   const url = `${base}/api/deployment-status/agent/status/${runId}`;
   return axios.get(url);
 }
 
 async function fetchV2Deployment(deploymentId: string, cfg: any) {
-  const base = ENDPOINT_BASE({ mode: cfg.apiMode || cfg.API_MODE, version: 'v2', port: cfg.port || cfg.PORT });
+  const deploymentConfig = cfg.deployment || {};
+  const mode = deploymentConfig.apiMode || cfg.apiMode || cfg.API_MODE;
+  const port = deploymentConfig.port || cfg.port || cfg.PORT;
+  const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}`;
   const projectId: string | undefined = cfg.projectId || process.env.PROJECT_ID;
   if (!projectId) {
@@ -56,7 +62,9 @@ async function fetchV2Deployment(deploymentId: string, cfg: any) {
 async function statusAction(idArg?: string): Promise<void> {
   const cwd = process.cwd();
   const cfg = readMicrofoxConfig(cwd);
-  const isV2 = (cfg.apiVersion || cfg.API_VERSION)?.toLowerCase?.() === 'v2';
+  const deploymentConfig = cfg.deployment || {};
+  const apiVersion = deploymentConfig.apiVersion || cfg.apiVersion || cfg.API_VERSION;
+  const isV2 = apiVersion?.toLowerCase?.() === 'v2';
 
   if (!isV2) {
     const runId = await getIdentifier('Run ID', idArg);
@@ -110,7 +118,9 @@ type LogsOptions = { step?: string; limit?: number; cursor?: string };
 async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<void> {
   const cwd = process.cwd();
   const cfg = readMicrofoxConfig(cwd);
-  const isV2 = (cfg.apiVersion || cfg.API_VERSION)?.toLowerCase?.() === 'v2';
+  const deploymentConfig = cfg.deployment || {};
+  const apiVersion = deploymentConfig.apiVersion || cfg.apiVersion || cfg.API_VERSION;
+  const isV2 = apiVersion?.toLowerCase?.() === 'v2';
 
   if (!isV2) {
     // Preserve existing behavior for v1
@@ -132,7 +142,9 @@ async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<vo
 
   // v2 logs via /deployments/:deploymentId/logs
   const deploymentId = await getIdentifier('Deployment ID', idArg);
-  const base = ENDPOINT_BASE({ mode: cfg.apiMode || cfg.API_MODE, version: 'v2', port: cfg.port || cfg.PORT });
+  const mode = deploymentConfig.apiMode || cfg.apiMode || cfg.API_MODE;
+  const port = deploymentConfig.port || cfg.port || cfg.PORT;
+  const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}/logs`;
   const projectId: string | undefined = cfg.projectId || process.env.PROJECT_ID;
   if (!projectId) {
@@ -173,7 +185,9 @@ async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<vo
 async function metricsAction(idArg?: string): Promise<void> {
   const cwd = process.cwd();
   const cfg = readMicrofoxConfig(cwd);
-  const isV2 = (cfg.apiVersion || cfg.API_VERSION)?.toLowerCase?.() === 'v2';
+  const deploymentConfig = cfg.deployment || {};
+  const apiVersion = deploymentConfig.apiVersion || cfg.apiVersion || cfg.API_VERSION;
+  const isV2 = apiVersion?.toLowerCase?.() === 'v2';
 
   if (!isV2) {
     const runId = await getIdentifier('Run ID', idArg);
