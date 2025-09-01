@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.0.20
+
+### Patch Changes
+
+- 784dae6: patch update
+
 ## 1.0.19
 
 ### Patch Changes
