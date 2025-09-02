@@ -1,0 +1,39 @@
+---
+title: 'Overview'
+description: 'A powerful, serverless-ready wrapper for Puppeteer that enables browser automation at scale.'
+---
+
+## Serverless Browser Automation Made Easy
+
+`@microfox/puppeteer-sls` is a robust package that simplifies running Puppeteer in serverless environments. It provides a high-level API for common browser automation tasks, allowing you to build scalable, cost-effective web scraping and automation solutions without the hassle of managing servers.
+
+### What Problem Does It Solve?
+
+Running a full-fledged browser automation tool like Puppeteer in a resource-constrained serverless environment (like AWS Lambda) is notoriously difficult. Developers often face challenges with:
+
+- **Large Package Sizes:** A standard Chromium installation is too large for serverless function deployment limits.
+- **System Dependencies:** Serverless runtimes lack the necessary system libraries and fonts required by Chromium to render pages correctly.
+- **Slow Cold Starts:** The time it takes to initialize a browser instance can lead to slow response times and increased costs.
+- **Complex Configuration:** A significant amount of boilerplate code is required to get Puppeteer running smoothly in a serverless context.
+
+`@microfox/puppeteer-sls` abstracts all these complexities away, providing a zero-configuration, plug-and-play solution.
+
+### Who Is This For?
+
+This package is ideal for developers who want to:
+
+-   Build scalable web scrapers that can run on demand.
+-   Generate PDFs or screenshots of web pages dynamically.
+-   Automate interactions with websites as part of a larger workflow.
+-   Run browser-based tests in a serverless CI/CD pipeline.
+-   Leverage the power of a real browser without managing server infrastructure.
+
+### Key Features
+
+- **Zero-Configuration Setup:** Designed for a seamless experience in serverless environments like AWS Lambda.
+- **Optimized for Performance:** Uses a compressed Chromium binary for fast cold starts and efficient resource usage.
+- **High-Level API:** Offers a simple, intuitive API for common tasks like data extraction, screenshots, and more.
+- **Flexible Usage:** Can be used as a comprehensive `PuppeteerSLS` object or as individual, tree-shakable functions.
+- **Dependency-Free:** Includes all necessary system libraries and fonts, so you don't have to worry about them.
+
+This documentation provides a comprehensive **[Getting Started](/micro-sdks/puppeteer-sls/getting-started)** guide, an in-depth look at the package's **[Foundation](/micro-sdks/puppeteer-sls/foundation)**, and a detailed **[API Reference](/micro-sdks/puppeteer-sls/functions/openPage)** to help you get the most out of `@microfox/puppeteer-sls`.

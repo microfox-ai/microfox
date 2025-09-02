@@ -1,0 +1,45 @@
+---
+title: 'reactMessage'
+description: 'Adds a reaction to a message.'
+---
+
+The `reactMessage` method adds a reaction to a message.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    await client.reactMessage({
+      channelId: 'C12345678',
+      timestamp: '1234567890.123456',
+      reaction: 'thumbsup',
+    });
+    console.log('Reaction added.');
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        The ID of the channel where the message is.
+    </Property>
+    <Property name="timestamp" type="string" required>
+        The timestamp of the message to react to.
+    </Property>
+    <Property name="reaction" type="string" required>
+        The name of the emoji to use for the reaction.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `ReactionsAddResponse` object.

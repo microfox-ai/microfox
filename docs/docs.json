@@ -15,11 +15,17 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["index", "intro/quickstart"]
+            "pages": [
+              "index",
+              "intro/quickstart"
+            ]
           },
           {
             "group": "About",
-            "pages": ["intro/roadmap", "intro/reach-out"]
+            "pages": [
+              "intro/roadmap",
+              "intro/reach-out"
+            ]
           }
         ]
       },
@@ -29,7 +35,257 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["micro-sdks/index"]
+            "pages": [
+              "micro-sdks/index"
+            ]
+          },
+          {
+            "group": "AI",
+            "pages": [
+              {
+                "group": "RAG Upstash",
+                "pages": [
+                  "micro-sdks/rag-upstash/index",
+                  "micro-sdks/rag-upstash/getting-started",
+                  "micro-sdks/rag-upstash/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      {
+                        "group": "Constructors",
+                        "pages": [
+                          "micro-sdks/rag-upstash/constructors/RagUpstashSdk"
+                        ]
+                      },
+                      {
+                        "group": "Functions",
+                        "pages": [
+                          "micro-sdks/rag-upstash/functions/delete",
+                          "micro-sdks/rag-upstash/functions/feedDocsToRAG",
+                          "micro-sdks/rag-upstash/functions/getConfig",
+                          "micro-sdks/rag-upstash/functions/info",
+                          "micro-sdks/rag-upstash/functions/listNamespaces",
+                          "micro-sdks/rag-upstash/functions/query",
+                          "micro-sdks/rag-upstash/functions/queryDocsFromRAG",
+                          "micro-sdks/rag-upstash/functions/upsert"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Communication",
+            "pages": [
+              {
+                "group": "Slack",
+                "pages": [
+                  "micro-sdks/slack/index",
+                  "micro-sdks/slack/getting-started",
+                  "micro-sdks/slack/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      "micro-sdks/slack/constructors/MicrofoxSlackClient",
+                      "micro-sdks/slack/functions/addUsersToChannel",
+                      "micro-sdks/slack/functions/createChannel",
+                      "micro-sdks/slack/functions/getActiveUsers",
+                      "micro-sdks/slack/functions/getActiveUsersIds",
+                      "micro-sdks/slack/functions/getChannelConversationInfo",
+                      "micro-sdks/slack/functions/getChannelMembers",
+                      "micro-sdks/slack/functions/getChannels",
+                      "micro-sdks/slack/functions/getChannelsIds",
+                      "micro-sdks/slack/functions/getConversationHistory",
+                      "micro-sdks/slack/functions/getFileInfo",
+                      "micro-sdks/slack/functions/getUserByEmail",
+                      "micro-sdks/slack/functions/getUserChannels",
+                      "micro-sdks/slack/functions/getUserInfo",
+                      "micro-sdks/slack/functions/getUsersByEmails",
+                      "micro-sdks/slack/functions/joinChannel",
+                      "micro-sdks/slack/functions/messageChannel",
+                      "micro-sdks/slack/functions/messageChannels",
+                      "micro-sdks/slack/functions/messageUser",
+                      "micro-sdks/slack/functions/messageUsers",
+                      "micro-sdks/slack/functions/reactMessage",
+                      "micro-sdks/slack/functions/removeUserFromChannel",
+                      "micro-sdks/slack/functions/replyMessage",
+                      "micro-sdks/slack/functions/setReminder",
+                      "micro-sdks/slack/functions/uploadFile"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "AWS SES",
+                "pages": [
+                  "micro-sdks/aws-ses/index",
+                  "micro-sdks/aws-ses/getting-started",
+                  "micro-sdks/aws-ses/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      "micro-sdks/aws-ses/constructors/createSESSdk",
+                      "micro-sdks/aws-ses/functions/sendEmail",
+                      "micro-sdks/aws-ses/functions/sendBulkEmails"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Database",
+            "pages": [
+              {
+                "group": "Rag Upstash",
+                "pages": [
+                  "micro-sdks/rag-upstash/index",
+                  "micro-sdks/rag-upstash/getting-started",
+                  "micro-sdks/rag-upstash/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      {
+                        "group": "Constructors",
+                        "pages": [
+                          "micro-sdks/rag-upstash/constructors/RagUpstashSdk"
+                        ]
+                      },
+                      {
+                        "group": "Functions",
+                        "pages": [
+                          "micro-sdks/rag-upstash/functions/delete",
+                          "micro-sdks/rag-upstash/functions/feedDocsToRAG",
+                          "micro-sdks/rag-upstash/functions/getConfig",
+                          "micro-sdks/rag-upstash/functions/info",
+                          "micro-sdks/rag-upstash/functions/listNamespaces",
+                          "micro-sdks/rag-upstash/functions/query",
+                          "micro-sdks/rag-upstash/functions/queryDocsFromRAG",
+                          "micro-sdks/rag-upstash/functions/upsert"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Db Upstash",
+                "pages": [
+                  "micro-sdks/db-upstash/index",
+                  "micro-sdks/db-upstash/getting-started",
+                  "micro-sdks/db-upstash/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      {
+                        "group": "Constructors",
+                        "pages": [
+                          "micro-sdks/db-upstash/constructors/CrudHash",
+                          "micro-sdks/db-upstash/constructors/CrudStore",
+                          "micro-sdks/db-upstash/constructors/Paginator"
+                        ]
+                      },
+                      {
+                        "group": "Functions",
+                        "pages": [
+                          "micro-sdks/db-upstash/functions/CrudHash.del",
+                          "micro-sdks/db-upstash/functions/CrudHash.get",
+                          "micro-sdks/db-upstash/functions/CrudHash.getFields",
+                          "micro-sdks/db-upstash/functions/CrudHash.list",
+                          "micro-sdks/db-upstash/functions/CrudHash.query",
+                          "micro-sdks/db-upstash/functions/CrudHash.set",
+                          "micro-sdks/db-upstash/functions/CrudHash.update",
+                          "micro-sdks/db-upstash/functions/CrudStore.del",
+                          "micro-sdks/db-upstash/functions/CrudStore.experimental_reIndex",
+                          "micro-sdks/db-upstash/functions/CrudStore.get",
+                          "micro-sdks/db-upstash/functions/CrudStore.list",
+                          "micro-sdks/db-upstash/functions/CrudStore.queryByComposite",
+                          "micro-sdks/db-upstash/functions/CrudStore.queryByField",
+                          "micro-sdks/db-upstash/functions/CrudStore.queryByFieldIn",
+                          "micro-sdks/db-upstash/functions/CrudStore.queryByLex",
+                          "micro-sdks/db-upstash/functions/CrudStore.queryByScore",
+                          "micro-sdks/db-upstash/functions/CrudStore.set",
+                          "micro-sdks/db-upstash/functions/completeIndexing",
+                          "micro-sdks/db-upstash/functions/failIndexing",
+                          "micro-sdks/db-upstash/functions/getCurrentStatus",
+                          "micro-sdks/db-upstash/functions/isStale",
+                          "micro-sdks/db-upstash/functions/pauseIndexing",
+                          "micro-sdks/db-upstash/functions/resetIndexing",
+                          "micro-sdks/db-upstash/functions/resumeIndexing",
+                          "micro-sdks/db-upstash/functions/startNewIndexing",
+                          "micro-sdks/db-upstash/functions/updateIndexingStatus"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Research",
+            "pages": [
+              {
+                "group": "Brave",
+                "pages": [
+                  "micro-sdks/brave/index",
+                  "micro-sdks/brave/getting-started",
+                  "micro-sdks/brave/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      {
+                        "group": "Constructors",
+                        "pages": [
+                          "micro-sdks/brave/constructors/createBraveSDK"
+                        ]
+                      },
+                      {
+                        "group": "Functions",
+                        "pages": [
+                          "micro-sdks/brave/functions/batchProcess",
+                          "micro-sdks/brave/functions/headers",
+                          "micro-sdks/brave/functions/imageSearch",
+                          "micro-sdks/brave/functions/newsSearch",
+                          "micro-sdks/brave/functions/videoSearch",
+                          "micro-sdks/brave/functions/webSearch"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Puppeteer SLS",
+                "pages": [
+                  "micro-sdks/puppeteer-sls/index",
+                  "micro-sdks/puppeteer-sls/getting-started",
+                  "micro-sdks/puppeteer-sls/foundation",
+                  {
+                    "group": "API Reference",
+                    "pages": [
+                      {
+                        "group": "Functions",
+                        "pages": [
+                          "micro-sdks/puppeteer-sls/functions/openPage",
+                          "micro-sdks/puppeteer-sls/functions/takeSnapShot",
+                          "micro-sdks/puppeteer-sls/functions/extractWebpage",
+                          "micro-sdks/puppeteer-sls/functions/extractLinks",
+                          "micro-sdks/puppeteer-sls/functions/extractImages",
+                          "micro-sdks/puppeteer-sls/functions/extractVideos",
+                          "micro-sdks/puppeteer-sls/functions/extractPureText",
+                          "micro-sdks/puppeteer-sls/functions/colorExtract",
+                          "micro-sdks/puppeteer-sls/functions/extractToMarkdown",
+                          "micro-sdks/puppeteer-sls/functions/extractHTML"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -39,7 +295,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["code-loop/index"]
+            "pages": [
+              "code-loop/index"
+            ]
           }
         ]
       },
@@ -49,7 +307,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["x-framework/index"]
+            "pages": [
+              "x-framework/index"
+            ]
           }
         ]
       },
@@ -89,7 +349,9 @@
           },
           {
             "group": "Examples",
-            "pages": ["ai-router/examples"]
+            "pages": [
+              "ai-router/examples"
+            ]
           },
           {
             "group": "API Reference",
@@ -124,9 +386,6 @@
       "label": "App",
       "href": "https://microfox.app"
     }
-  },
-  "styling": {
-    "eyebrows": "breadcrumbs"
   },
   "contextual": {
     "options": [

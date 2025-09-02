@@ -1,0 +1,113 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step guide to installing and using @microfox/puppeteer-sls for your first serverless browser automation task.'
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+-   **Node.js:** Version 16.x or later.
+-   **An AWS Account:** While the package can be used locally, it is designed for a serverless environment like AWS Lambda. The examples will be easier to adapt if you have an account.
+-   **Basic knowledge of TypeScript:** The examples are written in TypeScript.
+
+## 1. Installation
+
+First, add the package to your project using your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install @microfox/puppeteer-sls
+```
+```bash yarn
+yarn add @microfox/puppeteer-sls
+```
+```bash pnpm
+pnpm add @microfox/puppeteer-sls
+```
+</CodeGroup>
+
+## 2. Your First Automation Script
+
+Let's create a script that performs a few common actions:
+1.  Navigates to the Microfox blog.
+2.  Extracts the title of the page.
+3.  Takes a screenshot of the homepage.
+4.  Extracts all the links from the page.
+
+Create a new file named `scraper.ts` and add the following code:
+
+```typescript
+import { openPage, takeSnapShot, extractLinks } from '@microfox/puppeteer-sls';
+import { Browser } from 'puppeteer';
+import * as fs from 'fs';
+
+async function runAutomation() {
+  const url = 'https://microfox.app/blog';
+  let browser: Browser | null = null;
+  
+  console.log(`Starting automation on ${url}...`);
+
+  try {
+    // Step 1: Open the page
+    const { page, browser: browserInstance } = await openPage(url);
+    browser = browserInstance;
+    console.log('Page opened successfully.');
+
+    // Step 2: Extract the title
+    const title = await page.title();
+    console.log(`Page Title: ${title}`);
+
+    // Step 3: Take a screenshot
+    const screenshotBuffer = await takeSnapShot(url, { fullPage: true });
+    fs.writeFileSync('blog-screenshot.png', screenshotBuffer);
+    console.log('Screenshot saved as blog-screenshot.png');
+
+    // Step 4: Extract all links
+    const links = await extractLinks(url);
+    console.log(`Found ${links.length} links on the page.`);
+    console.log('Sample links:', links.slice(0, 5));
+
+  } catch (error) {
+    console.error('An error occurred during automation:', error);
+  } finally {
+    if (browser) {
+      await browser.close();
+      console.log('Browser closed.');
+    }
+  }
+}
+
+runAutomation();
+```
+
+### Understanding the Code
+- We import the necessary functions (`openPage`, `takeSnapShot`, `extractLinks`) directly.
+- The `openPage` function returns both the `page` and `browser` instances. We need the `browser` instance to close it later in the `finally` block, ensuring a clean exit.
+- `page.title()` is a standard Puppeteer function we can call on the returned `page` object.
+- `takeSnapShot` and `extractLinks` are called with the URL. The library handles opening and closing browser instances for these functions internally.
+- We use a `try...catch...finally` block for robust error handling and to guarantee the browser is closed, even if errors occur.
+
+## 3. Running the Script
+
+To run the script, you'll need `ts-node` installed:
+
+```bash
+npm install -g ts-node
+```
+
+Then, execute the file from your terminal:
+
+```bash
+ts-node scraper.ts
+```
+
+You should see output in your console logging the page title, the number of links found, and a new file named `blog-screenshot.png` in your directory.
+
+## Next Steps
+
+Congratulations! You've successfully run your first browser automation script with `@microfox/puppeteer-sls`.
+
+-   **Explore the API:** Dive into the **[API Reference](/micro-sdks/puppeteer-sls/functions/openPage)** to see what else you can do.
+-   **Learn the Concepts:** Understand the **[Foundation](/micro-sdks/puppeteer-sls/foundation)** to learn about the architecture and best practices for serverless deployment.
+-   **Deploy to Lambda:** Try deploying this script as an AWS Lambda function. You will need to configure a serverless framework (like Serverless Framework or AWS SAM) to package your code and dependencies correctly.

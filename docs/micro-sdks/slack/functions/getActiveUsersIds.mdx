@@ -1,0 +1,47 @@
+---
+title: 'getActiveUsersIds'
+description: 'Retrieves a list of all active users and returns an array of objects with user ID, name, and email.'
+---
+
+The `getActiveUsersIds` function retrieves a list of all active users in a Slack workspace and returns an array of objects, where each object contains the ID, name, and email of a user.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
+
+async function logUserIds() {
+  try {
+    const userMap = await client.getActiveUsersIds({ limit: 50, includeBots: true });
+    if (userMap) {
+      userMap.forEach(user => {
+        console.log(`User: ${user.name}, ID: ${user.id}, Email: ${user.email}`);
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+logUserIds();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="includeBots" type="boolean">
+        Whether to include bot users in the list. Defaults to `false`.
+    </Property>
+    <Property name="cursor" type="string">
+        A cursor for pagination.
+    </Property>
+    <Property name="limit" type="number">
+        The maximum number of users to return. Defaults to 100.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an array of objects, each containing the `id`, `name`, and `email` of a user.

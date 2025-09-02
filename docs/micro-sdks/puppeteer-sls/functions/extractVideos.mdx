@@ -1,0 +1,44 @@
+---
+title: 'extractVideos'
+description: 'The `extractVideos` function scrapes all video sources from a given webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function extractVideos(
+  url: string
+): Promise<string[]>
+```
+
+The `extractVideos` function navigates to a URL and extracts the `src` attribute from every video (`<video>`) tag on the page. This is useful for building video scrapers or analyzing a webpage's video content.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage from which to extract video sources.
+
+## Returns
+
+- **`Promise<string[]>`**: A Promise that resolves to an array of strings, where each string is a video URL found on the page.
+
+## Example Usage
+
+```typescript
+import { extractVideos } from '@microfox/puppeteer-sls';
+
+async function scrapeVideos() {
+  const url = 'https://example-with-videos.com';
+  try {
+    const videos = await extractVideos(url);
+    console.log('Found Videos:', videos);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+scrapeVideos();
+```
+
+## Related Functions
+
+- `extractVideosFromURL`: This is an alias for `extractVideos`.

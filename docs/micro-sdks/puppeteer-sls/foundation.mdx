@@ -1,0 +1,52 @@
+---
+title: 'Foundation'
+description: 'A deep dive into the core concepts, architecture, and best practices of @microfox/puppeteer-sls.'
+---
+
+## The Challenge of Puppeteer in Serverless
+
+Headless browsers are powerful but resource-intensive. Running them in ephemeral, resource-constrained serverless environments presents several significant challenges:
+
+-   **Deployment Package Size:** AWS Lambda has a 250 MB (unzipped) deployment package size limit. A standard Puppeteer installation, which includes a full Chromium browser, far exceeds this limit.
+-   **Missing System Dependencies:** Serverless Linux runtimes are minimal and lack the numerous shared libraries (like `libnss3.so`, `libgconf-2.so.4`, etc.) that Chromium needs to run.
+-   **No Writable `/tmp` Space:** While serverless environments provide some temporary disk space, it's limited and ephemeral. Chromium needs a writable file system for user data profiles and temporary files.
+-   **Performance and Cold Starts:** The time it takes to launch a new browser instance (a "cold start") can add significant latency to function execution, impacting user experience and increasing costs.
+-   **Memory Consumption:** Running a full browser is memory-intensive. Serverless functions have strict memory limits, and exceeding them can cause the function to crash.
+
+## The `@microfox/puppeteer-sls` Architecture
+
+`@microfox/puppeteer-sls` is specifically designed to overcome these challenges through a carefully considered architecture.
+
+```mermaid
+graph TD;
+    A[Your Serverless Function] --> B{PuppeteerSLS};
+    B --> C[@sparticuz/chromium];
+    B --> D[puppeteer-core];
+    C --> E[Optimized Chromium Binary];
+    D --> E;
+    E --> F[Target Webpage];
+```
+
+### Core Components:
+- **`puppeteer-core`**: We use `puppeteer-core` instead of the full `puppeteer` package. `puppeteer-core` is a version of Puppeteer that does not download a browser by default, giving us the flexibility to provide our own.
+- **`@sparticuz/chromium`**: This is the key to solving the package size and dependency problems. It provides a Brotli-compressed, self-contained Chromium binary that is stripped of non-essential features and is designed to run in AWS Lambda and other serverless environments. It also bundles the required shared library dependencies.
+
+### How It Solves the Problems:
+1.  **Size:** The compressed Chromium from `@sparticuz/chromium` is small enough to fit comfortably within serverless deployment limits.
+2.  **Dependencies:** The bundled binary includes the necessary shared libraries, making the package self-sufficient.
+3.  **Configuration:** `@microfox/puppeteer-sls` automatically configures `puppeteer-core` with the optimal launch arguments for a serverless environment, including pointing it to the correct Chromium executable and setting flags to disable the sandbox, use `/tmp` for user data, and optimize performance.
+4.  **Performance:** While cold starts are unavoidable, the lightweight binary and optimized launch arguments minimize the startup time.
+
+## Best Practices for Serverless Usage
+
+-   **Manage Memory:** When configuring your serverless function, allocate sufficient memory (at least 1024 MB is a good starting point for browser automation). Monitor your function's memory usage and adjust as needed.
+-   **Set Timeouts Appropriately:** Browser operations can be slow. Set a generous timeout for your serverless function (e.g., 30 seconds or more) to prevent it from terminating prematurely.
+-   **Graceful Error Handling:** Always wrap your browser automation logic in `try...catch...finally` blocks. Ensure that `browser.close()` is called in the `finally` block to clean up resources, even if an error occurs. This is critical for preventing orphaned Chromium processes that can consume resources.
+-   **Prefer Individual Functions for Simple Tasks:** For single, discrete operations like `takeSnapShot` or `extractLinks`, importing the function directly is efficient. The library manages the browser lifecycle for you.
+-   **Use `openPage` for Complex Workflows:** If you need to perform multiple sequential actions on a single page (e.g., fill out a form, click a button, then scrape the results), use `openPage` to get a persistent `page` object. This avoids the overhead of launching a new browser for each step.
+
+## Limitations
+
+-   **Concurrency:** Be mindful of the concurrency limits of your serverless platform and any downstream services you are interacting with. Scaling up too aggressively can lead to rate-limiting or IP bans.
+-   **No Persistent State:** Each serverless function invocation is stateless. The browser is new every time, with no cookies, cache, or session data from previous runs.
+-   **Resource Intensive:** Despite optimizations, running a headless browser is still more resource-intensive than typical serverless tasks. This can impact cost and performance at very high scales.

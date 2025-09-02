@@ -1,0 +1,35 @@
+---
+title: 'getUserInfo'
+description: 'Gets information about a user.'
+---
+
+The `getUserInfo` method gets information about a user.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const userInfo = await client.getUserInfo({ userId: 'U12345678' });
+    console.log(userInfo);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="userId" type="string" required>
+        The ID of the user to get information for.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `user` object.

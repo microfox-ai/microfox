@@ -1,0 +1,41 @@
+---
+title: 'getChannels'
+description: 'Lists all channels in a workspace.'
+---
+
+The `getChannels` method lists all channels in a workspace.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const { channels } = await client.getChannels({ limit: 20 });
+    console.log(channels);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="cursor" type="string">
+        A cursor to the next page of results.
+    </Property>
+    <Property name="limit" type="number">
+        The maximum number of channels to return.
+    </Property>
+    <Property name="types" type="('public' | 'private' | 'im')[]">
+        Channel types to include. Defaults to `['public', 'private']`.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an object with `channels` and `nextCursor` properties.

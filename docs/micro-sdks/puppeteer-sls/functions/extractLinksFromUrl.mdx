@@ -1,0 +1,35 @@
+---
+title: 'extractLinksFromUrl'
+description: 'Extracts hyperlink data from a webpage.'
+---
+
+A convenience wrapper that opens a URL, extracts links, and closes the browser.
+
+## Usage
+
+```typescript
+import { extractLinksFromUrl } from '@microfox/puppeteer-sls';
+
+async function main() {
+  const links = await extractLinksFromUrl({
+    url: 'https://developers.pinterest.com/docs/api/v5/introduction',
+    isLocal: true,
+    headless: true,
+  });
+  console.log(links);
+}
+
+main();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="options" type="object" required>
+        Inherits all options from `openPage`.
+    </Property>
+</Properties>
+
+## Response
+
+This function returns a `Promise<ExtractedLink[]>` that resolves to an array of `ExtractedLink` objects.

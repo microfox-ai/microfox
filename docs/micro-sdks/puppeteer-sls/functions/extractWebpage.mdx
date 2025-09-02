@@ -1,0 +1,44 @@
+---
+title: 'extractWebpage'
+description: 'The `extractWebpage` function extracts the title and a brief summary of a webpage.'
+---
+
+## Function Signature
+
+```typescript
+async function extractWebpage(
+  url: string
+): Promise<{
+  title: string;
+  summary: string;
+}>
+```
+
+The `extractWebpage` function fetches a webpage and extracts its title and a generated summary of its content. This is useful for creating previews, generating meta-descriptions, or summarizing articles.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage to process.
+
+## Returns
+
+- **`Promise<{ title: string; summary: string }>`**: A Promise that resolves to an object containing the `title` and `summary` of the webpage.
+
+## Example Usage
+
+```typescript
+import { extractWebpage } from '@microfox/puppeteer-sls';
+
+async function getPageSummary() {
+  const url = 'https://example-blog.com/some-article';
+  try {
+    const { title, summary } = await extractWebpage(url);
+    console.log('Title:', title);
+    console.log('Summary:', summary);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+getPageSummary();
+```

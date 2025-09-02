@@ -1,0 +1,35 @@
+---
+title: 'getUsersByEmails'
+description: 'Finds users by their email addresses.'
+---
+
+The `getUsersByEmails` method finds users by their email addresses.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const users = await client.getUsersByEmails({ emails: ['one@example.com', 'two@example.com'] });
+    console.log(users);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="emails" type="string[]" required>
+        The email addresses of the users to find.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an array of `user` objects.

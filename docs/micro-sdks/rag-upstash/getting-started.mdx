@@ -1,0 +1,144 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step tutorial to build your first RAG application with @microfox/rag-upstash and Upstash Vector.'
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+-   **Node.js:** Version 16.x or later.
+-   **An Upstash Account:** You will need a Vector Database. You can create one for free at [Upstash](https://upstash.com/).
+-   **Environment Variables:** After creating your database, find your `UPSTASH_VECTOR_REST_URL` and `UPSTASH_VECTOR_REST_TOKEN` from the Upstash console.
+
+## 1. Installation
+
+Install the `@rag-upstash` SDK from npm. It will automatically bring in the required `@upstash/vector` peer dependency.
+
+<CodeGroup>
+```bash npm
+npm install @microfox/rag-upstash
+```
+```bash yarn
+yarn add @microfox/rag-upstash
+```
+```bash pnpm
+pnpm add @microfox/rag-upstash
+```
+</CodeGroup>
+
+## 2. Setting Up the SDK Client
+
+Create a new file for your script (e.g., `rag-script.ts`). Initialize the SDK client by providing your Upstash credentials. It's best practice to use environment variables for this.
+
+```typescript
+import { RagUpstashSdk, createFilter, FilterHelpers } from '@microfox/rag-upstash';
+
+// The client will automatically use environment variables if not passed directly.
+// Make sure UPSTASH_VECTOR_REST_URL and UPSTASH_VECTOR_REST_TOKEN are set.
+const sdk = new RagUpstashSdk();
+```
+
+## 3. Defining Your Metadata Structure
+
+Using TypeScript, you can define the shape of the metadata you want to store alongside your documents. This gives you type safety and autocompletion.
+
+```typescript
+// Define a type for our document metadata
+type MyDocMetadata = {
+  source: 'website' | 'internal-doc';
+  author: string;
+  createdAt: number; // Unix timestamp
+};
+```
+
+You can then pass this type to the SDK client instance to get full type support for all methods.
+
+```typescript
+const sdk = new RagUpstashSdk<MyDocMetadata>();
+```
+
+## 4. Feeding Documents to the RAG
+
+Let's add some documents to our knowledge base using the `feedDocsToRAG` method. Each document has a `doc` (the text content) and a `metadata` object.
+
+```typescript
+async function feedDocuments() {
+  console.log('Feeding documents into the RAG...');
+  
+  await sdk.feedDocsToRAG([
+    {
+      doc: 'Microfox is a platform for building AI-powered applications and agents.',
+      metadata: { source: 'website', author: 'jane', createdAt: 1672531200 },
+    },
+    {
+      doc: 'The rag-upstash SDK simplifies building RAG systems with Upstash Vector.',
+      metadata: { source: 'internal-doc', author: 'john', createdAt: 1675209600 },
+    },
+    {
+      doc: 'Upstash provides serverless data solutions, including Redis and Kafka.',
+      metadata: { source: 'website', author: 'jane', createdAt: 1677628800 },
+    }
+  ]);
+
+  console.log('Documents fed successfully.');
+}
+```
+
+## 5. Querying with Semantic Search and Filters
+
+Now, let's retrieve the documents. We'll ask a question in natural language and also apply a metadata filter to narrow the search results.
+
+```typescript
+async function queryDocuments() {
+  const userQuestion = 'What is Microfox?';
+  console.log(`\nQuerying for: "${userQuestion}"`);
+
+  // Example 1: Pure semantic search
+  const results = await sdk.queryDocsFromRAG({
+    data: userQuestion,
+    topK: 2, // Get the top 2 most relevant results
+    includeMetadata: true, // Include metadata in the response
+  });
+
+  console.log('--- Semantic Search Results ---');
+  console.log(results);
+
+  // Example 2: Semantic search WITH a metadata filter
+  console.log('\nQuerying again, but only for documents from the "website"...');
+
+  // Use the filter helper to build a query
+  const websiteFilter = createFilter('source', '=', 'website');
+
+  const filteredResults = await sdk.queryDocsFromRAG({
+    data: userQuestion,
+    topK: 2,
+    includeMetadata: true,
+    filter: websiteFilter,
+  });
+  
+  console.log('--- Filtered Search Results ---');
+  console.log(filteredResults);
+}
+
+// Run the functions
+async function main() {
+  await feedDocuments();
+  await queryDocuments();
+}
+
+main();
+```
+
+### Running the Script
+Set your environment variables and run the script:
+```bash
+export UPSTASH_VECTOR_REST_URL="YOUR_URL"
+export UPSTASH_VECTOR_REST_TOKEN="YOUR_TOKEN"
+ts-node rag-script.ts
+```
+You will see the documents being fed, followed by the results of both the simple semantic search and the more specific filtered search.
+
+## Next Steps
+You have now successfully built a simple RAG retrieval pipeline.
+-   **Explore Filtering:** Read the **[Foundation](/micro-sdks/rag-upstash/foundation)** guide to learn how to create complex `AND`/`OR` filters.
+-   **Integrate an LLM:** Pass the retrieved documents as context in a prompt to your favorite Large Language Model to generate a final answer.

@@ -1,0 +1,43 @@
+---
+title: 'extractImagesFromURL'
+description: 'Extracts image data from a webpage.'
+---
+
+The `extractImagesFromURL` function is a convenience function that opens a URL, extracts images, and closes the browser. Use this for single-use scraping tasks.
+
+## Usage
+
+```typescript
+import { extractImagesFromURL } from '@microfox/puppeteer-sls';
+
+async function main() {
+  const images = await extractImagesFromURL({
+    url: 'https://www.pinterest.com/search/pins/?q=cyberpunk',
+    isLocal: true,
+    headless: true,
+  });
+  console.log(images);
+}
+
+main();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="options" type="object" required>
+        Inherits all options from `openPage`. The following options are also available:
+        <Properties>
+            <Property name="deepExtract" type="boolean">
+                When `true`, the function will attempt to scroll through the page to trigger lazy-loaded images and extract background images from CSS. Defaults to `false`.
+            </Property>
+            <Property name="waitUntil" type="'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2'">
+                Defines when to consider navigation successful. Defaults to `networkidle2`.
+            </Property>
+        </Properties>
+    </Property>
+</Properties>
+
+## Response
+
+This function returns a `Promise<ExtractedImage[]>` that resolves to an array of `ExtractedImage` objects.

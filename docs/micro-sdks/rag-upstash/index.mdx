@@ -1,0 +1,31 @@
+---
+title: 'Overview'
+description: 'A developer-friendly SDK for building Retrieval-Augmented Generation (RAG) applications with the Upstash Vector Database.'
+---
+
+## Build RAG Applications with Upstash Vector
+
+`@microfox/rag-upstash` is a TypeScript SDK designed to simplify the process of building Retrieval-Augmented Generation (RAG) applications. It provides a high-level, document-centric interface on top of the `@upstash/vector` client, making it easy to store, manage, and query text data for semantic search.
+
+### What Problem Does It Solve?
+Building a RAG system involves several steps: chunking documents, generating vector embeddings, storing them in a vector database, and then querying that database to find relevant context for a Large Language Model (LLM). While `@upstash/vector` provides the core tools, this SDK simplifies the developer workflow by:
+
+-   **Offering a Document-Centric API:** Methods like `feedDocsToRAG` and `queryDocsFromRAG` work directly with text documents, abstracting the underlying vector operations.
+-   **Simplifying Metadata Filtering:** Provides a powerful but intuitive helper function (`createFilter`) for building complex metadata filter expressions.
+-   **Providing a Clear RAG Focus:** The API is purpose-built for the most common RAG tasks, reducing boilerplate and making the code easier to read and maintain.
+
+### Who Is This For?
+This package is ideal for developers who want to:
+-   Build chatbots or question-answering systems that can answer questions based on a specific set of documents.
+-   Add semantic search capabilities to their applications.
+-   Create AI agents that can reason over a private knowledge base.
+-   Leverage the power of vector search without needing to manage the complexities of a low-level vector client.
+
+### Key Features
+-   **Simplified Document Indexing:** Easily feed text documents into your Upstash Vector database.
+-   **Powerful Semantic Search:** Query your documents using natural language to find the most relevant results.
+-   **Advanced Metadata Filtering:** A simple-to-use helper for creating complex, SQL-like filter expressions.
+-   **TypeScript First:** Fully typed with generics to support your custom metadata structures.
+-   **Direct Access:** Provides full, direct access to the underlying `@upstash/vector` client for advanced use cases.
+
+This documentation provides a comprehensive **[Getting Started](/micro-sdks/rag-upstash/getting-started)** guide and an in-depth look at the package's **[Foundation](/micro-sdks/rag-upstash/foundation)** to help you build your first RAG application.

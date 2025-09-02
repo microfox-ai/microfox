@@ -1,0 +1,171 @@
+---
+title: 'Getting Started'
+description: 'A step-by-step tutorial to install, configure, and use @microfox/db-upstash to manage data and rate limit your application.'
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+-   **Node.js:** Version 16.x or later.
+-   **An Upstash Account:** You'll need a Redis database. You can create one for free at [Upstash](https://upstash.com/).
+-   **Environment Variables:** After creating your database, find your `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` from the Upstash console.
+
+## 1. Installation
+
+First, you need both the `@upstash/redis` client and our SDK. Install them using your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install @upstash/redis @microfox/db-upstash
+```
+```bash yarn
+yarn add @upstash/redis @microfox/db-upstash
+```
+```bash pnpm
+pnpm add @upstash/redis @microfox/db-upstash
+```
+</CodeGroup>
+
+## 2. Setting Up the Redis Client
+
+Create a file to initialize and export your Redis client. This ensures you use a single, shared connection across your application.
+
+`lib/redis.ts`
+```typescript
+import { Redis } from '@upstash/redis';
+
+if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+  throw new Error('Upstash Redis credentials are not set in environment variables.');
+}
+
+export const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+```
+
+## 3. Defining Your Data Model and Store
+
+Now, let's create a `CrudStore` to manage a collection of products.
+
+First, define the TypeScript interface for a product:
+`models/product.ts`
+```typescript
+export interface Product {
+  id: string; // Must have an 'id' of type string
+  name: string;
+  price: number;
+  category: 'electronics' | 'clothing' | 'books';
+  createdAt: number; // Unix timestamp
+}
+```
+
+Next, create an instance of `CrudStore` for your products. This is where you define your indexes.
+`lib/product-store.ts`
+```typescript
+import { CrudStore } from '@microfox/db-upstash';
+import { redis } from './redis';
+import { Product } from '../models/product';
+
+export const productStore = new CrudStore<Product, 'price' | 'createdAt' | 'category'>(redis, 'products', {
+  // Fields for efficient sorting and range queries (must be numbers)
+  sortFields: ['price', 'createdAt'], 
+  // Fields for efficient exact-match filtering
+  matchFields: ['category'] 
+});
+```
+
+### Understanding the `CrudStore` Config
+-   The first argument is the `redis` client.
+-   The second argument, `'products'`, is a `keyPrefix`. All Redis keys created by this store will start with `products:`.
+-   The third argument configures the indexes:
+    -   `sortFields`: We can now efficiently sort our products by `price` or `createdAt`.
+    -   `matchFields`: We can now efficiently find all products where `category` is `'electronics'`, for example.
+
+## 4. Using the Store
+
+Now you can use `productStore` to manage your data. Let's create a script to add some products and then query them.
+
+`seed.ts`
+```typescript
+import { productStore } from './lib/product-store';
+import { Product } from './models/product';
+
+async function main() {
+  console.log('Adding products...');
+  
+  await productStore.set({
+    id: 'prod_001',
+    name: 'Laptop Pro',
+    price: 1200,
+    category: 'electronics',
+    createdAt: Date.now()
+  });
+  
+  await productStore.set({
+    id: 'prod_002',
+    name: 'Classic T-Shirt',
+    price: 25,
+    category: 'clothing',
+    createdAt: Date.now() - 10000
+  });
+
+  console.log('Products added.');
+
+  console.log('\nQuerying for all electronics...');
+  const electronics = await productStore.queryByField({
+    field: 'category',
+    value: 'electronics'
+  });
+  console.log(electronics);
+
+  console.log('\nListing all products sorted by price (cheapest first)...');
+  const cheapestFirst = await productStore.list({
+    sortField: 'price',
+    desc: false // ascending
+  });
+  console.log(cheapestFirst);
+}
+
+main();
+```
+
+Run this script with `ts-node seed.ts` to see it in action.
+
+## 5. Adding Rate Limiting
+
+Let's protect an imaginary API endpoint using the `Ratelimit` class.
+
+`lib/ratelimit.ts`
+```typescript
+import { Ratelimit } from '@microfox/db-upstash';
+import { redis } from './redis';
+
+// Allow 5 requests every 10 seconds
+export const ratelimit = new Ratelimit(redis, {
+  requests: 5,
+  window: 10
+});
+```
+Now, you could use this in your API route:
+```typescript
+import { ratelimit } from './lib/ratelimit';
+
+async function handleApiRequest(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+
+  const { allowed, remaining } = await ratelimit.limit(`ip:${ip}`);
+
+  if (!allowed) {
+    return new Response('Too many requests', { status: 429 });
+  }
+
+  // Your API logic here...
+  return new Response('Success!');
+}
+```
+
+## Next Steps
+You now have a solid foundation for using `@microfox/db-upstash`.
+-   **Explore the API:** Dive into the **API Reference** for `CrudStore`, `CrudHash`, and other classes.
+-   **Learn Advanced Concepts:** Read the **[Foundation](/micro-sdks/db-upstash/foundation)** guide to understand the underlying Redis data structures and advanced indexing strategies.

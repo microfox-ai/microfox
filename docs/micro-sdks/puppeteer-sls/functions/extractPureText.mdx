@@ -1,0 +1,40 @@
+---
+title: 'extractPureText'
+description: 'The `extractPureText` function extracts all the text content from a webpage, excluding HTML tags.'
+---
+
+## Function Signature
+
+```typescript
+async function extractPureText(
+  url: string
+): Promise<string>
+```
+
+The `extractPureText` function fetches a webpage and extracts all its text content, stripping out all HTML tags. This is useful for natural language processing, content analysis, or creating a clean text-only version of a webpage.
+
+## Parameters
+
+- **`url`** (string, required): The URL of the webpage from which to extract the text.
+
+## Returns
+
+- **`Promise<string>`**: A Promise that resolves to a single string containing all the text from the webpage.
+
+## Example Usage
+
+```typescript
+import { extractPureText } from '@microfox/puppeteer-sls';
+
+async function getPageText() {
+  const url = 'https://example-blog.com/some-article';
+  try {
+    const text = await extractPureText(url);
+    console.log('Page Text:\n', text);
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
+}
+
+getPageText();
+```

@@ -1,0 +1,53 @@
+---
+title: 'Overview'
+description: 'A modern, developer-friendly TypeScript SDK for Amazon Simple Email Service (SES).'
+---
+
+## A Simplified SDK for Amazon SES
+
+`@microfox/aws-ses` is a lightweight TypeScript SDK that provides a simplified, high-level interface for sending emails with Amazon Simple Email Service (SES). It's designed to make common email-sending tasks easier and more intuitive than using the official AWS SDK directly.
+
+### What Problem Does It Solve?
+While the official AWS SDK for JavaScript (v3) is powerful and comprehensive, its modular design can be verbose for common tasks. Sending a simple email requires importing multiple command and client objects and understanding a complex configuration structure.
+
+This SDK streamlines the process by:
+-   **Providing a Simple, Unified Client:** A single `createSESSdk` function gives you a client ready to send emails.
+-   **Simplifying the API:** Methods like `sendEmail` and `sendBulkEmails` accept a single, intuitive options object.
+-   **Handling Boilerplate:** The SDK manages the creation and execution of the underlying SES commands for you.
+-   **Adding Type Safety:** Provides a clear, type-safe interface for all parameters and options.
+
+### Who Is This For?
+This package is ideal for any developer using Node.js who needs to integrate email functionality into their application via Amazon SES. Common use cases include:
+-   Sending transactional emails (e.g., password resets, order confirmations).
+-   Distributing marketing or notification emails to a list of users.
+-   Building applications that need to send emails with complex HTML content and attachments.
+
+### High-Level Architecture
+The SDK acts as a developer-friendly wrapper around the official `@aws-sdk/client-sesv2`. It simplifies the interface without sacrificing the power and reliability of the underlying AWS infrastructure.
+
+```mermaid
+graph TD;
+    subgraph Your Application
+        A[Your Code] --> B{createSESSdk};
+        B --> C{SES SDK Client}
+    end
+
+    subgraph @microfox/aws-ses
+        C -- uses --> D["@aws-sdk/client-sesv2"];
+    end
+
+    subgraph AWS
+        D -- "Makes API Calls" --> E[(Amazon SES)];
+    end
+
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+```
+
+### Key Features
+-   **Simplified Email Sending:** Send emails with just a few lines of code.
+-   **Bulk Email Support:** Easily send the same email to multiple recipients.
+-   **Attachment Handling:** A simple interface for adding attachments to your emails.
+-   **HTML & Text Content:** Supports both HTML and plain text email bodies.
+-   **Fully Typed:** Written entirely in TypeScript for a great developer experience.
+
+This documentation provides a comprehensive **[Getting Started](/micro-sdks/aws-ses/getting-started)** guide, an in-depth look at the package's **[Foundation](/micro-sdks/aws-ses/foundation)**, and a detailed API Reference to help you get the most out of `@microfox/aws-ses`.

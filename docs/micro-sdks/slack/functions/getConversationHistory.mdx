@@ -1,0 +1,57 @@
+---
+title: 'getConversationHistory'
+description: "Fetches a conversation's history of messages and events."
+---
+
+The `getConversationHistory` function fetches a conversation's history of messages and events.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
+
+async function logConversationHistory() {
+  try {
+    const channelId = 'C1234567890'; // Replace with a real channel ID
+    const history = await client.getConversationHistory({ channelId });
+    if (history) {
+      history.forEach(message => {
+        console.log(message.text);
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+logConversationHistory();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="channelId" type="string" required>
+        Conversation ID to fetch history for.
+    </Property>
+    <Property name="limit" type="number">
+        The maximum number of items to return.
+    </Property>
+    <Property name="latest" type="string">
+        End of the time range of messages to include in results.
+    </Property>
+    <Property name="oldest" type="string">
+        Start of the time range of messages to include in results.
+    </Property>
+    <Property name="inclusive" type="boolean">
+        Include messages with latest or oldest timestamps in results.
+    </Property>
+    <Property name="cursor" type="string">
+        Paginate through collections of data by setting the cursor parameter to a `next_cursor` attribute returned by a previous request's response_metadata.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns an array of message objects.

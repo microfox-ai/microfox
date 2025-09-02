@@ -1,0 +1,33 @@
+name: Automated Trackers
+'on':
+  push:
+    branches:
+      - main
+jobs:
+  sync-micro-sdks-documentation:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ORG_PAT }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Tracker
+        run: npx microfox track --file ./__track__/sync-sdk-docs.tracker.ts
+      - name: Commit and Push Changes
+        run: |-
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "docs: Sync Micro SDKs documentation"
+            git push
+          fi

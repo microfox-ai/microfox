@@ -1,0 +1,59 @@
+---
+title: 'createChannel'
+description: 'Creates a new channel in a Slack workspace.'
+---
+
+The `createChannel` function creates a new channel in a Slack workspace.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient('YOUR_SLACK_BOT_TOKEN');
+
+async function createNewChannel() {
+  try {
+    // Basic channel creation
+    const newChannel = await client.createChannel({
+      name: 'new-exciting-project',
+      isPrivate: true,
+    });
+    console.log(`Channel created: ${newChannel.channel.name} (${newChannel.channel.id})`);
+
+    // Create channel with users
+    const projectChannel = await client.createChannel({
+      name: 'project-alpha',
+      isPrivate: true,
+      join: true,
+      userIds: ['U1234567890', 'U0987654321']
+    });
+    console.log(`Project channel created with users`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+createNewChannel();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="name" type="string" required>
+        The name of the channel to create.
+    </Property>
+    <Property name="isPrivate" type="boolean">
+        Whether the channel should be private. Defaults to `false`.
+    </Property>
+    <Property name="join" type="boolean">
+        Whether the bot should join the channel. Defaults to `true`.
+    </Property>
+    <Property name="userIds" type="string[]">
+        Array of user IDs to add to the channel after creation.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `ConversationsCreateResponse` object containing information about the newly created channel.

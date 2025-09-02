@@ -1,0 +1,35 @@
+---
+title: 'getFileInfo'
+description: 'Gets information about a file.'
+---
+
+The `getFileInfo` method gets information about a file.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    const fileInfo = await client.getFileInfo({ fileId: 'F12345678' });
+    console.log(fileInfo);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="fileId" type="string" required>
+        The ID of the file to get information about.
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `file` object.

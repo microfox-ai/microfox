@@ -1,0 +1,45 @@
+---
+title: 'setReminder'
+description: 'Sets a reminder for a user.'
+---
+
+The `setReminder` method sets a reminder for a user.
+
+## Usage
+
+```typescript
+import { MicrofoxSlackClient } from '@microfox/slack';
+
+const client = new MicrofoxSlackClient(process.env.SLACK_BOT_TOKEN);
+
+(async () => {
+  try {
+    await client.setReminder({
+      userId: 'U12345678',
+      text: 'Remember to submit your report.',
+      time: 'in 5 minutes',
+    });
+    console.log('Reminder set.');
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Arguments
+
+<Properties>
+    <Property name="userId" type="string" required>
+        The ID of the user to set a reminder for.
+    </Property>
+    <Property name="text" type="string" required>
+        The text of the reminder.
+    </Property>
+    <Property name="time" type="string" required>
+        A string describing when the reminder should fire (e.g., "in 5 minutes" or a Unix timestamp).
+    </Property>
+</Properties>
+
+## Response
+
+This method returns a `RemindersAddResponse` object.

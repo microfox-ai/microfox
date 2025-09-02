@@ -34,6 +34,15 @@ export interface TrackerConfig {
     };
     /** Optional environment variables for the GitHub Actions job. */
     env?: Record<string, string>;
+    /** Optional configuration for committing changes made by the tracker. */
+    commit?: {
+      /** Set to true to enable committing changes. */
+      enabled: boolean;
+      /** The message for the commit. */
+      message?: string;
+      /** The name of the environment variable holding a PAT for pushing. If not provided, it will default to using the workflow's GITHUB_TOKEN, which requires setting contents permissions. */
+      patEnvName?: string;
+    };
   };
 }
 
