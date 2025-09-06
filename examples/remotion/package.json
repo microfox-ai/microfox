@@ -9,7 +9,8 @@
     "lint": "next lint",
     "remotion": "remotion studio",
     "render": "remotion render",
-    "deploy": "node deploy.mjs"
+    "deploy": "node deploy.mjs",
+    "generate:mp3": "tsx scripts/generate-mp3-from-mp4.ts"
   },
   "dependencies": {
     "@microfox/remotion": "*",
@@ -41,6 +42,8 @@
     "eslint-config-next": "15.1.6",
     "prettier": "3.6.0",
     "tailwindcss": "^4.1.12",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.0",
     "typescript": "5.8.2"
   }
 }
