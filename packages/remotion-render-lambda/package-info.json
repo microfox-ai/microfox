@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/remotion-render-lambda",
+  "title": "Remotion Render Lambda TypeScript SDK",
+  "description": "A TypeScript SDK for Remotion Render Lambda.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/@microfox/remotion-render-lambda",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}

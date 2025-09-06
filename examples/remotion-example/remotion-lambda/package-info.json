@@ -1,0 +1,14 @@
+{
+  "name": "@microfox/@microfox/remotion",
+  "title": "Remotion TypeScript SDK",
+  "description": "A TypeScript SDK for Remotion.",
+  "platformType": "tool",
+  "path": ".",
+  "dependencies": ["zod"],
+  "status": "unstable",
+  "documentation": "https://www.npmjs.com/package/@microfox/@microfox/remotion",
+  "icon": "https://via.placeholder.com/64x64.png?text=<%= simpleName.charAt(0).toUpperCase() %>",
+  "constructors": [],
+  "extraInfo": [],
+  "authType": "none"
+}

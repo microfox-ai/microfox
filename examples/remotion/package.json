@@ -1,0 +1,46 @@
+{
+  "name": "template-next-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "remotion": "remotion studio",
+    "render": "remotion render",
+    "deploy": "node deploy.mjs"
+  },
+  "dependencies": {
+    "@microfox/remotion": "*",
+    "@remotion/bundler": "4.0.340",
+    "@remotion/cli": "4.0.340",
+    "@remotion/google-fonts": "^4.0.340",
+    "@remotion/lambda": "4.0.340",
+    "@remotion/paths": "4.0.340",
+    "@remotion/player": "4.0.340",
+    "@remotion/shapes": "4.0.340",
+    "next": "15.2.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "remotion": "4.0.340",
+    "zod": "3.22.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.1.0",
+    "@next/eslint-plugin-next": "15.1.6",
+    "@remotion/eslint-config-flat": "4.0.340",
+    "@remotion/eslint-plugin": "4.0.340",
+    "@remotion/tailwind-v4": "^4.0.340",
+    "@types/node": "20.12.14",
+    "@types/react": "19.1.1",
+    "@types/react-dom": "19.1.1",
+    "@types/web": "0.0.166",
+    "dotenv": "16.0.3",
+    "eslint": "9.19.0",
+    "eslint-config-next": "15.1.6",
+    "prettier": "3.6.0",
+    "tailwindcss": "^4.1.12",
+    "typescript": "5.8.2"
+  }
+}

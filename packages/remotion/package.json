@@ -1,0 +1,61 @@
+{
+  "name": "@microfox/remotion",
+  "version": "1.0.0",
+  "description": "A recursive composition system for Remotion with unified component architecture",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"./**/*.ts*\"",
+    "prettier-check": "prettier --check \"./**/*.ts*\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@remotion/google-fonts": "4.0.340",
+    "@remotion/media-utils": "^4.0.340",
+    "react": "19.1.1",
+    "remotion": "4.0.340",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@types/node": "^18",
+    "@types/react": "19.1.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^9.1.0",
+    "prettier": "^3.0.0",
+    "tsup": "^8",
+    "typescript": "^5.6.3",
+    "vitest": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "remotion",
+    "typescript",
+    "video",
+    "composition",
+    "layout",
+    "recursive"
+  ]
+}
