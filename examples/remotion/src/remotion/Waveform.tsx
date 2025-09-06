@@ -4,26 +4,29 @@ const audioMetadata = {
     // turntogold - https://cdn1.suno.ai/db192e72-b371-4462-b7b8-78278c550450.webm
     // epic - src: "https://cdn1.suno.ai/26abf813-e0af-4bda-8cd4-93344dd76473.webm", 
     // epic 2 - https://cdn1.suno.ai/eaebca37-01b7-47ff-ab70-d40fcd442405.webm
-    src: "creators.mp3",
+    // gotoblue - https://cdn1.suno.ai/04ae0ed2-54bb-45c5-a67a-586e83d5a91c.webm
+    // whiteboard funeral - https://cdn1.suno.ai/593e02b7-c238-4594-9e48-9f7334d70532.webm
+    //src: "https://cdn1.suno.ai/5008ce4f-e7f6-41d6-818c-08ea0813d75e.webm",
+    src: "titans.mp3",
     //src: "https://cdn1.suno.ai/75c0d53b-4437-43a7-a9ea-fae4716286b0.webm",
     //src: "https://cdn1.suno.ai/8ffa96ca-d37b-48dc-b8b2-74f263dad10c.webm",
     //src: "https://cdn1.suno.ai/eeae767e-20df-490b-9476-08abfa484c41.webm",
     volume: 2,
-    duration: (2 * 60) + 44,
+    duration: (2 * 60) + 5,
 }
 
 const imageMetadata = {
-    src: "creators.png",//"https://cdn.midjourney.com/cffd1fdb-3a43-47f7-b7d3-c0e795094d78/0_1.png",
+    src: "standing.png",//"https://cdn.midjourney.com/cffd1fdb-3a43-47f7-b7d3-c0e795094d78/0_1.png",
     //src: "https://cdn.midjourney.com/02465c52-e547-402e-a55f-9805dab2886f/0_0.png",
-    primaryColor: '#FBBE6C',
-    secondaryColor: '#49DAFC',
-    text: 'Creators',
-    textMarginBottom: 200,
+    primaryColor: '#FFF',
+    secondaryColor: '#FDCE99',
+    text: 'Titans',
+    textMarginBottom: 180,
     textColor: '#FFF',
     textSize: 250,
-    textFont: "ProtestRevolution",//"Roboto",
+    textFont: "ProtestRevolution",//"Roboto", ProtestRevolution, StoryScript, BebasNeue, Caveat
     subtext: "The Dream",
-    subtextMarginBottom: 200,
+    subtextMarginBottom: 50,
     subtextSize: 20,
     channelText: "Get into Zone",
 }
@@ -73,7 +76,7 @@ const histogram = {
             amplitude: 2,
             width: 1920,
             height: 200,
-            dataOffsetInSeconds: - 0.25,
+            dataOffsetInSeconds: - 0.1,
             useFrequencyData: false,
         } as WaveformConfig,
         barColor: '#A41117',
@@ -116,7 +119,7 @@ const histogramStatic = {
         horizontalSymmetry: false,
         verticalMirror: true,
         histogramStyle: 'full-width',
-        amplitude: 0.5,
+        amplitude: 0.75,
         gradientStartColor: imageMetadata.primaryColor ?? '#FFF',
         gradientEndColor: imageMetadata.secondaryColor ?? '#000',
         gradientDirection: 'vertical',
@@ -133,7 +136,7 @@ const AudioScene = {
     type: "layout",
     data: {
         containerProps: {
-            className: 'flex items-center justify-center bg-white',
+            className: 'flex items-center justify-center bg-black',
         },
         childrenProps: [
             {
