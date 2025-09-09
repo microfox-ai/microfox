@@ -4,13 +4,7 @@
   "description": "Universal CLI tool for creating modern TypeScript packages with npm availability checking",
   "platformType": "tool",
   "path": "packages/cli",
-  "dependencies": [
-    "commander",
-    "chalk",
-    "zod",
-    "axios",
-    "readline-sync"
-  ],
+  "dependencies": ["commander", "chalk", "zod", "axios", "readline-sync"],
   "status": "internal",
   "documentation": "https://www.npmjs.com/package/@microfox/cli",
   "icon": "https://raw.githubusercontent.com/microfox-ai/microfox/refs/heads/main/logos/cli.svg",
@@ -23,4 +17,4 @@
     "Supports both scoped and unscoped package names"
   ],
   "authType": "none"
-} 
+}

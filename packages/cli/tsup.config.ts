@@ -12,9 +12,10 @@ export default defineConfig([
       'src/commands/code.ts',
       'src/commands/install.ts',
       'src/commands/update.ts',
+      'src/commands/airouter.ts',
       'src/commands/track.ts',
       'src/commands/track-ci.ts',
-      'src/commands/openapi.ts'
+      'src/commands/openapi.ts',
     ],
     format: ['cjs', 'esm'],
     dts: true,
@@ -24,5 +25,7 @@ export default defineConfig([
     banner: {
       js: '#!/usr/bin/env node',
     },
+    bundle: true,
+    noExternal: [/.*/],
   },
-]); 
+]);

@@ -26,8 +26,9 @@ npx @microfox/cli kickstart
 ```
 
 This command will:
+
 - **Ask for a package name** interactively
-- **Check npm availability** for the package name  
+- **Check npm availability** for the package name
 - **Prompt for a new name** if the package already exists
 - Create a complete package directory structure
 - Set up modern TypeScript configuration
@@ -39,6 +40,7 @@ This command will:
 ### Package Name Format
 
 The CLI accepts any valid npm package name:
+
 - Simple names: `my-awesome-package`
 - Scoped packages: `@myorg/my-awesome-package`
 
@@ -97,7 +99,7 @@ import { MyPackageSdk } from 'my-package';
 
 const sdk = new MyPackageSdk({
   apiKey: 'your-api-key',
-  baseUrl: 'https://api.example.com'
+  baseUrl: 'https://api.example.com',
 });
 
 // Example hello method (replace with your own methods)
@@ -111,4 +113,4 @@ console.log(result.data); // "Hello, World! Welcome to my-package SDK."
 
 ## License
 
-MIT 
+MIT
