@@ -33,9 +33,12 @@
     "packages/linkedin-member-data-portability",
     "packages/puppeteer-suno",
     "packages/rag-upstash",
+    "packages/remotion",
+    "packages/remotion-render-lambda",
     "packages/s3-space",
     "packages/tool-core",
-    "packages/types"
+    "packages/types",
+    "packages/xsquare"
   ],
   "stablePackages": [
     "packages/ai-provider-anthropic",
@@ -98,6 +101,6 @@
     "packages/tracker",
     "packages/webhook-core"
   ],
-  "total": 81,
-  "generatedAt": "2025-08-03T22:15:46.103Z"
+  "total": 84,
+  "generatedAt": "2025-09-09T18:23:29.960Z"
 }
