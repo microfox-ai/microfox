@@ -1,5 +1,0 @@
----
-'xsquare': patch
----
-
-Initial release
