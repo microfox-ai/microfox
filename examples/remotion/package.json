@@ -13,6 +13,7 @@
     "generate:mp3": "tsx scripts/generate-mp3-from-mp4.ts"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.16.12",
     "@microfox/remotion": "*",
     "@remotion/bundler": "4.0.340",
     "@remotion/cli": "4.0.340",
