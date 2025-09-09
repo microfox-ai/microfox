@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.0
+
+### Minor Changes
+
+- 41cc294: Kickstart upgrade new
+
 ## 1.0.20
 
 ### Patch Changes
