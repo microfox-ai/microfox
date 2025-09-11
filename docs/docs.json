@@ -12,84 +12,53 @@
     "tabs": [
       {
         "tab": "Introduction",
-        "groups": [
-          {
-            "group": "Get Started",
-            "pages": ["index", "intro/quickstart"]
-          },
-          {
-            "group": "About",
-            "pages": ["intro/roadmap", "intro/reach-out"]
-          }
-        ]
-      },
-      {
-        "tab": "Micro SDKs",
-        "icon": "box",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["micro-sdks/index"]
-          }
-        ]
-      },
-      {
-        "tab": "Code Loop",
-        "icon": "infinity",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["code-loop/index"]
-          }
-        ]
-      },
-      {
-        "tab": "X Framework",
-        "icon": "superscript",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": ["x-framework/index"]
-          }
-        ]
+        "pages": ["index"]
       },
       {
         "tab": "AI Router",
         "icon": "split",
+        "page": "ai-router/index",
         "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "ai-router/intro/index",
+              "ai-router/intro/why",
+              "ai-router/intro/core"
+            ]
+          },
           {
             "group": "Getting Started",
             "pages": [
-              "ai-router/overview/why",
               "ai-router/overview/quickstart",
-              "ai-router/overview/langgraph",
-              "ai-router/overview/core-principles"
+              "ai-router/overview/ai-router",
+              "ai-router/overview/type-safety",
+              "ai-router/overview/structure",
+              "ai-router/overview/ai-studio"
             ]
           },
           {
-            "group": "Foundation",
+            "group": "Advanced",
             "pages": [
               "ai-router/foundation/basics",
               "ai-router/foundation/agents",
-              "ai-router/foundation/middleware",
-              "ai-router/foundation/state",
-              "ai-router/foundation/tools",
               "ai-router/foundation/agent-as-tool",
-              "ai-router/foundation/stream"
+              "ai-router/foundation/state",
+              "ai-router/foundation/stream",
+              "ai-router/foundation/middleware"
             ]
           },
           {
-            "group": "Advanced Usage",
+            "group": "Other",
             "pages": [
               "ai-router/advanced/advanced-usage",
-              "ai-router/advanced/structuring-applications",
-              "ai-router/advanced/langgraph-migration",
-              "ai-router/overview/coming-soon"
+              "ai-router/overview/langgraph",
+              "ai-router/advanced/langgraph-migration"
             ]
           },
           {
             "group": "Examples",
-            "pages": ["ai-router/examples"]
+            "pages": ["ai-router/examples/perplexity-clone"]
           },
           {
             "group": "API Reference",

@@ -1,49 +1,62 @@
 ---
-sidebarTitle: 'The Idea'
-title: 'What is Microfox'
-description: 'Building the future where software is not a moat - decentralized AI agents and code distribution platform'
+sidebarTitle: 'Microfox Docs'
+title: 'Microfox Docs'
+description: 'A full-stack framework for building, deploying & distributing real-world agents that are autonomous, scalable, and accessible to all.'
 ---
+
+## What is Microfox
+
+Microfox aims to help developers build, deploy & distrubte real-world agents that are autonomous, scalable, and accessible to all.
 
 ## The Microfox Vision
 
-Microfox is a revolutionary platform designed to decentralize and distribute AI agents and code. We believe software should not be a moat in the coming world - it's time to stop treating it as such. As software becomes increasingly cheaper and more accessible, traditional SaaS models will naturally evolve.
+The core vision of Microfox is to create a comprehensive, standardized framework for AI agent development, much like Next.js did for web development.
 
-Our mission is to empower developers to build, distribute, and monetize AI agents through a decentralized ecosystem where code is modular, efficient, and accessible to all.
+The current landscape for building AI agents is fragmented and chaotic, plagued by challenges in agent-to-agent communication (A2A), authentication, security, and a general lack of standard protocols.
 
-<Card title="Get Started" icon="rocket" href="/intro/quickstart" horizontal>
-  Build your first AI agent in minutes with Microfox
+This complexity has limited most "AI agents" to being little more than advanced chatbots, failing to unlock their true potential.
+Microfox aims to solve this by providing developers with the tools to build, deploy, and distribute powerful, secure AI agents that can seamlessly and safely interact with each other & access user data from any source with user's scoped permissions.
+
+<Card
+  title="Get Started Now"
+  icon="rocket"
+  href="/ai-router/overview/quickstart"
+  horizontal
+>
+  The Best way to learn is to do. Build your first AI agent in minutes with
+  Microfox
 </Card>
 
-## Core Components
+## Core Concepts
 
-<Columns cols={2}>
-  <Card title="Micro SDKs" icon="box" href="/micro-sdks/index">
-    Byte-sized SDKs for serverless environments. Highly individualized packages
-    that only include what you need, reducing bundle size and boot-up times.
-  </Card>
-  <Card title="Code Loop" icon="infinity" href="/code-loop/index">
-    Tools, libraries & frameworks to build coding agents. Create agents that
-    build other agents in an infinite loop of AI-powered development.
-  </Card>
-  <Card title="X Framework" icon="superscript" href="/x-framework/index">
-    Framework for building AI agents with A2A, MCP, auth, HITL, and background
-    tasks support. Write once, deploy everywhere.
-  </Card>
-  <Card title="AI Router" icon="split" href="/ai-router/index">
-    Alternative to LangGraph for ai-sdk based developers. Streamline your AI
-    workflows with our routing system.
-  </Card>
-</Columns>
+We are heavily oriented towards typescipt based frameworks and our vision is built on several key pillars:
 
-## The Future of Software
+### AI Router (v2 out now)
 
-Traditional SaaS models are becoming obsolete as software becomes easier to build. Microfox provides the infrastructure for the next generation of software distribution:
+Recognizing the limitations of existing tools, Microfox built its own orchestration engine as a more powerful and developer-friendly alternative to LangGraph, specifically tailored for the full-stack TypeScript community.
 
-- **Pay-per-use**: Only pay for what you actually use
-- **Global distribution**: Reach users worldwide through our decentralized store
-- **AI-powered creation**: Let AI agents build and maintain your code
-- **No vendor lock-in**: Choose any LLM, any framework, any deployment target
+[Learn more about AI Router](/ai-router/intro)
 
-<Card title="Join the Revolution" icon="users" href="/intro/reachout">
-  Contact us & join the decentralized software movement
-</Card>
+### Micro SDKs
+
+These are practical, AI-augmentive SDKs that allow developers to easily and securely access user data from various platforms (like Google, Slack, etc.) or other Ai helper libraries.
+
+They are the plug-in-play tools that make agent development faster and more robust within any typescript based framework.
+
+### The X Framework (Alpha)
+
+This is the central framework designed to make the entire agent development lifecycle—from building to deployment and distribution—radically simpler.
+
+A key goal is to make the framework "semi-autonomous," embedding coding agents directly into the development process. This means developers won't have to read extensive documentation to get started; the framework itself will help them set things up, accelerating development.
+
+### The Code Loop & "Code that Writes Code"
+
+Similar to the "Darwin's Godel Machine" concept introduced by Sakana, Microfox is heavily investing in building agents that can write and improve their own code.
+
+The "Code Loop" is the internal project dedicated to creating these coding agents. This meta-level development is fundamental to their strategy, as these agents are already responsible for writing and maintaining a significant portion (around 70%) of their own infrastructure, with human developers acting as reviewers.
+
+# The Future
+
+### Ultimately, Microfox envisions a future where building and distributing an AI agent is as straightforward as building and deploying a website today.
+
+These agents will be served through standard protocols (like A2A, MCP, and a proposed OpenAPI specification) and will plug into a user's "host assistant," creating a vibrant and interconnected ecosystem of specialized AI assistants.

@@ -1,17 +1,17 @@
 ---
 title: 'Agents & Agent Handlers'
-sidebarTitle: 'Agents'
+sidebarTitle: 'Defining Agents'
 description: 'Learn about agents, execution context, path definitions, and agent-to-agent communication.'
 ---
 
 ## What are Agents?
 
-Agents are the primary handlers in your AI Router application. They are async functions that receive a context object and can interact with users through response streams, call other agents, or invoke tools. Agents form the core of your AI application's logic and decision-making capabilities.
+Agents are the primary handlers in your AI Router application. They are async functions that receive a context object and can interact with users, call other agents, or be exposed as tools for LLM integration. With the new **agent-as-tools** pattern, agents form the core of your AI application's logic and decision-making capabilities.
 
 ```typescript
-router.agent('/path', async ctx => {
+router.agent('/path', async (ctx) => {
   // Agent logic here
-  ctx.response.write({ type: 'text', text: 'Hello from agent!' });
+  return { message: 'Hello from agent!' };
 });
 ```
 
@@ -22,12 +22,14 @@ Paths in AI Router follow a hierarchical structure similar to web routing. They 
 ### Static Paths
 
 ```typescript
-router.agent('/dashboard', async ctx => {
+router.agent('/dashboard', async (ctx) => {
   // Handle dashboard requests
+  return { dashboard: 'Welcome to the dashboard' };
 });
 
-router.agent('/api/users', async ctx => {
+router.agent('/api/users', async (ctx) => {
   // Handle user API requests
+  return { users: ['user1', 'user2', 'user3'] };
 });
 ```
 
@@ -36,14 +38,17 @@ router.agent('/api/users', async ctx => {
 Paths can include dynamic parameters using `:paramName` syntax:
 
 ```typescript
-router.agent('/users/:userId', async ctx => {
+router.agent('/users/:userId', async (ctx) => {
   const { userId } = ctx.request.params;
-  ctx.response.write({ type: 'text', text: `Loading user: ${userId}` });
+  return { user: { id: userId, name: `User ${userId}` } };
 });
 
-router.agent('/posts/:postId/comments/:commentId', async ctx => {
+router.agent('/posts/:postId/comments/:commentId', async (ctx) => {
   const { postId, commentId } = ctx.request.params;
-  // Handle specific comment
+  return {
+    post: { id: postId },
+    comment: { id: commentId, content: 'Comment content' },
+  };
 });
 ```
 
@@ -52,15 +57,23 @@ router.agent('/posts/:postId/comments/:commentId', async ctx => {
 When calling agents, paths are resolved relative to the current agent's path:
 
 ```typescript
-router.agent('/parent', async ctx => {
+router.agent('/parent', async (ctx) => {
   // Call a sibling agent
-  await ctx.next.callAgent('/sibling', { data: 'hello' });
+  const siblingResult = await ctx.next.callAgent('/sibling', { data: 'hello' });
 
   // Call a child agent
-  await ctx.next.callAgent('child', { data: 'hello' });
+  const childResult = await ctx.next.callAgent('child', { data: 'hello' });
 
   // Call an absolute path from root
-  await ctx.next.callAgent('/@/root-agent', { data: 'hello' });
+  const rootResult = await ctx.next.callAgent('/@/root-agent', {
+    data: 'hello',
+  });
+
+  return {
+    sibling: siblingResult.data,
+    child: childResult.data,
+    root: rootResult.data,
+  };
 });
 ```
 
@@ -71,42 +84,66 @@ Agents can call other agents using the `ctx.next.callAgent()` method. This enabl
 ### Basic Agent Calls
 
 ```typescript
-router.agent('/orchestrator', async ctx => {
+router.agent('/orchestrator', async (ctx) => {
   // Call another agent and wait for result
   const result = await ctx.next.callAgent('/worker', { task: 'process-data' });
 
   if (result.ok) {
-    ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+    return { message: `Result: ${result.data}` };
   } else {
     ctx.logger.error('Worker failed:', result.error);
+    return { error: 'Worker failed', details: result.error.message };
   }
 });
 
-router.agent('/worker', async ctx => {
+router.agent('/worker', async (ctx) => {
   const { task } = ctx.request.params;
-  return `Processed: ${task}`;
+  return { processed: `Processed: ${task}` };
 });
 ```
 
 ### Chaining Multiple Agents
 
 ```typescript
-router.agent('/workflow', async ctx => {
+router.agent('/workflow', async (ctx) => {
   // Step 1: Validate input
   const validation = await ctx.next.callAgent('/validate', ctx.request.params);
   if (!validation.ok) {
-    return ctx.response.write({ type: 'text', text: 'Validation failed' });
+    return { error: 'Validation failed', details: validation.error.message };
   }
 
   // Step 2: Process data
-  const processing = await ctx.next.callAgent('/process', validation.data);
+  const processing = await ctx.next.callAgent('/process', validation.data, {
+    // to stream the agent's response as tool part to the UI
+    // useful & works if the agent is exposed as a tool using [.actAsTool()](/ai-router/foundation/agent-as-tool)
+    stremstreamToUI: true,
+  });
   if (!processing.ok) {
-    return ctx.response.write({ type: 'text', text: 'Processing failed' });
+    return { error: 'Processing failed', details: processing.error.message };
   }
 
   // Step 3: Generate response
   const response = await ctx.next.callAgent('/generate', processing.data);
-  ctx.response.write({ type: 'text', text: response.data });
+  return {
+    result: response.data,
+    workflow: 'completed',
+    steps: ['validated', 'processed', 'generated'],
+  };
+});
+```
+
+### Attaching Agents as Tools
+
+```typescript
+router.agent('/orchestrator', async (ctx) => {
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+    tools: {
+      ...ctx.next.agentAsTool('/worker'),
+    },
+  });
+  return stream;
 });
 ```
 
@@ -119,13 +156,22 @@ The **execution context** is an internal system that tracks the current executio
 - **Handler Path Stack**: A stack of all handler paths in the current execution chain
 
 ```typescript
-router.agent('/debug', async ctx => {
+router.agent('/debug', async (ctx) => {
   // Access execution context information
   const currentPath = ctx.executionContext.currentPath;
   const callDepth = ctx.executionContext.callDepth;
   const pathStack = ctx.executionContext.handlerPathStack;
 
   ctx.logger.log(`Executing at path: ${currentPath}, depth: ${callDepth}`);
+
+  return {
+    debug: {
+      currentPath,
+      callDepth,
+      pathStack,
+      requestId: ctx.requestId,
+    },
+  };
 });
 ```
 
@@ -134,9 +180,8 @@ router.agent('/debug', async ctx => {
 The router automatically prevents infinite loops by tracking call depth. When an agent calls another agent, the call depth increases. If it exceeds the configured maximum (default: 10), the router throws a `MaxCallDepthExceededError`.
 
 ```typescript
-const router = new AiRouter({
-  maxCallDepth: 5, // Customize maximum call depth
-});
+const router = new AiRouter();
+router.options.maxCallDepth = 5; // Customize maximum call depth
 ```
 
 ## How Parameters are Handled
@@ -149,14 +194,12 @@ Understanding how data flows into your agents is key. `ai-router` provides two m
 
 This mechanism allows for type-safe and validated data transfer throughout your entire agentic system.
 
-AI Router provides two main ways to pass parameters to agents:
-
 ### Example
 
 These are parameters extracted from the URL path or passed during agent-to-agent calls:
 
 ```typescript
-router.agent('/users/:userId/profile/:section', async ctx => {
+router.agent('/users/:userId/profile/:section', async (ctx) => {
   // Parameter from request body
   const { chatSessionId } = ctx.request;
 
@@ -166,18 +209,21 @@ router.agent('/users/:userId/profile/:section', async ctx => {
   // Parameters from agent call
   const { customData } = ctx.request.params;
 
-  ctx.response.write({
-    type: 'text',
-    text: `User ${userId}, section ${section}, data: ${customData}`,
-  });
+  return {
+    user: { id: userId },
+    section,
+    sessionId: chatSessionId,
+    customData,
+    message: `User ${userId}, section ${section}, data: ${customData}`,
+  };
 });
 ```
 
 ## Next Steps
 
-- Learn about [State Management](/ai-router/foundation/state) for shared data across agents
-- Explore [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
-- Understand [Tools](/ai-router/foundation/tools) for reusable functionality
+- Learn about [Agent-as-Tools](/ai-router/foundation/agent-as-tool) to expose agents as tools for LLM integration
+- Explore [State Management](/ai-router/foundation/state) for shared data across agents
+- Understand [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
 - See [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
 - Check [Error Handling](/ai-router/advanced/error-handling) for robust applications
 - Review [Best Practices](/ai-router/advanced/best-practices) for building robust applications

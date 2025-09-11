@@ -3,7 +3,20 @@ title: 'Quick Start'
 description: 'Install and get started with your first agentic setup in minutes.'
 ---
 
-## Installation
+## Start a New Project
+
+It is recommened to use the `kickstart` command to create a new AiRouter project with Next.js,
+as it comes with in-built example of basic agents & orchestration.
+
+```bash terminal
+npx microfox@latest kickstart
+cd <your-app>
+npm run dev
+```
+
+This will create a new AiRouter project with Next.js, and a readily built UI for Ai Router testing, at http://localhost:3000/studio
+
+## Manual Installation
 
 To get started, install the `@microfox/ai-router` package using your preferred package manager:
 
@@ -22,191 +35,6 @@ pnpm add @microfox/ai-router
 
 </CodeGroup>
 
-## Quick Start
+### Next Steps
 
-Here's how to create a simple agentic router and handle requests in a Next.js application. We'll build a basic customer service agent that can route different types of inquiries to specialized sub-agents.
-
-### Step 1: Create Your Main Agent that does routing logic
-
-The main agent acts as the entry point and can route requests to specialized sub-agents based on the content or context:
-
-```typescript agent.ts
-import { AiRouter } from '@microfox/ai-router';
-
-// Create the main router instance
-const router = new AiRouter();
-
-// Define the main agent that handles incoming requests
-router.agent('/', async ctx => {
-  const { messages } = ctx.request;
-  const lastMessage = messages[messages.length - 1]?.content || '';
-
-  // Simple routing logic based on message content
-  if (lastMessage.toLowerCase().includes('technical')) {
-    // Route to technical support sub-agent
-    return ctx.next.callAgent('/technical');
-  } else if (lastMessage.toLowerCase().includes('billing')) {
-    // Route to billing support sub-agent
-    return ctx.next.callAgent('/billing');
-  }
-});
-```
-
-### Step 2: Create Specialized Sub-Agents
-
-Sub-agents handle specific types of requests and can be as simple or complex as needed:
-
-```typescript subagent.ts
-import { AiRouter } from '@microfox/ai-router';
-
-// Technical support sub-agent
-const technicalAgent = new AiRouter();
-
-technicalAgent.agent('/', async ctx => {
-  const { issue, priority } = ctx.request.params;
-
-  // Handle technical support logic
-});
-
-// Billing support sub-agent
-const billingAgent = new AiRouter();
-
-billingAgent.agent('/', async ctx => {
-  const { query } = ctx.request.params;
-
-  // Handle billing inquiries
-});
-```
-
-### Step 3: Attach Sub-Agents to Main Agent
-
-Connect your sub-agents to the main agent using the `use` method:
-
-```typescript agent.ts
-// Attach sub-agents to specific paths
-router.use('/technical', technicalAgent);
-router.use('/billing', billingAgent);
-```
-
-### Step 4: Connect to Next.js App Router
-
-Create an API route in your Next.js App Router to handle AI Router requests:
-
-```typescript app/api/chat/route.ts
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { messages, ...restOfBody } = body;
-
-  return router.handle('/', {
-    request: {
-      ...restOfBody,
-      messages,
-    },
-  });
-}
-```
-
-## Full Example
-
-Here's a complete example showing how to integrate AI Router with a Next.js API route, focusing on the mounting and routing logic:
-
-<CodeGroup>
-```typescript route.ts
-import { router } from './agent';
-
-// Handle requests in a Next.js API route
-export async function POST(request: Request) {
-// Parse the incoming request body
-const body = await request.json();
-const { messages, ...restOfBody } = body;
-console.log(messages);
-
-// Let the AiRouter handle the request and generate a response
-// The router will automatically route to the appropriate agent based on the content
-return router.handle("/", {
-request: {
-...restOfBody,
-messages: messages,
-sessionId: restOfBody.sessionId || 'default'
-},
-});
-
-}
-
-````
-
-```typescript agent.ts
-import { AiRouter } from '@microfox/ai-router';
-import { technicalAgent, billingAgent } from './subagents';
-
-// Create the main router instance
-const router = new AiRouter();
-
-// Add middleware for logging (optional)
-router.use(async (ctx, next) => {
-  console.log(`Processing request for session: ${ctx.request.sessionId}`);
-  const result = await next();
-  console.log(`Response generated: ${result.response}`);
-  return result;
-});
-
-// Define the main agent with routing logic
-router.agent('/', async ctx => {
-  const { messages } = ctx.request;
-  const lastMessage = messages[messages.length - 1]?.content || '';
-
-  // Simple routing logic based on message content
-  const isTechnicalIssue = /(error|bug|crash|support)/i.test(lastMessage);
-  const isBillingQuery = /(billing|payment|cost|price)/i.test(lastMessage);
-
-  if (isTechnicalIssue) {
-    // Route to technical support sub-agent
-     ctx.next.callAgent("/technical");
-  }
-
-  if (isBillingQuery) {
-    // Route to billing support sub-agent
-    ctx.next.callAgent("/billing");
-  }
-});
-
-// Mount sub-agents to the main agent
-router.use("/technical", technicalAgent);
-router.use("/billing", billingAgent);
-
-export { router };
-````
-
-```typescript subagents.ts
-import { AiRouter } from '@microfox/ai-router';
-
-// Technical support sub-agent
-const technicalAgent = new AiRouter();
-
-technicalAgent.agent('/', async ctx => {
-  const { issue, sessionId } = ctx.request.params;
-});
-
-// Billing support sub-agent
-const billingAgent = new AiRouter();
-
-billingAgent.agent('/', async ctx => {
-  const { query, sessionId } = ctx.request.params;
-});
-
-export { technicalAgent, billingAgent };
-```
-
-</CodeGroup>
-
-## Next Steps
-
-Now that you have a basic understanding of AI Router, here are some next steps to explore:
-
-1. **Add Middleware**: Implement authentication, rate limiting, or request validation
-2. **Type Safety**: Define custom request/response schemas for better type safety
-3. **Error Handling**: Add comprehensive error handling and fallback responses
-4. **State Management**: Implement session management and context persistence
-5. **Advanced Routing**: Create more sophisticated routing logic based on user intent or conversation history
-
-Check out the [Core Concepts](./core-concepts.mdx) and [Advanced Usage](./advanced-usage.mdx) guides for more detailed information about building complex AI applications with AI Router.
+Now that the basic setup is done, lets dive deeper into the Agent Orchestration.

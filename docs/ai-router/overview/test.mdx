@@ -1,0 +1,358 @@
+#### 5. **Full-Stack First**
+
+Built specifically for modern web applications:
+
+- **TypeScript native**: Full type safety
+- **Next.js optimized**: Works seamlessly with App Router
+- **AI SDK integration**: Designed for `useChat` and similar patterns
+- **Streaming support**: Native streaming support
+
+<Card
+  title="LangGraph vs AI Router : The better choice for full-stack applications"
+  href="/ai-router/overview/langgraph"
+  horizontal
+>
+  LangGraph is a great library, but it's not designed for typescript based
+  framework. Learn more about the differences between AI Router and LangGraph.
+</Card>
+
+### Next Steps
+
+<CardGroup cols={3}>
+  <Card
+    title="Quickstart"
+    icon="rocket"
+    href="/ai-router/foundation/basics"
+  >
+    Get up and running with AI Router in minutes. Learn the basics and build your first agent.
+  </Card>
+
+<Card title="Foundation" icon="book" href="/ai-router/foundation/basics">
+  Deep dive into core concepts, routing patterns, and architectural principles.
+</Card>
+
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/ai-router/api-reference/router"
+  >
+    Complete API documentation for building advanced multi-agent applications.
+  </Card>
+</CardGroup>
+--------
+
+Here's how to create a simple agentic router and handle requests in a Next.js application. We'll build a basic customer service agent that can route different types of inquiries to specialized sub-agents using the new **agent-as-tools** pattern.
+
+### Step 1: Create Your Main Agent that does routing logic
+
+The main agent acts as the entry point and can route requests to specialized sub-agents based on the content or context:
+
+```typescript agent.ts
+import { AiRouter } from '@microfox/ai-router';
+
+// Create the main router instance
+const router = new AiRouter();
+
+// Define the main agent that handles incoming requests
+router.agent('/', async (ctx) => {
+  const { messages } = ctx.request;
+  const lastMessage = messages[messages.length - 1]?.content || '';
+
+  // Simple routing logic based on message content
+  if (lastMessage.toLowerCase().includes('technical')) {
+    // Route to technical support sub-agent
+    const result = await ctx.next.callAgent('/technical', {
+      issue: lastMessage,
+      priority: 'normal',
+    });
+    return result.data;
+  } else if (lastMessage.toLowerCase().includes('billing')) {
+    // Route to billing support sub-agent
+    const result = await ctx.next.callAgent('/billing', {
+      query: lastMessage,
+    });
+    return result.data;
+  }
+
+  return { message: 'How can I help you today?' };
+});
+```
+
+### Step 2: Create Specialized Sub-Agents with Tool Definitions
+
+Sub-agents handle specific types of requests and are exposed as tools using the new `.actAsTool()` method:
+
+```typescript subagents.ts
+import { AiRouter } from '@microfox/ai-router';
+import { z } from 'zod';
+
+// Technical support sub-agent
+const technicalAgent = new AiRouter();
+
+technicalAgent
+  .agent('/', async (ctx) => {
+    const { issue, priority } = ctx.request.params;
+
+    // Handle technical support logic
+    return {
+      status: 'resolved',
+      solution: `Technical issue "${issue}" has been addressed with ${priority} priority`,
+      ticketId: `TECH-${Date.now()}`,
+    };
+  })
+  .actAsTool('/', {
+    id: 'technicalSupport',
+    name: 'Technical Support',
+    description: 'Handles technical support requests and issues',
+    inputSchema: z.object({
+      issue: z.string().describe('The technical issue to resolve'),
+      priority: z
+        .enum(['low', 'normal', 'high'])
+        .optional()
+        .describe('Priority level'),
+    }),
+    outputSchema: z.object({
+      status: z.string().describe('Resolution status'),
+      solution: z.string().describe('Solution provided'),
+      ticketId: z.string().describe('Support ticket ID'),
+    }),
+    metadata: {
+      icon: '🔧',
+      title: 'Technical Support',
+    },
+  });
+
+// Billing support sub-agent
+const billingAgent = new AiRouter();
+
+billingAgent
+  .agent('/', async (ctx) => {
+    const { query } = ctx.request.params;
+
+    // Handle billing inquiries
+    return {
+      status: 'answered',
+      response: `Billing inquiry about "${query}" has been processed`,
+      referenceId: `BILL-${Date.now()}`,
+    };
+  })
+  .actAsTool('/', {
+    id: 'billingSupport',
+    name: 'Billing Support',
+    description: 'Handles billing inquiries and payment questions',
+    inputSchema: z.object({
+      query: z.string().describe('The billing question or inquiry'),
+    }),
+    outputSchema: z.object({
+      status: z.string().describe('Response status'),
+      response: z.string().describe('Response to the inquiry'),
+      referenceId: z.string().describe('Reference ID for the inquiry'),
+    }),
+    metadata: {
+      icon: '💳',
+      title: 'Billing Support',
+    },
+  });
+
+export { technicalAgent, billingAgent };
+```
+
+### Step 3: Mount Sub-Agents to Main Router
+
+Connect your sub-agents to the main agent using the `use` method:
+
+```typescript agent.ts
+import { technicalAgent, billingAgent } from './subagents';
+
+// Mount sub-agents to specific paths
+router.agent('/technical', technicalAgent);
+router.agent('/billing', billingAgent);
+```
+
+### Step 4: Connect to Next.js App Router
+
+Create an API route in your Next.js App Router to handle AI Router requests:
+
+```typescript app/api/chat/route.ts
+import { router } from './agent';
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { messages, ...restOfBody } = body;
+
+  return router.handle('/', {
+    request: {
+      ...restOfBody,
+      messages,
+    },
+  });
+}
+```
+
+## Full Example
+
+Here's a complete example showing how to integrate AI Router with a Next.js API route using the new agent-as-tools pattern:
+
+<CodeGroup>
+```typescript route.ts
+import { router } from './agent';
+
+// Handle requests in a Next.js API route
+export async function POST(request: Request) {
+// Parse the incoming request body
+const body = await request.json();
+const { messages, ...restOfBody } = body;
+
+// Let the AiRouter handle the request and generate a response
+// The router will automatically route to the appropriate agent based on the content
+return router.handle('/', {
+request: {
+...restOfBody,
+messages: messages,
+sessionId: restOfBody.sessionId || 'default'
+},
+});
+}
+
+````
+
+```typescript agent.ts
+import { AiRouter, MemoryStore } from '@microfox/ai-router';
+import { technicalAgent, billingAgent } from './subagents';
+
+// Create the main router instance with store
+const router = new AiRouter();
+router.setStore(new MemoryStore());
+
+// Add middleware for logging (optional)
+router.use('/', async (ctx, next) => {
+  console.log(`Processing request for session: ${ctx.request.sessionId}`);
+  const result = await next();
+  console.log(`Response generated:`, result);
+  return result;
+});
+
+// Define the main agent with routing logic
+router.agent('/', async ctx => {
+  const { messages } = ctx.request;
+  const lastMessage = messages[messages.length - 1]?.content || '';
+
+  // Simple routing logic based on message content
+  const isTechnicalIssue = /(error|bug|crash|support)/i.test(lastMessage);
+  const isBillingQuery = /(billing|payment|cost|price)/i.test(lastMessage);
+
+  if (isTechnicalIssue) {
+    // Route to technical support sub-agent
+    const result = await ctx.next.callAgent('/technical', {
+      issue: lastMessage,
+      priority: 'normal'
+    });
+    return result.data;
+  }
+
+  if (isBillingQuery) {
+    // Route to billing support sub-agent
+    const result = await ctx.next.callAgent('/billing', {
+      query: lastMessage
+    });
+    return result.data;
+  }
+
+  return { message: 'How can I help you today?' };
+});
+
+// Mount sub-agents to the main agent
+router.use('/technical', technicalAgent);
+router.use('/billing', billingAgent);
+
+export { router };
+````
+
+```typescript subagents.ts
+import { AiRouter } from '@microfox/ai-router';
+import { z } from 'zod';
+
+// Technical support sub-agent
+const technicalAgent = new AiRouter();
+
+technicalAgent
+  .agent('/', async (ctx) => {
+    const { issue, priority } = ctx.request.params;
+
+    return {
+      status: 'resolved',
+      solution: `Technical issue "${issue}" has been addressed with ${priority} priority`,
+      ticketId: `TECH-${Date.now()}`,
+    };
+  })
+  .actAsTool('/', {
+    id: 'technicalSupport',
+    name: 'Technical Support',
+    description: 'Handles technical support requests and issues',
+    inputSchema: z.object({
+      issue: z.string().describe('The technical issue to resolve'),
+      priority: z
+        .enum(['low', 'normal', 'high'])
+        .optional()
+        .describe('Priority level'),
+    }),
+    outputSchema: z.object({
+      status: z.string().describe('Resolution status'),
+      solution: z.string().describe('Solution provided'),
+      ticketId: z.string().describe('Support ticket ID'),
+    }),
+    metadata: {
+      icon: '🔧',
+      title: 'Technical Support',
+    },
+  });
+
+// Billing support sub-agent
+const billingAgent = new AiRouter();
+
+billingAgent
+  .agent('/', async (ctx) => {
+    const { query } = ctx.request.params;
+
+    return {
+      status: 'answered',
+      response: `Billing inquiry about "${query}" has been processed`,
+      referenceId: `BILL-${Date.now()}`,
+    };
+  })
+  .actAsTool('/', {
+    id: 'billingSupport',
+    name: 'Billing Support',
+    description: 'Handles billing inquiries and payment questions',
+    inputSchema: z.object({
+      query: z.string().describe('The billing question or inquiry'),
+    }),
+    outputSchema: z.object({
+      status: z.string().describe('Response status'),
+      response: z.string().describe('Response to the inquiry'),
+      referenceId: z.string().describe('Reference ID for the inquiry'),
+    }),
+    metadata: {
+      icon: '💳',
+      title: 'Billing Support',
+    },
+  });
+
+export { technicalAgent, billingAgent };
+```
+
+</CodeGroup>
+
+## Next Steps
+
+Now that you have a basic understanding of AI Router with the new agent-as-tools pattern, here are some next steps to explore:
+
+1. **Agent-as-Tools Pattern**: Learn more about the new `.actAsTool()` method and how to expose agents as tools
+2. **Store Management**: Explore the new store system with `MemoryStore` and custom store implementations
+3. **Middleware**: Implement authentication, rate limiting, or request validation using the middleware system
+4. **Type Safety**: Define custom request/response schemas for better type safety with Zod
+5. **Error Handling**: Add comprehensive error handling and fallback responses
+6. **Advanced Routing**: Create more sophisticated routing logic based on user intent or conversation history
+7. **LLM Integration**: Learn how to integrate agents with LLM functions like `streamText` and `generateText`
+
+Check out the [Agent-as-Tools](./foundation/agent-as-tool.mdx) guide for detailed information about the new pattern, and [Advanced Usage](./advanced/advanced-usage.mdx) for building complex AI applications with AI Router.

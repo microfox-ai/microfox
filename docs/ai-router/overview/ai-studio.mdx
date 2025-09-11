@@ -1,0 +1,78 @@
+---
+title: 'AI Studio (Beta)'
+sidebarTitle: 'AI Studio'
+description: 'AI Studio is a comprehensive dashbaord for building, testing, and optimizing AI Router applications.'
+---
+
+AI Studio is a powerful, comprehensive development platform designed to accelerate the creation and iteration of AI Router applications. It provides developers with a complete toolkit for building, testing, and optimizing multi-agent AI systems with advanced visualization, automation, and testing capabilities.
+
+## **Quick Start with Simple Commands**
+
+AI Studio can be configured with a single kickstart command, making it incredibly easy to get started:
+
+```bash
+npx microfox@latest kickstart
+# chose Yes when asked to install Ai Studio
+```
+
+### **Pre-built React Components & Componenet Map**
+
+As you will observe in the example project, you can easily customise and configure your own componenets inside the chat,
+with just attaching them at `components/ai/index.tsx` folder.
+
+```typescript
+// components/ai/index.tsx
+export const aiComponentMap = {
+  agents1: {
+    full: Agent1Component,
+    footer_sticky: Agent1Footer,
+    header_sticky: Agent1Header,
+  },
+};
+```
+
+The following are the currrently supported:
+
+<CodeGroup>
+```bash component-types
+- input: replaces the input box in the step.
+- output: replaces the output box in the step.
+- full: replaces the entire step component.
+- header: replaces the header of the step.
+- header_sticky: replaces the header of the step making it sticky to the next step.
+- footer: replaces the footer of the step.
+- footer_sticky: replaces the footer of the step.
+```
+
+```bash hooks
+- useLayout: to collapse and expand the left and right side panels, replace right-side componenets.
+- useAppSession: to get the current chat session, and other available chat history.
+- useAppChat: to get the current chat messages, and other available chat history.
+- useChatUI: to get the current chat UI state
+- useTabUi: to get the current chat tab state.
+```
+
+</CodeGroup>
+
+Please manually check the `components/studio/` folder for further understanding.
+
+### 🗺️ **Upcoming: Ai Studio Features**
+
+AI Studio is being enhanced with powerful visualization tools:
+
+#### **Agentic Map**
+
+- **Visual Agent Architecture**: Interactive diagrams showing your agent hierarchy and relationships
+- **Real-time Flow Tracking**: See how requests flow through your agent network
+- **Performance Metrics**: Visual indicators of agent performance and bottlenecks
+
+#### **Iteration**
+
+- **A/B Testing**: Test different versions of your agents in parallel
+- **Error Tracking**: Comprehensive error logging and debugging
+- **Token Usage Logging** at each & every step of the agentic flow.
+
+#### **Extensible Architecture**
+
+- **Plugin System**: Add custom functionality through plugins
+- **Custom Components**: Build and share custom React components

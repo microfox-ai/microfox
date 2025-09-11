@@ -1,0 +1,56 @@
+---
+title: 'Folder Structure'
+sidebarTitle: 'Folder Structure'
+description: 'The core structure of Ai Router Applications'
+---
+
+AiRouter comes inbuilt with packed frontend componenets if you implement it via kickstart.
+
+The following is the folder structure we suggest to improve coding experience as well support for the upcoming features of Ai Router which includes a shadcn style agent registry library, which will enable you to install opensource snippets of agents developed by others.
+
+## Application Folder Structure
+
+For modularity & clean code, this is the structure of the application we recommend
+
+<CodeGroup>
+```txt backend
+app/
+├── ai/
+│   ├── index.ts
+│   ├── agents/
+│   │   ├── agent1/
+│   │   │   └── index.ts
+│   │   ├── agent2/
+│   │   │   └── index.ts
+│   ├── middleware/
+│   │   ├── auth.ts
+│   │   ├── chatRestorer.ts
+│   │   ├── contextLimiter.ts
+│   │   └── system.ts
+└── api/
+    └── chat/
+        └── route.ts
+```
+
+```txt frontend
+components/
+├── ai/
+│   ├── agent1/
+│   │   ├── footer.tsx
+│   │   ├── header.tsx
+│   │   ├── index.tsx
+│   │   └── card.tsx
+│   ├── agent2/
+│   │   ├── footer.tsx
+│   │   ├── header.tsx
+│   │   ├── index.tsx
+│   │   └── card.tsx
+│   ├── agent3/
+│   │   ├── footer.tsx
+│   │   ├── header.tsx
+│   │   ├── index.tsx
+│   │   └── card.tsx
+│   └── index.tsx
+```
+
+</CodeGroup>

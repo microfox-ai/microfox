@@ -1,0 +1,34 @@
+---
+title: 'Type-Safe UI Components'
+sidebarTitle: 'Type-Safety'
+description: 'Type-Safe UI Components for Ai Router Applications'
+---
+
+Ai Router provides union Tool Types to be plugged to the frontend cleaner & simpler. You can define your componenets and attach them in the index.ts of `components/ai/` folder.
+
+The types can be exported on the backend like below, all the mounted sub agents will be further inferred as tools in the union type.
+
+```typescript app/ai/index.ts
+// only needs to be exported at the root level of the ai folder.
+const aiRouterRegistry = aiMainAgent.registry();
+const aiRouterTools = aiRouterRegistry.tools;
+type AiRouterTools = InferUITools<typeof aiRouterTools>;
+export { aiRouterTools, type AiRouterTools };
+```
+
+Then you can import the types in the frontend like below, They will be inferred from the input schemas you defined in the backend with `actAsTool`.
+
+```tsx component.tsx
+type AgentTool = ToolUIPart<Pick<AiRouterTools, 'agentName'>>;
+export const AgentComponentInChat = ({ tool }: { tool: AgentTool }) => {
+  // type-safe output & input data will be available here.
+  const { output, input } = tool;
+
+  // use the output & input data to render the component.
+  return (
+    <div>
+      Output: {output.result} Input: {input.param1}
+    </div>
+  );
+};
+```

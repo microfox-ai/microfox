@@ -1,0 +1,79 @@
+---
+title: 'Why choose AiRouter?'
+sidebarTitle: 'Why AiRouter?'
+description: 'Overview of AI Router and why it exists.'
+---
+
+There are simply too many choices when it comes to building multi-agent AI applications.
+
+But most of them are either not suitable for typescript/fullstack developers or not thought of in-depth, providing extensive support for modularity, streaming capabalities, token optimisation, A/B testing, Leaner Orchestration and many other core features that Ai Router provides.
+
+## The Primary Problem
+
+Modern AI applications, especially those using helpers like the Vercel AI SDK's `useChat`, typically connect the frontend to a single backend API endpoint. This creates a significant challenge: how do you manage a complex, multi-agent system through that single route?
+
+```typescript
+// Your frontend connects to ONE endpoint
+const { messages, append } = useChat({
+  api: '/api/chat', // Single endpoint for everything
+});
+```
+
+Cramming an entire agentic orchestration logic—with multiple specialized agents, tools, and state management—into a single function is complex, hard to maintain, and quickly becomes unmanageable.
+
+```typescript
+// The nightmare: Everything in one function
+export async function POST(request: Request) {
+  const { messages, agentType, workflow, context, tools, state } =
+    await request.json();
+
+  // 1000+ lines of conditional logic
+  if (agentType === 'code-generator') {
+    // Code generation logic
+    if (needsValidation) {
+      // Validation logic
+      if (needsHumanApproval) {
+        // Human-in-the-loop logic
+      }
+    }
+  } else if (agentType === 'data-analyzer') {
+    // Data analysis logic
+  } else if (agentType === 'content-writer') {
+    // Content writing logic
+  }
+  // ... endless conditionals
+}
+```
+
+## The Solution: AI Router
+
+`ai-router` solves this with the **Principle of Singularity**. It allows you to build a sophisticated web of agents, middleware, and tools, each with its own path, and then serve the entire system through a single handler.
+
+The routing is handled internally, using path-like parameters sent in the request body, which simplifies both frontend and backend architecture.
+
+Your frontend communicates with one endpoint, while your backend remains modular, organized, and scalable.
+
+```typescript
+import { NextRequest } from 'next/server';
+
+export const maxDuration = 3000;
+
+const aiRouter = new AiRouter();
+
+const mainAgent = aiRouter
+  .use('/', chatRestoreLocal)
+  .use('/', contextLimiter(5))
+  .agent('/', mainOrchestrator)
+  .agent('/system', systemAgent)
+  .agent('/summarize', summarizeAgent)
+  .agent('/research/brave', braveResearchAgent);
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+  const revalidatePath = body.revalidatePath;
+
+  return mainAgent.handle('/', {
+    request: body,
+  });
+}
+```

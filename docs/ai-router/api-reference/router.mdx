@@ -1,9 +1,9 @@
 ---
 title: 'AiRouter Class'
-description: 'API reference for the main AiRouter class.'
+description: 'API reference for the main AiRouter class and its methods.'
 ---
 
-### Constructor
+## Constructor
 
 ```typescript
 new AiRouter<Metadata, Parts, Tools, State>(options?)
@@ -14,24 +14,206 @@ new AiRouter<Metadata, Parts, Tools, State>(options?)
 - `maxCallDepth`: Maximum agent-to-agent call depth (default: 10)
 - `logger`: Custom logger implementation
 
-### Methods
+## Methods
 
-##### `agent(path, ...handlers)`
+### `agent(path, handler)` or `agent(path, subRouter)`
 
-Register agent handlers for a path.
+Register agent handlers for a path or mount a sub-router.
 
-##### `tool(path, options, handler)` or `tool(path, factory)`
+**Parameters:**
 
-Register a tool handler.
+- `path` (string): The path pattern for the agent
+- `handler` (function): The agent handler function
+- `subRouter` (AiRouter): Another AiRouter instance to mount
 
-##### `use(path, middleware)`
+**Returns:** `AiRouter` instance for method chaining
 
-Register middleware for a path.
+**Example:**
 
-##### `actAsTool(path, definition)`
+```typescript
+// Register an agent handler
+router.agent('/users/:id', async (ctx) => {
+  const { id } = ctx.request.params;
+  return { user: await getUserById(id) };
+});
 
-Pre-define an agent as a tool for LLM function calling.
+// Mount a sub-router
+const userRouter = new AiRouter();
+router.agent('/users', userRouter);
+```
 
-##### `handle(path, context)`
+### `use(path, middleware)` or `use(path, subRouter)`
+
+Register middleware for a path or mount a sub-router.
+
+**Parameters:**
+
+- `path` (string): The path pattern for the middleware
+- `middleware` (function): The middleware function
+- `subRouter` (AiRouter): Another AiRouter instance to mount
+
+**Returns:** `AiRouter` instance for method chaining
+
+**Example:**
+
+```typescript
+// Register middleware
+router.use('/api', async (ctx, next) => {
+  console.log('API request:', ctx.request.path);
+  return next();
+});
+
+// Mount a sub-router
+const apiRouter = new AiRouter();
+router.use('/api', apiRouter);
+```
+
+### `actAsTool(path, definition)`
+
+Expose an agent as a tool for LLM integration.
+
+**Parameters:**
+
+- `path` (string): The path of the agent to expose as a tool
+- `definition` (object): Tool definition with schema and metadata
+
+**Returns:** `AiRouter` instance for method chaining
+
+**Definition Object:**
+
+```typescript
+{
+  id: string;                    // Unique tool identifier
+  name: string;                  // Human-readable name
+  description: string;           // Tool description
+  inputSchema: z.ZodSchema;      // Input parameter schema
+  outputSchema: z.ZodSchema;     // Output schema
+  metadata?: {                   // Optional metadata
+    icon?: string;
+    title?: string;
+    category?: string;
+    version?: string;
+    author?: string;
+    tags?: string[];
+  };
+}
+```
+
+**Example:**
+
+```typescript
+router
+  .agent('/calculator', async (ctx) => {
+    const { a, b, operation } = ctx.request.params;
+    return { result: calculate(a, b, operation) };
+  })
+  .actAsTool('/calculator', {
+    id: 'calculator',
+    name: 'Calculator',
+    description: 'Performs basic arithmetic operations',
+    inputSchema: z.object({
+      a: z.number(),
+      b: z.number(),
+      operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
+    }),
+    outputSchema: z.object({
+      result: z.number(),
+    }),
+    metadata: {
+      icon: '🧮',
+      category: 'math',
+    },
+  });
+```
+
+### `handle(path, context)`
 
 Process a request and return a streaming response.
+
+**Parameters:**
+
+- `path` (string): The request path
+- `context` (object): Request context including messages and parameters
+
+**Returns:** `Promise<Response>` - Streaming response
+
+**Example:**
+
+```typescript
+const response = await router.handle('/chat', {
+  messages: [{ role: 'user', content: 'Hello!' }],
+  userId: '123',
+});
+```
+
+### `setStore(store)`
+
+Configure the store for state persistence.
+
+**Parameters:**
+
+- `store` (Store): Store instance (e.g., `MemoryStore`)
+
+**Returns:** `void`
+
+**Example:**
+
+```typescript
+import { MemoryStore } from '@microfox/ai-router';
+
+router.setStore(new MemoryStore());
+```
+
+### `setLogger(logger)`
+
+Configure the logger for the router instance.
+
+**Parameters:**
+
+- `logger` (Logger): Logger instance
+
+**Returns:** `void`
+
+**Example:**
+
+```typescript
+router.setLogger(console);
+```
+
+## Deprecated Methods
+
+### ⚠️ `tool(path, options, handler)` - DEPRECATED
+
+**Status:** Deprecated in favor of the agent-as-tools pattern
+
+**Alternative:** Use `agent()` + `actAsTool()` instead
+
+**Example:**
+
+```typescript
+// ❌ DEPRECATED
+router.tool(
+  '/calculator',
+  {
+    schema: z.object({ a: z.number(), b: z.number() }),
+    description: 'Calculator tool',
+  },
+  async (ctx, params) => {
+    return params.a + params.b;
+  },
+);
+
+// ✅ RECOMMENDED
+router
+  .agent('/calculator', async (ctx) => {
+    const { a, b } = ctx.request.params;
+    return { result: a + b };
+  })
+  .actAsTool('/calculator', {
+    id: 'calculator',
+    name: 'Calculator',
+    description: 'Calculator tool',
+    inputSchema: z.object({ a: z.number(), b: z.number() }),
+    outputSchema: z.object({ result: z.number() }),
+  });
+```

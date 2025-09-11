@@ -1,15 +1,168 @@
 ---
 title: 'Next Handler'
-description: 'API reference for the next handler.'
+description: 'API reference for the next handler and agent communication methods.'
 ---
 
-The `next` object provides methods for agent-to-agent communication:
+The `next` object provides methods for agent-to-agent communication and tool integration:
 
 ```typescript
 interface NextHandler<Metadata, Parts, Tools, State> {
-  callAgent(path: string, params?: Record<string, any>): Promise<Result>;
-  callTool(path: string, params: any): Promise<Result>;
-  attachTool(path: string): Tool<any, any>; // Use to expose a standard .tool() to an LLM.
-  agentAsTool(path: string, definition?: Tool<any, any>): Tool<any, any>; // Use to expose another .agent() as a tool to an LLM.
+  callAgent(
+    path: string,
+    params?: Record<string, any>,
+    options?: CallOptions,
+  ): Promise<Result>;
+  agentAsTool(path: string): Tool<any, any>; // Use to expose an agent as a tool to an LLM
+}
+```
+
+## Methods
+
+### `callAgent(path, params?, options?)`
+
+Call another agent and wait for the result.
+
+**Parameters:**
+
+- `path` (string): The path of the agent to call
+- `params` (object, optional): Parameters to pass to the agent
+- `options` (object, optional): Call options
+
+**Returns:** `Promise<Result>` - Result object with `ok`, `data`, and `error` properties
+
+**Call Options:**
+
+```typescript
+interface CallOptions {
+  streamToUI?: boolean; // Stream the agent's response as tool part to the UI
+  timeout?: number; // Call timeout in milliseconds
+}
+```
+
+**Example:**
+
+```typescript
+router.agent('/orchestrator', async (ctx) => {
+  // Call another agent
+  const result = await ctx.next.callAgent('/worker', { task: 'process-data' });
+
+  if (result.ok) {
+    return { message: `Result: ${result.data}` };
+  } else {
+    ctx.logger.error('Worker failed:', result.error);
+    return { error: 'Processing failed' };
+  }
+});
+
+// Call with streaming option
+const streamResult = await ctx.next.callAgent('/streaming-agent', params, {
+  streamToUI: true, // Useful if the agent is exposed as a tool
+});
+```
+
+### `agentAsTool(path)`
+
+Expose an agent as a tool for LLM integration.
+
+**Parameters:**
+
+- `path` (string): The path of the agent to expose as a tool
+
+**Returns:** `Tool<any, any>` - Tool object for LLM integration
+
+**Example:**
+
+```typescript
+router.agent('/smart-assistant', async (ctx) => {
+  const { query } = ctx.request.params;
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Answer this question: ${query}`,
+    tools: {
+      // Expose agents as tools
+      calculator: ctx.next.agentAsTool('/calculator'),
+      weather: ctx.next.agentAsTool('/weather'),
+      research: ctx.next.agentAsTool('/research'),
+    },
+  });
+
+  return stream;
+});
+```
+
+## Deprecated Methods
+
+### ⚠️ `callTool(path, params)` - DEPRECATED
+
+**Status:** Deprecated in favor of `callAgent()`
+
+**Alternative:** Use `callAgent()` instead
+
+**Example:**
+
+```typescript
+// ❌ DEPRECATED
+const result = await ctx.next.callTool('/calculator', { a: 5, b: 3 });
+
+// ✅ RECOMMENDED
+const result = await ctx.next.callAgent('/calculator', { a: 5, b: 3 });
+```
+
+### ⚠️ `attachTool(path)` - DEPRECATED
+
+**Status:** Deprecated in favor of `agentAsTool()`
+
+**Alternative:** Use `agentAsTool()` instead
+
+**Example:**
+
+```typescript
+// ❌ DEPRECATED
+const stream = streamText({
+  model: openai('gpt-4'),
+  prompt: query,
+  tools: {
+    calculator: ctx.next.attachTool('/calculator'),
+  },
+});
+
+// ✅ RECOMMENDED
+const stream = streamText({
+  model: openai('gpt-4'),
+  prompt: query,
+  tools: {
+    ...ctx.next.agentAsTool('/calculator'),
+  },
+});
+```
+
+## Result Object
+
+The `Result` object returned by `callAgent()` has the following structure:
+
+```typescript
+interface Result {
+  ok: boolean; // Whether the call succeeded
+  data?: any; // The result data (if successful)
+  error?: Error; // The error (if failed)
+  metadata?: {
+    // Additional metadata
+    duration?: number; // Call duration in milliseconds
+    path?: string; // The path that was called
+  };
+}
+```
+
+**Example:**
+
+```typescript
+const result = await ctx.next.callAgent('/worker', { task: 'process' });
+
+if (result.ok) {
+  console.log('Success:', result.data);
+  console.log('Duration:', result.metadata?.duration);
+} else {
+  console.error('Failed:', result.error.message);
 }
 ```

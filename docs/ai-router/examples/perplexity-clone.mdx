@@ -1,0 +1,76 @@
+title: 'Perplexity Clone'
+sidebarTitle: 'Perplexity Clone'
+description: 'The Next.js Perplexity clone example demonstrates AI Studio\'s capabilities.'
+
+---
+
+The Next.js Perplexity clone example demonstrates AI Studio's capabilities:
+
+### **Multi-Agent Architecture**
+
+```typescript
+// Main orchestrator coordinates multiple specialized agents
+export const mainOrchestrator: AiMiddleware = async (props) => {
+  const stream = streamText({
+    model: google('gemini-2.5-pro'),
+    tools: {
+      ...props.next.agentAsTool('/research/brave'),
+      ...props.next.agentAsTool('/summarize'),
+    },
+    toolChoice: 'required',
+    stopWhen: [
+      stepCountIs(2),
+      ({ steps }) =>
+        steps.some((step) =>
+          step.toolResults.some(
+            (tool) => tool.toolName === 'summarizeResearch',
+          ),
+        ),
+    ],
+  });
+
+  return stream;
+};
+```
+
+### **Specialized Research Agent**
+
+```typescript
+// Research agent with tool exposure
+export const researchAgent = aiRouter
+  .agent('/', async (ctx) => {
+    const { query } = ctx.request.params;
+    const researchData = await performWebSearch(query);
+
+    // Store in state for other agents to access
+    ctx.state.researchData = researchData;
+    return { status: 'research_complete' };
+  })
+  .actAsTool('/', {
+    id: 'braveResearch',
+    name: 'Web Research',
+    description: 'Searches the web for current information',
+    inputSchema: z.object({
+      query: z.string().describe('Search query'),
+    }),
+    metadata: { icon: '🔍', title: 'Web Research' },
+  });
+```
+
+### **Intelligent Summarization**
+
+```typescript
+// Summarization agent that processes research data
+export const summarizeAgent = aiRouter.agent('/', async (ctx) => {
+  const researchData = ctx.state.researchData;
+
+  const textStream = streamText({
+    model: google('gemini-2.0-flash-001'),
+    system: `You are an expert researcher. Create a comprehensive, 
+               well-structured markdown summary...`,
+    prompt: `Summarise the following information: ${JSON.stringify(researchData)}`,
+  });
+
+  return textStream;
+});
+```

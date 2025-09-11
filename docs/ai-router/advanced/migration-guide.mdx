@@ -1,0 +1,614 @@
+---
+title: 'Migration Guide'
+description: 'Complete guide for migrating from old ai-router patterns to the new agent-as-tools pattern.'
+---
+
+## Overview
+
+This guide helps you migrate from the old ai-router patterns to the new **agent-as-tools** pattern. The new pattern provides better type safety, improved LLM integration, and more flexible agent composition.
+
+## Key Changes
+
+### ✅ New Patterns (Recommended)
+
+- **Agent-as-Tools**: Use `.actAsTool()` to expose agents as tools for LLM integration
+- **Store Management**: Configure stores with `setStore(new MemoryStore())`
+- **Agent Mounting**: Use `.agent('/path', subRouter)` to mount sub-routers
+- **Agent Calling**: Use `ctx.next.callAgent('/path', params)` for agent-to-agent communication
+
+### ⚠️ Deprecated Patterns
+
+- **Old Tool System**: `router.tool()` is deprecated in favor of agent-as-tools
+- **Old Tool Calling**: `ctx.next.callTool()` is deprecated, use `ctx.next.callAgent()` instead
+- **Old Tool Attachment**: `ctx.next.attachTool()` is deprecated, use `ctx.next.agentAsTool()` instead
+
+## Migration Steps
+
+### Step 1: Update Router Initialization
+
+**Before:**
+
+```typescript
+import { AiRouter } from '@microfox/ai-router';
+
+const router = new AiRouter({
+  maxCallDepth: 10,
+  logger: console,
+});
+```
+
+**After:**
+
+```typescript
+import { AiRouter, MemoryStore } from '@microfox/ai-router';
+
+const router = new AiRouter();
+router.setStore(new MemoryStore());
+router.setLogger(console);
+router.options.maxCallDepth = 10;
+```
+
+### Step 2: Convert Tools to Agents
+
+**Before:**
+
+```typescript
+import { z } from 'zod';
+
+router.tool(
+  '/calculator',
+  {
+    schema: z.object({
+      a: z.number(),
+      b: z.number(),
+      operation: z.enum(['add', 'subtract', 'multiply', 'divide']),
+    }),
+    description: 'Performs basic arithmetic operations',
+  },
+  async (ctx, params) => {
+    const { a, b, operation } = params;
+
+    switch (operation) {
+      case 'add':
+        return a + b;
+      case 'subtract':
+        return a - b;
+      case 'multiply':
+        return a * b;
+      case 'divide':
+        if (b === 0) throw new Error('Division by zero');
+        return a / b;
+    }
+  },
+);
+```
+
+**After:**
+
+```typescript
+import { z } from 'zod';
+
+const calculatorAgent = new AiRouter();
+
+calculatorAgent
+  .agent('/', async (ctx) => {
+    const { a, b, operation } = ctx.request.params;
+
+    switch (operation) {
+      case 'add':
+        return { result: a + b };
+      case 'subtract':
+        return { result: a - b };
+      case 'multiply':
+        return { result: a * b };
+      case 'divide':
+        if (b === 0) throw new Error('Division by zero');
+        return { result: a / b };
+    }
+  })
+  .actAsTool('/', {
+    id: 'calculator',
+    name: 'Calculator',
+    description: 'Performs basic arithmetic operations',
+    inputSchema: z.object({
+      a: z.number().describe('First number'),
+      b: z.number().describe('Second number'),
+      operation: z
+        .enum(['add', 'subtract', 'multiply', 'divide'])
+        .describe('Operation to perform'),
+    }),
+    outputSchema: z.object({
+      result: z.number().describe('The calculation result'),
+    }),
+    metadata: {
+      icon: '🧮',
+      title: 'Calculator',
+      category: 'math',
+    },
+  });
+
+// Mount the agent
+router.agent('/calculator', calculatorAgent);
+```
+
+### Step 3: Update Tool Calls
+
+**Before:**
+
+```typescript
+router.agent('/math-agent', async (ctx) => {
+  const result = await ctx.next.callTool('/calculator', {
+    a: 5,
+    b: 3,
+    operation: 'add',
+  });
+
+  if (result.ok) {
+    ctx.response.write({ type: 'text', text: `Result: ${result.data}` });
+  } else {
+    ctx.logger.error('Calculator failed:', result.error);
+  }
+});
+```
+
+**After:**
+
+```typescript
+router.agent('/math-agent', async (ctx) => {
+  const result = await ctx.next.callAgent('/calculator', {
+    a: 5,
+    b: 3,
+    operation: 'add',
+  });
+
+  if (result.ok) {
+    return { message: `Result: ${result.data.result}` };
+  } else {
+    ctx.logger.error('Calculator failed:', result.error);
+    return { error: 'Calculation failed', details: result.error.message };
+  }
+});
+```
+
+### Step 4: Update Tool Attachment
+
+**Before:**
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+router.agent('/smart-assistant', async (ctx) => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Answer this question: ${query}`,
+    tools: {
+      calculator: ctx.next.attachTool('/calculator'),
+      weather: ctx.next.attachTool('/weather'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+**After:**
+
+```typescript
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+router.agent('/smart-assistant', async (ctx) => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Answer this question: ${query}`,
+    tools: {
+      calculator: ctx.next.agentAsTool('/calculator'),
+      weather: ctx.next.agentAsTool('/weather'),
+    },
+  });
+
+  return { response: text };
+});
+```
+
+### Step 5: Update Response Patterns
+
+**Before:**
+
+```typescript
+router.agent('/user-profile', async (ctx) => {
+  const { userId } = ctx.request.params;
+  const user = await getUserById(userId);
+
+  ctx.response.write({ type: 'text', text: `User: ${user.name}` });
+  ctx.response.write({ type: 'data', data: user });
+});
+```
+
+**After:**
+
+```typescript
+router.agent('/user-profile', async (ctx) => {
+  const { userId } = ctx.request.params;
+  const user = await getUserById(userId);
+
+  return {
+    message: `User: ${user.name}`,
+    user: user,
+    timestamp: new Date().toISOString(),
+  };
+});
+```
+
+## Complete Migration Example
+
+### Before: Old Pattern
+
+```typescript
+import { AiRouter } from '@microfox/ai-router';
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+const router = new AiRouter({
+  maxCallDepth: 10,
+  logger: console,
+});
+
+// Define tools
+router.tool(
+  '/search',
+  {
+    schema: z.object({
+      query: z.string(),
+      limit: z.number().optional(),
+    }),
+    description: 'Searches for information',
+  },
+  async (ctx, params) => {
+    const { query, limit = 10 } = params;
+    const results = await searchService.search(query, limit);
+    return results;
+  },
+);
+
+router.tool(
+  '/summarize',
+  {
+    schema: z.object({
+      content: z.string(),
+      length: z.enum(['short', 'medium', 'long']).optional(),
+    }),
+    description: 'Summarizes content',
+  },
+  async (ctx, params) => {
+    const { content, length = 'medium' } = params;
+    const summary = await summarizeService.summarize(content, length);
+    return summary;
+  },
+);
+
+// Main agent
+router.agent('/assistant', async (ctx) => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Help with this query: ${query}`,
+    tools: {
+      search: ctx.next.attachTool('/search'),
+      summarize: ctx.next.attachTool('/summarize'),
+    },
+  });
+
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+### After: New Pattern
+
+```typescript
+import { AiRouter, MemoryStore } from '@microfox/ai-router';
+import { generateText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+const router = new AiRouter();
+router.setStore(new MemoryStore());
+router.setLogger(console);
+router.options.maxCallDepth = 10;
+
+// Create search agent
+const searchAgent = new AiRouter();
+searchAgent
+  .agent('/', async (ctx) => {
+    const { query, limit } = ctx.request.params;
+    const results = await searchService.search(query, limit || 10);
+    return {
+      results,
+      query,
+      count: results.length,
+      timestamp: new Date().toISOString(),
+    };
+  })
+  .actAsTool('/', {
+    id: 'search',
+    name: 'Search',
+    description: 'Searches for information',
+    inputSchema: z.object({
+      query: z.string().describe('Search query'),
+      limit: z.number().optional().describe('Maximum number of results'),
+    }),
+    outputSchema: z.object({
+      results: z.array(z.any()).describe('Search results'),
+      query: z.string().describe('Original query'),
+      count: z.number().describe('Number of results'),
+      timestamp: z.string().describe('Search timestamp'),
+    }),
+    metadata: {
+      icon: '🔍',
+      category: 'search',
+    },
+  });
+
+// Create summarize agent
+const summarizeAgent = new AiRouter();
+summarizeAgent
+  .agent('/', async (ctx) => {
+    const { content, length } = ctx.request.params;
+    const summary = await summarizeService.summarize(
+      content,
+      length || 'medium',
+    );
+    return {
+      summary,
+      originalLength: content.length,
+      summaryLength: summary.length,
+      compressionRatio: summary.length / content.length,
+    };
+  })
+  .actAsTool('/', {
+    id: 'summarize',
+    name: 'Summarizer',
+    description: 'Summarizes content',
+    inputSchema: z.object({
+      content: z.string().describe('Content to summarize'),
+      length: z
+        .enum(['short', 'medium', 'long'])
+        .optional()
+        .describe('Summary length'),
+    }),
+    outputSchema: z.object({
+      summary: z.string().describe('Generated summary'),
+      originalLength: z.number().describe('Original content length'),
+      summaryLength: z.number().describe('Summary length'),
+      compressionRatio: z.number().describe('Compression ratio'),
+    }),
+    metadata: {
+      icon: '📝',
+      category: 'processing',
+    },
+  });
+
+// Mount agents
+router.agent('/search', searchAgent);
+router.agent('/summarize', summarizeAgent);
+
+// Main assistant agent
+router.agent('/assistant', async (ctx) => {
+  const { query } = ctx.request.params;
+
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Help with this query: ${query}`,
+    tools: {
+      search: ctx.next.agentAsTool('/search'),
+      summarize: ctx.next.agentAsTool('/summarize'),
+    },
+  });
+
+  return { response: text };
+});
+```
+
+## Benefits of Migration
+
+### 1. Better Type Safety
+
+The new pattern provides full TypeScript support with Zod schema validation:
+
+```typescript
+// Input and output are fully typed
+const result = await ctx.next.callAgent('/calculator', {
+  a: 5,
+  b: 3,
+  operation: 'add',
+});
+// result.data.result is typed as number
+```
+
+### 2. Improved LLM Integration
+
+Agents can be seamlessly integrated with AI SDK functions:
+
+```typescript
+const stream = streamText({
+  model: openai('gpt-4'),
+  prompt: query,
+  tools: {
+    // Agents are automatically converted to tools
+    search: ctx.next.agentAsTool('/search'),
+    summarize: ctx.next.agentAsTool('/summarize'),
+  },
+});
+```
+
+### 3. Better Error Handling
+
+The new pattern provides structured error handling:
+
+```typescript
+const result = await ctx.next.callAgent('/worker', params);
+
+if (result.ok) {
+  // Success case
+  return { data: result.data };
+} else {
+  // Error case with detailed information
+  ctx.logger.error('Agent failed:', result.error);
+  return { error: result.error.message };
+}
+```
+
+### 4. Enhanced Metadata
+
+Agents can include rich metadata for better tool discovery:
+
+```typescript
+.actAsTool('/', {
+  id: 'calculator',
+  name: 'Calculator',
+  description: 'Performs basic arithmetic operations',
+  metadata: {
+    icon: '🧮',
+    category: 'math',
+    version: '1.0.0',
+    author: 'Your Team',
+    tags: ['math', 'arithmetic', 'calculator']
+  }
+});
+```
+
+## Common Migration Issues
+
+### Issue 1: Response Format Changes
+
+**Problem:** Old pattern used `ctx.response.write()`, new pattern uses `return`
+
+**Solution:**
+
+```typescript
+// ❌ Old pattern
+ctx.response.write({ type: 'text', text: 'Hello' });
+
+// ✅ New pattern
+return { message: 'Hello' };
+```
+
+### Issue 2: Parameter Access
+
+**Problem:** Old pattern passed parameters directly, new pattern uses `ctx.request.params`
+
+**Solution:**
+
+```typescript
+// ❌ Old pattern
+async (ctx, params) => {
+  const { query } = params;
+};
+
+// ✅ New pattern
+async (ctx) => {
+  const { query } = ctx.request.params;
+};
+```
+
+### Issue 3: Tool Definition Structure
+
+**Problem:** Old pattern used `schema`, new pattern uses `inputSchema` and `outputSchema`
+
+**Solution:**
+
+```typescript
+// ❌ Old pattern
+{
+  schema: z.object({ query: z.string() }),
+  description: 'Tool description'
+}
+
+// ✅ New pattern
+{
+  inputSchema: z.object({ query: z.string().describe('Search query') }),
+  outputSchema: z.object({ results: z.array(z.any()) }),
+  description: 'Tool description'
+}
+```
+
+## Testing Your Migration
+
+### 1. Unit Tests
+
+Update your tests to use the new patterns:
+
+```typescript
+// Test agent calls
+const result = await router.handle('/calculator', {
+  a: 5,
+  b: 3,
+  operation: 'add',
+});
+
+expect(result.data.result).toBe(8);
+```
+
+### 2. Integration Tests
+
+Test the full workflow:
+
+```typescript
+// Test agent-as-tool integration
+const stream = streamText({
+  model: openai('gpt-4'),
+  prompt: 'Calculate 5 + 3',
+  tools: {
+    calculator: router.agentAsTool('/calculator'),
+  },
+});
+
+const result = await stream.text;
+expect(result).toContain('8');
+```
+
+### 3. Performance Testing
+
+Monitor performance after migration:
+
+```typescript
+// Add timing to your agents
+const start = Date.now();
+const result = await ctx.next.callAgent('/worker', params);
+const duration = Date.now() - start;
+
+ctx.logger.log(`Agent call took ${duration}ms`);
+```
+
+## Next Steps
+
+After completing your migration:
+
+1. **Update Documentation**: Update your internal documentation to reflect the new patterns
+2. **Train Your Team**: Ensure your team understands the new agent-as-tools pattern
+3. **Monitor Performance**: Keep an eye on performance and error rates
+4. **Gradual Rollout**: Consider rolling out the migration gradually if you have a large codebase
+5. **Feedback Collection**: Collect feedback from your team and users about the new patterns
+
+## Resources
+
+- [Agent-as-Tools Pattern](/ai-router/foundation/agent-as-tool) - Detailed guide to the new pattern
+- [API Reference](/ai-router/api-reference/router) - Complete API documentation
+- [Examples](/ai-router/examples) - Real-world examples using the new patterns
+- [Best Practices](/ai-router/advanced/best-practices) - Guidelines for building robust applications
+
+## Support
+
+If you encounter issues during migration:
+
+1. Check the [API Reference](/ai-router/api-reference/router) for the latest method signatures
+2. Review the [Examples](/ai-router/examples) for working code patterns
+3. Consult the [Best Practices](/ai-router/advanced/best-practices) guide
+4. Open an issue in the repository with your specific migration challenge

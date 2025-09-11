@@ -1,17 +1,18 @@
 ---
-title: 'Routing'
+title: 'Ai Routing In-Depth'
+sidebarTitle: 'Ai Routing In-Depth'
 description: 'Learn the fundamental concepts of ai-router and how to get started.'
 ---
 
 ## The AiRouter Class
 
-The `AiRouter` is the core class that orchestrates your entire AI application. It manages the routing stack, handles requests, and provides the execution context for your agents and tools.
+The `AiRouter` is the core class that orchestrates your entire AI application. It manages the routing stack, handles requests, and provides the execution context for your agents. With the new **agent-as-tools** pattern, agents can be exposed as tools for LLM integration.
 
 ```typescript
 import { AiRouter } from '@microfox/ai-router';
 
-// Create a new router instance
-const router = new AiRouter<Metadata, Parts, Tools, State>(options?);
+// Create a new router instance with store
+const router = new AiRouter<Metadata, Parts, Tools, State>();
 ```
 
 **Generic Parameters:**
@@ -21,10 +22,11 @@ const router = new AiRouter<Metadata, Parts, Tools, State>(options?);
 - `Tools`: Custom tools type for UI messages
 - `State`: Type for the shared state object
 
-**Options:**
+**Configuration Methods:**
 
-- `maxCallDepth`: Maximum agent-to-agent call depth (default: 10)
-- `logger`: Custom logger implementation
+- `setStore(store)`: Configure the store for state management
+- `setLogger(logger)`: Set a custom logger for this router instance
+- `options.maxCallDepth`: Maximum agent-to-agent call depth (default: 10)
 
 ## Mounting & Routing
 
@@ -50,49 +52,128 @@ app.get('/users/:id/posts', (req, res) => {
 **ai-router Pattern:**
 
 ```typescript
-// ai-router - AI agent routing
-router.agent('/users/:id', async ctx => {
+// ai-router - AI agent routing with agent-as-tools pattern
+router.agent('/users/:id', async (ctx) => {
   const userId = ctx.request.params.id;
-  ctx.response.write({ type: 'text', text: `User info: ${getUser(userId)}` });
+  return { user: getUser(userId) };
 });
 
-router.agent('/users/:id/posts', async ctx => {
+router.agent('/users/:id/posts', async (ctx) => {
   const userId = ctx.request.params.id;
-  ctx.response.write({ type: 'text', text: `Posts: ${getUserPosts(userId)}` });
+  return { posts: getUserPosts(userId) };
 });
 ```
 
 ### Hierarchical Agent Composition
 
-You can mount sub-agents to create a hierarchy of specialized agents:
+You can mount sub-agents to create a hierarchy of specialized agents using the new agent-as-tools pattern:
 
-```typescript
-// Main router
+<CodeGroup>
+```typescript Setup & Imports
+import { AiRouter, MemoryStore } from '@microfox/ai-router';
+import { z } from 'zod';
+
+// Main router with store
 const mainRouter = new AiRouter();
+mainRouter.setStore(new MemoryStore());
 
+````
+
+```typescript Code Generation Agent
 // Sub-agent for code generation
 const codeAgent = new AiRouter();
-codeAgent.agent('/', async ctx => {
-  ctx.response.write({ type: 'text', text: 'Generating code...' });
-});
+codeAgent
+  .agent('/', async (ctx) => {
+    const { language, requirements } = ctx.request.params;
+    return {
+      code: `// Generated ${language} code for: ${requirements}`,
+      status: 'completed',
+    };
+  })
+  .actAsTool('/', {
+    id: 'codeGenerator',
+    name: 'Code Generator',
+    description: 'Generates code based on requirements',
+    inputSchema: z.object({
+      language: z.string().describe('Programming language'),
+      requirements: z.string().describe('Code requirements'),
+    }),
+    outputSchema: z.object({
+      code: z.string().describe('Generated code'),
+      status: z.string().describe('Generation status'),
+    }),
+    metadata: {
+      icon: '💻',
+      title: 'Code Generator',
+    },
+  });
+````
 
+```typescript Test Runner Agent
 // Sub-agent for testing
 const testAgent = new AiRouter();
-testAgent.agent('/', async ctx => {
-  ctx.response.write({ type: 'text', text: 'Running tests...' });
-});
+testAgent
+  .agent('/', async (ctx) => {
+    const { testType, code } = ctx.request.params;
+    return {
+      results: `Running ${testType} tests on code...`,
+      passed: true,
+      coverage: '95%',
+    };
+  })
+  .actAsTool('/', {
+    id: 'testRunner',
+    name: 'Test Runner',
+    description: 'Runs tests on generated code',
+    inputSchema: z.object({
+      testType: z.string().describe('Type of tests to run'),
+      code: z.string().describe('Code to test'),
+    }),
+    outputSchema: z.object({
+      results: z.string().describe('Test results'),
+      passed: z.boolean().describe('Whether tests passed'),
+      coverage: z.string().describe('Code coverage percentage'),
+    }),
+    metadata: {
+      icon: '🧪',
+      title: 'Test Runner',
+    },
+  });
+```
 
-// Mount sub-agents to main router
-mainRouter.use('/code', codeAgent);
-mainRouter.use('/test', testAgent);
+```typescript Agent Mounting & Orchestration
+// Mount sub-agents to main router using .agent() method
+mainRouter.agent('/code', codeAgent);
+mainRouter.agent('/test', testAgent);
 
 // Main agent that orchestrates the workflow
-mainRouter.agent('/', async ctx => {
-  // Call sub-agents
-  await ctx.next.callAgent('/code');
-  await ctx.next.callAgent('/test');
+mainRouter.agent('/', async (ctx) => {
+  const { task } = ctx.request.params;
+
+  // Call sub-agents with parameters
+  const codeResult = await ctx.next.callAgent('/code', {
+    language: 'typescript',
+    requirements: task,
+  });
+
+  if (codeResult.ok) {
+    const testResult = await ctx.next.callAgent('/test', {
+      testType: 'unit',
+      code: codeResult.data.code,
+    });
+
+    return {
+      code: codeResult.data,
+      tests: testResult.data,
+      status: 'completed',
+    };
+  }
+
+  return { error: 'Code generation failed' };
 });
 ```
+
+</CodeGroup>
 
 ## The Context Object
 
@@ -107,27 +188,27 @@ ai-router integrates seamlessly with Next.js App Router, allowing you to serve y
 <CodeGroup>
   ```typescript Basic Integration
   // app/api/chat/route.ts
-  import { AiRouter } from '@microfox/ai-router';
+  import { AiRouter, MemoryStore } from '@microfox/ai-router';
 
 const router = new AiRouter();
+router.setStore(new MemoryStore());
 
-router.agent('/', async ctx => {
-ctx.response.write({ type: 'text', text: 'Hello from ai-router!' });
+router.agent('/', async (ctx) => {
+return { message: 'Hello from ai-router!' };
 });
 
 export async function POST(request: Request) {
-const body = await request.json();
-const { messages, ...restOfBody } = body;
+  const body = await request.json();
+  const { messages, ...restOfBody } = body;
 
-    const response = router.handle('/', {
-      request: {
-        ...restOfBody,
-        messages: messages || [],
-      },
-    });
+const response = router.handle('/', {
+request: {
+...restOfBody,
+messages: messages || [],
+},
+});
 
-    return response;
-
+return response;
 }
 
 ````
@@ -139,12 +220,12 @@ import { AiRouter } from '@microfox/ai-router';
 const router = new AiRouter();
 
 // Define agents for different paths
-router.agent('/code', async ctx => {
-  ctx.response.write({ type: 'text', text: 'Code generation agent' });
+router.agent('/code', async (ctx) => {
+  return { message: 'Code generation agent', status: 'ready' };
 });
 
-router.agent('/analyze', async ctx => {
-  ctx.response.write({ type: 'text', text: 'Data analysis agent' });
+router.agent('/analyze', async (ctx) => {
+  return { message: 'Data analysis agent', status: 'ready' };
 });
 
 export async function POST(
@@ -166,7 +247,7 @@ export async function POST(
 
   return response;
 }
-````
+```
 
 ```typescript Frontend Integration
 // app/page.tsx
@@ -204,6 +285,7 @@ export default function Chat() {
 
 ## Streaming Support
 
-ai-router provides comprehensive streaming support built on top of the Vercel AI SDK v5. This enables real-time, interactive AI experiences where responses are delivered as they're generated.
+ai-router provides comprehensive streaming support built on top of the Vercel AI SDK v5. This enables real-time, interactive AI experiences where responses are delivered as they're generated. The new agent-as-tools pattern integrates seamlessly with streaming LLM functions.
 
 For detailed information about streaming capabilities, helper functions, and integration patterns, see the [Streaming Support](/ai-router/foundation/stream) documentation.
+````

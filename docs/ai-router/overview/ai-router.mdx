@@ -1,0 +1,157 @@
+---
+title: 'Basics of Ai Router'
+sidebarTitle: 'Basics of Ai Router'
+description: 'THe core structure of Ai Router Applications'
+---
+
+## If you know Express.js, you already know Ai Router.
+
+AiRouter follows the same structure & principles as Express.js, with some extra features.
+
+- **Regex Matching** with support for `*` , `[id]` , `[...slug]` for Middlewares & Agents.
+- Agents can be mounted at relative paths supporting **Nested Mouniting**
+- Reusable **Middleware** for handling cross-cutting concerns.
+- **Shared State** within the context of each handler callback.
+
+<CodeGroup>
+```typescript app/ai/index.ts
+import { AiRouter } from '@microfox/ai-router';
+
+const router = new AiRouter();
+
+// Define middlewares
+router
+.use('/', authMiddleware)
+.use('/agent1', agent1Middleware)
+.use('/agent2', agent2Middleware);
+
+// Define agents
+router
+.agent('/agent1', agent1Handler)
+.agent('/agent2', agent2Handler)
+.agent('/', main);
+
+// plug the router to your next.js route handler -> check the other tab.
+
+````
+
+```typescript app/api/chat/route.ts
+export const maxDuration = 3000; // 3 seconds timeout for streaming responses
+export async function POST(req) {
+  const body = await req.json();
+  const revalidatePath = body.revalidatePath;
+
+  return mainAgent.handle('/', {
+    request: body,
+  });
+}
+````
+
+</CodeGroup>
+
+## Agent-As-Tools approach to building AI applications
+
+This pattern was first introduced by Google's Agent Development Kit (ADK) and is the root inspiration for AiRouter.
+
+### Agents are Tools, Tools are Agents
+
+The key adavantages of this pattern lies in how you can easily compose, reuse & switch between agents for testing different pipelines & processses.
+
+- `ctx.next.callAgent(path, params)` to trigger any agent from inside any other agent.
+- `ctx.next.agentAsTool(path)` to expose an agent as a tool for LLM calls `generateText`, `streamText` etc...
+
+<CodeGroup>
+```typescript agent1.ts 
+  airouter
+  .agent("/subagent1", subagent1)
+  .agent("/subagent2", subagent2)
+  .agent("/", async (ctx) => {
+        const stream = streamText({
+            model: openai("gpt-4"),
+            prompt: ctx.request.params.prompt,
+            tools: {
+                ...ctx.next.agentAsTool("/subagent1"),
+                ...ctx.next.agentAsTool("/subagent2"),
+            },
+        });
+        ctx.response.merge(stream.toUIMessageStream({ sendFinish: false, sendStart: false }));
+  });
+```
+
+```typescript subagent1.ts
+const aiRouter = new AiRouter();
+export const subagent1 = aiRouter
+  .agent('/', async (ctx) => {
+    return { result: 'subagent1' };
+  })
+  .actAsTool('/', {
+    id: 'subagent1',
+    name: 'Subagent1',
+    description: 'Subagent1',
+    inputSchema: z.object({
+      param1: z.string(),
+      param2: z.string(),
+    }),
+    outputSchema: z.object({
+      result: z.string(),
+    }),
+    metadata: {
+      icon: '🔧',
+      title: 'Subagent1',
+      category: 'subagent',
+    },
+  });
+```
+
+```typescript subagent2.ts
+const aiRouter = new AiRouter();
+export const subagent2 = aiRouter
+  .agent('/', async (ctx) => {
+    return { result: 'subagent2' };
+  })
+  .actAsTool('/', {
+    id: 'subagent2',
+    name: 'Subagent2',
+    description: 'Subagent2',
+  });
+```
+
+</CodeGroup>
+
+### Can't I also do it with tools ?
+
+There are 2 concers with tools.
+
+- State sharing between multiple tools is a tough call, this results in your core LLM which has the tools attached to exchange data only through LLM, causing a massive spike in token usage, not suitable for building production grade AI applications.
+- If you have a second LLM call inside a tool, then merging the streams of the nested LLM call to the parent LLM effectively is not clean and proves to be a challenge.
+
+<CodeGroup>
+```typescript subAgent1.ts
+const aiRouter = new AiRouter();
+export const main = aiRouter
+  .agent('/', async (ctx) => {
+    ctx.state.result = 'subAgent1';
+    return { status: 'Task Completed' };
+  });
+```
+
+```typescript subAgent2.ts
+const aiRouter = new AiRouter();
+export const main = aiRouter.agent('/', async (ctx) => {
+  // value of result will be 'subAgent1'
+  const subagent1Result = ctx.state.result;
+
+  const steam2 = streamText({
+    model: openai('gpt-4'),
+    system: `You are a helpful assistant that can summarise text.`,
+    prompt: `Summarise this result: ${subagent1Result}`,
+  });
+  // merging stream to the response.
+  ctx.response.merge(
+    steam2.toUIMessageStream({ sendFinish: false, sendStart: false }),
+  );
+  return { status: 'Task Completed' };
+});
+```
+
+</CodeGroup>

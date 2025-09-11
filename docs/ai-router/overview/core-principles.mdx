@@ -15,13 +15,13 @@ To prevent uncontrolled recursion or infinite loops in these complex interaction
 
 ```typescript
 // An orchestrator agent calls a worker with a dynamic parameter
-router.agent('/orchestrator', async ctx => {
+router.agent('/orchestrator', async (ctx) => {
   const result = await ctx.next.callAgent('/worker/process-data');
   ctx.response.write({ type: 'text', text: `Worker says: ${result.data}` });
 });
 
 // The worker agent uses the dynamic parameter from its path
-router.agent('/worker/:task', async ctx => {
+router.agent('/worker/:task', async (ctx) => {
   const { task } = ctx.request.params;
   return `Completed task: ${task}`;
 });
@@ -58,19 +58,30 @@ In a multi-agent system, you often need to pass information between agents. Pass
 `ai-router` includes a `state` object in its context, similar to the `context` in Express.js. This allows you to pass data between agents and middleware on the backend without ever exposing it to the LLM. It's the perfect solution for token optimization and efficient inter-agent communication.
 
 ```typescript
-// Agent 1 fetches data and stores it in the shared state object
-router.agent('/step1', async ctx => {
-  const sensitiveData = await db.getUserData(ctx.request.userId);
-  ctx.state.userData = sensitiveData; // Not sent to the LLM
-
-  // Call the next agent in the workflow
-  await ctx.next.callAgent('/step2');
+router.agent('/', async (ctx) => {
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+    tools: {
+      ...ctx.next.agentAsTool('/agent-1'),
+      ...ctx.next.agentAsTool('/agent-2'),
+    },
+  });
 });
 
-// Agent 2 can now access this data directly from the state
-router.agent('/step2', async ctx => {
-  const userData = ctx.state.userData;
-  return `Processing data for user: ${userData.name}`;
+router.agent('/agent-1', async (ctx) => {
+  ctx.state.topic = 'LONG RESEARCH INFORMATION';
+  // only return the action keeping the orchestration token usage very low.
+  return { action: 'done' };
+});
+
+router.agent('/agent-2', async (ctx) => {
+  // access the value from the state even though the orchestrator does not know about it.
+  const { topic } = ctx.request.state;
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+  });
 });
 ```
 
@@ -94,7 +105,7 @@ router.use('/', async (ctx, next) => {
 });
 
 // 2. An agent determines it needs human approval for a transaction
-router.agent('/financial-transaction', async ctx => {
+router.agent('/financial-transaction', async (ctx) => {
   const { amount, recipient } = ctx.request.params;
 
   // Signal to the UI that confirmation is needed by sending a tool-call
@@ -119,23 +130,29 @@ import { openai } from '@ai-sdk/openai'; // or your preferred provider
 // 1. Define a reusable "research" agent and expose it as a tool
 router
   .actAsTool('/research', {
+    id: 'research',
     description: 'Performs web research on a specific topic.',
     inputSchema: z.object({ query: z.string() }),
+    outputSchema: z.object({ summary: z.string() }),
+    metadata: {
+      icon: '🔍',
+      title: 'Research',
+    },
   })
-  .agent('/research', async ctx => {
+  .agent('/research', async (ctx) => {
     const summary = await researchService.search(ctx.request.params.query);
-    return summary;
+    return { summary };
   });
 
 // 2. Use that agent as a tool within another agent
-router.agent('/blog-writer', async ctx => {
+router.agent('/blog-writer', async (ctx) => {
   const { topic } = ctx.request.params;
   const { text } = await generateText({
     model: openai('gpt-4'),
     prompt: `Write a blog post about ${topic}.`,
     tools: {
       // Attach the existing agent as a tool for the LLM to use
-      researcher: ctx.next.agentAsTool('/research'),
+      ...ctx.next.agentAsTool('/research'),
     },
   });
   ctx.response.write({ type: 'text', text });

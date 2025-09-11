@@ -1,48 +1,720 @@
-## Agent as Tool Pattern
+---
+title: 'Agent-as-Tools'
+sidebarTitle: 'Agent-as-Tools'
+description: 'Learn how to expose agents as tools for LLM integration and create powerful agent compositions.'
+---
 
-The Agent as Tool pattern allows you to expose any agent as a reusable tool that can be used by other agents. This creates a powerful orchestration paradigm where complex workflows can be built by composing simpler, specialized agents.
+## Overview
 
-### Step 1: Exposing Agents as Tools
+The **Agent-as-Tools** pattern is the core paradigm of modern ai-router applications. It allows you to expose any agent as a reusable tool that can be used by LLMs and other agents, creating powerful orchestration capabilities where complex workflows are built by composing simpler, specialized agents.
 
-First, define your agent and expose it as a tool using `.actAsTool()`:
+## Key Benefits
 
-```typescript
+- **LLM Integration**: Agents can be seamlessly integrated with `streamText`, `generateText`, and other AI SDK functions
+- **Type Safety**: Full TypeScript support with Zod schema validation
+- **Composability**: Agents can call other agents and be exposed as tools
+- **Reusability**: Single agents can be used across multiple contexts
+- **Intelligent Routing**: LLMs can dynamically choose which agents to use based on user requests
+
+## Basic Pattern
+
+### Step 1: Create and Expose an Agent as a Tool
+
+<CodeGroup>
+
+```typescript:research-agent.ts
+import { AiRouter } from '@microfox/ai-router';
 import { z } from 'zod';
 
-// Define a reusable "research" agent
-router
-  .agent('/research', async ctx => {
+// Create a specialized agent
+const researchAgent = new AiRouter();
+
+researchAgent
+  .agent('/', async (ctx) => {
     const { query } = ctx.request.params;
     const summary = await researchService.search(query);
-    return summary;
+    return {
+      summary,
+      sources: summary.sources,
+      timestamp: new Date().toISOString(),
+    };
   })
-  .actAsTool({
-    description: 'Performs web research on a specific topic.',
-    inputSchema: z.object({ query: z.string() }),
+  .actAsTool('/', {
+    id: 'research',
+    name: 'Research Agent',
+    description: 'Performs comprehensive web research on any topic',
+    inputSchema: z.object({
+      query: z.string().describe('The research query or topic to investigate'),
+      depth: z
+        .enum(['shallow', 'deep'])
+        .optional()
+        .describe('Research depth level'),
+    }),
+    outputSchema: z.object({
+      summary: z.string().describe('Research summary'),
+      sources: z.array(z.string()).describe('List of source URLs'),
+      timestamp: z.string().describe('When the research was performed'),
+    }),
+    metadata: {
+      icon: '🔍',
+      title: 'Research',
+      category: 'information',
+    },
   });
+
+// Mount the agent
+router.agent('/research', researchAgent);
 ```
 
-The `.actAsTool()` method takes:
+```typescript:blog-writer.ts
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
 
-- `description`: A clear description of what the tool does
-- `inputSchema`: A Zod schema defining the expected input parameters
-
-### Step 2: Using the Exposed Tool
-
-Now you can use this exposed tool within other agents:
-
-```typescript
-// Use the research agent as a tool within another agent
-router.agent('/blog-writer', async ctx => {
+router.agent('/blog-writer', async (ctx) => {
   const { topic } = ctx.request.params;
 
-  // Use the research agent as a Tool
-  const text = await generateText({
+  const stream = streamText({
     model: openai('gpt-4'),
-    prompt: `Write a blog post about ${topic}`,
+    prompt: `Write a comprehensive blog post about ${topic}. Use research to gather current information.`,
     tools: {
       research: ctx.next.agentAsTool('/research'),
     },
   });
+
+  return stream;
 });
 ```
+
+</CodeGroup>
+
+## Advanced Patterns
+
+### Complex Agent Compositions
+
+You can create sophisticated workflows by composing multiple agents:
+
+<CodeGroup>
+
+```typescript:data-analysis-agent.ts
+// Create specialized agents
+const dataAnalysisAgent = new AiRouter();
+
+// Define each agent with specific capabilities
+dataAnalysisAgent
+  .agent('/', async (ctx) => {
+    const { data } = ctx.request.params;
+    const analysis = await analyzeData(data);
+    return { insights: analysis.insights, metrics: analysis.metrics };
+  })
+  .actAsTool('/', {
+    id: 'dataAnalysis',
+    name: 'Data Analysis',
+    description: 'Analyzes data and extracts insights',
+    inputSchema: z.object({
+      data: z.array(z.any()).describe('Data to analyze'),
+    }),
+    outputSchema: z.object({
+      insights: z.array(z.string()).describe('Key insights from the data'),
+      metrics: z.record(z.number()).describe('Calculated metrics'),
+    }),
+    metadata: { icon: '📊', category: 'analysis' },
+  });
+```
+
+```typescript:report-generator-agent.ts
+const reportGeneratorAgent = new AiRouter();
+
+reportGeneratorAgent
+  .agent('/', async (ctx) => {
+    const { insights, metrics } = ctx.request.params;
+    const report = await generateReport({ insights, metrics });
+    return { report, format: 'pdf' };
+  })
+  .actAsTool('/', {
+    id: 'reportGenerator',
+    name: 'Report Generator',
+    description: 'Generates professional reports from analysis data',
+    inputSchema: z.object({
+      insights: z.array(z.string()).describe('Insights to include in report'),
+      metrics: z.record(z.number()).describe('Metrics to include in report'),
+    }),
+    outputSchema: z.object({
+      report: z.string().describe('Generated report content'),
+      format: z.string().describe('Report format'),
+    }),
+    metadata: { icon: '📄', category: 'generation' },
+  });
+```
+
+```typescript:workflow-orchestrator.ts
+// Main orchestrator agent
+router.agent('/workflow-orchestrator', async (ctx) => {
+  const { data } = ctx.request.params;
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Process this data and generate a comprehensive report.`,
+    tools: {
+      ...ctx.next.agentAsTool('/data-analysis'),
+      ...ctx.next.agentAsTool('/report-generation'),
+      ...ctx.next.agentAsTool('/email-sender'),
+    },
+  });
+
+  return stream;
+});
+
+// Mount all agents
+router.agent('/data-analysis', dataAnalysisAgent);
+router.agent('/report-generation', reportGeneratorAgent);
+router.agent('/email-sender', emailSenderAgent);
+```
+
+</CodeGroup>
+
+### Conditional Agent Attachment
+
+You can conditionally attach agents based on context:
+
+```typescript:smart-assistant.ts
+router.agent('/smart-assistant', async (ctx) => {
+  const { query, userRole } = ctx.request.params;
+
+  let tools: Record<string, any> = {
+    // Always available
+    ...ctx.next.agentAsTool('/calculator'),
+    ...ctx.next.agentAsTool('/weather'),
+  };
+
+  // Add role-specific agents
+  if (userRole === 'admin') {
+    tools = { ...tools, ...ctx.next.agentAsTool('/user-management') };
+    tools = { ...tools, ...ctx.next.agentAsTool('/system-monitor') };
+  }
+
+  if (userRole === 'developer') {
+    tools = { ...tools, ...ctx.next.agentAsTool('/code-analyzer') };
+    tools = { ...tools, ...ctx.next.agentAsTool('/deployment-helper') };
+  }
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: query,
+    tools,
+  });
+
+  return stream;
+});
+```
+
+### Agent-to-Agent Communication with Tools
+
+Agents can call other agents and also be exposed as tools:
+
+<CodeGroup>
+
+```typescript:research-agent-with-summarizer.ts
+const researchAgent = new AiRouter();
+
+// Research agent that can call the summarizer
+researchAgent
+  .agent('/', async (ctx) => {
+    const { query } = ctx.request.params;
+
+    // Perform research
+    const researchData = await performResearch(query);
+
+    // Call summarizer agent
+    const summaryResult = await ctx.next.callAgent('/summarizer', {
+      content: researchData.content,
+      length: 'medium',
+    });
+
+    return {
+      research: researchData,
+      summary: summaryResult.data.summary,
+      sources: researchData.sources,
+    };
+  })
+  .actAsTool('/', {
+    id: 'research',
+    name: 'Research Agent',
+    description: 'Performs research and provides summaries',
+    inputSchema: z.object({
+      query: z.string().describe('Research query'),
+    }),
+    outputSchema: z.object({
+      research: z.any().describe('Raw research data'),
+      summary: z.string().describe('Research summary'),
+      sources: z.array(z.string()).describe('Source URLs'),
+    }),
+    metadata: { icon: '🔍', category: 'research' },
+  });
+```
+
+```typescript:summarizer-agent.ts
+const summarizerAgent = new AiRouter();
+
+// Summarizer agent
+summarizerAgent
+  .agent('/', async (ctx) => {
+    const { content, length } = ctx.request.params;
+    const summary = await summarizeContent(content, length);
+    return { summary, wordCount: summary.split(' ').length };
+  })
+  .actAsTool('/', {
+    id: 'summarizer',
+    name: 'Content Summarizer',
+    description: 'Summarizes long content into concise summaries',
+    inputSchema: z.object({
+      content: z.string().describe('Content to summarize'),
+      length: z.enum(['short', 'medium', 'long']).describe('Summary length'),
+    }),
+    outputSchema: z.object({
+      summary: z.string().describe('Generated summary'),
+      wordCount: z.number().describe('Number of words in summary'),
+    }),
+    metadata: { icon: '📝', category: 'processing' },
+  });
+
+// Mount agents
+router.agent('/research', researchAgent);
+router.agent('/summarizer', summarizerAgent);
+```
+
+</CodeGroup>
+
+## Configuration Options
+
+### Tool Configuration
+
+The `.actAsTool()` method accepts several configuration options:
+
+```typescript:tool-configuration.ts
+agent.actAsTool('/', {
+  // Required
+  id: 'unique-tool-id',
+  name: 'Human Readable Name',
+  description: 'What this tool does',
+  inputSchema: z.object({
+    /* ... */
+  }),
+  outputSchema: z.object({
+    /* ... */
+  }),
+
+  // Optional
+  metadata: {
+    icon: '🔧',
+    title: 'Display Title',
+    category: 'tool-category',
+    version: '1.0.0',
+    author: 'Your Name',
+    tags: ['tag1', 'tag2'],
+  },
+
+  // Ai SDK all tool options
+  onInputStart: ({ toolCallId }) => {
+    console.log('Tool input streaming started:', toolCallId);
+  },
+  onInputDelta: ({ inputTextDelta, toolCallId }) => {
+    console.log('Tool input delta:', inputTextDelta);
+  },
+  onInputAvailable: ({ input, toolCallId }) => {
+    console.log('Tool input ready:', input);
+  },
+  execute: async ({ city }) => {
+    return `Weather in ${city}: sunny, 72°F`;
+  },
+});
+```
+
+### Streaming Support
+
+Agents can stream their responses when used as tools:
+
+```typescript:streaming-agent.ts
+const streamingAgent = new AiRouter();
+
+streamingAgent
+  .agent('/', async (ctx) => {
+    const { query } = ctx.request.params;
+
+    // Stream the response
+    const stream = streamText({
+      model: openai('gpt-4'),
+      prompt: `Answer this question: ${query}`,
+    });
+    ctx.response.merge(
+      stream.toUIMessageStream({ sendFinish: false, sendStart: false }),
+    );
+  })
+  .actAsTool('/', {
+    id: 'streamingAssistant',
+    name: 'Streaming Assistant',
+    description: 'Provides streaming responses to questions',
+    inputSchema: z.object({
+      query: z.string().describe('Question to answer'),
+    }),
+    outputSchema: z.object({
+      response: z.string().describe('Streaming response'),
+    }),
+    metadata: {
+      icon: '💬',
+      streaming: true,
+      category: 'assistant',
+    },
+  });
+```
+
+## Best Practices
+
+### 1. Design for Reusability
+
+Create agents that can be used in multiple contexts:
+
+<CodeGroup>
+
+```typescript:reusable-agent.ts
+// Good: Generic and reusable
+const dataProcessorAgent = new AiRouter();
+dataProcessorAgent
+  .agent('/', async (ctx) => {
+    const { data, operation } = ctx.request.params;
+    return await processData(data, operation);
+  })
+  .actAsTool('/', {
+    id: 'dataProcessor',
+    name: 'Data Processor',
+    description: 'Processes data with various operations',
+    inputSchema: z.object({
+      data: z.any().describe('Data to process'),
+      operation: z
+        .enum(['clean', 'transform', 'validate'])
+        .describe('Processing operation'),
+    }),
+    // ...
+  });
+```
+
+```typescript:specific-agent.ts
+// Avoid: Too specific
+const userEmailProcessorAgent = new AiRouter();
+userEmailProcessorAgent.agent('/', async (ctx) => {
+  // Only works for user emails
+  const { userEmail } = ctx.request.params;
+  return await processUserEmail(userEmail);
+});
+// ...
+```
+
+</CodeGroup>
+
+### 2. Provide Clear Descriptions
+
+Make your tools (aka agents) easy to understand and use:
+
+<CodeGroup>
+
+```typescript:clear-descriptions.ts
+// Good: Clear and descriptive
+.actAsTool('/', {
+  id: 'weatherForecast',
+  name: 'Weather Forecast',
+  description: 'Gets current weather conditions and 5-day forecast for any location',
+  inputSchema: z.object({
+    location: z.string().describe('City name, coordinates, or postal code'),
+    units: z.enum(['metric', 'imperial']).optional().describe('Temperature units (default: metric)'),
+  }),
+  // ...
+});
+```
+
+```typescript:vague-descriptions.ts
+// Avoid: Vague descriptions
+.actAsTool('/', {
+  id: 'weather',
+  name: 'Weather',
+  description: 'Gets weather',
+  inputSchema: z.object({
+    location: z.string(),
+  }),
+  // ...
+});
+```
+
+</CodeGroup>
+
+### 3. Handle Errors Gracefully
+
+Provide meaningful error messages and handle edge cases:
+
+```typescript:robust-agent.ts
+const robustAgent = new AiRouter();
+
+robustAgent
+  .agent('/', async (ctx) => {
+    try {
+      const { query } = ctx.request.params;
+
+      if (!query || query.trim().length === 0) {
+        throw new Error('Query cannot be empty');
+      }
+
+      if (query.length > 1000) {
+        throw new Error('Query too long (max 1000 characters)');
+      }
+
+      const result = await performOperation(query);
+      return { result, success: true };
+    } catch (error) {
+      ctx.logger.error('Operation failed:', error);
+      return {
+        error: error.message,
+        success: false,
+        suggestion:
+          'Try rephrasing your query or breaking it into smaller parts',
+      };
+    }
+  })
+  .actAsTool('/', {
+    id: 'robustProcessor',
+    name: 'Robust Processor',
+    description: 'Processes queries with comprehensive error handling',
+    inputSchema: z.object({
+      query: z.string().min(1).max(1000).describe('Query to process'),
+    }),
+    outputSchema: z.object({
+      result: z.any().optional().describe('Processing result'),
+      success: z.boolean().describe('Whether the operation succeeded'),
+      error: z.string().optional().describe('Error message if failed'),
+      suggestion: z
+        .string()
+        .optional()
+        .describe('Suggestion for fixing the error'),
+    }),
+    metadata: { icon: '🛡️', category: 'processing' },
+  });
+```
+
+### 4. Use Appropriate Metadata
+
+Provide useful metadata for better tool discovery and usage:
+
+```typescript:metadata-example.ts
+.actAsTool('/', {
+  id: 'imageGenerator',
+  name: 'AI Image Generator',
+  description: 'Generates images from text descriptions using AI',
+  inputSchema: z.object({
+    prompt: z.string().describe('Text description of the image to generate'),
+    style: z.enum(['realistic', 'artistic', 'cartoon']).optional().describe('Image style'),
+    size: z.enum(['small', 'medium', 'large']).optional().describe('Image size'),
+  }),
+  outputSchema: z.object({
+    imageUrl: z.string().describe('URL of the generated image'),
+    prompt: z.string().describe('The prompt used for generation'),
+    metadata: z.object({
+      style: z.string(),
+      size: z.string(),
+      timestamp: z.string(),
+    }).describe('Generation metadata'),
+  }),
+  metadata: {
+    icon: '🎨',
+    title: 'Image Generator',
+    category: 'generation',
+    version: '2.1.0',
+    author: 'AI Team',
+    tags: ['image', 'generation', 'ai', 'art'],
+    capabilities: ['text-to-image', 'style-transfer'],
+    limitations: ['max-1024px', 'no-nsfw'],
+    examples: [
+      'A sunset over mountains',
+      'A cute cat in a garden',
+      'Abstract geometric patterns'
+    ]
+  }
+});
+```
+
+## Integration Examples
+
+### Next.js API Route Integration
+
+```typescript:api-route.ts
+// app/api/ai/chat/route.ts
+import { AiRouter } from '@microfox/ai-router';
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+
+const router = new AiRouter();
+
+// Define your agents with tool exposure
+const researchAgent = new AiRouter();
+researchAgent
+  .agent('/', async (ctx) => {
+    // ... research logic
+  })
+  .actAsTool('/', {
+    id: 'research',
+    name: 'Research',
+    description: 'Performs web research',
+    inputSchema: z.object({
+      query: z.string().describe('Research query'),
+    }),
+    outputSchema: z.object({
+      results: z.array(z.string()).describe('Research results'),
+    }),
+  });
+
+router.agent('/research', researchAgent);
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    messages,
+    tools: {
+      research: router.agentAsTool('/research'),
+    },
+  });
+
+  return stream.toDataStreamResponse();
+}
+```
+
+### Real-world Example: Content Creation Workflow
+
+<CodeGroup>
+
+```typescript:content-research-agent.ts
+// Research agent
+const researchAgent = new AiRouter();
+researchAgent
+  .agent('/', async (ctx) => {
+    const { topic } = ctx.request.params;
+    const research = await performResearch(topic);
+    return {
+      facts: research.facts,
+      sources: research.sources,
+      trends: research.trends,
+    };
+  })
+  .actAsTool('/', {
+    id: 'research',
+    name: 'Research',
+    description: 'Gathers comprehensive research on any topic',
+    inputSchema: z.object({
+      topic: z.string().describe('Topic to research'),
+    }),
+    outputSchema: z.object({
+      facts: z.array(z.string()).describe('Key facts discovered'),
+      sources: z.array(z.string()).describe('Source URLs'),
+      trends: z.array(z.string()).describe('Current trends'),
+    }),
+    metadata: { icon: '🔍', category: 'research' },
+  });
+```
+
+```typescript:content-writing-agent.ts
+// Writing agent
+const writingAgent = new AiRouter();
+writingAgent
+  .agent('/', async (ctx) => {
+    const { topic, research, style } = ctx.request.params;
+    const content = await generateContent({ topic, research, style });
+    return {
+      content,
+      wordCount: content.split(' ').length,
+      readability: await calculateReadability(content),
+    };
+  })
+  .actAsTool('/', {
+    id: 'writing',
+    name: 'Content Writer',
+    description: 'Creates engaging content based on research',
+    inputSchema: z.object({
+      topic: z.string().describe('Content topic'),
+      research: z.any().describe('Research data to use'),
+      style: z
+        .enum(['formal', 'casual', 'technical'])
+        .describe('Writing style'),
+    }),
+    outputSchema: z.object({
+      content: z.string().describe('Generated content'),
+      wordCount: z.number().describe('Number of words'),
+      readability: z.string().describe('Readability score'),
+    }),
+    metadata: { icon: '✍️', category: 'writing' },
+  });
+```
+
+```typescript:seo-agent.ts
+// SEO agent
+const seoAgent = new AiRouter();
+seoAgent
+  .agent('/', async (ctx) => {
+    const { content, keywords } = ctx.request.params;
+    const seo = await optimizeForSEO(content, keywords);
+    return {
+      optimizedContent: seo.content,
+      metaDescription: seo.metaDescription,
+      suggestions: seo.suggestions,
+    };
+  })
+  .actAsTool('/', {
+    id: 'seo',
+    name: 'SEO Optimizer',
+    description: 'Optimizes content for search engines',
+    inputSchema: z.object({
+      content: z.string().describe('Content to optimize'),
+      keywords: z.array(z.string()).describe('Target keywords'),
+    }),
+    outputSchema: z.object({
+      optimizedContent: z.string().describe('SEO-optimized content'),
+      metaDescription: z.string().describe('Meta description'),
+      suggestions: z.array(z.string()).describe('SEO improvement suggestions'),
+    }),
+    metadata: { icon: '🎯', category: 'seo' },
+  });
+```
+
+```typescript:content-workflow.ts
+// Content creation workflow with multiple specialized agents
+const contentWorkflow = new AiRouter();
+
+// Main content creation agent
+contentWorkflow.agent('/create-content', async (ctx) => {
+  const { topic, keywords, style } = ctx.request.params;
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Create comprehensive content about ${topic}. Use the available tools to research, write, and optimize the content.`,
+    tools: {
+      research: ctx.next.agentAsTool('/research'),
+      writing: ctx.next.agentAsTool('/writing'),
+      seo: ctx.next.agentAsTool('/seo'),
+    },
+  });
+
+  return stream;
+});
+
+// Mount all agents
+router.agent('/research', researchAgent);
+router.agent('/writing', writingAgent);
+router.agent('/seo', seoAgent);
+router.agent('/content-workflow', contentWorkflow);
+```
+
+</CodeGroup>
+
+## Next Steps
+
+- Learn about [State Management](/ai-router/foundation/state) for shared data across agents
+- Explore [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- See [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- Check [Error Handling](/ai-router/advanced/error-handling) for robust applications
+- Review [Best Practices](/ai-router/advanced/best-practices) for building robust applications

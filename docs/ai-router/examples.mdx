@@ -1,94 +1,527 @@
 ---
 title: 'Examples'
-description: 'Explore practical examples of using ai-router.'
+description: 'Explore practical examples of using ai-router with the new agent-as-tools pattern.'
 ---
 
-### Multi-Agent Workflow
+## Next.js Perplexity Clone
+
+This example shows a complete AI-powered search application similar to Perplexity, built with the new agent-as-tools pattern.
+
+### Main Router Configuration
 
 ```typescript
-import { AiRouter } from '@microfox/ai-router';
-import { generateText } from 'ai';
-import { z } from 'zod';
+// app/ai/microfox.config.ts
+import { AiRouter, MemoryStore } from '@microfox/ai-router';
+import { chatSessionLocal } from './middlewares/chatSessionLocal';
+import { mainOrchestrator } from './orchestrator';
+import { braveResearchAgent } from './agents/braveResearch';
 
-const workflow = new AiRouter();
+// Create main router with store
+const aiMainRouter = new AiRouter();
+aiMainRouter.setStore(new MemoryStore());
 
-// Receptionist agent that routes to specialized agents
-workflow
-  .actAsTool('/', {
-    description: 'Routes requests to appropriate specialized agents',
-    inputSchema: z.object({ task: z.string() }),
-  })
-  .agent('/', async ctx => {
-    const { task } = ctx.request.params;
+// Mount middleware for session management
+aiMainRouter.use('/', chatSessionLocal);
 
-    ctx.response.write({ type: 'text', text: 'Analyzing your request...\n' });
+// Mount main orchestrator agent
+aiMainRouter.agent('/', mainOrchestrator);
 
-    const { toolCalls } = await generateText({
-      model: openai('gpt-4'),
-      prompt: `Route this task to the appropriate agent: ${task}`,
-      tools: {
-        codeGenerator: ctx.next.agentAsTool('/code'),
-        dataAnalyzer: ctx.next.agentAsTool('/analyze'),
-        documentWriter: ctx.next.agentAsTool('/write'),
-      },
-    });
+// Mount specialized research agent
+aiMainRouter.agent('/research/brave', braveResearchAgent);
 
-    ctx.response.write({ type: 'text', text: 'Task routed successfully!' });
-  });
-
-// Specialized agents
-workflow.agent('/code', codeAgent);
-workflow.agent('/analyze', analyzeAgent);
-workflow.agent('/write', writeAgent);
+export { aiMainRouter };
 ```
 
-### RESTful API with AI
+### Main Orchestrator Agent
 
 ```typescript
+// app/ai/orchestrator.ts
 import { AiRouter } from '@microfox/ai-router';
-import { generateText } from 'ai';
+import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { z } from 'zod';
 
-const api = new AiRouter();
+const mainOrchestrator = new AiRouter();
 
-// Middleware for authentication
-api.use('*', async (ctx, next) => {
-  const token = ctx.request.headers?.authorization;
-  if (!token) {
-    throw new Error('Unauthorized');
-  }
-  await next();
-});
+mainOrchestrator.agent('/', async (ctx) => {
+  const { messages, chatSessionId } = ctx.request;
 
-// A specific tool for searching users, which is better for the LLM to use
-api.tool(
-  '/search/users',
-  {
-    schema: z.object({
-      query: z.string().describe('The search query for users'),
-    }),
-    description: 'Searches for users based on a query.',
-  },
-  async (ctx, params) => {
-    // In a real app, you would have database logic here
-    // return await db.searchUsers(params.query);
-    return { users: [{ id: '123', name: 'John Doe' }] };
-  },
-);
-
-// AI-powered search
-api.agent('/search', async ctx => {
-  const { query } = ctx.request.params;
-
-  const { text } = await generateText({
+  const stream = streamText({
     model: openai('gpt-4'),
-    prompt: `Fulfill this search request: ${query}`,
+    messages,
     tools: {
-      userSearch: ctx.next.attachTool('/search/users'),
+      // Expose research agent as a tool
+      braveResearch: ctx.next.agentAsTool('/research/brave'),
+    },
+    onFinish: async (result) => {
+      // Store conversation in session
+      await ctx.store.set(chatSessionId, {
+        messages: [...messages, result.message],
+        timestamp: new Date().toISOString(),
+      });
     },
   });
 
-  ctx.response.write({ type: 'text', text });
+  return stream;
 });
 ```
+
+### Research Agent with Tool Exposure
+
+```typescript
+// app/ai/agents/braveResearch/index.ts
+import { AiRouter } from '@microfox/ai-router';
+import { z } from 'zod';
+
+const braveResearchAgent = new AiRouter();
+
+braveResearchAgent
+  .agent('/', async (ctx) => {
+    const { query, searchDepth } = ctx.request.params;
+
+    // Perform web research
+    const researchResults = await performWebSearch(query, searchDepth);
+
+    return {
+      results: researchResults,
+      query,
+      timestamp: new Date().toISOString(),
+      sources: researchResults.map((r) => r.url),
+    };
+  })
+  .actAsTool('/', {
+    id: 'braveResearch',
+    name: 'Web Research',
+    description:
+      'Performs comprehensive web research on any topic using Brave Search',
+    inputSchema: z.object({
+      query: z.string().describe('The research query or topic to investigate'),
+      searchDepth: z
+        .enum(['fast', 'deep'])
+        .optional()
+        .describe('Research depth level'),
+    }),
+    outputSchema: z.object({
+      results: z
+        .array(
+          z.object({
+            title: z.string(),
+            content: z.string(),
+            url: z.string(),
+            relevance: z.number(),
+          }),
+        )
+        .describe('Research results'),
+      query: z.string().describe('The original query'),
+      timestamp: z.string().describe('When the research was performed'),
+      sources: z.array(z.string()).describe('List of source URLs'),
+    }),
+    metadata: {
+      icon: '🔍',
+      title: 'Web Research',
+      category: 'research',
+    },
+  });
+```
+
+### Session Management Middleware
+
+```typescript
+// app/ai/middlewares/chatSessionLocal.ts
+import { AiRouter } from '@microfox/ai-router';
+
+const chatSessionLocal = new AiRouter();
+
+chatSessionLocal.use('/', async (ctx, next) => {
+  const { chatSessionId } = ctx.request;
+
+  if (!chatSessionId) {
+    throw new Error('Chat session ID is required');
+  }
+
+  // Load existing session
+  const existingSession = await ctx.store.get(chatSessionId);
+  if (existingSession) {
+    ctx.request.messages = existingSession.messages;
+  }
+
+  // Continue to next handler
+  const result = await next();
+
+  // Save session after processing
+  await ctx.store.set(chatSessionId, {
+    messages: ctx.request.messages,
+    lastActivity: new Date().toISOString(),
+  });
+
+  return result;
+});
+```
+
+### Next.js API Route Integration
+
+```typescript
+// app/api/ai/chat/route.ts
+import { aiMainRouter } from '@/app/ai/microfox.config';
+
+export async function POST(request: Request) {
+  try {
+    const { messages, chatSessionId } = await request.json();
+
+    const response = await aiMainRouter.handle('/', {
+      messages,
+      chatSessionId,
+    });
+
+    return response;
+  } catch (error) {
+    return new Response('Internal Server Error', { status: 500 });
+  }
+}
+```
+
+## Multi-Agent Content Creation Workflow
+
+This example shows how to create a sophisticated content creation system with multiple specialized agents.
+
+### Content Creation Router
+
+```typescript
+// content-creation.ts
+import { AiRouter } from '@microfox/ai-router';
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+const contentRouter = new AiRouter();
+
+// Research Agent
+const researchAgent = new AiRouter();
+researchAgent
+  .agent('/', async (ctx) => {
+    const { topic, depth } = ctx.request.params;
+    const research = await performResearch(topic, depth);
+
+    return {
+      facts: research.facts,
+      sources: research.sources,
+      trends: research.trends,
+      credibility: research.credibility,
+    };
+  })
+  .actAsTool('/', {
+    id: 'research',
+    name: 'Research Agent',
+    description: 'Gathers comprehensive research on any topic',
+    inputSchema: z.object({
+      topic: z.string().describe('Topic to research'),
+      depth: z.enum(['shallow', 'deep']).optional().describe('Research depth'),
+    }),
+    outputSchema: z.object({
+      facts: z.array(z.string()).describe('Key facts discovered'),
+      sources: z.array(z.string()).describe('Source URLs'),
+      trends: z.array(z.string()).describe('Current trends'),
+      credibility: z.number().describe('Overall credibility score'),
+    }),
+    metadata: { icon: '🔍', category: 'research' },
+  });
+
+// Writing Agent
+const writingAgent = new AiRouter();
+writingAgent
+  .agent('/', async (ctx) => {
+    const { topic, research, style, length } = ctx.request.params;
+    const content = await generateContent({ topic, research, style, length });
+
+    return {
+      content,
+      wordCount: content.split(' ').length,
+      readability: await calculateReadability(content),
+      structure: analyzeStructure(content),
+    };
+  })
+  .actAsTool('/', {
+    id: 'writing',
+    name: 'Content Writer',
+    description: 'Creates engaging content based on research',
+    inputSchema: z.object({
+      topic: z.string().describe('Content topic'),
+      research: z.any().describe('Research data to use'),
+      style: z
+        .enum(['formal', 'casual', 'technical', 'creative'])
+        .describe('Writing style'),
+      length: z.enum(['short', 'medium', 'long']).describe('Content length'),
+    }),
+    outputSchema: z.object({
+      content: z.string().describe('Generated content'),
+      wordCount: z.number().describe('Number of words'),
+      readability: z.string().describe('Readability score'),
+      structure: z
+        .object({
+          headings: z.number(),
+          paragraphs: z.number(),
+          sentences: z.number(),
+        })
+        .describe('Content structure analysis'),
+    }),
+    metadata: { icon: '✍️', category: 'writing' },
+  });
+
+// SEO Agent
+const seoAgent = new AiRouter();
+seoAgent
+  .agent('/', async (ctx) => {
+    const { content, keywords, targetAudience } = ctx.request.params;
+    const seo = await optimizeForSEO(content, keywords, targetAudience);
+
+    return {
+      optimizedContent: seo.content,
+      metaDescription: seo.metaDescription,
+      suggestions: seo.suggestions,
+      keywordDensity: seo.keywordDensity,
+      score: seo.score,
+    };
+  })
+  .actAsTool('/', {
+    id: 'seo',
+    name: 'SEO Optimizer',
+    description: 'Optimizes content for search engines',
+    inputSchema: z.object({
+      content: z.string().describe('Content to optimize'),
+      keywords: z.array(z.string()).describe('Target keywords'),
+      targetAudience: z.string().optional().describe('Target audience'),
+    }),
+    outputSchema: z.object({
+      optimizedContent: z.string().describe('SEO-optimized content'),
+      metaDescription: z.string().describe('Meta description'),
+      suggestions: z.array(z.string()).describe('SEO improvement suggestions'),
+      keywordDensity: z.record(z.number()).describe('Keyword density analysis'),
+      score: z.number().describe('SEO score out of 100'),
+    }),
+    metadata: { icon: '🎯', category: 'seo' },
+  });
+
+// Main Content Creation Agent
+contentRouter.agent('/create', async (ctx) => {
+  const { topic, keywords, style, targetAudience } = ctx.request.params;
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Create comprehensive content about "${topic}". Use the available tools to research, write, and optimize the content for the target audience: ${targetAudience}.`,
+    tools: {
+      research: ctx.next.agentAsTool('/research'),
+      writing: ctx.next.agentAsTool('/writing'),
+      seo: ctx.next.agentAsTool('/seo'),
+    },
+  });
+
+  return stream;
+});
+
+// Mount all agents
+contentRouter.agent('/research', researchAgent);
+contentRouter.agent('/writing', writingAgent);
+contentRouter.agent('/seo', seoAgent);
+```
+
+## E-commerce AI Assistant
+
+This example shows how to build an AI-powered e-commerce assistant with product search, recommendations, and order management.
+
+### E-commerce Router
+
+```typescript
+// ecommerce-assistant.ts
+import { AiRouter } from '@microfox/ai-router';
+import { streamText } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
+
+const ecommerceRouter = new AiRouter();
+
+// Product Search Agent
+const productSearchAgent = new AiRouter();
+productSearchAgent
+  .agent('/', async (ctx) => {
+    const { query, filters, sortBy } = ctx.request.params;
+    const products = await searchProducts(query, filters, sortBy);
+
+    return {
+      products: products.items,
+      totalCount: products.total,
+      filters: products.availableFilters,
+      recommendations: products.recommendations,
+    };
+  })
+  .actAsTool('/', {
+    id: 'productSearch',
+    name: 'Product Search',
+    description: 'Searches for products based on query and filters',
+    inputSchema: z.object({
+      query: z.string().describe('Search query for products'),
+      filters: z
+        .object({
+          category: z.string().optional(),
+          priceRange: z
+            .object({
+              min: z.number().optional(),
+              max: z.number().optional(),
+            })
+            .optional(),
+          brand: z.string().optional(),
+          rating: z.number().min(1).max(5).optional(),
+        })
+        .optional()
+        .describe('Search filters'),
+      sortBy: z
+        .enum(['relevance', 'price', 'rating', 'newest'])
+        .optional()
+        .describe('Sort order'),
+    }),
+    outputSchema: z.object({
+      products: z
+        .array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            rating: z.number(),
+            image: z.string(),
+            description: z.string(),
+          }),
+        )
+        .describe('Found products'),
+      totalCount: z.number().describe('Total number of products found'),
+      filters: z.any().describe('Available filters'),
+      recommendations: z.array(z.string()).describe('Search recommendations'),
+    }),
+    metadata: { icon: '🛍️', category: 'search' },
+  });
+
+// Recommendation Agent
+const recommendationAgent = new AiRouter();
+recommendationAgent
+  .agent('/', async (ctx) => {
+    const { userId, productId, context } = ctx.request.params;
+    const recommendations = await getRecommendations(
+      userId,
+      productId,
+      context,
+    );
+
+    return {
+      recommendations: recommendations.items,
+      reason: recommendations.reason,
+      confidence: recommendations.confidence,
+    };
+  })
+  .actAsTool('/', {
+    id: 'recommendations',
+    name: 'Product Recommendations',
+    description: 'Provides personalized product recommendations',
+    inputSchema: z.object({
+      userId: z.string().optional().describe('User ID for personalization'),
+      productId: z.string().optional().describe('Product ID for similar items'),
+      context: z
+        .enum(['browsing', 'cart', 'purchase', 'wishlist'])
+        .describe('Recommendation context'),
+    }),
+    outputSchema: z.object({
+      recommendations: z
+        .array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            reason: z.string(),
+          }),
+        )
+        .describe('Recommended products'),
+      reason: z.string().describe('Why these recommendations were made'),
+      confidence: z.number().describe('Confidence score for recommendations'),
+    }),
+    metadata: { icon: '💡', category: 'recommendation' },
+  });
+
+// Order Management Agent
+const orderAgent = new AiRouter();
+orderAgent
+  .agent('/', async (ctx) => {
+    const { action, orderId, items } = ctx.request.params;
+
+    switch (action) {
+      case 'create':
+        const order = await createOrder(items);
+        return { order, status: 'created' };
+      case 'status':
+        const status = await getOrderStatus(orderId);
+        return { orderId, status };
+      case 'cancel':
+        const cancelled = await cancelOrder(orderId);
+        return { orderId, status: 'cancelled', refund: cancelled.refund };
+      default:
+        throw new Error(`Unknown action: ${action}`);
+    }
+  })
+  .actAsTool('/', {
+    id: 'orderManagement',
+    name: 'Order Management',
+    description: 'Manages customer orders and order status',
+    inputSchema: z.object({
+      action: z
+        .enum(['create', 'status', 'cancel'])
+        .describe('Order action to perform'),
+      orderId: z
+        .string()
+        .optional()
+        .describe('Order ID for status/cancel actions'),
+      items: z
+        .array(
+          z.object({
+            productId: z.string(),
+            quantity: z.number(),
+            price: z.number(),
+          }),
+        )
+        .optional()
+        .describe('Items for order creation'),
+    }),
+    outputSchema: z.object({
+      orderId: z.string().describe('Order ID'),
+      status: z.string().describe('Order status'),
+      order: z.any().optional().describe('Order details'),
+      refund: z.any().optional().describe('Refund information'),
+    }),
+    metadata: { icon: '📦', category: 'order' },
+  });
+
+// Main E-commerce Assistant
+ecommerceRouter.agent('/assistant', async (ctx) => {
+  const { messages, userId } = ctx.request;
+
+  const stream = streamText({
+    model: openai('gpt-4'),
+    messages,
+    tools: {
+      productSearch: ctx.next.agentAsTool('/product-search'),
+      recommendations: ctx.next.agentAsTool('/recommendations'),
+      orderManagement: ctx.next.agentAsTool('/order-management'),
+    },
+    system: `You are a helpful e-commerce assistant. Help customers find products, get recommendations, and manage their orders. Always be friendly and helpful.`,
+  });
+
+  return stream;
+});
+
+// Mount all agents
+ecommerceRouter.agent('/product-search', productSearchAgent);
+ecommerceRouter.agent('/recommendations', recommendationAgent);
+ecommerceRouter.agent('/order-management', orderAgent);
+```
+
+## Next Steps
+
+- Learn about [Agent-as-Tools](/ai-router/foundation/agent-as-tool) for detailed patterns
+- Explore [State Management](/ai-router/foundation/state) for session handling
+- Understand [Middleware](/ai-router/foundation/middleware) for cross-cutting concerns
+- See [Advanced Routing](/ai-router/advanced/routing) for complex scenarios
+- Check [Best Practices](/ai-router/advanced/best-practices) for building robust applications

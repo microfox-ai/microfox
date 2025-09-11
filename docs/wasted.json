@@ -1,0 +1,45 @@
+[
+  {
+    "tab": "Introduction",
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": ["index", "intro/quickstart"]
+      },
+      {
+        "group": "About",
+        "pages": ["intro/roadmap", "intro/reach-out"]
+      }
+    ]
+  },
+  {
+    "tab": "Micro SDKs",
+    "icon": "box",
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": ["micro-sdks/index"]
+      }
+    ]
+  },
+  {
+    "tab": "Code Loop",
+    "icon": "infinity",
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": ["code-loop/index"]
+      }
+    ]
+  },
+  {
+    "tab": "X Framework",
+    "icon": "superscript",
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": ["x-framework/index"]
+      }
+    ]
+  }
+]

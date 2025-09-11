@@ -1,0 +1,90 @@
+---
+title: 'Core Principles'
+sidebarTitle: 'Core Principles *'
+description: 'Overview of the core principles of AI Router.'
+---
+
+Ai-router brings a familiar middleware-style architecture to the world of AI Agents. It provides a robust foundation for orchestrating complex AI workflows with multiple agents, tools, and dynamic routing, all while integrating seamlessly with the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).
+Core Principles of Ai Router.
+
+#### 1. **Principle of Singularity**
+
+Your frontend connects to one endpoint, but your backend is modular and organized:
+
+```typescript
+// Frontend: Still one endpoint
+const { messages, append } = useChat({
+  api: '/api/chat',
+});
+
+// Backend: Clean, modular agents & routing logic
+router.agent('/code-generator', codeGeneratorHandler);
+router.agent('/data-analyzer', dataAnalyzerHandler);
+router.agent('/content-writer', contentWriterHandler);
+```
+
+#### 2. **Express.js Familiarity**
+
+If you know Express.js, you already know AI Router:
+
+```typescript
+// Express.js style routing
+router.use('*', authMiddleware);
+router.agent('/users/:id', userAgent);
+```
+
+#### 3. **ADK Inspiration**
+
+Agents can be attached as tools to LLM calls, enabling agent sub-agent architecture similar to Google's Agent Development Kit:
+
+```typescript
+router.agent('/blog-writer', async (ctx) => {
+  const { topic } = ctx.request.params;
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+    tools: {
+      // Attach the existing agent as a tool for the LLM to use
+      ...ctx.next.agentAsTool('/research'),
+    },
+  });
+  ctx.response.write({ type: 'text', text });
+});
+```
+
+#### 4. **Leaner Orchestration** with Internal shared state.
+
+<CodeGroup>
+```typescript main.ts
+router.agent('/', async (ctx) => {
+  const stream = streamText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+    tools: {
+      ...ctx.next.agentAsTool('/agent-1'),
+      ...ctx.next.agentAsTool('/agent-2'),
+    },
+  });
+});
+```
+
+```typescript agent-1.ts
+router.agent('/agent-1', async (ctx) => {
+  ctx.state.topic = 'LONG RESEARCH INFORMATION';
+  // only return the action keeping the orchestration token usage very low.
+  return { action: 'done' };
+});
+```
+
+```typescript agent-2.ts
+router.agent('/agent-2', async (ctx) => {
+  // access the value from the state even though the orchestrator does not know about it.
+  const { topic } = ctx.request.state;
+  const { text } = await generateText({
+    model: openai('gpt-4'),
+    prompt: `Write a blog post about ${topic}.`,
+  });
+});
+```
+
+</CodeGroup>
