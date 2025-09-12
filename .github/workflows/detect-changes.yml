@@ -127,8 +127,12 @@ jobs:
           # --- Frontmatter Start ---
           echo "---" > "$CHANGESET_FILE"
           for PACKAGE in $AFFECTED_PACKAGES; do
-            # Ensure package name is treated as a string key in YAML and prepend @microfox/
-            echo "\"@microfox/$(echo $PACKAGE | sed 's/"/\"/g')\": $VERSION_TYPE" >> "$CHANGESET_FILE"
+            if [ "$PACKAGE" = "cli" ]; then
+              echo "\"microfox\": $VERSION_TYPE" >> "$CHANGESET_FILE"
+            else
+              # Ensure package name is treated as a string key in YAML and prepend @microfox/
+              echo "\"@microfox/$(echo $PACKAGE | sed 's/"/\"/g')\": $VERSION_TYPE" >> "$CHANGESET_FILE"
+            fi
           done
           echo "---" >> "$CHANGESET_FILE"
           # --- Frontmatter End ---
