@@ -6,6 +6,7 @@ import {
   createAgentProject,
   createBackgroundAgentProject,
   createPackageProject,
+  createProjectFromTemplate,
 } from '../logic/build';
 import { checkPackageNameAndPrompt } from '../utils/npmChecker';
 import path from 'path';
@@ -23,7 +24,10 @@ async function runCommand(command: string, args: string[]) {
 export const kickstartCommand = new Command('kickstart')
   .description('Kickstart a new Microfox project')
   .argument('[project-name]', 'Name of the project to initialize')
-  .option('--template <template>', 'Template to use for initialization')
+  .option(
+    '-t, --template <template>',
+    'Template to use for initialization',
+  )
   .option(
     '--path <path>',
     'Path where to initialize the project',
@@ -32,6 +36,42 @@ export const kickstartCommand = new Command('kickstart')
   .action(async (projectName, options) => {
     try {
       console.log(chalk.blue('🚀 Kickstarting Microfox...'));
+
+      if (options.template) {
+        let finalProjectName = projectName;
+        if (!finalProjectName) {
+          finalProjectName = readlineSync.question(
+            chalk.yellow('📦 Enter project name: '),
+          );
+        }
+        if (!finalProjectName?.trim()) {
+          throw new Error('Project name cannot be empty');
+        }
+
+        await createProjectFromTemplate(
+          options.template,
+          finalProjectName,
+          options.path,
+        );
+
+        console.log(
+          chalk.green(
+            `\n🎉 Successfully created project ${chalk.bold(
+              finalProjectName,
+            )} from template ${chalk.bold(options.template)}!`,
+          ),
+        );
+        console.log(
+          chalk.gray(
+            `📍 Located at ${path.join(options.path, finalProjectName)}`,
+          ),
+        );
+        console.log(chalk.yellow('\n💡 Next steps:'));
+        console.log(chalk.yellow(`   1. cd ${path.join(options.path, finalProjectName)}`));
+        console.log(chalk.yellow('   2. npm install'));
+        console.log(chalk.yellow('   3. Start developing your project!'));
+        return;
+      }
 
       const { projectType } = await inquirer.prompt([
         {

@@ -48,14 +48,10 @@ export async function createProjectFromTemplate(
   projectName: string,
   destinationPath: string,
 ) {
-  const projectRoot = getWorkingDirectory();
-  const templatePath = path.join(
-    projectRoot,
-    `${templateName}.tar.gz`,
-  );
+  const templatePath = path.resolve(__dirname, `${templateName}.tar.gz`);
 
   if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template "${templateName}" not found.`);
+    throw new Error(`Template "${templateName}" not found at ${templatePath}`);
   }
 
   const destination = path.join(destinationPath, projectName);
