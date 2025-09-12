@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.2
+
+### Patch Changes
+
+- 6f8681e: minor fix
+
 ## 1.1.1
 
 ### Patch Changes
