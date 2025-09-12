@@ -1,0 +1,5 @@
+---
+'microfox': patch
+---
+
+minor fix
