@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.1
+
+### Patch Changes
+
+- 716c692: refactor templating to use tar files
+
 ## 1.1.0
 
 ### Minor Changes
