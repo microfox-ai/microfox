@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import inquirer from 'inquirer';
+import * as tar from 'tar';
 
 const NPM_PUBLISHING_CONFIG = {
   scripts: {
@@ -12,11 +13,11 @@ const NPM_PUBLISHING_CONFIG = {
   },
   devDependencies: {
     '@changesets/cli': '^2.27.10',
-    "eslint": "8.57.1",
-    "prettier": "^3.3.3",
-    "tsup": "^8",
-    "turbo": "2.3.3",
-    "typescript": "5.6.3"
+    eslint: '8.57.1',
+    prettier: '^3.3.3',
+    tsup: '^8',
+    turbo: '2.3.3',
+    typescript: '5.6.3',
   },
   packageManager: 'npm@10.2.4',
   engines: {
@@ -32,7 +33,7 @@ export const initCommand = new Command('init')
 async function initAction(options: { experimental?: boolean }) {
   if (!options.experimental) {
     console.log(
-      chalk.yellow('This command is experimental. Use --experimental to run.')
+      chalk.yellow('This command is experimental. Use --experimental to run.'),
     );
     return;
   }
@@ -49,46 +50,31 @@ async function initAction(options: { experimental?: boolean }) {
   if (feature === 'NPM Publishing Workflows') {
     console.log(chalk.green('Initializing NPM Publishing Workflows...'));
 
-    const templateDir = path.resolve(__dirname, 'npm-publishing');
+    const templatePath = path.resolve(
+      __dirname,
+      'npm-publishing.tar.gz',
+    );
     const targetDir = process.cwd();
 
     try {
-      copyTemplates(templateDir, targetDir);
-      console.log(chalk.green('NPM publishing workflow initialized successfully!'));
+      if (!fs.existsSync(templatePath)) {
+        throw new Error(
+          `Template not found at ${templatePath}. Please rebuild the CLI.`,
+        );
+      }
+
+      await tar.x({
+        file: templatePath,
+        cwd: targetDir,
+      });
+
+      console.log(
+        chalk.green('NPM publishing workflow initialized successfully!'),
+      );
 
       await updatePackageJson(targetDir);
     } catch (error) {
       console.error(chalk.red('Error initializing project:'), error);
-    }
-  }
-}
-
-function copyTemplates(src: string, dest: string) {
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name.replace(/\.txt$/, ''));
-
-    if (entry.isDirectory()) {
-      fs.mkdirSync(destPath, { recursive: true });
-      copyTemplates(srcPath, destPath);
-    } else if (entry.name.endsWith('.txt')) {
-      if (fs.existsSync(destPath)) {
-        console.log(
-          chalk.yellow(
-            `File ${path.relative(
-              process.cwd(),
-              destPath
-            )} already exists. Skipping.`
-          )
-        );
-      } else {
-        const templateContent = fs.readFileSync(srcPath, 'utf-8');
-        fs.writeFileSync(destPath, templateContent);
-        console.log(
-          chalk.green(`✅ Created ${path.relative(process.cwd(), destPath)}`)
-        );
-      }
     }
   }
 }
@@ -129,7 +115,7 @@ async function updatePackageJson(targetDir: string) {
 
   await fs.promises.writeFile(
     packageJsonPath,
-    JSON.stringify(packageJson, null, 2)
+    JSON.stringify(packageJson, null, 2),
   );
 
   console.log(chalk.green('`package.json` updated successfully!'));
