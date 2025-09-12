@@ -14,6 +14,7 @@
     "test": "turbo test -- --passWithNoTests --",
     "test:watch": "turbo test --watch",
     "test:coverage": "turbo test --coverage",
+    "pack": "node scripts/src/pack.mjs",
     "ci:release": "turbo clean && changeset publish",
     "ci:version": "changeset version && npm install",
     "clean-examples": "node .github/scripts/cleanup-examples-changesets.mjs && npm install"
@@ -65,7 +66,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "glob": "^11.0.1",
+    "glob": "^11.0.3",
     "zod": "^3.24.3",
     "zod-to-json-schema": "^3.24.6"
   },
