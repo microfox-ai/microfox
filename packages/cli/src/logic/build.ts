@@ -1,49 +1,108 @@
 import fs from 'fs';
 import path from 'path';
-import chalk from 'chalk';
 import { getWorkingDirectory } from '../utils/getProjectRoot';
-import { checkPackageNameAndPrompt } from '../utils/npmChecker';
+import * as tar from 'tar';
+import { glob } from 'glob';
 
-export async function createAgentProject(agentName: string): Promise<void> {
-  const workingDir = getWorkingDirectory();
-  const agentDir = path.join(workingDir, agentName);
+function processTemplate(
+  targetPath: string,
+  variables: Record<string, string>,
+) {
+  const files = glob.sync('**/*', { cwd: targetPath, dot: true });
 
-  if (fs.existsSync(agentDir)) {
-    throw new Error(`Directory already exists at ${agentDir}`);
-  }
+  for (const file of files) {
+    const filePath = path.join(targetPath, file);
+    const stat = fs.statSync(filePath);
 
-  console.log(
-    chalk.blue(`🚀 Creating agent ${chalk.bold(agentName)} at ${agentDir}\n`),
-  );
-
-  fs.mkdirSync(agentDir, { recursive: true });
-
-  const templatePath = path.resolve(
-    __dirname,
-    '../templates/agent-template.txt',
-  );
-  const templateContent = fs.readFileSync(templatePath, 'utf-8');
-
-  const fileSections = templateContent.split('--- filename: ').slice(1);
-
-  for (const section of fileSections) {
-    const lines = section.split('\n');
-    const filePath = lines.shift()!.trim();
-    const content = lines.join('\n').replace(/<%= agentName %>/g, agentName);
-
-    const destPath = path.join(agentDir, filePath);
-    const destDir = path.dirname(destPath);
-
-    if (!fs.existsSync(destDir)) {
-      fs.mkdirSync(destDir, { recursive: true });
+    // Rename file or directory
+    let newPath = filePath;
+    for (const [key, value] of Object.entries(variables)) {
+      newPath = newPath.replace(new RegExp(`__${key}__`, 'g'), value);
+    }
+    if (newPath !== filePath) {
+      fs.renameSync(filePath, newPath);
     }
 
-    fs.writeFileSync(destPath, content);
-    console.log(chalk.green(`✅ Created ${filePath}`));
+    if (stat.isFile()) {
+      let content = fs.readFileSync(newPath, 'utf-8');
+      for (const [key, value] of Object.entries(variables)) {
+        content = content.replace(
+          new RegExp(`<%=\\s*${key}\\s*%>`, 'g'),
+          value,
+        );
+      }
+      // A special case for the package template's changelog
+      if (path.basename(newPath) === 'CHANGELOG.md') {
+          content = content.replace(
+              new RegExp(`<%=\\s*new Date\\(\\).toISOString\\(\\).split\\('T'\\)\\[0\\]\\s*%>`, 'g'),
+              new Date().toISOString().split('T')[0],
+          );
+      }
+      fs.writeFileSync(newPath, content);
+    }
   }
 }
 
-export async function createPackageProject(packageName: string): Promise<void> {
+export async function createProjectFromTemplate(
+  templateName: string,
+  projectName: string,
+  destinationPath: string,
+) {
+  const templatePath = path.resolve(__dirname, `${templateName}.tar.gz`);
+
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(`Template "${templateName}" not found at ${templatePath}`);
+  }
+
+  const destination = path.join(destinationPath, projectName);
+  if (!fs.existsSync(destination)) {
+    fs.mkdirSync(destination, { recursive: true });
+  }
+
+  await tar.x({
+    file: templatePath,
+    cwd: destination,
+  });
+}
+
+export async function createAgentProject(agentName: string) {
+  const workingDir = getWorkingDirectory();
+  const projectPath = path.join(workingDir, agentName);
+
+  if (fs.existsSync(projectPath)) {
+    throw new Error(`Directory "${agentName}" already exists.`);
+  }
+  fs.mkdirSync(projectPath, { recursive: true });
+
+  const templatePath = path.resolve(__dirname, 'agent.tar.gz');
+  await tar.x({
+    file: templatePath,
+    cwd: projectPath,
+  });
+  processTemplate(projectPath, { agentName });
+}
+
+export async function createBackgroundAgentProject(agentName: string) {
+  const workingDir = getWorkingDirectory();
+  const projectPath = path.join(workingDir, agentName);
+
+  if (fs.existsSync(projectPath)) {
+    throw new Error(`Directory "${agentName}" already exists.`);
+  }
+  fs.mkdirSync(projectPath, { recursive: true });
+
+  const templatePath = path.resolve(
+    __dirname,
+    'background-agent.tar.gz',
+  );
+  await tar.x({
+    file: templatePath,
+    cwd: projectPath,
+  });
+  processTemplate(projectPath, { agentName });
+}
+
+export async function createPackageProject(packageName: string) {
   const simpleName = packageName.includes('/')
     ? packageName.split('/')[1]
     : packageName;
@@ -51,109 +110,29 @@ export async function createPackageProject(packageName: string): Promise<void> {
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+  const className = titleName.replace(/ /g, '');
   const description = `A TypeScript SDK for ${titleName}.`;
-  const className =
-    simpleName
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('') + 'Sdk';
 
   const workingDir = getWorkingDirectory();
-  const packageDir = path.join(workingDir, simpleName);
+  const projectPath = path.join(workingDir, simpleName);
 
-  if (fs.existsSync(packageDir)) {
-    throw new Error(`Directory already exists at ${packageDir}`);
+  if (fs.existsSync(projectPath)) {
+    throw new Error(`Directory "${simpleName}" already exists.`);
   }
+  fs.mkdirSync(projectPath, { recursive: true });
 
-  console.log(
-    chalk.blue(
-      `🚀 Creating package ${chalk.bold(packageName)} at ${packageDir}\n`,
-    ),
-  );
+  const templatePath = path.resolve(__dirname, 'package.tar.gz');
 
-  fs.mkdirSync(packageDir, { recursive: true });
+  await tar.x({
+    file: templatePath,
+    cwd: projectPath,
+  });
 
-  const templatePath = path.resolve(
-    __dirname,
-    '../templates/package-template.txt',
-  );
-  const templateContent = fs.readFileSync(templatePath, 'utf-8');
-
-  const fileSections = templateContent.split('--- filename: ').slice(1);
-
-  for (const section of fileSections) {
-    const lines = section.split('\n');
-    const filePath = lines
-      .shift()!
-      .trim()
-      .replace(/<%= simpleName %>/g, simpleName);
-    let content = lines.join('\n');
-
-    content = content.replace(/<%= packageName %>/g, packageName);
-    content = content.replace(/<%= simpleName %>/g, simpleName);
-    content = content.replace(/<%= titleName %>/g, titleName);
-    content = content.replace(/<%= description %>/g, description);
-    content = content.replace(/<%= className %>/g, className);
-
-    const destPath = path.join(packageDir, filePath);
-    const destDir = path.dirname(destPath);
-
-    if (!fs.existsSync(destDir)) {
-      fs.mkdirSync(destDir, { recursive: true });
-    }
-
-    fs.writeFileSync(destPath, content);
-    console.log(chalk.green(`✅ Created ${filePath}`));
-  }
-
-  const docsDir = path.join(packageDir, 'docs');
-  const docsConstructors = path.join(docsDir, 'constructors');
-  const docsFunctions = path.join(docsDir, 'functions');
-
-  fs.mkdirSync(docsDir, { recursive: true });
-  fs.mkdirSync(docsConstructors, { recursive: true });
-  fs.mkdirSync(docsFunctions, { recursive: true });
-}
-
-export async function createBackgroundAgentProject(
-  agentName: string,
-): Promise<void> {
-  const workingDir = getWorkingDirectory();
-  const agentDir = path.join(workingDir, agentName);
-
-  if (fs.existsSync(agentDir)) {
-    throw new Error(`Directory already exists at ${agentDir}`);
-  }
-
-  console.log(
-    chalk.blue(
-      `🚀 Creating background agent ${chalk.bold(agentName)} at ${agentDir}\n`,
-    ),
-  );
-
-  fs.mkdirSync(agentDir, { recursive: true });
-
-  const templateDir = path.resolve(__dirname, '../templates/background-agent');
-
-  const copyTemplates = (src: string, dest: string) => {
-    const entries = fs.readdirSync(src, { withFileTypes: true });
-    for (const entry of entries) {
-      const srcPath = path.join(src, entry.name);
-      const destPath = path.join(dest, entry.name.replace(/\.txt$/, ''));
-
-      if (entry.isDirectory()) {
-        fs.mkdirSync(destPath, { recursive: true });
-        copyTemplates(srcPath, destPath);
-      } else if (entry.name.endsWith('.txt')) {
-        const templateContent = fs.readFileSync(srcPath, 'utf-8');
-        const content = templateContent.replace(/<%= agentName %>/g, agentName);
-        fs.writeFileSync(destPath, content);
-        console.log(
-          chalk.green(`✅ Created ${path.relative(agentDir, destPath)}`),
-        );
-      }
-    }
-  };
-
-  copyTemplates(templateDir, agentDir);
+  processTemplate(projectPath, {
+    packageName,
+    simpleName,
+    titleName,
+    className,
+    description,
+  });
 }
