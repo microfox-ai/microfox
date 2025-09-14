@@ -29,6 +29,11 @@ export const kickstartCommand = new Command('kickstart')
     'Template to use for initialization',
   )
   .option(
+    '--local',
+    'Use a local template file path instead of a remote template name',
+    false
+  )
+  .option(
     '--path <path>',
     'Path where to initialize the project',
     process.cwd(),
@@ -55,6 +60,7 @@ export const kickstartCommand = new Command('kickstart')
             options.template,
             finalProjectName,
             options.path,
+            options.local,
           );
 
           // If we get here, the local template was found and used successfully.
@@ -78,11 +84,11 @@ export const kickstartCommand = new Command('kickstart')
           console.log(chalk.yellow('   3. Start developing your project!'));
           return; // Exit successfully.
         } catch (error: any) {
-          if (error.message.includes('not found')) {
+          if (error.message.toLowerCase().includes('not found') && !options.local) {
             // This is okay, it might be a studio template. We'll continue to the next section.
             console.log(
               chalk.gray(
-                `Local template "${options.template}" not found, checking AI Studio...`,
+                `Template "${options.template}" not found on GitHub, checking AI Studio...`,
               ),
             );
             // We need to use the user-provided project name later, so we assign it back.

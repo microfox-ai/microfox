@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import inquirer from 'inquirer';
-import * as tar from 'tar';
+import { downloadAndExtractTemplate } from '../utils/templates';
 
 const NPM_PUBLISHING_CONFIG = {
   scripts: {
@@ -50,23 +50,10 @@ async function initAction(options: { experimental?: boolean }) {
   if (feature === 'NPM Publishing Workflows') {
     console.log(chalk.green('Initializing NPM Publishing Workflows...'));
 
-    const templatePath = path.resolve(
-      __dirname,
-      'npm-publishing.tar.gz',
-    );
     const targetDir = process.cwd();
 
     try {
-      if (!fs.existsSync(templatePath)) {
-        throw new Error(
-          `Template not found at ${templatePath}. Please rebuild the CLI.`,
-        );
-      }
-
-      await tar.x({
-        file: templatePath,
-        cwd: targetDir,
-      });
+      await downloadAndExtractTemplate('npm-publishing', targetDir);
 
       console.log(
         chalk.green('NPM publishing workflow initialized successfully!'),
