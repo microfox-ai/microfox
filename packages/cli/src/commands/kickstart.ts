@@ -38,6 +38,8 @@ export const kickstartCommand = new Command('kickstart')
       console.log(chalk.blue('🚀 Kickstarting Microfox...'));
 
       if (options.template) {
+        // If a template is provided, we first try to find it locally.
+        // If not found, we'll proceed assuming it might be an AI Studio template.
         let finalProjectName = projectName;
         if (!finalProjectName) {
           finalProjectName = readlineSync.question(
@@ -48,29 +50,48 @@ export const kickstartCommand = new Command('kickstart')
           throw new Error('Project name cannot be empty');
         }
 
-        await createProjectFromTemplate(
-          options.template,
-          finalProjectName,
-          options.path,
-        );
+        try {
+          await createProjectFromTemplate(
+            options.template,
+            finalProjectName,
+            options.path,
+          );
 
-        console.log(
-          chalk.green(
-            `\n🎉 Successfully created project ${chalk.bold(
-              finalProjectName,
-            )} from template ${chalk.bold(options.template)}!`,
-          ),
-        );
-        console.log(
-          chalk.gray(
-            `📍 Located at ${path.join(options.path, finalProjectName)}`,
-          ),
-        );
-        console.log(chalk.yellow('\n💡 Next steps:'));
-        console.log(chalk.yellow(`   1. cd ${path.join(options.path, finalProjectName)}`));
-        console.log(chalk.yellow('   2. npm install'));
-        console.log(chalk.yellow('   3. Start developing your project!'));
-        return;
+          // If we get here, the local template was found and used successfully.
+          console.log(
+            chalk.green(
+              `\n🎉 Successfully created project ${chalk.bold(
+                finalProjectName,
+              )} from template ${chalk.bold(options.template)}!`,
+            ),
+          );
+          console.log(
+            chalk.gray(
+              `📍 Located at ${path.join(options.path, finalProjectName)}`,
+            ),
+          );
+          console.log(chalk.yellow('\n💡 Next steps:'));
+          console.log(
+            chalk.yellow(`   1. cd ${path.join(options.path, finalProjectName)}`),
+          );
+          console.log(chalk.yellow('   2. npm install'));
+          console.log(chalk.yellow('   3. Start developing your project!'));
+          return; // Exit successfully.
+        } catch (error: any) {
+          if (error.message.includes('not found')) {
+            // This is okay, it might be a studio template. We'll continue to the next section.
+            console.log(
+              chalk.gray(
+                `Local template "${options.template}" not found, checking AI Studio...`,
+              ),
+            );
+            // We need to use the user-provided project name later, so we assign it back.
+            projectName = finalProjectName;
+          } else {
+            // A different error occurred, so we should stop.
+            throw error;
+          }
+        }
       }
 
       const { projectType } = await inquirer.prompt([
