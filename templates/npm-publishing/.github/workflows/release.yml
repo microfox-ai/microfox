@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.changeset/**'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          npm i
+
+      - name: Make release script executable
+        run: chmod +x ./scripts/release.sh
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run ci:version
+          publish: ./scripts/release.sh ${{ github.event.before }} ${{ github.event.after }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_ELEVATED }}

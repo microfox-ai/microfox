@@ -1,0 +1,260 @@
+name: Detect Changes and Create Changeset
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to main
+
+permissions:
+  contents: write
+  pull-requests: write # Keep for potential future interactions, though not strictly needed for this flow
+
+jobs:
+  detect-changes:
+    # Only run on merge commits to main and skip if PR title starts with "Version Changes"
+    if: github.event_name == 'push' && (startsWith(github.event.head_commit.message, 'Merge pull request ') || startsWith(github.event.head_commit.message, 'release:')) && !contains(github.event.head_commit.message, '/changeset-release/')
+    runs-on: ubuntu-latest
+    outputs:
+      any_changed: ${{ steps.changed-files.outputs.any_changed }}
+    steps:
+      - name: Debug Event
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Base SHA (Before): ${{ github.event.before }}"
+          echo "Head SHA (After): ${{ github.sha }}"
+          echo "Commit Message: ${{ github.event.head_commit.message }}"
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4 # Use v4
+        with:
+          fetch-depth: 0 # Fetch all history to ensure base sha is available
+          token: ${{ secrets.ORG_PAT }}
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4 # Use v4
+
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install # Assuming npm install is needed for changeset CLI and scripts
+
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v46.0.1 # Use latest major version v44
+        with:
+          # For push events, default comparison is HEAD~1..HEAD which is github.event.before..github.sha
+          # No need to specify sha or base_sha explicitly
+          files: |
+            packages/*/**
+          files_ignore: |
+            packages/*/node_modules/**
+            packages/*/dist/**
+            packages/*/build/**
+            packages/*/.turbo/**
+            packages/*/.next/**
+            packages/*/coverage/**
+
+      - name: Debug Changed Files
+        run: |
+          echo "Any changed: ${{ steps.changed-files.outputs.any_changed }}"
+          echo "Changed files: ${{ steps.changed-files.outputs.all_changed_files }}"
+
+      - name: Create Changeset
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          echo "Comparing before SHA ($BEFORE_SHA) with after SHA ($AFTER_SHA)"
+
+          # Ensure SHAs are valid
+          if ! git cat-file -e $BEFORE_SHA; then
+            echo "Error: BEFORE_SHA ($BEFORE_SHA) is not a valid commit."
+            # Attempt to use the parent of AFTER_SHA as a fallback, common in first push to repo/branch
+            BEFORE_SHA_FALLBACK=$(git rev-parse $AFTER_SHA^)
+             if ! git cat-file -e $BEFORE_SHA_FALLBACK; then
+               echo "Error: Fallback BEFORE_SHA ($BEFORE_SHA_FALLBACK) is also not valid."
+               exit 1
+             fi
+             echo "Using fallback BEFORE_SHA: $BEFORE_SHA_FALLBACK"
+             BEFORE_SHA=$BEFORE_SHA_FALLBACK
+          fi
+          if ! git cat-file -e $AFTER_SHA; then
+            echo "Error: AFTER_SHA ($AFTER_SHA) is not a valid commit."
+            exit 1
+          fi
+
+
+          # Get the number of changed lines, excluding @ext_ packages
+          # Use pathspecs for clarity and robustness
+          CHANGED_LINES=$(git diff --stat $BEFORE_SHA $AFTER_SHA -- 'packages/' ':!packages/@ext_*/**' | awk '{s+=$1} END {print s}')
+          # Handle potential empty output from awk if no matching files changed
+          CHANGED_LINES=${CHANGED_LINES:-0}
+          echo "Changed lines (excluding @ext_): $CHANGED_LINES"
+
+          # Determine version bump based on changed lines
+          if [ "$CHANGED_LINES" -gt 1000 ]; then
+            VERSION_TYPE="major"
+          elif [ "$CHANGED_LINES" -gt 100 ]; then
+            VERSION_TYPE="minor"
+          else
+            VERSION_TYPE="patch"
+          fi
+          echo "Version type: $VERSION_TYPE"
+
+          # Get affected packages, excluding @ext_ packages
+          AFFECTED_PACKAGES=$(git diff --name-only $BEFORE_SHA $AFTER_SHA -- 'packages/' ':!packages/@ext_*/**' | sed -n 's;^packages/\([^/]*\)/.*;\1;p' | sort -u)
+          echo "Affected packages: $AFFECTED_PACKAGES"
+
+          if [ -z "$AFFECTED_PACKAGES" ]; then
+            echo "No non-@ext_ packages affected by this merge commit. Exiting changeset creation."
+            # Exit cleanly, as no changeset is needed if only excluded files changed
+            exit 0
+          fi
+
+          # Create changeset files manually
+          CHANGESET_DIR=".changeset"
+          mkdir -p "$CHANGESET_DIR"
+          CHANGESET_ID=$(cat /proc/sys/kernel/random/uuid | sed 's/-//g' | head -c 10)
+
+          CHANGESET_FILE="$CHANGESET_DIR/generated-$CHANGESET_ID.md"
+          echo "Creating changeset file: $CHANGESET_FILE"
+
+          # --- Frontmatter Start ---
+          echo "---" > "$CHANGESET_FILE"
+          for PACKAGE in $AFFECTED_PACKAGES; do
+            # Ensure package name is treated as a string key in YAML and prepend @microfox/
+            echo "\"@microfox/$(echo $PACKAGE | sed 's/"/\"/g')\": $VERSION_TYPE" >> "$CHANGESET_FILE"
+          done
+          echo "---" >> "$CHANGESET_FILE"
+          # --- Frontmatter End ---
+          echo "" >> "$CHANGESET_FILE"
+
+          # Add Summary
+          PR_NUMBER=$(echo "$COMMIT_MESSAGE" | sed -n 's/Merge pull request #\([0-9]*\).*/\1/p')
+          COMMIT_TITLE=$(echo "$COMMIT_MESSAGE" | head -n 1)
+          if [ -n "$PR_NUMBER" ]; then
+            # Extract title from merge commit message (part after "from <branch>")
+            PR_INFO=$(echo "$COMMIT_MESSAGE" | sed -n 's/Merge pull request #[0-9]* from .*\/\(.*\)/\1/p' | head -n 1)
+             # Fallback to commit title if PR info extraction fails
+            SUMMARY="Changes from PR #$PR_NUMBER: ${PR_INFO:-$COMMIT_TITLE}"
+          else
+            # Fallback if commit message doesn't match expected merge format
+            SUMMARY="$COMMIT_TITLE"
+          fi
+          echo "$SUMMARY" >> "$CHANGESET_FILE"
+
+
+          echo "Changeset file content:"
+          cat "$CHANGESET_FILE"
+
+      - name: Generate Changelog Summary
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.create-changeset.outputs.affected_packages_exist == 'true' # Need to ensure changeset was actually created
+        env:
+          # Pass necessary info if the script needs it, otherwise remove env
+          # Example: Maybe pass the created changeset file path?
+          CHANGESET_FILE_PATH: ${{ steps.create-changeset.outputs.changeset_file_path }} # Assuming create-changeset outputs this
+        run: node .github/scripts/generate-changelog-summary.mjs # Check if this script needs adjustments for push event
+
+      - name: Commit Changes
+        # Only run if a changeset file was potentially created and affected packages exist
+        # A better check might involve checking if .changeset directory is dirty
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          # Check if there are any changes in .changeset or CHANGELOG.md to commit
+          if git status --porcelain | grep -E '(\.changeset/|CHANGELOG.md)'; then
+            echo "Changes detected in .changeset/ or CHANGELOG.md. Committing..."
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add .changeset/ # Add the changeset directory
+            # Add root CHANGELOG.md if it exists, but don't error if it doesn't
+            git add CHANGELOG.md 2>/dev/null || true
+            # Add any CHANGELOG.md files within the packages directory
+            find packages/ -name "CHANGELOG.md" -exec git add {} + 2>/dev/null || true
+            # Customize commit message, maybe include PR number if available
+            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | sed -n 's/Merge pull request #\([0-9]*\).*/\1/p')
+            COMMIT_MSG="chore: add changeset(s) and update changelog"
+            if [ -n "$PR_NUMBER" ]; then
+              COMMIT_MSG="$COMMIT_MSG for PR #$PR_NUMBER"
+            fi
+
+            git commit -m "$COMMIT_MSG"
+            git push
+          else
+            echo "No changes in .changeset/ or CHANGELOG.md to commit."
+          fi
+
+  reset-files:
+    # Run after detect-changes completes, and only if the commit message contains 'packagefox:'
+    needs: detect-changes
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, 'packagefox:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ORG_PAT }}
+
+      - name: Reset Microfox Files
+        run: |
+          chmod +x scripts/reset-microfox-files.sh
+          ./scripts/reset-microfox-files.sh
+
+      - name: Clean up  & reset .microfox files
+        run: |
+          echo '{"requests": []}' > .microfox/packagefox-build.json
+          echo "{}" > .microfox/pr-usage.json
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .microfox/
+          git commit -m "Reset microfox files after merge to main"
+          git push
+
+  auto-release:
+    name: Auto Release
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' && 
+      startsWith(github.event.head_commit.message, 'release:') && 
+      needs.detect-changes.outputs.any_changed == 'true'
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.ORG_PAT }}
+
+      - name: Create dummy changeset file
+        run: |
+          mkdir -p .changeset
+          # Use printf to correctly handle newline characters
+          printf -- "---\n---\n\nTriggered by issue #${{ github.event.issue.number }}: ${{ github.event.issue.title }}\n" > .changeset/trigger-${{ github.event.issue.number }}.md
+          echo "Created .changeset/trigger-${{ github.event.issue.number }}.md"
+
+      - name: Commit and push changeset file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .changeset/trigger-${{ github.event.issue.number }}.md
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: create changeset trigger file for issue #${{ github.event.issue.number }}"
+            git push origin main
+            echo "Changes pushed to main branch."
+          fi
+
+      - name: Close the issue
+        env:
+          GH_TOKEN: ${{ secrets.ORG_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close $ISSUE_NUMBER --comment "Changeset file created and pushed. Closing issue."
+          echo "Issue #${ISSUE_NUMBER} closed."
