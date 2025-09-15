@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.3
+
+### Patch Changes
+
+- 1f45693: added local template support for kickstart and init commands
+
 ## 1.1.2
 
 ### Patch Changes
