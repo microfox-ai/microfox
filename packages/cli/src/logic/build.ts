@@ -3,6 +3,7 @@ import path from 'path';
 import { getWorkingDirectory } from '../utils/getProjectRoot';
 import * as tar from 'tar';
 import { glob } from 'glob';
+import { downloadAndExtractTemplate } from '../utils/templates';
 
 function processTemplate(
   targetPath: string,
@@ -47,58 +48,60 @@ export async function createProjectFromTemplate(
   templateName: string,
   projectName: string,
   destinationPath: string,
+  isLocal: boolean,
 ) {
-  const templatePath = path.resolve(__dirname, `${templateName}.tar.gz`);
-
-  if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template "${templateName}" not found at ${templatePath}`);
-  }
-
   const destination = path.join(destinationPath, projectName);
-  if (!fs.existsSync(destination)) {
-    fs.mkdirSync(destination, { recursive: true });
+  if (fs.existsSync(destination)) {
+    throw new Error(
+      `Directory "${projectName}" already exists at ${destinationPath}`,
+    );
   }
+  fs.mkdirSync(destination, { recursive: true });
 
-  await tar.x({
-    file: templatePath,
-    cwd: destination,
-  });
+  if (isLocal) {
+    const templatePath = path.resolve(process.cwd(), templateName);
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Local template not found at ${templatePath}`);
+    }
+
+    const stats = fs.statSync(templatePath);
+    if (stats.isDirectory()) {
+      const items = fs.readdirSync(templatePath);
+      for (const item of items) {
+        const srcPath = path.join(templatePath, item);
+        const destPath = path.join(destination, item);
+        fs.cpSync(srcPath, destPath, { recursive: true });
+      }
+    } else if (
+      templatePath.endsWith('.tar.gz') ||
+      templatePath.endsWith('.tar')
+    ) {
+      await tar.x({
+        file: templatePath,
+        cwd: destination,
+        strip: 1, // Assumes template is in a subdirectory
+      });
+    } else {
+      throw new Error(
+        `Local template must be a directory or a .tar.gz/.tar file.`,
+      );
+    }
+  } else {
+    await downloadAndExtractTemplate(templateName, destination);
+  }
 }
 
 export async function createAgentProject(agentName: string) {
   const workingDir = getWorkingDirectory();
+  await createProjectFromTemplate('agent', agentName, workingDir, false);
   const projectPath = path.join(workingDir, agentName);
-
-  if (fs.existsSync(projectPath)) {
-    throw new Error(`Directory "${agentName}" already exists.`);
-  }
-  fs.mkdirSync(projectPath, { recursive: true });
-
-  const templatePath = path.resolve(__dirname, 'agent.tar.gz');
-  await tar.x({
-    file: templatePath,
-    cwd: projectPath,
-  });
   processTemplate(projectPath, { agentName });
 }
 
 export async function createBackgroundAgentProject(agentName: string) {
   const workingDir = getWorkingDirectory();
+  await createProjectFromTemplate('background-agent', agentName, workingDir, false);
   const projectPath = path.join(workingDir, agentName);
-
-  if (fs.existsSync(projectPath)) {
-    throw new Error(`Directory "${agentName}" already exists.`);
-  }
-  fs.mkdirSync(projectPath, { recursive: true });
-
-  const templatePath = path.resolve(
-    __dirname,
-    'background-agent.tar.gz',
-  );
-  await tar.x({
-    file: templatePath,
-    cwd: projectPath,
-  });
   processTemplate(projectPath, { agentName });
 }
 
@@ -114,19 +117,8 @@ export async function createPackageProject(packageName: string) {
   const description = `A TypeScript SDK for ${titleName}.`;
 
   const workingDir = getWorkingDirectory();
+  await createProjectFromTemplate('package', simpleName, workingDir, false);
   const projectPath = path.join(workingDir, simpleName);
-
-  if (fs.existsSync(projectPath)) {
-    throw new Error(`Directory "${simpleName}" already exists.`);
-  }
-  fs.mkdirSync(projectPath, { recursive: true });
-
-  const templatePath = path.resolve(__dirname, 'package.tar.gz');
-
-  await tar.x({
-    file: templatePath,
-    cwd: projectPath,
-  });
 
   processTemplate(projectPath, {
     packageName,

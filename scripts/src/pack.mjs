@@ -39,7 +39,7 @@ async function packDirectory(sourceDir) {
     });
 
     const outputFileName = `${path.basename(sourceDir)}.tar.gz`;
-    const outputDir = path.resolve(process.cwd(), 'packages/cli/src/templates');
+    const outputDir = path.resolve(process.cwd(), 'templates');
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
