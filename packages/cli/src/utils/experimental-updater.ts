@@ -48,11 +48,6 @@ function updatePackage(packageName: string, isDev: boolean): boolean {
 function updateSpecificPackage(packageName: string, isDevFlag: boolean) {
   logSection(`Updating Specific Package: ${packageName}`);
 
-  if (!packageName || typeof packageName !== 'string' || !packageName.startsWith('@microfox/')) {
-    log(`Invalid package name: "${packageName}". Must start with "@microfox/".`, true);
-    process.exit(1);
-  }
-
   const packageJson = JSON.parse(fs.readFileSync(CWD_PACKAGE_JSON, 'utf8'));
   const dependencies = packageJson.dependencies || {};
   const devDependencies = packageJson.devDependencies || {};
