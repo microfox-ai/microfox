@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
+import { glob } from 'glob';
 
 const CWD_PACKAGE_JSON = path.join(process.cwd(), 'package.json');
 const CWD_NODE_MODULES = path.join(process.cwd(), 'node_modules');
@@ -138,97 +139,71 @@ function updatePackageJson(packageName: string): boolean {
   }
 }
 
-function installSpecificPackage(packageName: string) {
-  logSection(`Installing Specific Package: ${packageName}`);
+function installSpecificPackage(packageName: string): boolean {
+  logSection(`Installing Local Package: ${packageName}`);
 
-  if (!packageName || typeof packageName !== 'string' || !packageName.startsWith('@microfox/')) {
-    log(`Invalid package name format: "${packageName}". Must start with "@microfox/"`, true);
-    process.exit(1);
-  }
-
-  const packageShortName = packageName.replace('@microfox/', '');
-  if (!packageShortName || packageShortName.trim() === '') {
-    log(`Invalid package name: "${packageName}"`, true);
-    process.exit(1);
-  }
-
-  const microfoxDir = path.join(MICROFOX_NODE_MODULES, '@microfox');
-  const srcDir = path.join(microfoxDir, packageShortName);
+  const srcDir = path.join(MICROFOX_NODE_MODULES, packageName);
 
   log(`Searching for package: ${packageName}`);
   log(`Source directory: ${srcDir}`);
 
-  if (!fs.existsSync(microfoxDir)) {
-    log(`Microfox packages directory not found at: ${microfoxDir}`, true);
-    process.exit(1);
-  }
-
   if (!fs.existsSync(srcDir)) {
     log(`Package "${packageName}" not found in source packages`, true);
     log(`Searched in: ${srcDir}`, true);
-    process.exit(1);
+    return false;
   }
 
   if (!updatePackageJson(packageName)) {
-    process.exit(1);
+    return false;
   }
 
-  const microfoxScopeDir = path.join(CWD_NODE_MODULES, '@microfox');
-  if (!fs.existsSync(microfoxScopeDir)) {
-    fs.mkdirSync(microfoxScopeDir, { recursive: true });
-  }
+  const destDir = path.join(CWD_NODE_MODULES, packageName);
+  const destParentDir = path.dirname(destDir);
 
-  const destDir = path.join(CWD_NODE_MODULES, '@microfox', packageShortName);
+  if (!fs.existsSync(destParentDir)) {
+    fs.mkdirSync(destParentDir, { recursive: true });
+  }
 
   log(`Copying package files...`);
   if (copyDirectory(srcDir, destDir)) {
     logSection(`✅ SUCCESS`);
     logSuccess(`Package ${packageName} installed for local development!`);
     log(`Package location: ${destDir}`);
+    return true;
   } else {
     log(`Failed to copy package files`, true);
-    process.exit(1);
+    return false;
   }
 }
 
 function installAllPackages() {
-  log('Installing all @microfox/* packages with "*" version from package.json...');
+  log('Installing all packages with "*" version from package.json...');
+
+  if (!fs.existsSync(CWD_PACKAGE_JSON)) {
+    log('package.json not found. Nothing to install.', false, true);
+    return;
+  }
 
   const packageJson = JSON.parse(fs.readFileSync(CWD_PACKAGE_JSON, 'utf8'));
   const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
 
-  const microfoxPackages = Object.entries(dependencies)
-    .filter(([name, version]) => name.startsWith('@microfox/') && version === '*')
+  const packagesToInstall = Object.entries(dependencies)
+    .filter(([, version]) => version === '*')
     .map(([name]) => name);
 
-  if (microfoxPackages.length === 0) {
-    log('ℹ️  No @microfox/* packages with "*" version found in package.json');
+  if (packagesToInstall.length === 0) {
+    log('ℹ️  No packages with "*" version found in package.json. Nothing to install.');
     return;
   }
 
-  log(`Found ${microfoxPackages.length} @microfox/* packages to install:`);
-  microfoxPackages.forEach(pkg => log(`  - ${pkg}`));
-
-  const microfoxScopeDir = path.join(CWD_NODE_MODULES, '@microfox');
-  if (!fs.existsSync(microfoxScopeDir)) {
-    fs.mkdirSync(microfoxScopeDir, { recursive: true });
-  }
+  log(`Found ${packagesToInstall.length} packages to install:`);
+  packagesToInstall.forEach(pkg => log(`  - ${pkg}`));
 
   let successCount = 0;
   let failureCount = 0;
 
-  for (const packageName of microfoxPackages) {
-    const packageShortName = packageName.replace('@microfox/', '');
-    const srcDir = path.join(MICROFOX_NODE_MODULES, '@microfox', packageShortName);
-    const destDir = path.join(CWD_NODE_MODULES, '@microfox', packageShortName);
-
-    if (!fs.existsSync(srcDir)) {
-      log(`⚠️  Package ${packageName} not found in source node_modules, skipping...`);
-      failureCount++;
-      continue;
-    }
-
-    if (copyDirectory(srcDir, destDir)) {
+  for (const packageName of packagesToInstall) {
+    if (installSpecificPackage(packageName)) {
       successCount++;
     } else {
       failureCount++;
@@ -269,11 +244,24 @@ export async function runExperimentalInstall(packages: string[], targetDirName: 
     }
 
     if (packages.length > 0) {
-      log(`Installing ${packages.length} specific package(s)...`);
-      for (let i = 0; i < packages.length; i++) {
-        const packageName = packages[i];
-        log(`\n[${i + 1}/${packages.length}] Processing: ${packageName}`);
-        installSpecificPackage(packageName);
+      const allPackagePatterns = packages.map(p => path.join(MICROFOX_NODE_MODULES, p).replace(/\\/g, '/'));
+      const foundPackagesPaths = await glob(allPackagePatterns, { nodir: false });
+
+      if (foundPackagesPaths.length === 0) {
+        log(`No packages found matching the provided patterns: ${packages.join(', ')}`, true);
+        process.exit(1);
+      }
+      
+      const foundPackages = foundPackagesPaths.map(p => path.relative(MICROFOX_NODE_MODULES, p).replace(/\\/g, '/'));
+
+      log(`Installing ${foundPackages.length} specific package(s)...`);
+      for (let i = 0; i < foundPackages.length; i++) {
+        const packageName = foundPackages[i];
+        log(`\n[${i + 1}/${foundPackages.length}] Processing: ${packageName}`);
+        if (!installSpecificPackage(packageName)) {
+          log(`Failed to install ${packageName}. Aborting.`, true);
+          process.exit(1);
+        }
       }
       logSection('🎉 All Specified Packages Installed Successfully');
     } else {
