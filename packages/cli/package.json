@@ -7,7 +7,8 @@
   "types": "./dist/index.d.ts",
   "bin": {
     "microfox": "./dist/cli.js",
-    "ai-studio-cli": "./dist/ai-studio-cli.js"
+    "ai-studio-cli": "./dist/ai-studio-cli.js",
+    "tracker-cli": "./dist/tracker-cli.js"
   },
   "files": [
     "dist/**/*",
@@ -33,22 +34,17 @@
     "chalk": "^5.3.0",
     "commander": "^14.0.0",
     "execa": "^8.0.1",
-    "find-up": "^7.0.0",
     "form-data": "^4.0.4",
-    "glob": "^10.4.5",
     "inquirer": "^12.7.0",
-    "js-yaml": "^4.1.0",
     "micromatch": "^4.0.8",
     "openapi-typescript": "^6.7.5",
     "readline-sync": "^1.4.10",
     "zod": "^4.0.5"
   },
   "devDependencies": {
-    "@microfox/tracker": "^1.0.3",
     "@microfox/tsconfig": "*",
     "@types/archiver": "^6.0.3",
     "@types/inquirer": "^9.0.8",
-    "@types/js-yaml": "^4.0.9",
     "@types/micromatch": "^4.0.9",
     "@types/node": "^24.0.8",
     "@types/readline-sync": "^1.4.8",
