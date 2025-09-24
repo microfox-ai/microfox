@@ -10,7 +10,7 @@ import { z } from 'zod';
 
 export const VideoAtomDataProps = z.object({
     src: z.string(),                    // Video source URL
-    style: z.record(z.any()).optional(), // CSS styles object
+    style: z.record(z.string(), z.any()).optional(), // CSS styles object
     className: z.string().optional(),   // CSS class names
     startFrom: z.number().optional(),   // Start playback from this time (seconds)
     endAt: z.number().optional(),       // End playback at this time (seconds)
