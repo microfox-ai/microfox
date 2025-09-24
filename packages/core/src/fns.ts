@@ -8,7 +8,7 @@ import { assert } from './utils';
 export interface PrivateAIFunctionMetadata {
   name: string;
   description: string;
-  inputSchema: z.AnyZodObject;
+  inputSchema: z.ZodObject<any>;
   methodName: string;
   strict?: boolean;
 }
@@ -69,7 +69,7 @@ export abstract class AIFunctionsProvider {
 
 export function aiFunction<
   This extends AIFunctionsProvider,
-  InputSchema extends z.SomeZodObject,
+  InputSchema extends z.ZodObject<any>,
   OptionalArgs extends Array<undefined>,
   Return extends types.MaybePromise<any>,
 >({
