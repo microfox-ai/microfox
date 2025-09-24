@@ -39,9 +39,9 @@ export const activitySchema = z.object({
   timestamp: z.union([z.date(), z.string().datetime()]).default(() => new Date()).describe('When the activity occurred.'),
   message_id: z.string().uuid().optional().describe('Direct reference to the message ID, required if the activity type is "message".'),
   message_content: z.string().optional().describe('Direct reference to the message content, required if the activity type is "message".'),
-  metadata: z.record(z.unknown()).optional().describe('Generic metadata for the activity.'),
+  metadata: z.record(z.string(), z.any()).optional().describe('Generic metadata for the activity.'),
   messageMetadata: messageMetadataSchema.optional().describe('Specific metadata, required if the activity type is "message".'),
-  ai_generated_data: z.record(z.unknown()).optional().describe('Data generated for or by AI processes related to this activity.'),
+  ai_generated_data: z.record(z.string(), z.any()).optional().describe('Data generated for or by AI processes related to this activity.'),
 }).superRefine((data, ctx) => {
   if (data.type === 'message') {
     if (!data.messageMetadata) {
@@ -71,5 +71,5 @@ export const activitySchema = z.object({
 export type Activity = z.infer<typeof activitySchema>;
 export type MessageMetadata = z.infer<typeof messageMetadataSchema>;
 
-export const CreateActivityInputSchema = activitySchema._def.schema.omit({ id: true, timestamp: true, sequence_number: true });
+export const CreateActivityInputSchema = activitySchema.omit({ id: true, timestamp: true, sequence_number: true });
 export type CreateActivityInput = z.infer<typeof CreateActivityInputSchema>; 

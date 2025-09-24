@@ -11,7 +11,7 @@ export const EventSchema = z.object({
   event_type: z.string().describe("The type of event, e.g., 'message', 'reaction_added', 'payment.succeeded'."),
   status: EventStatus.describe('The processing status of the event.'),
   content: z.string().optional().nullable().describe('The text content of the event, typically for messages.'),
-  metadata: z.record(z.any()).optional().nullable().describe('A flexible field for storing the full, raw event payload or other data.'),
+  metadata: z.record(z.string(), z.any()).optional().nullable().describe('A flexible field for storing the full, raw event payload or other data.'),
   classification_notes: z.string().optional().nullable().describe('Notes added during processing, explaining why an event was classified a certain way or failed.'),
 });
 export type Event = z.infer<typeof EventSchema>;

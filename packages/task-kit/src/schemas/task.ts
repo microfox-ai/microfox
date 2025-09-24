@@ -32,9 +32,9 @@ export const TaskSchema = z.object({
   priority: TaskPrioritySchema.optional().nullable().describe('The priority level of the task.'),
   authorized_users: z.array(z.string()).optional().nullable().describe('An array of user IDs authorized to interact with this task.'),
   triggering_event_id: z.string().uuid().optional().nullable().describe('The ID of the event that triggered this task.'),
-  input: z.record(z.any()).optional().nullable().describe('The data the task needs to run.'),
-  output: z.record(z.any()).optional().nullable().describe('The result of a successful task execution.'),
-  metadata: z.record(z.any()).optional().nullable().describe('A flexible field for storing any other unstructured data.'),
+  input: z.record(z.string(), z.any()).optional().nullable().describe('The data the task needs to run.'),
+  output: z.record(z.string(), z.any()).optional().nullable().describe('The result of a successful task execution.'),
+  metadata: z.record(z.string(), z.any()).optional().nullable().describe('A flexible field for storing any other unstructured data.'),
   provider_name: z.string().optional().nullable().describe('The system or event source that initiated this task.'),
   ai_description: z.string().optional().nullable().describe('An AI-generated description of the task or its purpose.'),
 });
