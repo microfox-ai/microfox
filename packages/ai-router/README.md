@@ -1,5 +1,3 @@
-> **Note:** This package is deprecated and will no longer be maintained. Please consider using an alternative.
-
 # @microfox/ai-router
 
 A powerful, composable router framework for building structured, multi-agent AI applications. Heavily inspired by the simplicity and power of [Express.js](https://expressjs.com/) & Agent as Tool approach of Google's Agent Development kit [Adk](https://google.github.io/adk-docs/), `ai-router` brings a familiar middleware-style architecture to the world of AI assistants. It provides a robust foundation for orchestrating complex AI workflows with multiple agents, tools, and dynamic routing, all while integrating seamlessly with the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).

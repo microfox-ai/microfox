@@ -26,11 +26,11 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/perplexity": "latest",
-    "@ai-sdk/provider": "latest",
+    "@ai-sdk/perplexity": "2.0.10",
+    "@ai-sdk/provider": "2.0.0",
     "@microfox/usage-tracker": "*",
     "@upstash/redis": "^1.34.9",
-    "ai": "latest",
+    "ai": "5.0.51",
     "zod": "4.0.5"
   },
   "devDependencies": {

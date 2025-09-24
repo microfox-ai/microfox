@@ -26,10 +26,10 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/google": "latest",
-    "@ai-sdk/provider": "latest",
+    "@ai-sdk/google": "2.0.16",
+    "@ai-sdk/provider": "2.0.0",
     "@microfox/usage-tracker": "*",
-    "ai": "latest",
+    "ai": "5.0.51",
     "zod": "4.0.5"
   },
   "devDependencies": {
