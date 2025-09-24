@@ -296,7 +296,7 @@ export const DiscordSlashCommandInteractionDataSchema = z.object({
     )
     .optional()
     .describe('Command options'),
-  resolved: z.record(z.any()).optional().describe('Resolved data for mentions'),
+  resolved: z.record(z.string(), z.any()).optional().describe('Resolved data for mentions'),
 });
 
 /**
@@ -341,7 +341,7 @@ export const DiscordCommandHandlerSchema = z.object({
     .array(DiscordSlashCommandOptionSchema)
     .optional()
     .describe('Command options'),
-  handler: z.function().describe('Command handler function'),
+  handler: z.any().describe('Command handler function'),
   default_member_permissions: z
     .string()
     .optional()
