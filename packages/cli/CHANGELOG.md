@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.4
+
+### Patch Changes
+
+- 0e82a19: added support for non @microfox/ packages and regex matching for bulk installs
+
 ## 1.1.3
 
 ### Patch Changes
