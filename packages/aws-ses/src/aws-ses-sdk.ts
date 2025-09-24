@@ -331,15 +331,9 @@ const getRequestHeaders = (config: SESConfig, params: any) => {
 // SDK interface with method descriptions
 export const SESSdkSchema = z
   .object({
-    sendEmail: z
-      .function()
-      .args(EmailParamsSchema)
-      .returns(z.promise(SendEmailResponseSchema))
-      .describe('Send a single email using AWS SES'),
+    sendEmail: z.any().describe('Send a single email using AWS SES'),
     sendBulkEmails: z
-      .function()
-      .args(BulkEmailParamsSchema)
-      .returns(z.promise(z.array(SendEmailResponseSchema)))
+      .any()
       .describe('Send multiple emails in parallel using AWS SES'),
   })
   .describe('AWS SES SDK interface');
