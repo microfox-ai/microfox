@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Github } from '@microfox/github-oauth';
+import { GitHubOAuthSdk } from '@microfox/github-oauth';
 import { OauthKit } from '@microfox/oauth-kit';
 
 interface GitHubUser {
@@ -21,7 +21,7 @@ export default function GitHub() {
   const [error, setError] = useState<string | null>(null);
   const [pkceVerifier, setPkceVerifier] = useState<string | null>(null);
 
-  const githubOAuth = createGitHubOAuth({
+  const githubOAuth = new GitHubOAuthSdk({
     clientId: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || 'demo-client-id',
     clientSecret: process.env.GITHUB_CLIENT_SECRET || 'demo-client-secret',
     redirectUri: process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI || 'http://localhost:3000/github',
