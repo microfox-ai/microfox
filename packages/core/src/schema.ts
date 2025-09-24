@@ -1,9 +1,8 @@
-import type { z } from 'zod';
+import { z } from 'zod';
 
 import type * as types from './types';
 import { parseStructuredOutput } from './parse-structured-output';
 import { stringifyForModel } from './utils';
-import { zodToJsonSchema } from './zod-to-json-schema';
 
 /**
  * Used to mark schemas so we can support both Zod and custom schemas.
@@ -67,9 +66,8 @@ export function isZodSchema(value: unknown): value is z.ZodType {
 
 export function asSchema<TData>(
   schema: z.Schema<TData> | Schema<TData>,
-  opts: { strict?: boolean } = {},
 ): Schema<TData> {
-  return isSchema(schema) ? schema : createSchemaFromZodSchema(schema, opts);
+  return isSchema(schema) ? schema : createSchemaFromZodSchema(schema);
 }
 
 /**
@@ -107,7 +105,7 @@ export function createSchemaFromZodSchema<TData>(
   zodSchema: z.Schema<TData>,
   opts: { strict?: boolean } = {},
 ): Schema<TData> {
-  return createSchema(zodToJsonSchema(zodSchema, opts), {
+  return createSchema(z.toJSONSchema(zodSchema), {
     parse: value => {
       return parseStructuredOutput(value, zodSchema);
     },

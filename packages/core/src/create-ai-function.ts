@@ -1,9 +1,7 @@
-import type { z } from 'zod';
-
+import { z } from 'zod';
 import type * as types from './types';
 import { parseStructuredOutput } from './parse-structured-output';
 import { assert } from './utils';
-import { zodToJsonSchema } from './zod-to-json-schema';
 
 /**
  * Create a function meant to be used with OpenAI tool or function calling.
@@ -43,17 +41,14 @@ export function createAIFunction<InputSchema extends z.ZodObject<any>, Output>(
   );
 
   /** Parse the arguments string, optionally reading from a message. */
-  const parseInput = (input: string | types.Msg) => {
-    if (typeof input === 'string') {
-      return parseStructuredOutput(input, spec.inputSchema);
-    } else {
-      const args = input.function_call?.arguments;
-      assert(
-        args,
-        `Missing required function_call.arguments for function ${spec.name}`,
-      );
-      return parseStructuredOutput(args, spec.inputSchema);
-    }
+  const parseInput = (input: string | types.Msg): z.infer<InputSchema> => {
+    const text =
+      typeof input === 'string' ? input : input.function_call?.arguments;
+    assert(
+      text,
+      `Missing required function_call.arguments for function ${spec.name}`,
+    );
+    return parseStructuredOutput(text, spec.inputSchema) as z.infer<InputSchema>;
   };
 
   // Call the implementation function with the parsed arguments.
@@ -78,7 +73,7 @@ export function createAIFunction<InputSchema extends z.ZodObject<any>, Output>(
   aiFunction.spec = {
     name: spec.name,
     description: spec.description?.trim() ?? '',
-    parameters: zodToJsonSchema(spec.inputSchema, { strict }),
+    parameters: z.toJSONSchema(spec.inputSchema),
     type: 'function',
     strict,
   };
