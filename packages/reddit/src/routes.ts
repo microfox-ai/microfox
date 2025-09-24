@@ -982,7 +982,7 @@ export const Endpoints = {
       method: 'GET',
       url: '/api/user_data_by_account_ids',
       bodySchema: usersSchemas.userDataByAccountIdsSchema,
-      responseSchema: z.record(userSchema),
+      responseSchema: z.record(z.string(), userSchema),
     },
     usernameAvailable: {
       method: 'GET',
