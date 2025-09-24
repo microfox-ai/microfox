@@ -39,7 +39,7 @@
     "micromatch": "^4.0.8",
     "openapi-typescript": "^6.7.5",
     "readline-sync": "^1.4.10",
-    "zod": "^4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "zod": "4.0.5",
+    "zod": "^4.1.11",
     "@upstash/redis": "*"
   },
   "devDependencies": {

@@ -33,7 +33,7 @@
     "@microfox/core": "*",
     "ky": "^1.7.5",
     "p-throttle": "^6.2.0",
-    "zod": "4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*"

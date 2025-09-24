@@ -28,7 +28,7 @@
   "dependencies": {
     "@notionhq/client": "^1.0.4",
     "@tryfabric/martian": "^1.2.4",
-    "zod": "4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

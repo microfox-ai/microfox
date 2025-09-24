@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@microfox/instagram-oauth": "*",
-    "zod": "4.0.5",
+    "zod": "^4.1.11",
     "dotenv": "^16.4.0"
   },
   "devDependencies": {

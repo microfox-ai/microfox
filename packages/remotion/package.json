@@ -30,7 +30,7 @@
     "@remotion/media-utils": "^4.0.340",
     "react": "19.1.1",
     "remotion": "4.0.340",
-    "zod": "4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/js": "latest",

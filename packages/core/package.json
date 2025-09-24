@@ -35,8 +35,8 @@
     "ky": "^1.7.5",
     "p-throttle": "^6.2.0",
     "type-fest": "^4.37.0",
-    "zod": "^3.24.2",
-    "zod-validation-error": "^3.4.0"
+    "zod": "^4.1.11",
+    "zod-validation-error": "^4.0.2"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

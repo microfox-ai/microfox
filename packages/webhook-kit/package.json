@@ -27,7 +27,7 @@
     "@microfox/webhook-core": "*",
     "@microfox/webhook-octokit": "*",
     "@microfox/webhook-slack": "*",
-    "zod": "4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
