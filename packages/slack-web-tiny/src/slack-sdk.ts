@@ -295,7 +295,7 @@ const SlackMessageSchema = z
       .optional()
       .describe('Custom image URL to use as the bot icon.'),
     metadata: z
-      .record(z.unknown())
+      .record(z.string(), z.unknown())
       .optional()
       .describe('Additional metadata associated with the message.'),
   })
@@ -353,7 +353,7 @@ const MessageResponseSchema = z
         id: z.string(),
         app_id: z.string(),
         name: z.string(),
-        icons: z.record(z.string()).optional(),
+        icons: z.record(z.string(), z.string()).optional(),
         deleted: z.boolean().optional(),
         updated: z.number().optional(),
         team_id: z.string().optional(),
@@ -391,7 +391,7 @@ const SlackMessageResponseSchema = z
         'The timestamp of the posted message, used as a unique identifier.',
       ),
     message: z
-      .union([MessageResponseSchema, z.record(z.unknown())])
+      .union([MessageResponseSchema, z.record(z.string(), z.unknown())])
       .optional()
       .describe('Details about the posted message.'),
     error: z
