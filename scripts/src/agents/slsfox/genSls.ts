@@ -118,7 +118,7 @@ async function generateOpenAPIPath(
         .object({
           type: z.literal('object').describe('Type must be object'),
           description: z.string().describe('Description of the parameters object'),
-          properties: z.record(z.any()).describe('Properties of the object'),
+          properties: z.record(z.string(), z.any()).describe('Properties of the object'),
           required: z.array(z.string()).optional().describe('Required properties'),
         })
         .describe('Parameters object schema for the function arguments'),
