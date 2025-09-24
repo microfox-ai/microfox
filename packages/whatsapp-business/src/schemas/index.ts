@@ -207,7 +207,7 @@ export const FlowActionPayloadSchema = z.object({
     .optional()
     .describe('The id of the first screen. Default is FIRST_ENTRY_SCREEN'),
   data: z
-    .record(z.any())
+    .record(z.string(), z.any())
     .optional()
     .describe(
       'Optional. The input data for the first screen of the Flow. Must be a non-empty object',
@@ -406,7 +406,7 @@ export const FlowSchema = z.object({
               'The id of the first screen. Default is FIRST_ENTRY_SCREEN',
             ),
           data: z
-            .record(z.any())
+            .record(z.string(), z.any())
             .optional()
             .describe(
               'Optional. The input data for the first screen of the Flow',
