@@ -23,7 +23,6 @@ import {
 import { CryptoVault } from '@microfox/crypto-sdk';
 import { convertOpenApiSchemaToZod } from '../parsing/jsonzod';
 import { addPropertiesToBody } from '../parsing/argumentHelpers';
-import zodToJsonSchema from 'zod-to-json-schema';
 import { JsonSchema } from '@microfox/types';
 import { constructHeaders, getAuthOptions } from './headers';
 
@@ -902,9 +901,7 @@ export class OpenApiMCP {
           summary: cleanedOperation.summary,
         });
         if (additionalArgsZod) {
-          additionalArgsSchema = zodToJsonSchema(additionalArgsZod as any, {
-            $refStrategy: 'none',
-          }) as JsonSchema;
+          additionalArgsSchema = (additionalArgsZod as any).toJSON();
         }
       }
 

@@ -1,3 +1,5 @@
+> **Note:** This package is deprecated and will no longer be maintained. Please consider using an alternative.
+
 ![hero illustration](./assets/hero.gif)
 
 # AI SDK

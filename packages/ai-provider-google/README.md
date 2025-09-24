@@ -1,3 +1,5 @@
+> **Note:** This package is deprecated and will no longer be maintained. Please consider using an alternative.
+
 # Google AI Provider for Vercel's AI SDK
 
 A comprehensive TypeScript SDK for interacting with Google AI's REST API endpoints, enabling seamless integration with various AI models for text generation, embeddings, and image creation.

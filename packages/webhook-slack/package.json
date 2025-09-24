@@ -28,7 +28,7 @@
     "@slack/bolt": "^4.4.0",
     "@types/aws-lambda": "^8.10.149",
     "aws-lambda": "^1.0.7",
-    "zod": "^3.24.2"
+    "zod": "4.0.5"
   },
   "peerDependencies": {
     "next": ">=13.0.0"

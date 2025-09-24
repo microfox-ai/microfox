@@ -1,3 +1,5 @@
+> **Note:** This package is deprecated and will no longer be maintained. Please consider using an alternative.
+
 # Anthropic Provider for Vercel's AI SDK
 
 A TypeScript SDK for interacting with Anthropic's Claude API, providing a convenient wrapper around the official Anthropic SDK.

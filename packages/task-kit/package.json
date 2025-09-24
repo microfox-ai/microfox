@@ -28,8 +28,8 @@
     "@microfox/usage-tracker": "*",
     "@microfox/webhook-core": "*",
     "@supabase/supabase-js": "^2.50.0",
-    "ai": "5.0.0-alpha.15",
-    "zod": "^3.25.67"
+    "ai": "latest",
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

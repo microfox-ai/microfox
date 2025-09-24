@@ -1,3 +1,5 @@
+> **Note:** This package is deprecated and will no longer be maintained. Please consider using an alternative.
+
 # Perplexity Provider for Vercel's AI SDK
 
 This package provides a convenient wrapper for using Perplexity's various models through Vercel's AI SDK.

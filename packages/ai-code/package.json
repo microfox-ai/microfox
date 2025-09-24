@@ -26,11 +26,11 @@
     }
   },
   "dependencies": {
-    "zod": "^3.24.3",
-    "ai": "5.0.0-alpha.15",
-    "@ai-sdk/provider": "2.0.0-alpha.15",
-    "@ai-sdk/google": "2.0.0-alpha.15",
-    "@ai-sdk/anthropic": "2.0.0-alpha.15"
+    "zod": "4.0.5",
+    "ai": "latest",
+    "@ai-sdk/provider": "latest",
+    "@ai-sdk/google": "latest",
+    "@ai-sdk/anthropic": "latest"
   },
   "devDependencies": {
     "@types/node": "^18",

@@ -28,7 +28,7 @@
   "dependencies": {
     "@microfox/db-upstash": "latest",
     "@upstash/redis": "^1.35.2",
-    "zod": "^3.24.3"
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@eslint/js": "latest",

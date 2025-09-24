@@ -26,11 +26,11 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/google": "2.0.0-alpha.15",
-    "@ai-sdk/provider": "2.0.0-alpha.15",
+    "@ai-sdk/google": "latest",
+    "@ai-sdk/provider": "latest",
     "@microfox/usage-tracker": "*",
-    "ai": "5.0.0-alpha.15",
-    "zod": "^3.24.2"
+    "ai": "latest",
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

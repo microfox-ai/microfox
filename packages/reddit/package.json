@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@microfox/reddit-oauth": "*",
-    "zod": "^3.24.3"
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

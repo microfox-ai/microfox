@@ -26,12 +26,12 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/perplexity": "2.0.0-alpha.15",
-    "@ai-sdk/provider": "2.0.0-alpha.15",
+    "@ai-sdk/perplexity": "latest",
+    "@ai-sdk/provider": "latest",
     "@microfox/usage-tracker": "*",
     "@upstash/redis": "^1.34.9",
-    "ai": "5.0.0-alpha.15",
-    "zod": "^3.24.2"
+    "ai": "latest",
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
