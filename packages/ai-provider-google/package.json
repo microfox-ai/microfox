@@ -30,7 +30,7 @@
     "@ai-sdk/provider": "2.0.0",
     "@microfox/usage-tracker": "*",
     "ai": "5.0.51",
-    "zod": "4.0.5"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",
