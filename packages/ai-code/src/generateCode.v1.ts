@@ -509,12 +509,12 @@ Based on the instruction and directory structure, create the high-level generati
 
   const PlanningSchemaWithParams = paramsSchema
     ? z.object({
-        plan: PlanSchema,
-        params: paramsSchema,
-      })
+      plan: PlanSchema,
+      params: paramsSchema,
+    })
     : z.object({
-        plan: PlanSchema,
-      });
+      plan: PlanSchema,
+    });
 
   const planResult = await generateObject({
     model: submodel || model,
@@ -610,7 +610,7 @@ Please correct your response. It MUST be a single call to the 'submitPlan' tool.
                 submitPlan: {
                   description:
                     'Submits the detailed, hierarchical plan for the chunk.',
-                  parameters: z.object({
+                  inputSchema: z.object({
                     subChunks: z
                       .array(ChunkDetailSchema)
                       .describe(
@@ -736,7 +736,7 @@ Please correct your response. It MUST be a single call to the 'submitPlan' tool.
       .join('\n');
 
     const fileDir = path.dirname(absoluteFilePath);
-    await fs.promises.mkdir(fileDir, { recursive: true }).catch(() => {});
+    await fs.promises.mkdir(fileDir, { recursive: true }).catch(() => { });
     await fs.promises.writeFile(absoluteFilePath, scaffoldContent);
   }
 
@@ -836,11 +836,10 @@ You must replace the placeholder \`${CHUNK_PLACEHOLDER(chunk.id)}\` with the cor
 **Dependencies (for context only):**
 The code for chunks that this chunk depends on is provided below. Do not duplicate this code.
 ---
-${
-  Array.from(dependencyContent.entries())
-    .map(([id, code]) => `// DEPENDENCY CHUNK: ${id}\n\n${code}`)
-    .join('\n\n// -----\n\n') || 'This chunk has no dependencies.'
-}
+${Array.from(dependencyContent.entries())
+        .map(([id, code]) => `// DEPENDENCY CHUNK: ${id}\n\n${code}`)
+        .join('\n\n// -----\n\n') || 'This chunk has no dependencies.'
+      }
 ---
 
 Now, call the \`generateChunk\` tool with the precise code needed to replace the placeholder.
@@ -890,7 +889,7 @@ Please correct your response. It MUST be a single call to the 'generateChunk' to
             generateChunk: {
               description:
                 'Generates the final code for a simple, atomic chunk.',
-              parameters: z.object({
+              inputSchema: z.object({
                 code: z.string().describe('The final code for the chunk.'),
                 imports: z
                   .array(

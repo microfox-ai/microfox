@@ -4,7 +4,7 @@ import { LanguageModelV2 } from '@ai-sdk/provider';
 
 type GenerateTextOptions = Parameters<typeof generateText>[0];
 
-export type GenerateCodeFileOptions = Omit<GenerateTextOptions, 'prompt' | 'system'> & {
+export type GenerateCodeFileOptions = Omit<GenerateTextOptions, 'prompt' | 'system' | 'messages'> & {
     systemPrompt: string;
     userPrompt: string;
     model: LanguageModelV2;

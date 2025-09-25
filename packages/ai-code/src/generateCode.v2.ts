@@ -45,6 +45,7 @@ export async function generateCodeV2<TParams = any>(
     onFileSubmit,
     onChunkSubmit,
     maxChunks = 10,
+    messages,
     ...args
   } = options;
 
