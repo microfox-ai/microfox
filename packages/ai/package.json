@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@microfox/usage-tracker": "*",
-    "ai": "latest",
+    "ai": "^5.0.51",
     "zod": "^4.1.11"
   },
   "devDependencies": {
