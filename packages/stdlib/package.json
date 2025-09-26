@@ -1,6 +1,6 @@
 {
   "name": "@microfox/stdlib",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Standard library of AI functions which work with any LLM and TypeScript AI SDK.",
   "license": "MIT",
   "repository": {

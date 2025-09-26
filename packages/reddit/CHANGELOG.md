@@ -1,5 +1,16 @@
 # @microfox/reddit
 
+## 1.7.0
+
+### Minor Changes
+
+- a629d84: Changes from PR #743: update-zod-and-ai-sdk-packages-8801
+
+### Patch Changes
+
+- Updated dependencies [a629d84]
+  - @microfox/reddit-oauth@1.5.0
+
 ## 1.6.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/youtube",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "YouTube SDK for Microfox",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@microfox/google": "*",
-    "@microfox/rest-sdk": "1.2.1",
+    "@microfox/rest-sdk": "1.3.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {
@@ -35,7 +35,7 @@
     "typescript": "5.6.3"
   },
   "peerDependencies": {
-    "@microfox/rest-sdk": ">=1.2.1"
+    "@microfox/rest-sdk": ">=1.3.0"
   },
   "publishConfig": {
     "access": "public"

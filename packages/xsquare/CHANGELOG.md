@@ -1,10 +1,17 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- a629d84: Changes from PR #743: update-zod-and-ai-sdk-packages-8801
+
 All notable changes to this project will be documented in this file.
 
 ## [1.0.0] - <%= new Date().toISOString().split('T')[0] %>
 
 ### Added
+
 - Initial release
 - Basic SDK structure
 - TypeScript support
@@ -24,4 +31,4 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Deprecated feature
---> 
+-->
