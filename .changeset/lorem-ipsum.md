@@ -57,7 +57,7 @@
 "@microfox/webhook-whatsapp": minor
 "@microfox/whatsapp-business": minor
 "@microfox/whatsapp-oauth": minor
-"@microfox/xsquare": minor
+"xsquare": minor
 "@microfox/youtube": minor
 "@microfox/youtube-analytics": minor
 "@microfox/youtube-reporting-api": minor
