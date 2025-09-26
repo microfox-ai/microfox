@@ -63,7 +63,7 @@ export const classificationResultSchema = z.object({
             watcher: z.object({
                 provider_name: z.string().describe("The name of the originating provider, e.g., 'slack'."),
                 event_type: z.string().describe("The type of event to watch for, e.g., 'message'."),
-                match_query: z.record(z.string()).optional().describe("A simple key-value map to match against the event's payload. Values must be strings."),
+                match_query: z.record(z.string(), z.string()).optional().describe("A simple key-value map to match against the event's payload. Values must be strings."),
             }).optional().describe('A rule to automatically trigger this task in the future.'),
         }).optional().describe('The new task to be created. This should be populated based on the event.'),
     notes: z.string().optional().describe('A brief explanation for how the task details were derived from the event.'),

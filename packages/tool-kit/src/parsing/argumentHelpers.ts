@@ -1,4 +1,4 @@
-import { JsonSchema } from '@microfox/types';
+import { JSONSchema } from 'zod/v4/core';
 
 /**
  * Merges additional properties into the 'body' part of a given JSON schema.
@@ -8,11 +8,11 @@ import { JsonSchema } from '@microfox/types';
  * @param {JsonSchema & { properties?: Record<string, any>; required?: string[] }} additionalSchema - The schema containing properties and required fields to add.
  */
 export function addPropertiesToBody(
-  schema: JsonSchema & {
+  schema: JSONSchema.BaseSchema & {
     properties?: Record<string, any>;
     required?: string[];
   },
-  additionalSchema: JsonSchema & {
+  additionalSchema: JSONSchema.BaseSchema & {
     properties?: Record<string, any>;
     required?: string[];
   },

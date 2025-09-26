@@ -8,11 +8,11 @@ import { z } from 'zod';
 import { MicrofoxSDKError, APICallError } from './errors';
 
 // Zod schemas for SDK configuration
-const RestHeadersSchema = z.record(z.string());
+const RestHeadersSchema = z.record(z.string(), z.string());
 
 const RestRequestOptionsSchema = z
   .object({
-    query: z.record(z.union([z.string(), z.number(), z.boolean()])).optional(),
+    query: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
     headers: RestHeadersSchema.optional(),
     body: z.unknown().optional(),
   })

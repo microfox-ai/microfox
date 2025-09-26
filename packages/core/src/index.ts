@@ -8,4 +8,3 @@ export * from './parse-structured-output';
 export * from './schema';
 export type * from './types';
 export * from './utils';
-export * from './zod-to-json-schema';

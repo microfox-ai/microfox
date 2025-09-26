@@ -23,9 +23,9 @@ import {
 import { CryptoVault } from '@microfox/crypto-sdk';
 import { convertOpenApiSchemaToZod } from '../parsing/jsonzod';
 import { addPropertiesToBody } from '../parsing/argumentHelpers';
-import zodToJsonSchema from 'zod-to-json-schema';
 import { JsonSchema } from '@microfox/types';
 import { constructHeaders, getAuthOptions } from './headers';
+import { JSONSchema } from 'zod/v4/core';
 
 /**
  * Individual client for interacting with a single API described by an OpenAPI schema
@@ -894,7 +894,7 @@ export class OpenApiMCP {
       const jsonSchema = this.convertOperationToJsonSchema(cleanedOperation);
 
       const getAdditionalArgsFn = getAdditionalArgs || this.getAdditionalArgs;
-      let additionalArgsSchema: JsonSchema | undefined;
+      let additionalArgsSchema: JSONSchema.BaseSchema | undefined;
       if (getAdditionalArgsFn) {
         const additionalArgsZod = await getAdditionalArgsFn({
           toolName,
@@ -902,9 +902,7 @@ export class OpenApiMCP {
           summary: cleanedOperation.summary,
         });
         if (additionalArgsZod) {
-          additionalArgsSchema = zodToJsonSchema(additionalArgsZod as any, {
-            $refStrategy: 'none',
-          }) as JsonSchema;
+          additionalArgsSchema = z.toJSONSchema(additionalArgsZod);
         }
       }
 
@@ -1029,7 +1027,7 @@ export class OpenApiMCP {
         type: 'function',
         toolName,
         clientName: this.name,
-        inputSchema: zodSchema,
+        inputSchema: zodSchema as any,
         summary: cleanedOperation.summary,
         description:
           cleanedOperation.description ||

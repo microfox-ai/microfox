@@ -381,7 +381,7 @@ export class OpenApiToolset {
           const allToolResults = lastStep.toolResults;
           if (
             allToolResults.find(
-              t => t && t.output && t.output._humanIntervention,
+              t => t && t.output && (t.output as any)._humanIntervention,
             )
           ) {
             return true;

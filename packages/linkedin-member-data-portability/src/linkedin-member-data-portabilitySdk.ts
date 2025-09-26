@@ -20,10 +20,10 @@ const ChangelogEventSchema = z
     resourceUri: z.string(),
     method: z.enum(['CREATE', 'UPDATE', 'PARTIAL_UPDATE', 'DELETE']),
     methodName: z.string().optional(),
-    activity: z.record(z.unknown()),
-    processedActivity: z.record(z.unknown()),
-    siblingActivities: z.array(z.record(z.unknown())),
-    parentSiblingActivities: z.array(z.record(z.unknown())),
+    activity: z.record(z.string(), z.unknown()),
+    processedActivity: z.record(z.string(), z.unknown()),
+    siblingActivities: z.array(z.record(z.string(), z.unknown())),
+    parentSiblingActivities: z.array(z.record(z.string(), z.unknown())),
     activityId: z.string(),
     activityStatus: z.enum(['SUCCESS', 'FAILURE', 'SUCCESSFUL_REPLAY']),
   })
@@ -32,7 +32,7 @@ const ChangelogEventSchema = z
 const MemberSnapshotSchema = z
   .object({
     snapshotDomain: z.string(),
-    snapshotData: z.record(z.unknown()),
+    snapshotData: z.record(z.string(), z.unknown()),
   })
   .describe('Member snapshot schema');
 

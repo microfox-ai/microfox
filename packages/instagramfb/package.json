@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@microfox/instagramfb-oauth": "*",
-    "zod": "^3.24.3"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

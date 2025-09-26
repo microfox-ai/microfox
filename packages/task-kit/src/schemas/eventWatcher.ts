@@ -12,7 +12,7 @@ export const EventWatcherSchema = z.object({
   event_type: z.string().describe("The type of event to watch for, e.g., 'message'."),
   team_id: z.string().optional().nullable().describe('An optional, specific team ID to scope the watcher to.'),
   organization_id: z.string().optional().nullable().describe('An optional, specific organization ID to scope the watcher to.'),
-  match_query: z.record(z.any()).describe('The JSONB query used to match against incoming webhook payloads.'),
+  match_query: z.record(z.string(), z.any()).describe('The JSONB query used to match against incoming webhook payloads.'),
   created_at: z.string().datetime().describe('The timestamp when the watcher was created.'),
 });
 export type EventWatcher = z.infer<typeof EventWatcherSchema>;

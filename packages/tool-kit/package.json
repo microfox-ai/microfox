@@ -26,12 +26,12 @@
     }
   },
   "dependencies": {
-    "@ai-sdk/openai": "2.0.0-alpha.15",
+    "@ai-sdk/openai": "2.0.34",
     "@ai-sdk/ui-utils": "1.2.11",
     "@microfox/crypto-sdk": "^1.2.0",
     "@microfox/types": "*",
-    "ai": "5.0.0-alpha.15",
-    "zod": "^3.25.67"
+    "ai": "5.0.51",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@microfox/tsconfig": "*",

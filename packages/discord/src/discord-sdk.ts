@@ -490,7 +490,10 @@ export const createDiscordSdk = (config: DiscordConfig) => {
       }
 
       // Execute the handler
-      await handler.handler(parsedInteraction, options);
+      await (handler.handler as DiscordCommandHandler)(
+        parsedInteraction,
+        options,
+      );
     },
 
     /**

@@ -28,7 +28,7 @@
     "@octokit/webhooks": "^13.8.2",
     "@types/aws-lambda": "^8.10.149",
     "aws-lambda": "^1.0.7",
-    "zod": "^3.24.2"
+    "zod": "^4.1.11"
   },
   "peerDependencies": {
     "next": ">=13.0.0"

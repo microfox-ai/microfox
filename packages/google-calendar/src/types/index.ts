@@ -256,12 +256,12 @@ export const ColorsSchema = z.object({
       'Last modification time of the color palette (as a RFC3339 timestamp)',
     ),
   calendar: z
-    .record(ColorDefinitionSchema)
+    .record(z.string(), ColorDefinitionSchema)
     .describe(
       'A global palette of calendar colors, mapping from the color ID to its definition',
     ),
   event: z
-    .record(ColorDefinitionSchema)
+    .record(z.string(), ColorDefinitionSchema)
     .describe(
       'A global palette of event colors, mapping from the color ID to its definition',
     ),
@@ -417,11 +417,11 @@ export const ConferenceDataSchema = z.object({
 
 export const ExtendedPropertiesSchema = z.object({
   private: z
-    .record(z.string())
+    .record(z.string(), z.string())
     .optional()
     .describe('Properties that are private to the copy of the event'),
   shared: z
-    .record(z.string())
+    .record(z.string(), z.string())
     .optional()
     .describe('Properties that are shared between copies of the event'),
 });
@@ -437,7 +437,7 @@ export const GadgetSchema = z.object({
     .enum(['icon', 'chip'])
     .optional()
     .describe("The gadget's display mode"),
-  preferences: z.record(z.string()).optional().describe('Preferences'),
+  preferences: z.record(z.string(), z.string()).optional().describe('Preferences'),
 });
 
 export const EventReminderOverrideSchema = z.object({
@@ -832,11 +832,11 @@ export const FreeBusyResponseSchema = z.object({
   timeMin: z.string().describe('The start of the interval'),
   timeMax: z.string().describe('The end of the interval'),
   groups: z
-    .record(z.array(z.string()))
+    .record(z.string(), z.array(z.string()))
     .optional()
     .describe('Expansion of groups'),
   calendars: z
-    .record(FreeBusyCalendarSchema)
+    .record(z.string(), FreeBusyCalendarSchema)
     .describe('List of free/busy information for calendars'),
 });
 

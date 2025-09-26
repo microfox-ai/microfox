@@ -244,7 +244,7 @@ export const ChannelSchema = z.object({
   type: z.string(),
   address: z.string(),
   expiration: z.string().optional(),
-  params: z.record(z.string()).optional(),
+  params: z.record(z.string(), z.any()).optional(),
 });
 
 export const ChannelResponseSchema = z.object({
