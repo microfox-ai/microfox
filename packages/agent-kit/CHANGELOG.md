@@ -1,5 +1,16 @@
 # @microfox/webhook-slack
 
+## 0.3.0
+
+### Minor Changes
+
+- a629d84: Changes from PR #743: update-zod-and-ai-sdk-packages-8801
+
+### Patch Changes
+
+- Updated dependencies [a629d84]
+  - @microfox/webhook-slack@1.3.0
+
 ## 0.2.0
 
 ### Minor Changes

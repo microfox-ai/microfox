@@ -1,6 +1,6 @@
 {
   "name": "@microfox/usage-pricing",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A TypeScript SDK for Tracking Pricing & Usage of any LLM and TypeScript AI SDK internally.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

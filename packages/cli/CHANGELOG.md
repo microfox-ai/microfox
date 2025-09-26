@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.5
+
+### Patch Changes
+
+- 827493a: migrate tracker cli
+
 ## 1.1.4
 
 ### Patch Changes

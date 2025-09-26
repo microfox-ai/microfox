@@ -1,6 +1,6 @@
 {
   "name": "@microfox/db-upstash",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for Db Upstash.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

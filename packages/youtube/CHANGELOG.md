@@ -1,5 +1,17 @@
 # @microfox/youtube
 
+## 4.0.0
+
+### Minor Changes
+
+- a629d84: Changes from PR #743: update-zod-and-ai-sdk-packages-8801
+
+### Patch Changes
+
+- Updated dependencies [a629d84]
+  - @microfox/google@4.0.0
+  - @microfox/rest-sdk@1.3.0
+
 ## 3.0.2
 
 ### Patch Changes

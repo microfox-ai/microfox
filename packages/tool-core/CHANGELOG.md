@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- a629d84: Changes from PR #743: update-zod-and-ai-sdk-packages-8801
+
+### Patch Changes
+
+- Updated dependencies [a629d84]
+  - @microfox/db-upstash@1.2.0
+  - @microfox/types@1.1.0
+
 ## 1.0.16
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@microfox/veo-on-vertex-ai",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A TypeScript SDK for interacting with the Veo API on Google Cloud's Vertex AI platform.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
