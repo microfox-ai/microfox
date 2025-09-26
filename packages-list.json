@@ -11,53 +11,7 @@
     "packages/webhook-slack",
     "packages/webhook-whatsapp"
   ],
-  "internalPackages": [
-    "packages/ai",
-    "packages/ai-router",
-    "packages/cli",
-    "packages/crypto-sdk",
-    "packages/db-upstash",
-    "packages/fontuse",
-    "packages/oauth-kit",
-    "packages/rest-sdk",
-    "packages/serverless-yml",
-    "packages/tool-kit",
-    "packages/usage-pricing",
-    "packages/usage-tracker",
-    "packages/webhook-kit"
-  ],
-  "unstablePackages": [
-    "packages/ai-code",
-    "packages/ai-provider-vertex",
-    "packages/coloruse",
-    "packages/linkedin-member-data-portability",
-    "packages/puppeteer-suno",
-    "packages/rag-upstash",
-    "packages/remotion",
-    "packages/remotion-render-lambda",
-    "packages/s3-space",
-    "packages/tool-core",
-    "packages/types",
-    "packages/xsquare"
-  ],
-  "stablePackages": [
-    "packages/ai-provider-anthropic",
-    "packages/ai-provider-google",
-    "packages/aws-ses",
-    "packages/brave",
-    "packages/google-sheets",
-    "packages/instagram",
-    "packages/instagramfb",
-    "packages/linkedin-share",
-    "packages/puppeteer-sls",
-    "packages/slack",
-    "packages/slack-web-tiny",
-    "packages/suno-api",
-    "packages/whatsapp-business"
-  ],
   "semiStablePackages": [
-    "packages/ai-provider-openai",
-    "packages/ai-provider-perplexity",
     "packages/amazon-rekognition-face-detection",
     "packages/apify",
     "packages/coingecko-sdk",
@@ -76,6 +30,42 @@
     "packages/youtube",
     "packages/youtube-analytics",
     "packages/youtube-reporting-api"
+  ],
+  "stablePackages": [
+    "packages/aws-ses",
+    "packages/brave",
+    "packages/google-sheets",
+    "packages/instagram",
+    "packages/instagramfb",
+    "packages/linkedin-share",
+    "packages/puppeteer-sls",
+    "packages/slack",
+    "packages/slack-web-tiny",
+    "packages/suno-api",
+    "packages/whatsapp-business"
+  ],
+  "internalPackages": [
+    "packages/cli",
+    "packages/crypto-sdk",
+    "packages/db-upstash",
+    "packages/fontuse",
+    "packages/oauth-kit",
+    "packages/rest-sdk",
+    "packages/serverless-yml",
+    "packages/tool-kit",
+    "packages/usage-pricing",
+    "packages/usage-tracker",
+    "packages/webhook-kit"
+  ],
+  "unstablePackages": [
+    "packages/coloruse",
+    "packages/linkedin-member-data-portability",
+    "packages/puppeteer-suno",
+    "packages/rag-upstash",
+    "packages/s3-space",
+    "packages/tool-core",
+    "packages/types",
+    "packages/xsquare"
   ],
   "partialPackages": [
     "packages/core",
@@ -101,6 +91,6 @@
     "packages/tracker",
     "packages/webhook-core"
   ],
-  "total": 84,
-  "generatedAt": "2025-09-09T18:23:29.960Z"
+  "total": 74,
+  "generatedAt": "2025-09-26T10:12:50.485Z"
 }
