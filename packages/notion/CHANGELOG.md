@@ -1,5 +1,11 @@
 # @microfox/notion
 
+## 1.2.1
+
+### Patch Changes
+
+- 9a38c9c: upgrade to latest notion api version
+
 ## 1.2.0
 
 ### Minor Changes
