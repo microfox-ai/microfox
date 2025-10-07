@@ -84,7 +84,7 @@ export class NotionOAuthSdk {
     const testEndpoint = 'https://api.notion.com/v1/users/me';
     const headers = new Headers({
       Authorization: `Bearer ${accessToken}`,
-      'Notion-Version': '2022-06-28',
+      'Notion-Version': '2025-09-03',
     });
 
     try {
