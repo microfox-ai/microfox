@@ -53,5 +53,8 @@
   },
   "bugs": {
     "url": "https://github.com/microfox-ai/microfox/issues"
+  },
+  "dependencies": {
+    "zod": "^4.1.11"
   }
 }
