@@ -400,7 +400,30 @@ class WhatsAppBusinessSDK {
    * @returns {Promise<ApiResponse>} - API response with media data
    */
   async downloadMedia(mediaId: string): Promise<ApiResponse> {
-    return this._makeRequest(`/${mediaId}`, 'GET');
+    const mediaUrlResponse = await this.getMediaUrl(mediaId);
+    const mediaUrl = mediaUrlResponse.data.url;
+
+    const mediaResponse = await fetch(mediaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+      },
+    });
+
+    if (!mediaResponse.ok) {
+      const errorData = await mediaResponse.json();
+      throw new WhatsAppBusinessSDKError(
+        errorData.error?.message || 'Failed to download media',
+        errorData.error?.code || mediaResponse.status,
+        errorData,
+      );
+    }
+
+    const mediaData = await mediaResponse.arrayBuffer();
+
+    return {
+      success: true,
+      data: mediaData,
+    };
   }
 
   /**
