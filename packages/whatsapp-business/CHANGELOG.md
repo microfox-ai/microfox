@@ -1,5 +1,11 @@
 # @microfox/whatsapp-business
 
+## 1.5.1
+
+### Patch Changes
+
+- f8dcffc: fix file handling
+
 ## 1.5.0
 
 ### Minor Changes
