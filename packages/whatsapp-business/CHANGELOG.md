@@ -1,5 +1,11 @@
 # @microfox/whatsapp-business
 
+## 1.5.2
+
+### Patch Changes
+
+- 6a090ce: updated zod to v4
+
 ## 1.5.1
 
 ### Patch Changes
