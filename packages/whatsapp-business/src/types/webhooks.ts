@@ -63,6 +63,37 @@ const StickerMessageSchema = z.object({
   sticker: MediaMessageBaseSchema,
 });
 
+const VideoMessageSchema = z.object({
+  from: z.string(),
+  id: z.string(),
+  timestamp: z.string(),
+  type: z.literal('video'),
+  video: MediaMessageBaseSchema.extend({
+    caption: z.string().optional(),
+  }),
+});
+
+const DocumentMessageSchema = z.object({
+  from: z.string(),
+  id: z.string(),
+  timestamp: z.string(),
+  type: z.literal('document'),
+  document: MediaMessageBaseSchema.extend({
+    filename: z.string(),
+    caption: z.string().optional(),
+  }),
+});
+
+const AudioMessageSchema = z.object({
+  from: z.string(),
+  id: z.string(),
+  timestamp: z.string(),
+  type: z.literal('audio'),
+  audio: MediaMessageBaseSchema.extend({
+    voice: z.boolean(),
+  }),
+});
+
 // Location Message
 const LocationMessageSchema = z.object({
   from: z.string(),
@@ -223,6 +254,9 @@ export const WebhookPayloadSchema = z.object({
                   LocationMessageSchema,
                   ContactMessageSchema,
                   InteractiveMessageSchema,
+                  DocumentMessageSchema,
+                  AudioMessageSchema,
+                  VideoMessageSchema,
                 ]),
               )
               .optional(),
@@ -247,3 +281,6 @@ export type WhatsAppContactMessage = z.infer<typeof ContactMessageSchema>;
 export type WhatsAppInteractiveMessage = z.infer<
   typeof InteractiveMessageSchema
 >;
+export type WhatsAppDocumentMessage = z.infer<typeof DocumentMessageSchema>;
+export type WhatsAppAudioMessage = z.infer<typeof AudioMessageSchema>;
+export type WhatsAppVideoMessage = z.infer<typeof VideoMessageSchema>;
