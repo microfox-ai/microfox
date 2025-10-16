@@ -1,3 +1,4 @@
+import sharp from 'sharp';
 import { ColorRgbUtility, RGB } from './colorUtility';
 
 export interface AccessibilityInfo {
@@ -24,7 +25,7 @@ export class ColorPicker {
     } = { enableLogs: false }
   ): Promise<ExtractedPalette> {
     const {
-      deltaEThreshold = 0.5,
+      deltaEThreshold = 4.0,
       paletteSize = 12,
       enableLogs = false,
     } = options;
@@ -48,37 +49,39 @@ export class ColorPicker {
       );
 
       let imageDataArray: Uint8ClampedArray;
-      if (typeof imageData === 'string') {
-        if (imageData.startsWith('http')) {
-          log(`Input is an image URL. Fetching: ${imageData}`);
-          const response = await fetch(encodeURI(imageData.trim()));
-          if (!response.ok) {
-            throw new Error(`Failed to fetch image: ${response.statusText}`);
-          }
-          if (!response.body) {
-            throw new Error('Response body is null');
-          }
-          const chunks = [];
-          for await (const chunk of response.body) {
-            chunks.push(chunk);
-          }
-          const imageBuffer = Buffer.concat(chunks);
-          imageDataArray = new Uint8ClampedArray(imageBuffer);
-          log('Successfully fetched and converted image to Uint8ClampedArray.');
-        } else {
-          log('Input is a base64 string. Decoding...');
-          const buffer = Buffer.from(imageData, 'base64');
-          imageDataArray = new Uint8ClampedArray(buffer);
-          log(
-            `Decoded base64 string to Uint8ClampedArray of length ${imageDataArray.length}.`
-          );
-        }
-      } else if (imageData instanceof ArrayBuffer) {
-        log('Input is an ArrayBuffer. Converting...');
-        imageDataArray = new Uint8ClampedArray(imageData);
-        log('Converted ArrayBuffer to Uint8ClampedArray.');
-      } else {
+
+      if (imageData instanceof Uint8ClampedArray) {
         imageDataArray = imageData;
+      } else {
+        let imageBuffer: Buffer;
+        if (typeof imageData === 'string') {
+          if (imageData.startsWith('http')) {
+            log(`Input is an image URL. Fetching: ${imageData}`);
+            const response = await fetch(encodeURI(imageData.trim()));
+            if (!response.ok) {
+              throw new Error(`Failed to fetch image: ${response.statusText}`);
+            }
+            imageBuffer = Buffer.from(await response.arrayBuffer());
+            log('Successfully fetched image.');
+          } else {
+            log('Input is a base64 string. Decoding...');
+            imageBuffer = Buffer.from(imageData, 'base64');
+            log(`Decoded base64 string to buffer.`);
+          }
+        } else if (imageData instanceof ArrayBuffer) {
+          log('Input is an ArrayBuffer. Converting to buffer...');
+          imageBuffer = Buffer.from(imageData);
+        } else {
+          throw new Error('Unsupported image data type');
+        }
+
+        const { data } = await sharp(imageBuffer)
+          .ensureAlpha()
+          .toColorspace('srgb')
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        imageDataArray = new Uint8ClampedArray(data);
+        log('Decoded image buffer to raw RGBA pixel data.');
       }
 
       let rgbArray = ColorRgbUtility.buildRgb(imageDataArray, 5);
@@ -151,7 +154,7 @@ export class ColorPicker {
           (a, b) => b.hsl.l - a.hsl.l
         );
         const remainingBySaturation = [...remainingColorsHsl].sort(
-          (a, b) => a.hsl.s - b.hsl.s
+          (a, b) => b.hsl.s - a.hsl.s
         );
 
         if (dominantLuminance > 0.65) {

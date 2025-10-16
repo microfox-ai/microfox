@@ -31,10 +31,12 @@
   "devDependencies": {
     "@eslint/js": "latest",
     "@types/node": "^18",
+    "@types/sharp": "^0.31.1",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "eslint": "^9.1.0",
     "prettier": "^3.0.0",
+    "sharp": "^0.34.4",
     "tsup": "^8",
     "typescript": "^5.6.3",
     "vitest": "^1.0.0"

@@ -5,16 +5,17 @@ type MediaMetadata = {
   dominantColor?: string | null;
   secondaryColor?: string | null;
   accentColor?: string | null;
-  aspectRatioType: string | null; // 4:3, 16:9, 1:1, etc.
-  aspectRatio: number | null; // 4:3, 16:9, 1:1, etc.
-  platform: string | null; // instagram, pinterest, etc.
-  platformId: string | null; // instagram, pinterest, etc.
-  platformUrl: string | null; // https://www.instagram.com, https://www.pinterest.com, etc.
+  aspectRatioType: string | null;
+  aspectRatio: number | null;
+  platform: string | null;
+  platformId: string | null;
+  platformUrl: string | null;
   keywords: string[] | null;
-  artStyle: string[] | null; // abstract, surrealism, etc.
-  audienceKeywords: string[] | null; // abstract, surrealism, etc.
-  mediaType: string | null; // image, video, etc.
-  mimeType: string | null; // image/jpeg, image/png, video/mp4, etc.
+  artStyle: string[] | null;
+  audienceKeywords: string[] | null;
+  mediaType: string | null;
+  mimeType: string | null;
+  userTags: string[] | null;
 };
 
 type ImageSet = {
