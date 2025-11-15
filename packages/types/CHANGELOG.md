@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+- 5d6341d: types change & coloruse sdk fixed
+
 ## 1.1.0
 
 ### Minor Changes
