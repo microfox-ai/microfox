@@ -1,12 +1,15 @@
 import { Command } from 'commander';
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import * as fs from 'fs';
+import * as path from 'path';
+import { tmpdir } from 'os';
 import chalk from 'chalk';
 import axios from 'axios';
-import FormData from 'form-data';
-import archiver from 'archiver';
-import micromatch from 'micromatch';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const FormData = require('form-data');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const archiver = require('archiver');
+import * as micromatch from 'micromatch';
+import { findServerlessWorkersDir, saveDeploymentRecord } from '../utils/deployment-records';
 
 const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?: string, port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -58,7 +61,7 @@ const getDirectoryFiles = (dir: string, basePath: string = '', ignorePatterns: s
 };
 
 async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Promise<string> {
-  const tempDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'microfox-'));
+  const tempDir = await fs.promises.mkdtemp(path.join(tmpdir(), 'microfox-'));
   const zipPath = path.join(tempDir, 'archive.zip');
   const output = fs.createWriteStream(zipPath);
   const archive = archiver('zip', { zlib: { level: 9 } });
@@ -88,7 +91,15 @@ async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Pr
 }
 
 async function pushAction(): Promise<void> {
-  const cwd = process.cwd();
+  let cwd = process.cwd();
+  
+  // Check if .serverless-workers directory exists at same level with microfox.json
+  const serverlessDir = findServerlessWorkersDir(cwd);
+  if (serverlessDir) {
+    cwd = serverlessDir;
+    process.chdir(cwd);
+  }
+  
   const microfoxConfigPath = path.join(cwd, 'microfox.json');
 
   if (!fs.existsSync(microfoxConfigPath)) {
@@ -148,9 +159,15 @@ async function pushAction(): Promise<void> {
       if (response.status >= 200 && response.status < 300) {
         console.log(chalk.green('✅ Deployment request accepted!'));
         if (response.data?.deploymentId) {
-          console.log(chalk.green(`   Deployment ID: ${response.data.deploymentId}`));
+          const deploymentId = response.data.deploymentId;
+          console.log(chalk.green(`   Deployment ID: ${deploymentId}`));
+          // Save deployment ID to records
+          saveDeploymentRecord(cwd, deploymentId);
         } else if (response.data?.runId) {
-          console.log(chalk.green(`   Run ID: ${response.data.runId}`));
+          const runId = response.data.runId;
+          console.log(chalk.green(`   Run ID: ${runId}`));
+          // Save run ID as deployment ID for v1
+          saveDeploymentRecord(cwd, runId);
         }
         if (response.data?.message) {
           console.log(chalk.green(`   Message: ${response.data.message}`));
@@ -208,7 +225,10 @@ async function pushAction(): Promise<void> {
       if (response.status >= 200 && response.status < 300) {
         console.log(chalk.green('✅ Deployment successful!'));
         if (response.data?.runId) {
-          console.log(chalk.green(`   Run ID: ${response.data.runId}`));
+          const runId = response.data.runId;
+          console.log(chalk.green(`   Run ID: ${runId}`));
+          // Save run ID as deployment ID for v1
+          saveDeploymentRecord(cwd, runId);
         }
         if (response.data?.message) {
           console.log(chalk.green(`   Message: ${response.data.message}`));
