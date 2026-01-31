@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.7
+
+### Patch Changes
+
+- 9c83186: patch update
+
 ## 1.1.6
 
 ### Patch Changes
