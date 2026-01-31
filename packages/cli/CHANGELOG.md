@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.1.6
+
+### Patch Changes
+
+- 7d48d17: added ai-worker-cli intergration
+
 ## 1.1.5
 
 ### Patch Changes
