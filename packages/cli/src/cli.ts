@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { buildCommand } from './commands/build';
 import { addCommand } from './commands/add';
 import { pushCommand } from './commands/push';
+import { compileCommand } from './commands/compile';
 import { statusCommand, logsCommand, metricsCommand } from './commands/status';
 import { codeCommand } from './commands/code';
 import { installCommand } from './commands/install';
@@ -22,6 +23,7 @@ program
   .version(version);
 
 program.addCommand(buildCommand);
+program.addCommand(compileCommand);
 program.addCommand(pushCommand);
 program.addCommand(statusCommand);
 program.addCommand(logsCommand);

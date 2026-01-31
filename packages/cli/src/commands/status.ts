@@ -2,8 +2,9 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import axios from 'axios';
 import inquirer from 'inquirer';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
+import { getLatestDeploymentId, findServerlessWorkersDir } from '../utils/deployment-records';
 
 const ENDPOINT_BASE = ({ mode, version, port }: { mode?: string; version?: string; port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -59,15 +60,56 @@ async function fetchV2Deployment(deploymentId: string, cfg: any) {
   return axios.get(url, { headers: { 'x-project-id': projectId } });
 }
 
-async function statusAction(idArg?: string): Promise<void> {
-  const cwd = process.cwd();
+async function statusAction(idArg?: string, options?: { number?: number }): Promise<void> {
+  let cwd = process.cwd();
+  
+  // Check if .serverless-workers directory exists at same level with microfox.json
+  const serverlessDir = findServerlessWorkersDir(cwd);
+  if (serverlessDir) {
+    cwd = serverlessDir;
+  }
+  
   const cfg = readMicrofoxConfig(cwd);
   const deploymentConfig = cfg.deployment || {};
   const apiVersion = deploymentConfig.apiVersion || cfg.apiVersion || cfg.API_VERSION;
   const isV2 = apiVersion?.toLowerCase?.() === 'v2';
 
+  // Handle "latest" keyword and -n option
+  let idsToProcess: string[] = [];
+  if (idArg === 'latest' || !idArg) {
+    const n = options?.number || 1;
+    const latestIds = getLatestDeploymentId(cwd, n);
+    if (latestIds.length === 0) {
+      console.error(chalk.red('❌ Error: No deployment records found. Run `npx microfox push` first.'));
+      process.exit(1);
+    }
+    idsToProcess = latestIds;
+  } else {
+    idsToProcess = [idArg];
+  }
+
+  // Process multiple deployments if -n is specified
+  if (idsToProcess.length > 1) {
+    for (let i = 0; i < idsToProcess.length; i++) {
+      const id = idsToProcess[i];
+      console.log(chalk.cyan(`\n[${i + 1}/${idsToProcess.length}] Deployment: ${id}`));
+      console.log(chalk.gray('────────────────────────────────────────────────'));
+      await processSingleStatus(id, cwd, cfg, isV2);
+      if (i < idsToProcess.length - 1) {
+        console.log(''); // Add spacing between deployments
+      }
+    }
+    return;
+  }
+
+  // Single deployment
+  const idToProcess = idsToProcess[0];
+  await processSingleStatus(idToProcess, cwd, cfg, isV2);
+}
+
+async function processSingleStatus(idArg: string, cwd: string, cfg: any, isV2: boolean): Promise<void> {
   if (!isV2) {
-    const runId = await getIdentifier('Run ID', idArg);
+    const runId = idArg;
     const resp = await fetchV1Status(runId, cfg);
     const deployment = resp.data.data.deployment;
 
@@ -80,12 +122,12 @@ async function statusAction(idArg?: string): Promise<void> {
     console.log(`${chalk.bold('Start Time:')}  ${deployment.startTime ? new Date(deployment.startTime).toLocaleString() : 'N/A'}`);
     console.log(`${chalk.bold('End Time:')}    ${deployment.endTime ? new Date(deployment.endTime).toLocaleString() : 'N/A'}`);
     console.log(`${chalk.bold('Base URL:')}    ${deployment.baseUrl ? chalk.underline.blue(deployment.baseUrl) : 'N/A'}`);
-    console.log(chalk.gray('----------------------------------------'));
+    console.log(chalk.gray('────────────────────────────────────────────────'));
     return;
   }
 
   // v2
-  const deploymentId = await getIdentifier('Deployment ID', idArg);
+  const deploymentId = idArg;
   try {
     const resp = await fetchV2Deployment(deploymentId, cfg);
     const dep = resp.data;
@@ -101,7 +143,7 @@ async function statusAction(idArg?: string): Promise<void> {
     console.log(`${chalk.bold('Start Time:')}    ${start}`);
     console.log(`${chalk.bold('End Time:')}      ${end}`);
     console.log(`${chalk.bold('Base URL:')}      ${dep.baseUrl ? chalk.underline.blue(dep.baseUrl) : 'N/A'}`);
-    console.log(chalk.gray('----------------------------------------'));
+    console.log(chalk.gray('────────────────────────────────────────────────'));
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       console.error(chalk.red(`❌ Error: Deployment with ID "${deploymentId}" not found.`));
@@ -113,25 +155,66 @@ async function statusAction(idArg?: string): Promise<void> {
   }
 }
 
-type LogsOptions = { step?: string; limit?: number; cursor?: string };
+type LogsOptions = { step?: string; limit?: number; cursor?: string; number?: number };
 
 async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<void> {
-  const cwd = process.cwd();
+  let cwd = process.cwd();
+  
+  // Check if .serverless-workers directory exists at same level with microfox.json
+  const serverlessDir = findServerlessWorkersDir(cwd);
+  if (serverlessDir) {
+    cwd = serverlessDir;
+  }
+  
   const cfg = readMicrofoxConfig(cwd);
   const deploymentConfig = cfg.deployment || {};
   const apiVersion = deploymentConfig.apiVersion || cfg.apiVersion || cfg.API_VERSION;
   const isV2 = apiVersion?.toLowerCase?.() === 'v2';
 
+  // Handle "latest" keyword and -n option
+  let idsToProcess: string[] = [];
+  if (idArg === 'latest' || !idArg) {
+    const n = options?.number || 1;
+    const latestIds = getLatestDeploymentId(cwd, n);
+    if (latestIds.length === 0) {
+      console.error(chalk.red('❌ Error: No deployment records found. Run `npx microfox push` first.'));
+      process.exit(1);
+    }
+    idsToProcess = latestIds;
+  } else {
+    idsToProcess = [idArg];
+  }
+
+  // Process multiple deployments if -n is specified
+  if (idsToProcess.length > 1) {
+    for (let i = 0; i < idsToProcess.length; i++) {
+      const id = idsToProcess[i];
+      console.log(chalk.cyan(`\n[${i + 1}/${idsToProcess.length}] Deployment: ${id}`));
+      console.log(chalk.gray('────────────────────────────────────────────────'));
+      await processSingleLogs(id, cwd, cfg, isV2, options);
+      if (i < idsToProcess.length - 1) {
+        console.log(''); // Add spacing between deployments
+      }
+    }
+    return;
+  }
+
+  // Single deployment
+  const idToProcess = idsToProcess[0];
+  await processSingleLogs(idToProcess, cwd, cfg, isV2, options);
+}
+
+async function processSingleLogs(idArg: string, cwd: string, cfg: any, isV2: boolean, options: LogsOptions): Promise<void> {
   if (!isV2) {
     // Preserve existing behavior for v1
     try {
-      const runId = await getIdentifier('Run ID', idArg);
+      const runId = idArg;
       const resp = await fetchV1Status(runId, cfg);
       const logs = resp.data.data.deploymentLogs;
       console.log(chalk.cyan.bold('📜 Deployment Logs (v1)'));
-      console.log(chalk.gray('----------------------------------------'));
+      console.log(chalk.gray('────────────────────────────────────────────────'));
       console.log(logs);
-      console.log(chalk.gray('----------------------------------------'));
+      console.log(chalk.gray('────────────────────────────────────────────────'));
     } catch (error) {
       console.error(chalk.red('❌ An error occurred while fetching deployment logs:'));
       console.error(error);
@@ -141,7 +224,8 @@ async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<vo
   }
 
   // v2 logs via /deployments/:deploymentId/logs
-  const deploymentId = await getIdentifier('Deployment ID', idArg);
+  const deploymentId = idArg;
+  const deploymentConfig = cfg.deployment || {};
   const mode = deploymentConfig.apiMode || cfg.apiMode || cfg.API_MODE;
   const port = deploymentConfig.port || cfg.port || cfg.PORT;
   const base = ENDPOINT_BASE({ mode, version: 'v2', port });
@@ -174,7 +258,7 @@ async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<vo
     printSection('compiling', logs.compiling || []);
     printSection('deploying', logs.deploying || []);
     printSection('post_deployment', logs.post_deployment || []);
-    console.log(chalk.gray('----------------------------------------'));
+    console.log(chalk.gray('────────────────────────────────────────────────'));
   } catch (error) {
     console.error(chalk.red('❌ An error occurred while fetching deployment logs (v2):'));
     console.error(error);
@@ -287,26 +371,28 @@ async function metricsAction(idArg?: string): Promise<void> {
 
 export const statusCommand = new Command('status')
     .description('Check the deployment status of your agent')
-    .argument('[runId]', 'The deployment Run ID')
-    .action(async (runId) => {
+    .argument('[id]', 'The deployment ID, Run ID (v1), or "latest" for the most recent deployment')
+    .option('-n, --number <number>', 'Number of recent deployments to show (used with "latest")', (val) => parseInt(val, 10))
+    .action(async (id, options) => {
         try {
-            await statusAction(runId);
+            await statusAction(id, options);
         } catch (error) {
-            // Error is already handled in getDeploymentData, just exit
+            // Error is already handled in statusAction, just exit
         }
     });
 
 export const logsCommand = new Command('logs')
     .description('View the deployment logs for your agent')
-    .argument('[id]', 'The Run ID (v1) or Deployment ID (v2)')
+    .argument('[id]', 'The Run ID (v1), Deployment ID (v2), or "latest" for the most recent deployment')
     .option('-s, --step <step>', 'Log step: compiling|deploying|post_deployment', 'deploying')
     .option('-l, --limit <limit>', 'Number of log lines to fetch (default 100)', (value) => parseInt(value, 10))
     .option('-c, --cursor <cursor>', 'Pagination cursor (ISO timestamp)')
+    .option('-n, --number <number>', 'Number of recent deployments to show logs for (used with "latest")', (val) => parseInt(val, 10))
     .action(async (id, opts) => {
         try {
             await logsAction(id, opts);
         } catch (error) {
-            // Error is already handled in getDeploymentData, just exit
+            // Error is already handled in logsAction, just exit
         }
     });
 
