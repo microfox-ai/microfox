@@ -36,7 +36,7 @@ interface AiContext<Metadata, Parts, Tools, State> {
 The `request` object contains all the information about the current request:
 
 ```typescript
-router.agent('/example', async ctx => {
+router.agent('/example', async (ctx) => {
   // Access message history
   const messages = ctx.request.messages;
   const lastMessage = messages[messages.length - 1];
@@ -60,13 +60,13 @@ router.agent('/example', async ctx => {
 The `state` object provides a shared, mutable state that persists for the lifetime of a single request. This is perfect for passing data between agents without consuming LLM tokens:
 
 ```typescript
-router.agent('/step1', async ctx => {
+router.agent('/step1', async (ctx) => {
   // Store data in shared state
   ctx.state.userData = await fetchUserData();
   ctx.state.timestamp = Date.now();
 });
 
-router.agent('/step2', async ctx => {
+router.agent('/step2', async (ctx) => {
   // Access data from previous agent
   const userData = ctx.state.userData;
   const timestamp = ctx.state.timestamp;
@@ -85,7 +85,7 @@ router.agent('/step2', async ctx => {
 The `executionContext` provides information about the current execution state:
 
 ```typescript
-router.agent('/debug', async ctx => {
+router.agent('/debug', async (ctx) => {
   // Log current execution information
   ctx.logger.log(`Current path: ${ctx.executionContext.currentPath}`);
   ctx.logger.log(`Call depth: ${ctx.executionContext.callDepth}`);
@@ -102,7 +102,7 @@ router.agent('/debug', async ctx => {
 ### Request Identification
 
 ```typescript
-router.agent('/tracking', async ctx => {
+router.agent('/tracking', async (ctx) => {
   // Unique identifier for this request
   const requestId = ctx.requestId;
 
@@ -122,7 +122,7 @@ router.agent('/tracking', async ctx => {
 The `response` object provides methods for streaming data back to the client:
 
 ```typescript
-router.agent('/streaming', async ctx => {
+router.agent('/streaming', async (ctx) => {
   // Basic text streaming
   ctx.response.write({ type: 'text', text: 'Hello' });
 
@@ -153,12 +153,9 @@ router.agent('/streaming', async ctx => {
 The `next` object provides utilities for agent-to-agent communication:
 
 ```typescript
-router.agent('/orchestrator', async ctx => {
+router.agent('/orchestrator', async (ctx) => {
   // Call another agent
   const result = await ctx.next.callAgent('/worker', { task: 'process' });
-
-  // Call a tool
-  const toolResult = await ctx.next.callTool('/calculator', { a: 5, b: 3 });
 
   // Expose an agent as a tool for LLM function calling
   const agentTool = ctx.next.agentAsTool('/research');
@@ -168,7 +165,6 @@ router.agent('/orchestrator', async ctx => {
 **Available Methods:**
 
 - `callAgent(path, params?)`: Call another agent with optional parameters
-- `callTool(path, params)`: Call a tool with parameters
 - `agentAsTool(path, definition?)`: Expose an agent as a tool for LLM function calling
 
 ## Context Usage Patterns
@@ -176,7 +172,7 @@ router.agent('/orchestrator', async ctx => {
 ### Basic Agent Pattern
 
 ```typescript
-router.agent('/basic', async ctx => {
+router.agent('/basic', async (ctx) => {
   // 1. Extract parameters
   const { query } = ctx.request.params;
 
@@ -194,7 +190,7 @@ router.agent('/basic', async ctx => {
 ### Multi-Step Workflow Pattern
 
 ```typescript
-router.agent('/workflow', async ctx => {
+router.agent('/workflow', async (ctx) => {
   // Step 1: Initialize
   ctx.state.step = 'initializing';
   ctx.response.write({ type: 'text', text: 'Starting workflow...' });
@@ -213,7 +209,7 @@ router.agent('/workflow', async ctx => {
 ### Error Handling Pattern
 
 ```typescript
-router.agent('/robust', async ctx => {
+router.agent('/robust', async (ctx) => {
   try {
     // Your agent logic
     const result = await riskyOperation();
@@ -234,7 +230,7 @@ router.agent('/robust', async ctx => {
 ### Debugging Pattern
 
 ```typescript
-router.agent('/debug', async ctx => {
+router.agent('/debug', async (ctx) => {
   // Log execution context
   ctx.logger.log('Execution context:', {
     path: ctx.executionContext.currentPath,
@@ -270,7 +266,7 @@ interface MyState {
 // Use typed router
 const router = new AiRouter<MyMetadata, any, any, MyState>();
 
-router.agent('/typed', async ctx => {
+router.agent('/typed', async (ctx) => {
   // Full type safety
   const userId = ctx.request.messages[0]?.metadata?.userId;
   ctx.state.processingStage = 'processing';

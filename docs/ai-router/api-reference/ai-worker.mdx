@@ -1,0 +1,671 @@
+---
+title: 'Worker API Reference'
+sidebarTitle: 'Worker API'
+description: 'Complete API reference for @microfox/ai-worker - background job execution runtime.'
+---
+
+## Overview
+
+`@microfox/ai-worker` provides a runtime for executing background jobs on AWS Lambda (triggered via SQS queues) or locally in development. It enables long-running tasks, worker-to-worker communication, and durable job state management through MongoDB or Redis.
+
+## Core Types
+
+### `createWorker<INPUT_SCHEMA, OUTPUT>(config)`
+
+Creates a worker agent that can be dispatched to SQS/Lambda.
+
+```typescript
+export function createWorker<INPUT_SCHEMA extends ZodType<any>, OUTPUT>(
+  config: WorkerAgentConfig<INPUT_SCHEMA, OUTPUT>
+): WorkerAgent<INPUT_SCHEMA, OUTPUT>
+```
+
+**Parameters:**
+
+- `config.id: string` - Unique worker identifier
+- `config.inputSchema: INPUT_SCHEMA` - Zod schema for input validation
+- `config.outputSchema: ZodType<OUTPUT>` - Zod schema for output validation
+- `config.handler: WorkerHandler<z.infer<INPUT_SCHEMA>, OUTPUT>` - Handler function
+- `config.workerConfig?: WorkerConfig` - **Deprecated**: Prefer exporting `workerConfig` separately
+
+**Returns:** `WorkerAgent<INPUT_SCHEMA, OUTPUT>` with a `dispatch()` method
+
+**Example:**
+
+```typescript
+import { createWorker } from '@microfox/ai-worker';
+import { z } from 'zod';
+
+const InputSchema = z.object({
+  url: z.string().url(),
+  timeout: z.number().optional().default(5000),
+});
+
+const OutputSchema = z.object({
+  processedUrl: z.string(),
+  duration: z.number(),
+});
+
+export default createWorker<typeof InputSchema, z.infer<typeof OutputSchema>>({
+  id: 'video-processor',
+  inputSchema: InputSchema,
+  outputSchema: OutputSchema,
+  handler: async ({ input, ctx }) => {
+    await ctx.jobStore?.update({ status: 'running' });
+    const result = await processVideo(input.url);
+    return { processedUrl: result.url, duration: result.duration };
+  },
+});
+```
+
+### `WorkerAgent<INPUT_SCHEMA, OUTPUT>`
+
+The worker agent object returned by `createWorker`.
+
+```typescript
+export interface WorkerAgent<INPUT_SCHEMA extends ZodType<any>, OUTPUT> {
+  id: string;
+  dispatch: (
+    input: z.input<INPUT_SCHEMA>,
+    options: DispatchOptions
+  ) => Promise<DispatchResult>;
+  handler: WorkerHandler<z.infer<INPUT_SCHEMA>, OUTPUT>;
+  inputSchema: INPUT_SCHEMA;
+  outputSchema: ZodType<OUTPUT>;
+  workerConfig?: WorkerConfig;
+}
+```
+
+### `WorkerHandler<INPUT, OUTPUT>`
+
+The handler function signature for worker execution.
+
+```typescript
+export type WorkerHandler<INPUT, OUTPUT> = (
+  params: WorkerHandlerParams<INPUT, OUTPUT>
+) => Promise<OUTPUT>;
+```
+
+**Handler Parameters:**
+
+```typescript
+export interface WorkerHandlerParams<INPUT, OUTPUT> {
+  input: INPUT; // Parsed input (defaults applied)
+  ctx: {
+    jobId: string;
+    workerId: string;
+    requestId?: string;
+    jobStore?: JobStore;
+    dispatchWorker: (
+      workerId: string,
+      input: unknown,
+      options?: DispatchWorkerOptions
+    ) => Promise<{ jobId: string; messageId?: string; output?: unknown }>;
+    [key: string]: any;
+  };
+}
+```
+
+## Worker Configuration
+
+### `WorkerConfig`
+
+Lambda deployment configuration for a worker. **Best Practice**: Export this as a separate const from your worker file.
+
+```typescript
+export interface WorkerConfig {
+  timeout?: number; // Lambda timeout in seconds (max 900)
+  memorySize?: number; // Lambda memory in MB (128-10240)
+  layers?: string[]; // Lambda layer ARNs
+  schedule?: ScheduleConfig; // Schedule events (cron/rate)
+  sqs?: {
+    maxReceiveCount?: number; // DLQ threshold (default: 3)
+    messageRetentionPeriod?: number; // Seconds (max 1209600)
+    visibilityTimeout?: number; // Seconds (default: timeout + 60)
+    deadLetterMessageRetentionPeriod?: number; // DLQ retention
+  };
+}
+```
+
+**Example:**
+
+```typescript
+import { type WorkerConfig } from '@microfox/ai-worker';
+
+export const workerConfig: WorkerConfig = {
+  timeout: 900, // 15 minutes
+  memorySize: 2048, // 2GB
+  layers: ['arn:aws:lambda:${aws:region}:${aws:accountId}:layer:ffmpeg:1'],
+  schedule: 'rate(2 hours)',
+  sqs: {
+    maxReceiveCount: 3,
+    messageRetentionPeriod: 86400, // 1 day
+  },
+};
+```
+
+### `ScheduleConfig`
+
+Schedule event configuration for periodic execution.
+
+```typescript
+export type ScheduleConfig = 
+  | string // Simple rate/cron: 'rate(2 hours)' or 'cron(0 12 * * ? *)'
+  | ScheduleEventConfig
+  | (string | ScheduleEventConfig)[]; // Multiple schedules
+
+export interface ScheduleEventConfig {
+  rate: string | string[]; // Rate or cron expression(s)
+  enabled?: boolean; // Default: true
+  input?: Record<string, any>; // Input payload
+  inputPath?: string; // JSONPath to select event data
+  inputTransformer?: {
+    inputPathsMap?: Record<string, string>;
+    inputTemplate?: string;
+  };
+  name?: string; // Schedule name
+  description?: string;
+  method?: 'eventBus' | 'scheduler'; // Default: 'eventBus'
+  timezone?: string; // Only for 'scheduler' method
+}
+```
+
+**Examples:**
+
+```typescript
+// Simple rate
+schedule: 'rate(2 hours)'
+
+// Multiple schedules
+schedule: [
+  'rate(2 hours)',
+  { rate: 'cron(0 12 * * ? *)', enabled: true, input: { key: 'value' } }
+]
+
+// Scheduler method with timezone
+schedule: {
+  method: 'scheduler',
+  rate: 'cron(0 0/4 ? * MON-FRI *)',
+  timezone: 'America/New_York',
+  input: { key1: 'value1' }
+}
+```
+
+## Dispatch API
+
+### `dispatch(input, options)`
+
+Dispatches a job to the background worker. In local/auto mode (development), runs the handler immediately in-process. In remote mode (production), sends a message to SQS which triggers a Lambda function.
+
+```typescript
+async dispatch(
+  input: z.input<INPUT_SCHEMA>,
+  options: DispatchOptions
+): Promise<DispatchResult>
+```
+
+**Parameters:**
+
+- `input: z.input<INPUT_SCHEMA>` - Input data (validated against `inputSchema`)
+- `options: DispatchOptions` - Dispatch options
+
+**DispatchOptions:**
+
+```typescript
+export interface DispatchOptions {
+  webhookUrl?: string; // Callback URL when job completes
+  mode?: 'auto' | 'local' | 'remote'; // Execution mode
+  jobId?: string; // Optional job ID (default: generated)
+  metadata?: Record<string, any>; // Metadata attached to job
+  registry?: WorkerQueueRegistry; // For dispatchQueue
+  onCreateQueueJob?: (params: {
+    queueJobId: string;
+    queueId: string;
+    firstStep: { workerId: string; workerJobId: string };
+    metadata?: Record<string, unknown>;
+  }) => Promise<void>;
+}
+```
+
+**Returns:**
+
+```typescript
+export interface DispatchResult {
+  messageId: string;
+  status: 'queued';
+  jobId: string;
+}
+```
+
+**Example:**
+
+```typescript
+const result = await worker.dispatch(
+  { url: 'https://example.com/video.mp4' },
+  {
+    webhookUrl: 'https://myapp.com/api/callback',
+    mode: 'auto',
+    metadata: { userId: '123' },
+  }
+);
+// Returns: { messageId: '...', status: 'queued', jobId: '...' }
+```
+
+## Job Store API
+
+### `JobStore`
+
+Interface for updating and retrieving job state.
+
+```typescript
+export interface JobStore {
+  update(update: JobStoreUpdate): Promise<void>;
+  get(): Promise<JobRecord | null>;
+  appendInternalJob?(entry: { jobId: string; workerId: string }): Promise<void>;
+  getJob?(jobId: string): Promise<JobRecord | null>;
+}
+```
+
+**JobStoreUpdate:**
+
+```typescript
+export interface JobStoreUpdate {
+  status?: 'queued' | 'running' | 'completed' | 'failed';
+  metadata?: Record<string, any>;
+  progress?: number; // 0-100
+  progressMessage?: string;
+  output?: any;
+  error?: {
+    message: string;
+    stack?: string;
+    name?: string;
+  };
+}
+```
+
+**JobRecord:**
+
+```typescript
+export interface JobRecord {
+  jobId: string;
+  workerId: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  input: any;
+  output?: any;
+  error?: { message: string; stack?: string };
+  metadata?: Record<string, any>;
+  internalJobs?: Array<{ jobId: string; workerId: string }>;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+}
+```
+
+**Example:**
+
+```typescript
+handler: async ({ input, ctx }) => {
+  // Update status
+  await ctx.jobStore?.update({ status: 'running' });
+  
+  // Update progress
+  await ctx.jobStore?.update({ 
+    progress: 50, 
+    progressMessage: 'Processing batch 2 of 4' 
+  });
+  
+  // Complete with output
+  await ctx.jobStore?.update({ 
+    status: 'completed', 
+    output: { result: 'success' } 
+  });
+  
+  return { result: 'success' };
+}
+```
+
+## Worker-to-Worker Communication
+
+### `ctx.dispatchWorker(workerId, input, options?)`
+
+Dispatch another worker from within a worker handler.
+
+```typescript
+dispatchWorker: (
+  workerId: string,
+  input: unknown,
+  options?: DispatchWorkerOptions
+) => Promise<{ jobId: string; messageId?: string; output?: unknown }>
+```
+
+**DispatchWorkerOptions:**
+
+```typescript
+export interface DispatchWorkerOptions {
+  webhookUrl?: string;
+  metadata?: Record<string, any>;
+  jobId?: string;
+  await?: boolean; // Poll until completion
+  pollIntervalMs?: number; // Default: 2000
+  pollTimeoutMs?: number; // Default: 15 minutes
+  delaySeconds?: number; // 0-900, fire-and-forget only
+}
+```
+
+**Examples:**
+
+```typescript
+handler: async ({ ctx }) => {
+  // Fire-and-forget
+  await ctx.dispatchWorker('other-worker', { key: 'value' });
+  
+  // Fire-and-forget with delay (0-900 seconds)
+  await ctx.dispatchWorker('other-worker', { key: 'value' }, {
+    delaySeconds: 60
+  });
+  
+  // Await completion
+  const result = await ctx.dispatchWorker('other-worker', { key: 'value' }, {
+    await: true,
+    pollIntervalMs: 3000,
+    pollTimeoutMs: 600000
+  });
+  console.log(result.output); // Child worker output
+  
+  // Append to internalJobs automatically
+  // Parent job's internalJobs will include: [{ jobId: '...', workerId: 'other-worker' }]
+}
+```
+
+**Deployment:** The CLI scans for `ctx.dispatchWorker('worker-id', ...)` and injects `WORKER_QUEUE_URL_<SANITIZED_ID>` into that Lambda's environment.
+
+**Local:** In development, uses HTTP trigger (`WORKER_BASE_URL`) when queue URL env is not set.
+
+## Client API
+
+### `dispatchWorker(workerId, input?, options?, ctx?)`
+
+Trigger a worker by ID from server code without importing the worker module. Sends to the workers trigger API (`WORKER_BASE_URL`). No input schema validation at call site (the worker validates when it runs).
+
+```typescript
+export async function dispatchWorker(
+  workerId: string,
+  input?: Record<string, unknown>,
+  options?: DispatchOptions,
+  ctx?: any
+): Promise<DispatchResult>
+```
+
+**Example:**
+
+```typescript
+import { dispatchWorker } from '@microfox/ai-worker';
+
+const { jobId } = await dispatchWorker('echo', { message: 'Hi' }, { metadata: { source: 'api' } });
+```
+
+### `dispatch(workerId, input, inputSchema, options, ctx?)`
+
+Low-level dispatch function for sending jobs to SQS (used internally by `WorkerAgent.dispatch`).
+
+```typescript
+export async function dispatch<INPUT_SCHEMA extends ZodType<any>>(
+  workerId: string,
+  input: z.input<INPUT_SCHEMA>,
+  inputSchema: INPUT_SCHEMA,
+  options: DispatchOptions,
+  ctx?: any
+): Promise<DispatchResult>
+```
+
+### `dispatchLocal(handler, input, ctx)`
+
+Execute handler immediately in local mode.
+
+```typescript
+export async function dispatchLocal<INPUT, OUTPUT>(
+  handler: WorkerHandler<INPUT, OUTPUT>,
+  input: INPUT,
+  ctx: WorkerHandlerParams<INPUT, OUTPUT>['ctx']
+): Promise<OUTPUT>
+```
+
+### `getWorkersTriggerUrl()`
+
+Derives the `/workers/trigger` URL from environment variables.
+
+```typescript
+export function getWorkersTriggerUrl(): string
+```
+
+**Environment Variables:**
+- `WORKER_BASE_URL` - Base URL of workers service (server-side only; e.g., `https://xxx.execute-api.us-east-1.amazonaws.com/prod`)
+- `WORKERS_TRIGGER_API_URL` / `WORKERS_CONFIG_API_URL` - Legacy, still supported
+
+The function normalizes the URL and appends `/workers/trigger` if needed.
+
+## Lambda Handler
+
+### `createLambdaHandler(handler, outputSchema?)`
+
+Creates a Lambda handler wrapper for SQS events.
+
+```typescript
+export function createLambdaHandler<INPUT, OUTPUT>(
+  handler: WorkerHandler<INPUT, OUTPUT>,
+  outputSchema?: ZodType<OUTPUT>
+): (event: SQSEvent, context: LambdaContext) => Promise<void>
+```
+
+**Example:**
+
+```typescript
+import { createLambdaHandler } from '@microfox/ai-worker/handler';
+import worker from './my-worker';
+
+export const handler = createLambdaHandler(
+  worker.handler,
+  worker.outputSchema
+);
+```
+
+## Queue API
+
+### `defineWorkerQueue(config)`
+
+Defines a worker queue (sequential chain of workers).
+
+```typescript
+export function defineWorkerQueue<T extends WorkerQueueConfig>(config: T): T
+```
+
+**WorkerQueueConfig:**
+
+```typescript
+export interface WorkerQueueConfig {
+  id: string; // Queue identifier
+  steps: WorkerQueueStep[]; // Ordered workers
+  schedule?: string | { rate: string; enabled?: boolean; input?: Record<string, any> };
+}
+
+export interface WorkerQueueStep {
+  workerId: string; // Worker ID
+  delaySeconds?: number; // 0-900, SQS DelaySeconds
+  mapInputFromPrev?: string; // Mapping function name
+}
+```
+
+**Example:**
+
+```typescript
+import { defineWorkerQueue } from '@microfox/ai-worker/queue';
+
+export default defineWorkerQueue({
+  id: 'data-pipeline',
+  steps: [
+    { workerId: 'data-collector' },
+    { workerId: 'data-processor', delaySeconds: 10 },
+    { workerId: 'data-uploader', mapInputFromPrev: 'mapUploadInput' },
+  ],
+  schedule: 'cron(0 3 * * ? *)', // Daily at 03:00 UTC
+});
+```
+
+### `dispatchQueue(queueId, initialInput?, options?)`
+
+Dispatches a queue by ID. POSTs to the queue-start API; the queue-start handler creates the queue job. No registry required. Pass the **first worker’s input** directly (no mapping for step 0).
+
+```typescript
+export async function dispatchQueue(
+  queueId: string,
+  initialInput?: unknown,
+  options?: DispatchOptions
+): Promise<DispatchQueueResult>
+```
+
+**Example:**
+
+```typescript
+import { dispatchQueue } from '@microfox/ai-worker';
+
+const result = await dispatchQueue('data-pipeline', { source: 's3://bucket/data.json' }, { metadata: { source: 'api' } });
+```
+
+## Config API
+
+### `getWorkersConfig(apiUrl, apiKey?)`
+
+Fetches workers configuration from the workers-config API.
+
+```typescript
+export async function getWorkersConfig(
+  apiUrl: string,
+  apiKey?: string
+): Promise<WorkersConfig>
+```
+
+### `resolveQueueUrl(workerId, apiUrl, apiKey?)`
+
+Resolves queue URL for a specific worker ID.
+
+```typescript
+export async function resolveQueueUrl(
+  workerId: string,
+  apiUrl: string,
+  apiKey?: string
+): Promise<string>
+```
+
+## Constants
+
+### `SQS_MAX_DELAY_SECONDS`
+
+Maximum SQS delay in seconds (AWS limit: 900).
+
+```typescript
+export const SQS_MAX_DELAY_SECONDS = 900;
+```
+
+## Environment Variables
+
+### Next.js Application
+
+**For triggering workers (remote, server-side only):**
+- `WORKER_BASE_URL` - Base URL of deployed workers service
+- `WORKERS_TRIGGER_API_KEY` - Optional API key for trigger authentication
+- `WORKERS_CONFIG_API_KEY` - Optional API key for config API authentication
+
+**For job store:**
+- `WORKER_DATABASE_TYPE` - `'mongodb'` or `'upstash-redis'` (default: `'upstash-redis'`)
+- **MongoDB**: `MONGODB_URI` or `DATABASE_MONGODB_URI`, `MONGODB_DB` or `DATABASE_MONGODB_DB`, `MONGODB_WORKER_JOBS_COLLECTION`
+- **Redis**: `WORKER_UPSTASH_REDIS_REST_URL` (or `UPSTASH_REDIS_REST_URL`), `WORKER_UPSTASH_REDIS_REST_TOKEN` (or `UPSTASH_REDIS_REST_TOKEN`), `WORKER_UPSTASH_REDIS_JOBS_PREFIX` (default: `worker:jobs:`), `WORKER_JOBS_TTL_SECONDS`
+
+**Local development:**
+- `WORKERS_LOCAL_MODE` - Set to `'false'` to disable local execution (default: auto-detects from `NODE_ENV`)
+- `WORKER_JOB_STORE_MODULE_PATH` - Custom job store module path (for direct DB access in local mode)
+- `WORKER_JOB_STORE_URL` - Job store HTTP URL (fallback when direct DB access unavailable)
+
+### AWS Lambda (deployed workers)
+
+**Required:**
+- `AWS_REGION` - AWS region for SQS/Lambda
+- `STAGE` - Deployment stage (dev/stage/prod)
+- `MONGODB_URI` or `DATABASE_MONGODB_URI` - For MongoDB job store
+- **OR** `WORKER_UPSTASH_REDIS_REST_URL` and `WORKER_UPSTASH_REDIS_REST_TOKEN` - For Redis job store
+- `WORKER_QUEUE_URL_<SANITIZED_ID>` - Auto-injected by CLI for worker-to-worker (e.g., `WORKER_QUEUE_URL_VIDEO_PROCESSOR`)
+
+**Optional:**
+- `DEBUG_WORKER_QUEUES` - Set to `'1'` to enable queue debugging logs
+- `WORKFLOW_APP_BASE_URL` or `QUEUE_JOB_API_URL` - Base URL of your app (for queue job step updates from Lambda)
+
+## Execution Modes
+
+The `dispatch()` method supports three execution modes controlled by the `mode` option:
+
+### Auto Mode (default)
+
+`mode: 'auto'` (or omitted) automatically chooses based on environment:
+
+- **Development** (`NODE_ENV === 'development'` and `WORKERS_LOCAL_MODE !== 'false'`): Runs handlers immediately in-process (local mode)
+- **Production** (otherwise): Sends messages to SQS (remote mode)
+
+### Local Mode
+
+`mode: 'local'` forces in-process execution even in production:
+
+- Handlers execute synchronously in the same Node.js process
+- Job store uses direct DB access (if `WORKER_JOB_STORE_MODULE_PATH` is set) or HTTP fallback
+- Webhooks are called immediately after completion
+- Worker-to-worker uses HTTP trigger (`WORKER_BASE_URL`)
+
+Perfect for testing and development.
+
+### Remote Mode
+
+`mode: 'remote'` forces SQS/Lambda dispatch even in development:
+
+- Handlers execute on AWS Lambda (triggered by SQS)
+- Job store uses MongoDB or Redis directly (from Lambda environment)
+- Webhooks are called from Lambda after completion
+- Worker-to-worker uses SQS queues (via `WORKER_QUEUE_URL_*` env vars)
+
+Use this for production deployments or when testing Lambda behavior locally.
+
+## Error Handling
+
+Workers should handle errors gracefully and update job status:
+
+```typescript
+handler: async ({ input, ctx }) => {
+  try {
+    await ctx.jobStore?.update({ status: 'running' });
+    const result = await processData(input);
+    await ctx.jobStore?.update({ status: 'completed', output: result });
+    return result;
+  } catch (error: any) {
+    await ctx.jobStore?.update({
+      status: 'failed',
+      error: {
+        message: error.message || 'Unknown error',
+        stack: error.stack,
+        name: error.name || 'Error',
+      },
+    });
+    throw error; // Re-throw to trigger Lambda error handling
+  }
+}
+```
+
+## Type Safety
+
+The `createWorker` function uses TypeScript generics to ensure type safety:
+
+- `INPUT_SCHEMA` - Zod schema type (e.g., `typeof InputSchema`)
+- `z.input<INPUT_SCHEMA>` - Pre-parse input type (preserves optional fields)
+- `z.infer<INPUT_SCHEMA>` - Parsed input type (defaults applied)
+- `OUTPUT` - Handler return type
+
+This ensures:
+- `dispatch()` accepts pre-parse input (optional fields preserved)
+- `handler` receives parsed input (defaults applied)
+- Output is validated against `outputSchema`

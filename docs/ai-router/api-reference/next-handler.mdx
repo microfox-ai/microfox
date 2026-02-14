@@ -91,52 +91,6 @@ router.agent('/smart-assistant', async (ctx) => {
 });
 ```
 
-## Deprecated Methods
-
-### ⚠️ `callTool(path, params)` - DEPRECATED
-
-**Status:** Deprecated in favor of `callAgent()`
-
-**Alternative:** Use `callAgent()` instead
-
-**Example:**
-
-```typescript
-// ❌ DEPRECATED
-const result = await ctx.next.callTool('/calculator', { a: 5, b: 3 });
-
-// ✅ RECOMMENDED
-const result = await ctx.next.callAgent('/calculator', { a: 5, b: 3 });
-```
-
-### ⚠️ `attachTool(path)` - DEPRECATED
-
-**Status:** Deprecated in favor of `agentAsTool()`
-
-**Alternative:** Use `agentAsTool()` instead
-
-**Example:**
-
-```typescript
-// ❌ DEPRECATED
-const stream = streamText({
-  model: openai('gpt-4'),
-  prompt: query,
-  tools: {
-    calculator: ctx.next.attachTool('/calculator'),
-  },
-});
-
-// ✅ RECOMMENDED
-const stream = streamText({
-  model: openai('gpt-4'),
-  prompt: query,
-  tools: {
-    ...ctx.next.agentAsTool('/calculator'),
-  },
-});
-```
-
 ## Result Object
 
 The `Result` object returned by `callAgent()` has the following structure:

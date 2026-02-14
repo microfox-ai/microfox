@@ -1,0 +1,99 @@
+---
+title: 'Workers + Orchestration Proof'
+sidebarTitle: 'Workers + Orchestration Proof'
+description: 'Pattern for sequential/parallel workers, HITL, and timeline proof. Repo uses a minimal demo worker set.'
+---
+
+This example references the **repository** for concrete file locations and code. Direct links:
+
+- **Demo worker** (echo, process, dispatch-demo): [examples/root/app/ai/workers/demo.worker.ts](https://github.com/microfox-ai/ai-router/blob/main/examples/root/app/ai/workers/demo.worker.ts)
+- **Results-aggregator worker**: [examples/root/app/ai/workers/results-aggregator.worker.ts](https://github.com/microfox-ai/ai-router/blob/main/examples/root/app/ai/workers/results-aggregator.worker.ts)
+- **Demo queue** (demo + results-aggregator): [examples/root/app/ai/queues/demo-data-processor.queue.ts](https://github.com/microfox-ai/ai-router/blob/main/examples/root/app/ai/queues/demo-data-processor.queue.ts)
+- **Workflows API** (workers + queues routes): [examples/root/app/api/workflows](https://github.com/microfox-ai/ai-router/tree/main/examples/root/app/api/workflows)
+
+## What this pattern proves
+
+A **Worker Proof Workflow** can demonstrate:
+
+- **Sequential awaited workers** – one worker finishes before the next starts.
+- **Parallel awaited workers** – two workers overlap in time.
+- **HITL gate** – the workflow pauses until you manually resume from the UI.
+- **Timeline proof** – a final worker computes a proof object with timestamps and gaps.
+- **Worker-to-worker dispatch** – `ctx.dispatchWorker(..., { await: true })` and `{ await: false }`.
+
+In this repo, the **Worker demo** page uses the **demo** worker (modes: echo, dispatch-demo) to prove dispatch with `await: true` and `await: false`. The **orchestration-demo** and **queue-demo** use the same **demo** worker (process mode) and **results-aggregator** with minimal workers and maximum feature coverage.
+
+## Workflow definition (pattern)
+
+You can define an orchestration config that uses sequential workers, parallel workers, a HITL hook, and a proof step. Example pattern (workers `timed-sleep` and `timeline-proof` are conceptual; in this repo the **demo** worker is used instead):
+
+<CodeGroup>
+
+```typescript
+import type { OrchestrationConfig, OrchestrationStep } from '@microfox/ai-workflow';
+
+export const workerProofWorkflow: OrchestrationConfig = {
+  id: 'worker-proof',
+  steps: [
+    // Sequential awaited workers
+    { type: 'worker', worker: 'timed-sleep', id: 'seq1', await: true, input: { label: 'seq-1', sleepMs: 2000 } },
+    { type: 'worker', worker: 'timed-sleep', id: 'seq2', await: true, input: { label: 'seq-2', sleepMs: 3000 } },
+    // Parallel awaited workers
+    {
+      type: 'parallel',
+      steps: [
+        { type: 'worker', worker: 'timed-sleep', id: 'parA', await: true, input: { label: 'par-A', sleepMs: 5000 } },
+        { type: 'worker', worker: 'timed-sleep', id: 'parB', await: true, input: { label: 'par-B', sleepMs: 2000 } },
+      ] as OrchestrationStep[],
+    },
+    { type: 'hook', token: 'worker-proof:gate:default', id: 'gate' },
+    { type: 'worker', worker: 'timeline-proof', id: 'proof', await: true, input: { _fromSteps: ['seq1', 'seq2', 'parA', 'parB'], _path: 'output', expected: { seq1: 'seq-1', seq2: 'seq-2', parA: 'par-A', parB: 'par-B' } } } as OrchestrationStep,
+  ],
+};
+```
+
+</CodeGroup>
+
+## Workers in this repo
+
+Two workers cover all demo and proof needs:
+
+### Demo worker (`demo.worker.ts`)
+
+Single worker with three modes:
+
+- **echo** – Fast echo for polling tests. Input: `{ mode: 'echo', message }`. Output: `{ echoed, at }`.
+- **process** – Batch processing with progress (jobStore updates). Input: `{ mode: 'process', data, operation, batchSize? }` or legacy `{ data?, content?, operation, batchSize? }`. Used by orchestration-demo and queue step 1.
+- **dispatch-demo** – Proves `ctx.dispatchWorker` with **await: true** and **await: false**. Dispatches itself in echo mode twice; returns `{ awaited: { echoed, at }, fireJobId }`.
+
+```typescript
+// Proves await: true (block until child completes)
+const awaited = await ctx.dispatchWorker('demo', { mode: 'echo', message: 'child-await' }, { await: true });
+// Proves await: false (fire-and-forget, return jobId)
+const { jobId: fireJobId } = await ctx.dispatchWorker('demo', { mode: 'echo', message: 'child-fire' }, { await: false });
+```
+
+### Results-aggregator worker (`results-aggregator.worker.ts`)
+
+Consumes process output (e.g. from queue step 1) and produces a summary report. Used as queue step 2 with `mapInputFromPrev`.
+
+## UI and demos
+
+- **Worker demo** (`/workflows/worker-demo`) – Trigger **demo** in echo mode or run **Run dispatch demo** to prove `ctx.dispatchWorker` with await true/false.
+- **Queue demo** (`/workflows/queue-demo`) – Runs queue **demo-data-processor**: step 1 = demo (process), step 2 = results-aggregator (with delay and mapInputFromPrev).
+- **Orchestration demo** (`/workflows/orchestration-demo`) – Uses **demo** (process) after HITL approval, plus agents.
+
+## Interpreting the result
+
+- **Dispatch demo**: Output includes `awaited` (child result from `await: true`) and `fireJobId` (from `await: false`), proving both code paths.
+- **Queue demo**: Steps list shows demo then results-aggregator; final output is the aggregator report.
+- **Orchestration**: Worker step runs demo in process mode; you get processing results and a summary from the next agent step.
+
+Together, the minimal worker set demonstrates:
+
+- worker steps **awaited** in orchestration and queue chains,
+- **ctx.dispatchWorker** with **await: true** (block for result) and **await: false** (fire-and-forget),
+- **jobStore** progress and status updates,
+- **mapInputFromPrev** and **delaySeconds** in queues,
+- and HITL + conditionals in orchestration.
+

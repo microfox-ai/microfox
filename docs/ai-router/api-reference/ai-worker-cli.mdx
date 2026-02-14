@@ -1,0 +1,540 @@
+---
+title: 'Worker CLI Reference'
+sidebarTitle: 'Worker CLI'
+description: 'Complete CLI reference for @microfox/ai-worker-cli - deployment and scaffolding tool.'
+---
+
+## Overview
+
+`@microfox/ai-worker-cli` provides command-line tools for deploying workers to AWS Lambda and scaffolding new worker files. It scans your codebase for worker definitions, builds Lambda handlers, and generates Serverless Framework configuration.
+
+## Installation
+
+```bash
+npm install -D @microfox/ai-worker-cli
+# or use npx
+npx @microfox/ai-worker-cli@latest <command>
+```
+
+## Invocation
+
+You can run the CLI in any of these ways:
+
+- **Direct**: `npx @microfox/ai-worker-cli <command>`
+- **Via microfox CLI**: `npx ai-worker <command>` (e.g. `npx ai-worker push`, `npx ai-worker new`)
+- **Build only** (no deploy): `npx microfox compile` — same as `npx ai-worker push --skip-deploy`
+- **Deploy only** (no build): `npx microfox push` — deploys only; same as `npx ai-worker push --deploy-only`. Use `npx ai-worker push` for build and deploy.
+
+The `microfox` CLI package proxies these commands to `@microfox/ai-worker-cli`.
+
+## Commands
+
+### `push`
+
+Builds and deploys workers to AWS Lambda using Serverless Framework.
+
+```bash
+npx @microfox/ai-worker-cli push [options]
+# or
+npx ai-worker push [options]
+# or
+npx microfox push [options]
+```
+
+**Options:**
+
+- `--stage <stage>` - Deployment stage (default: `dev`)
+- `--region <region>` - AWS region (default: `us-east-1`)
+- `--service-name <name>` - Serverless service name (default: auto-detected)
+- `--ai-path <path>` - Base path for scanning workers and queues (default: `app/ai`)
+- `--workers-dir <path>` - Directory pattern to scan for workers (default: `app/ai/**/*.worker.ts`)
+- `--queues-dir <path>` - Directory pattern to scan for queues (default: `app/ai/**/*.queue.ts`)
+- `--output-dir <path>` - Output directory for generated files (default: `.serverless-workers`)
+- `--build-only` - Build only, don't deploy
+- `--deploy-only` - Deploy only (assumes build already done)
+- `--skip-build` - Skip build step (use existing build)
+- `--skip-deploy` - Skip deploy step (build only)
+- `--env-file <path>` - Path to environment variables file (default: `.env`)
+- `--env-prefix <prefix>` - Prefix for environment variables (default: none)
+- `--no-bundle` - Don't bundle dependencies (use Lambda layers instead)
+- `--bundle-deps` - Bundle all dependencies (default: auto-detect)
+- `--verbose` - Enable verbose logging
+
+**What it does:**
+
+1. **Scans** for worker files (`*.worker.ts`) and queue files (`*.queue.ts`)
+2. **Extracts** worker configurations (`workerConfig` exports)
+3. **Analyzes** dependencies and environment variable usage
+4. **Detects** worker-to-worker calls (`ctx.dispatchWorker`)
+5. **Generates** Lambda handler files
+6. **Generates** `serverless.yml` configuration
+7. **Builds** handlers with esbuild
+8. **Deploys** to AWS (unless `--build-only`)
+
+**Example:**
+
+```bash
+# Build and deploy to dev stage
+npx ai-worker push --stage dev --region us-east-1
+
+# Build only (no deploy)
+npx ai-worker push --build-only
+# or: npx microfox compile
+
+# Deploy only (after build)
+npx ai-worker push --deploy-only --stage prod
+# or: npx microfox push --stage prod
+```
+
+### `new`
+
+Scaffolds a new **worker** (`.worker.ts`) or **queue** (`.queue.ts`). When run without `--type`, the CLI asks you to choose one option, then prompts for the ID if not provided.
+
+```bash
+npx @microfox/ai-worker-cli new [id] [options]
+# or
+npx ai-worker new [id] [options]
+```
+
+**Arguments:**
+
+- `id` - Optional. Worker or queue ID (filename and config id). If omitted, the CLI prompts for it.
+
+**Options:**
+
+- `--type <worker|queue>` - Scaffold type. If set, skips the interactive "worker or queue?" prompt.
+- `--dir <path>` - Output directory (workers: default `app/ai/workers`; queues: default `app/ai/queues`)
+- `--schedule <expression>` - Optional schedule, workers only (e.g. `"cron(0 3 * * ? *)"` or `"rate(1 hour)"`)
+- `--timeout <seconds>` - Lambda timeout, workers only (default: `300`)
+- `--memory <mb>` - Lambda memory, workers only (default: `512`)
+
+**Examples:**
+
+```bash
+# Interactive: choose worker or queue, then enter id
+npx ai-worker new
+
+# Create a worker (non-interactive)
+npx ai-worker new video-processor
+npx ai-worker new daily-report --schedule "cron(0 3 * * ? *)" --timeout 600
+
+# Create a queue (non-interactive)
+npx ai-worker new cost-usage --type queue
+
+# Custom directory
+npx ai-worker new data-processor --dir app/workers
+```
+
+**Generated worker file** (e.g. `app/ai/workers/video-processor.worker.ts`):
+
+- Uses `createWorker` with Zod input/output, `ctx.jobStore`, `ctx.logger`, and `ctx.dispatchWorker`. Fill in input/output schemas and handler logic.
+
+**Generated queue file** (e.g. `app/ai/queues/cost-usage.queue.ts`):
+
+- Uses `defineWorkerQueue` with `id` and `steps: [{ workerId: 'first-worker' }, ...]`. Replace `first-worker` (and add steps) with your real worker IDs, then run `npx ai-worker push` to build and deploy.
+
+### `boilerplate`
+
+Creates or updates worker boilerplate files (job store, API routes, config) in your application.
+
+```bash
+npx @microfox/ai-worker-cli boilerplate [options]
+# or
+npx ai-worker boilerplate [options]
+```
+
+**Options:**
+
+- `--force` - Overwrite existing files (default: skip existing files)
+- `--app-dir <path>` - App directory path (default: `app`)
+- `--skip-config` - Skip microfox.config.ts updates
+
+**What it creates:**
+
+1. **Job store adapters** (`app/api/workflows/stores/`):
+   - `jobStore.ts` - Main job store interface
+   - `mongoAdapter.ts` - MongoDB adapter
+   - `redisAdapter.ts` - Upstash Redis adapter
+   - `queueJobStore.ts` - Queue job tracking (optional)
+
+2. **Workers HTTP API** (`app/api/workflows/workers/[...slug]/route.ts`):
+   - POST trigger worker (calls trigger API directly; no registry required)
+   - GET job status
+   - POST webhook callback
+   - POST job update
+
+3. **Queues API** (`app/api/workflows/queues/[...slug]/route.ts`):
+   - POST /queues/:queueId – trigger a queue (calls queue-start API; no registry required; pass first-worker input)
+   - GET /queues/:queueId/:jobId – get queue job status
+   - GET /queues or GET /queues?queueId=... – list queue jobs
+   - POST /queues/:queueId/update – update queue job step
+   - POST /queues/:queueId/webhook – webhook for queue completion
+
+4. **Configuration** (`microfox.config.ts`):
+   - Merges `workflowSettings.jobStore` block (if file exists)
+   - Creates minimal config file if missing
+
+**Example:**
+
+```bash
+# Create boilerplate files
+npx ai-worker boilerplate
+
+# Overwrite existing files
+npx ai-worker boilerplate --force
+
+# Use custom app directory
+npx ai-worker boilerplate --app-dir src/app
+
+# Skip config updates
+npx ai-worker boilerplate --skip-config
+```
+
+For a runnable example that includes repository references, see [Workers + Orchestration Proof](../examples/workers-orchestration-proof).
+
+## How `push` Works
+
+### 1. Worker Discovery
+
+Scans for files matching patterns:
+- Workers: `app/ai/**/*.worker.ts` (configurable via `--workers-dir`)
+- Queues: `app/ai/**/*.queue.ts` (configurable via `--queues-dir`)
+
+For each worker file:
+- Extracts `workerConfig` export
+- Extracts `createWorker` call with `id`
+- Validates worker configuration
+
+### 2. Dependency Analysis
+
+For each worker, analyzes:
+- **Runtime dependencies**: Packages imported by worker code
+- **Environment variables**: `process.env.*` usage
+- **Worker-to-worker calls**: `ctx.dispatchWorker('worker-id', ...)` patterns
+
+**Dependency detection:**
+- Walks import graph from worker entry files
+- Identifies external packages (non-builtin, non-local)
+- Includes `@microfox/ai-worker` and `@aws-sdk/client-sqs` by default
+
+**Environment variable detection:**
+- Scans for `process.env.KEY` patterns
+- Separates runtime vs buildtime variables
+- Adds to Lambda environment configuration
+
+**Worker-to-worker detection:**
+- Scans handler code for `ctx.dispatchWorker('worker-id', ...)`
+- Extracts worker IDs from string literals
+- Generates `WORKER_QUEUE_URL_<SANITIZED_ID>` env vars
+
+### 3. Handler Generation
+
+Generates Lambda handler files in `.serverless-workers/handlers/`:
+
+```typescript
+// .serverless-workers/handlers/worker-id.ts
+import { createLambdaHandler } from '@microfox/ai-worker/handler';
+import worker from '../../app/ai/workers/worker-id.worker';
+
+export const handler = createLambdaHandler(
+  worker.handler,
+  worker.outputSchema
+);
+```
+
+### 4. Queue Handler Generation
+
+For queues, generates:
+- **Queue starter handler**: Lambda triggered by schedule (if configured)
+- **Queue step handlers**: Wrappers that chain workers sequentially
+
+### 5. Serverless Configuration
+
+Generates `serverless.yml` with:
+
+- **Functions**: One Lambda per worker (and queue starter)
+- **SQS Queues**: One queue per worker (with DLQ if configured)
+- **Event Sources**: SQS triggers for worker functions, schedules for queue starters
+- **Environment Variables**: Extracted from worker code
+- **Layers**: If `layers` specified in `workerConfig`
+- **IAM Roles**: Permissions for SQS, Lambda, and job store access
+
+**Example generated config:**
+
+```yaml
+service: my-service-workers
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: dev
+  environment:
+    STAGE: ${self:provider.stage}
+    AWS_REGION: ${self:provider.region}
+    MONGODB_URI: ${env:MONGODB_URI}
+    WORKER_QUEUE_URL_VIDEO_PROCESSOR: ${self:custom.queues.video-processor.url}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+          Resource:
+            - ${self:custom.queues.*.arn}
+
+functions:
+  video-processor:
+    handler: handlers/video-processor.handler
+    timeout: 900
+    memorySize: 2048
+    events:
+      - sqs:
+          arn: ${self:custom.queues.video-processor.arn}
+          batchSize: 1
+    environment:
+      WORKER_ID: video-processor
+
+resources:
+  Resources:
+    VideoProcessorQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:provider.stage}-video-processor
+        VisibilityTimeout: 960
+        MessageRetentionPeriod: 86400
+        RedrivePolicy:
+          deadLetterTargetArn: ${self:custom.queues.video-processor.dlqArn}
+          maxReceiveCount: 3
+```
+
+### 6. Build Process
+
+Uses `esbuild` to bundle handlers:
+
+- **Entry points**: Generated handler files
+- **External dependencies**: Excluded (installed in Lambda layer or runtime)
+- **Output**: `.serverless-workers/dist/`
+- **Format**: CommonJS (for Lambda compatibility)
+
+### 7. Deploy Process
+
+Runs `serverless deploy`:
+
+- Packages Lambda functions
+- Creates/updates SQS queues
+- Creates/updates Lambda functions
+- Sets up event source mappings
+- Updates environment variables
+
+## Configuration Files
+
+### `.env` File
+
+The CLI reads environment variables from `.env` (or `--env-file`):
+
+```bash
+# Required
+MONGODB_URI=mongodb://...
+AWS_REGION=us-east-1
+STAGE=dev
+
+# Optional
+WORKERS_TRIGGER_API_KEY=secret-key
+OPENAI_API_KEY=sk-...
+```
+
+### `serverless.yml` (Generated)
+
+The CLI generates `serverless.yml` in `.serverless-workers/`. You can customize it after generation, but it will be overwritten on next `push`.
+
+**Customization:** Use `--output-dir` to generate in a different location, then copy to your project root if needed.
+
+## Worker Configuration Extraction
+
+The CLI extracts `workerConfig` from worker files:
+
+```typescript
+// ✅ Good: Separate export
+export const workerConfig: WorkerConfig = {
+  timeout: 900,
+  memorySize: 2048,
+};
+
+// ❌ Bad: Inline in createWorker (deprecated)
+export default createWorker({
+  id: 'worker',
+  workerConfig: { timeout: 900 }, // CLI won't extract this
+});
+```
+
+**Supported config fields:**
+
+- `timeout` - Lambda timeout (seconds, max 900)
+- `memorySize` - Lambda memory (MB, 128-10240)
+- `layers` - Lambda layer ARNs
+- `schedule` - Schedule events (cron/rate)
+- `sqs.maxReceiveCount` - DLQ threshold
+- `sqs.messageRetentionPeriod` - Queue retention (seconds)
+- `sqs.visibilityTimeout` - Queue visibility timeout (seconds)
+
+## Queue Configuration
+
+For queue files (`*.queue.ts`), the CLI:
+
+1. Extracts `defineWorkerQueue` calls
+2. Generates queue starter Lambda (if `schedule` is set)
+3. Generates queue step handlers
+4. Sets up SQS triggers for chaining
+
+**Queue file example:**
+
+```typescript
+import { defineWorkerQueue } from '@microfox/ai-worker/queue';
+
+export default defineWorkerQueue({
+  id: 'data-pipeline',
+  steps: [
+    { workerId: 'data-collector' },
+    { workerId: 'data-processor', delaySeconds: 10 },
+    { workerId: 'data-uploader' },
+  ],
+  schedule: 'cron(0 3 * * ? *)',
+});
+```
+
+## Environment Variable Injection
+
+The CLI automatically injects environment variables:
+
+**From worker code:**
+- Scans for `process.env.*` usage
+- Adds to Lambda environment
+
+**For worker-to-worker:**
+- Detects `ctx.dispatchWorker('worker-id', ...)`
+- Injects `WORKER_QUEUE_URL_<SANITIZED_ID>` into caller's Lambda
+
+**Sanitization:**
+- Replaces `-` with `_`
+- Converts to uppercase
+- Example: `video-processor` → `WORKER_QUEUE_URL_VIDEO_PROCESSOR`
+
+## Troubleshooting
+
+### Build Failures
+
+**Issue:** Handler build fails with import errors
+
+**Solution:** Check that all dependencies are listed in `package.json`. The CLI bundles external packages, but local imports must be resolvable.
+
+### Deployment Failures
+
+**Issue:** `serverless deploy` fails with permission errors
+
+**Solution:** Ensure AWS credentials are configured (`aws configure`) and IAM role has permissions for:
+- Lambda (create/update functions)
+- SQS (create/update queues)
+- IAM (create/update roles)
+
+### Missing Environment Variables
+
+**Issue:** Lambda fails with missing env vars
+
+**Solution:** 
+- Add variables to `.env` file
+- Use `--env-file` to specify custom file
+- Check that variables are in `serverless.yml` environment section
+
+### Worker-to-Worker Not Working
+
+**Issue:** `ctx.dispatchWorker` fails with missing queue URL
+
+**Solution:**
+- Ensure callee worker is deployed
+- Check that `WORKER_QUEUE_URL_<SANITIZED_ID>` is in caller's Lambda environment
+- For cross-service calls, set env var manually
+
+## Best Practices
+
+1. **Export `workerConfig` separately** - Makes it easy for CLI to extract
+2. **Use consistent worker IDs** - Matches filename (without `.worker.ts`)
+3. **Group workers by feature** - Use subdirectories (`app/ai/workers/video/`)
+4. **Version control `.serverless-workers/`** - Or add to `.gitignore` if regenerated
+5. **Use stages** - Deploy to `dev`, `stage`, `prod` separately
+6. **Monitor Lambda logs** - Use CloudWatch for debugging
+7. **Test locally first** - Use `mode: 'local'` in development
+
+## Integration with CI/CD
+
+**GitHub Actions example:**
+
+```yaml
+name: Deploy Workers
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: |
+          npx ai-worker push \
+            --stage prod \
+            --region us-east-1 \
+            --env-file .env.production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+```
+
+## Advanced Usage
+
+### Custom Build Configuration
+
+The CLI uses `esbuild` internally. To customize:
+
+1. Generate config with `--build-only`
+2. Modify `.serverless-workers/esbuild.config.js` (if exists)
+3. Rebuild manually if needed
+
+### Multiple Services
+
+To deploy workers to different Serverless services:
+
+```bash
+# Service 1
+npx ai-worker push \
+  --service-name video-workers \
+  --workers-dir app/ai/workers/video/**/*.worker.ts
+
+# Service 2
+npx ai-worker push \
+  --service-name data-workers \
+  --workers-dir app/ai/workers/data/**/*.worker.ts
+```
+
+### Custom Output Directory
+
+```bash
+npx ai-worker push \
+  --output-dir .build/workers \
+  --build-only
+```
+
+Then manually deploy:
+
+```bash
+cd .build/workers
+serverless deploy --stage prod
+```

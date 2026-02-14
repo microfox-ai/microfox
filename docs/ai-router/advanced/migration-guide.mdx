@@ -16,11 +16,11 @@ This guide helps you migrate from the old ai-router patterns to the new **agent-
 - **Agent Mounting**: Use `.agent('/path', subRouter)` to mount sub-routers
 - **Agent Calling**: Use `ctx.next.callAgent('/path', params)` for agent-to-agent communication
 
-### ⚠️ Deprecated Patterns
+### ⚠️ Removed Patterns
 
-- **Old Tool System**: `router.tool()` is deprecated in favor of agent-as-tools
-- **Old Tool Calling**: `ctx.next.callTool()` is deprecated, use `ctx.next.callAgent()` instead
-- **Old Tool Attachment**: `ctx.next.attachTool()` is deprecated, use `ctx.next.agentAsTool()` instead
+- **Old Tool System**: `router.tool()` has been removed in favor of agent-as-tools
+- **Old Tool Calling**: `ctx.next.callTool()` has been removed, use `ctx.next.callAgent()` instead
+- **Old Tool Attachment**: `ctx.next.attachTool()` has been removed, use `ctx.next.agentAsTool()` instead
 
 ## Migration Steps
 

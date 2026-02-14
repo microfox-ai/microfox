@@ -1,0 +1,311 @@
+---
+title: 'Orchestration API'
+sidebarTitle: 'Orchestration API'
+description: 'Types and helpers for defining workflows with @microfox/ai-workflow.'
+---
+
+## OrchestrationContext
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface OrchestrationContext {
+  input: any;                    // Original input
+  steps: Record<string, any>;    // Outputs by step ID
+  previous: any;                 // Previous step output
+  all: any[];                    // All step outputs in order
+  runId?: string;                // Current workflow runId (for token generation)
+  errors?: Array<{              // Collected errors when continueOnError is true
+    step: number | string;
+    error: any;
+  }>;
+}
+```
+
+The context is **mutable** and passed through every step:
+
+- `input` – initial payload configured in `OrchestrationConfig.input`.
+- `steps[id]` – output of a step with a given `id`.
+- `previous` – last step result (used by `resolveInput`).
+- `all` – ordered list of all outputs (useful for debugging and proof steps).
+
+## OrchestrationStep and step types
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export type OrchestrationStep =
+  | AgentStep
+  | HookStep
+  | SleepStep
+  | ConditionStep
+  | ParallelStep
+  | WorkerStep
+  | WorkflowStep
+  | StatusUpdateStep; // Internal only
+```
+
+### AgentStep
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface AgentStep {
+  type: 'agent';
+  agent: string; // Agent path (e.g. '/system/current_date')
+  input?: any | ((ctx: OrchestrationContext) => any);
+  await?: boolean; // true = blocking, false = fire-and-forget (default: true)
+  id?: string;     // Step ID for referencing output
+}
+```
+
+### HookStep (HITL)
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface HookStep {
+  type: 'hook';
+  token: string | ((ctx: OrchestrationContext) => string);
+  schema?: ZodTypeAny; // Optional payload schema (Zod)
+  id?: string;
+}
+```
+
+### SleepStep
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface SleepStep {
+  type: 'sleep';
+  duration: string | number; // "1 min", "30s", or milliseconds
+}
+```
+
+### ConditionStep and StepFieldCondition
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface StepFieldCondition {
+  type: 'stepField';
+  stepId: string;
+  path?: string; // e.g. 'payload.approved'
+  op: 'eq' | 'neq' | 'truthy' | 'falsy' | 'exists' | 'notExists';
+  value?: unknown;
+}
+
+export interface ConditionStep {
+  type: 'condition';
+  if: ((ctx: OrchestrationContext) => boolean)
+    | boolean
+    | StepFieldCondition;
+  then: OrchestrationStep[];
+  else?: OrchestrationStep[];
+}
+```
+
+#### whenStep
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export function whenStep(
+  stepId: string,
+  path: string | undefined,
+  op: StepFieldCondition['op'],
+  value?: unknown,
+): StepFieldCondition {
+  return { type: 'stepField', stepId, path, op, value };
+}
+```
+
+Use `whenStep` when you need **serializable** conditions (e.g. for Vercel workflow serialization).
+
+#### evaluateStepFieldCondition
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export function evaluateStepFieldCondition(
+  cond: StepFieldCondition,
+  ctx: OrchestrationContext,
+): boolean {
+  const raw = ctx.steps[cond.stepId];
+  const v = getAtPath(raw, cond.path);
+  // ...compare using cond.op
+}
+```
+
+This helper evaluates a `StepFieldCondition` at runtime and is used by executors such as
+`orchestrateWorkflowFn` in the Next.js example.
+
+### ParallelStep
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface ParallelStep {
+  type: 'parallel';
+  steps: OrchestrationStep[];
+}
+```
+
+### WorkerStep and WorkerPollConfig
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface WorkerPollConfig {
+  intervalMs?: number; // Default: 3000
+  timeoutMs?: number;  // Default: 600_000 (10 minutes)
+  maxRetries?: number; // Default: 200
+}
+
+export interface WorkerStep {
+  type: 'worker';
+  worker: string;
+  input?: any | ((ctx: OrchestrationContext) => any);
+  await?: boolean;
+  id?: string;
+  workerPoll?: WorkerPollConfig;
+}
+```
+
+In the example executor, awaited workers use `workerPoll` to control polling behaviour.
+
+### WorkflowStep
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface WorkflowStep {
+  type: 'workflow';
+  workflow: string; // Workflow ID or path
+  input?: any | ((ctx: OrchestrationContext) => any);
+  await?: boolean;
+  id?: string;
+}
+```
+
+### StatusUpdateStep (internal)
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface StatusUpdateStep {
+  type: '_statusUpdate';
+  status: 'paused' | 'running';
+  hookToken?: string;
+}
+```
+
+This type is **internal** and created automatically by `prepareOrchestrationConfig`.
+You generally do not author these steps directly.
+
+## OrchestrationConfig and prepareOrchestrationConfig
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export interface OrchestrationConfig {
+  id?: string;
+  steps: OrchestrationStep[];
+  baseUrl?: string;
+  messages?: any[];
+  input?: any;
+  hookTimeout?: string;
+  continueOnError?: boolean;
+  timeout?: string;
+  workerPoll?: WorkerPollConfig;
+}
+```
+
+### prepareOrchestrationConfig
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export function prepareOrchestrationConfig(
+  raw: Pick<OrchestrationConfig, 'steps'> & Partial<OrchestrationConfig>,
+): OrchestrationConfig {
+  const hasStatusUpdates = raw.steps.some((s) => s.type === '_statusUpdate');
+  if (hasStatusUpdates) return { ...raw, steps: raw.steps };
+
+  const stepsWithStatusUpdates: OrchestrationStep[] = [];
+
+  for (const step of raw.steps) {
+    if (step.type === 'hook' || step.type === 'sleep') {
+      stepsWithStatusUpdates.push({
+        type: '_statusUpdate',
+        status: 'paused',
+        hookToken: undefined,
+      });
+    }
+    stepsWithStatusUpdates.push(step);
+    if (step.type === 'hook' || step.type === 'sleep') {
+      stepsWithStatusUpdates.push({
+        type: '_statusUpdate',
+        status: 'running',
+        hookToken: undefined,
+      });
+    }
+  }
+
+  return { ...raw, steps: stepsWithStatusUpdates };
+}
+```
+
+`prepareOrchestrationConfig` ensures that each `hook` and `sleep` is wrapped with internal
+status-update steps so your status store can reflect `paused` / `running` transitions
+without you having to author those steps manually.
+
+## OrchestrationBuilder
+
+For a more fluent style, use `OrchestrationBuilder`:
+
+```typescript packages/ai-workflow/src/orchestrate.ts
+export class OrchestrationBuilder {
+  steps: OrchestrationStep[] = [];
+
+  agent(path: string, input?: any | ((ctx: OrchestrationContext) => any), options?: {
+    await?: boolean;
+    id?: string;
+  }): this { /* ... */ }
+
+  hook(token: string | ((ctx: OrchestrationContext) => string), schemaOrOptions?: ZodTypeAny | { id?: string }, options?: {
+    id?: string;
+  }): this { /* ... */ }
+
+  sleep(duration: string | number): this { /* ... */ }
+
+  condition(ifCond: ConditionStep['if'], thenSteps: OrchestrationStep[], elseSteps?: OrchestrationStep[]): this { /* ... */ }
+
+  parallel(steps: OrchestrationStep[]): this { /* ... */ }
+
+  worker(workerId: string, input?: any | ((ctx: OrchestrationContext) => any), options?: {
+    await?: boolean;
+    id?: string;
+    workerPoll?: WorkerPollConfig;
+  }): this { /* ... */ }
+
+  workflow(workflowId: string, input?: any | ((ctx: OrchestrationContext) => any), options?: {
+    await?: boolean;
+    id?: string;
+  }): this { /* ... */ }
+
+  build(config: Omit<OrchestrationConfig, 'steps'> = {}): OrchestrationConfig { /* ... */ }
+}
+```
+
+Builders are especially useful when constructing configs programmatically instead of authoring
+raw JSON.
+
+## Workflow runtime adapter
+
+The orchestration layer is runtime-agnostic; it talks to a **WorkflowRuntimeAdapter**:
+
+```typescript packages/ai-workflow/src/runtimeAdapter.ts
+export interface WorkflowRuntimeStartResult<Output = unknown> {
+  runId: string;
+  status: string;
+  result?: Output;
+}
+
+export interface WorkflowRuntimeStatusResult<Output = unknown> {
+  status: string;
+  result?: Output;
+  error?: string;
+  hook?: { token: string; type: 'hook' };
+  webhook?: { token: string; url: string; type: 'webhook' };
+}
+
+export interface WorkflowRuntimeAdapter {
+  startWorkflow<Input, Output>(def: any, input: Input): Promise<WorkflowRuntimeStartResult<Output>>;
+  getWorkflowStatus<Output>(def: any, runId: string): Promise<WorkflowRuntimeStatusResult<Output>>;
+  resumeHook<Payload, Output>(token: string, payload: Payload): Promise<WorkflowRuntimeStatusResult<Output>>;
+  resumeWebhook<Payload, Output>(token: string, payload: Payload): Promise<WorkflowRuntimeStatusResult<Output>>;
+}
+```
+
+Adapters translate between:
+
+- your **OrchestrationConfig**, and
+- the provider’s workflow engine (Vercel `workflow`, Temporal, etc.).
+
+The Next.js example app includes a `vercelAdapter` that implements this interface for
+Vercel’s workflows.
+

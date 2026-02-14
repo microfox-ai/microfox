@@ -1,0 +1,38 @@
+---
+title: 'Workers Overview'
+sidebarTitle: 'Workers'
+description: 'High-level overview of background workers: durable jobs, Lambda, and queues.'
+---
+
+## What are workers?
+
+Workers run **background jobs** outside the request/response path. They are durable (state stored in MongoDB or Redis), scalable (run on AWS Lambda via SQS), and support chaining (worker-to-worker and multi-step queues).
+
+## Key pieces
+
+- **`@microfox/ai-worker`** – Runtime for defining workers (Zod input/output, handler, job store, dispatch).
+- **`@microfox/ai-worker-cli`** – Scans worker and queue definitions, builds Lambda handlers, and deploys to AWS (Serverless Framework).
+- **Application API** – HTTP routes to trigger workers, poll job status, and receive webhooks. You add these via the CLI boilerplate or your own routes.
+
+## Flow in short
+
+1. Your app (or a schedule) triggers a worker via the workers API or by calling `worker.dispatch()`.
+2. The job is enqueued to SQS; Lambda runs the handler when a message is received.
+3. The handler updates job status and output in the job store; optional webhook is called on completion.
+4. Callers poll the workers API for status or rely on the webhook.
+
+Workers can also call other workers (`ctx.dispatchWorker`) in fire-and-forget or await mode, and you can define **worker queues** (fixed sequences of workers) that run step-by-step with optional input mapping between steps.
+
+## When to use workers
+
+- Long-running or bursty tasks (data processing, reports, notifications).
+- When you need durable state and progress (job store, polling, webhooks).
+- Multi-step pipelines (queues) without writing orchestration code.
+- Offloading work from the request path so the UI stays responsive.
+
+## Next steps
+
+- [Workers (foundation)](../foundation/workers) – Defining workers, job store, HTTP API, **useWorkflowJob** client hook, queues, and dispatch.
+- [Worker Architecture](../advanced/worker-architecture) – Deep dive: SQS, Lambda, job store, worker-to-worker, and deployment.
+- [Worker API Reference](../api-reference/ai-worker) – `createWorker`, `dispatch`, `JobStore`, `dispatchWorker`, queues.
+- [Worker CLI Reference](../api-reference/ai-worker-cli) – `push`, `new`, `boilerplate`, and configuration.
