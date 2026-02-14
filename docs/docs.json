@@ -34,7 +34,8 @@
               "ai-router/overview/ai-router",
               "ai-router/overview/type-safety",
               "ai-router/overview/structure",
-              "ai-router/overview/ai-studio"
+              "ai-router/overview/ai-studio",
+              "ai-router/overview/workers"
             ]
           },
           {
@@ -43,6 +44,7 @@
               "ai-router/foundation/basics",
               "ai-router/foundation/agents",
               "ai-router/foundation/agent-as-tool",
+              "ai-router/foundation/workers",
               "ai-router/foundation/state",
               "ai-router/foundation/stream",
               "ai-router/foundation/middleware"
@@ -53,12 +55,18 @@
             "pages": [
               "ai-router/advanced/advanced-usage",
               "ai-router/overview/langgraph",
-              "ai-router/advanced/langgraph-migration"
+              "ai-router/overview/workflows",
+              "ai-router/advanced/workflows-nextjs",
+              "ai-router/advanced/langgraph-migration",
+              "ai-router/advanced/worker-architecture"
             ]
           },
           {
             "group": "Examples",
-            "pages": ["ai-router/examples/perplexity-clone"]
+            "pages": [
+              "ai-router/examples/perplexity-clone",
+              "ai-router/examples/workers-orchestration-proof"
+            ]
           },
           {
             "group": "API Reference",
@@ -66,7 +74,10 @@
               "ai-router/api-reference/router",
               "ai-router/api-reference/context-object",
               "ai-router/api-reference/next-handler",
-              "ai-router/api-reference/error-types"
+              "ai-router/api-reference/error-types",
+              "ai-router/api-reference/orchestration",
+              "ai-router/api-reference/ai-worker",
+              "ai-router/api-reference/ai-worker-cli"
             ]
           }
         ]
