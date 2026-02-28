@@ -13,6 +13,7 @@ Workers run **background jobs** outside the request/response path. They are dura
 - **`@microfox/ai-worker`** – Runtime for defining workers (Zod input/output, handler, job store, dispatch).
 - **`@microfox/ai-worker-cli`** – Scans worker and queue definitions, builds Lambda handlers, and deploys to AWS (Serverless Framework).
 - **Application API** – HTTP routes to trigger workers, poll job status, and receive webhooks. You add these via the CLI boilerplate or your own routes.
+- **microfox.json `worker`** – Optional project config: `externalDeps`, `includeNodeModules`, and `groups` for per-group bundling (e.g. heavier stacks like Puppeteer). See [Worker Architecture – Project config](../advanced/worker-architecture#project-config-microfoxjson).
 
 ## Flow in short
 

@@ -96,6 +96,13 @@ export interface WorkerHandlerParams<INPUT, OUTPUT> {
     workerId: string;
     requestId?: string;
     jobStore?: JobStore;
+    /** Logger with prefixed levels: [INFO] [workerId] [jobId] message */
+    logger: {
+      info(message: string, data?: Record<string, unknown>): void;
+      warn(message: string, data?: Record<string, unknown>): void;
+      error(message: string, data?: Record<string, unknown>): void;
+      debug(message: string, data?: Record<string, unknown>): void;
+    };
     dispatchWorker: (
       workerId: string,
       input: unknown,
@@ -110,7 +117,7 @@ export interface WorkerHandlerParams<INPUT, OUTPUT> {
 
 ### `WorkerConfig`
 
-Lambda deployment configuration for a worker. **Best Practice**: Export this as a separate const from your worker file.
+Lambda deployment configuration for a worker. **Best Practice**: Export this as a separate const from your worker file. The CLI reads it when generating `serverless.yml`; you do not pass it into `createWorker()`.
 
 ```typescript
 export interface WorkerConfig {
@@ -118,6 +125,7 @@ export interface WorkerConfig {
   memorySize?: number; // Lambda memory in MB (128-10240)
   layers?: string[]; // Lambda layer ARNs
   schedule?: ScheduleConfig; // Schedule events (cron/rate)
+  group?: string; // Multi-group: deploy this worker to a different stack (max 12 chars; cannot be 'core'; omit for 'default')
   sqs?: {
     maxReceiveCount?: number; // DLQ threshold (default: 3)
     messageRetentionPeriod?: number; // Seconds (max 1209600)
@@ -126,6 +134,8 @@ export interface WorkerConfig {
   };
 }
 ```
+
+**Multi-group:** Set `group: 'scraper'` (or any name except `core`) to deploy this worker to a separate Serverless stack. One `WORKER_BASE_URL` (core stack) is used to trigger all workers. See [Worker Architecture – Multi-group deployments](../advanced/worker-architecture#multi-group-deployments) for details.
 
 **Example:**
 
@@ -377,7 +387,7 @@ handler: async ({ ctx }) => {
 }
 ```
 
-**Deployment:** The CLI scans for `ctx.dispatchWorker('worker-id', ...)` and injects `WORKER_QUEUE_URL_<SANITIZED_ID>` into that Lambda's environment.
+**Deployment:** The CLI scans for `ctx.dispatchWorker('worker-id', ...)` and injects `WORKER_QUEUE_URL_<SANITIZED_ID>` into that Lambda's environment. Same-group workers get queue URLs and IAM automatically; for cross-group dispatch (calling a worker in another stack), see [Worker Architecture – Multi-group](../advanced/worker-architecture#multi-group-deployments).
 
 **Local:** In development, uses HTTP trigger (`WORKER_BASE_URL`) when queue URL env is not set.
 

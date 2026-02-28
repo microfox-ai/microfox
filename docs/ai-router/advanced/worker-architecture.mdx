@@ -69,7 +69,7 @@ export default createWorker({
 **Key aspects:**
 
 - **Type-safe**: Uses Zod schemas for input/output validation
-- **Configurable**: `workerConfig` controls Lambda deployment settings
+- **Configurable**: `workerConfig` controls Lambda deployment settings (timeout, memory, schedule, SQS options, optional `group` for multi-group deployments)
 - **Context-aware**: `ctx` provides job store, dispatch capabilities, and metadata
 
 ### 2. Dispatch Layer
@@ -288,6 +288,48 @@ The CLI (`@microfox/ai-worker-cli`) handles deployment:
 2. **Deploy**: Run `serverless deploy`
 3. **Create resources**: SQS queues, Lambda functions, IAM roles
 4. **Update configs**: Environment variables, event sources
+
+### Multi-group deployments
+
+You can split workers into **groups**, each deployed as a separate Serverless project (stack). This allows multiple stacks per Microfox project with a **single WORKER_BASE_URL** for triggering and starting queues.
+
+- **Reserved "core" group**: A system-defined group named `core` contains only shared runtime functions: trigger (`/workers/trigger`), workers config (`/workers/config`), docs (`/docs.json`), and **all queue-starter Lambdas** (HTTP and schedule events). No user workers live in core. Users cannot create a group named `core`; the CLI fails the build if any worker has `group: 'core'`.
+- **Single WORKER_BASE_URL**: Only the core stack exposes these HTTP endpoints. All other groups are **worker + SQS only** (no trigger, config, or queue APIs). The app uses one `WORKER_BASE_URL` pointing at the core stack to trigger any worker and start any queue.
+- **Worker queues in core**: Queues are group-agnostic; their steps can reference workers from any group. Queue definitions and queue-starter Lambdas are built and deployed only in core, so starting a queue uses the same base URL as triggering a worker.
+- **Group in worker config**: Export `group: 'workflows'` (or any name except `core`, max 12 characters) in `workerConfig` to assign that worker to a different stack. Workers without `group` go to the `default` group.
+- **Cross-group dispatch**: For a Lambda in group A to call a worker in group B (outside of a queue next-step), add `WORKER_QUEUE_URL_<SANITIZED_B_ID>` and IAM `sqs:SendMessage` for that queue in that stack's serverless.yml. Queue next-steps across groups are injected automatically by the CLI.
+
+### Project config (microfox.json)
+
+The CLI reads optional **worker** configuration from the project root `microfox.json`. Use it to control bundling and to define per-group options for multi-group deployments.
+
+**Top-level `worker` keys:**
+
+- **`externalDeps`** (array of strings): Package names to keep external at build time (e.g. `@microfox/puppeteer-sls`, `@sparticuz/chromium`). Default is `aws-sdk` only; these are appended. Useful for large or Lambda-layer dependencies.
+- **`includeNodeModules`** (boolean): When `true`, bundle most of `node_modules` into the Lambda (except `excludeNodeModules`). Default is `false` (bundle only code + externals). Set to `true` for groups that need many npm packages (e.g. Puppeteer).
+- **`excludeNodeModules`** (array of strings): When `includeNodeModules` is true, exclude these package names from the bundle (e.g. dev/build-only packages).
+
+**`worker.groups`** (object): Per-group overrides. Keys are group names (same as in `workerConfig.group`). Each group can set:
+
+- **`includeNodeModules`** (boolean): Override the project-level value for this group. Example: `true` for a `scraper` group that uses Puppeteer, while other groups stay lean.
+
+**Example:**
+
+```json
+{
+  "worker": {
+    "externalDeps": ["@microfox/puppeteer-sls", "@sparticuz/chromium"],
+    "includeNodeModules": false,
+    "groups": {
+      "scraper": {
+        "includeNodeModules": true
+      }
+    }
+  }
+}
+```
+
+Workers with `group: 'scraper'` are then built with `node_modules` included for that stack only; `default` and other groups use the project default (no node_modules). The CLI merges `worker.*` with `worker.groups[groupName]` when building each group.
 
 ## Data Flow Examples
 

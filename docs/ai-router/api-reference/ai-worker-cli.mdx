@@ -63,13 +63,16 @@ npx microfox push [options]
 **What it does:**
 
 1. **Scans** for worker files (`*.worker.ts`) and queue files (`*.queue.ts`)
-2. **Extracts** worker configurations (`workerConfig` exports)
-3. **Analyzes** dependencies and environment variable usage
-4. **Detects** worker-to-worker calls (`ctx.dispatchWorker`)
-5. **Generates** Lambda handler files
-6. **Generates** `serverless.yml` configuration
-7. **Builds** handlers with esbuild
-8. **Deploys** to AWS (unless `--build-only`)
+2. **Reads** optional `microfox.json` `worker` config (externalDeps, includeNodeModules, groups) for bundling and multi-group behavior
+3. **Extracts** worker configurations (`workerConfig` exports, including `group`)
+4. **Analyzes** dependencies and environment variable usage
+5. **Detects** worker-to-worker calls (`ctx.dispatchWorker`)
+6. **Generates** Lambda handler files (one Serverless stack per group; core stack for trigger/config/queues)
+7. **Generates** `serverless.yml` configuration
+8. **Builds** handlers with esbuild (per-group options from `worker.groups`)
+9. **Deploys** to AWS (unless `--build-only`)
+
+See [Worker Architecture – Multi-group and Project config](../advanced/worker-architecture#multi-group-deployments) for groups and `microfox.json` details.
 
 **Example:**
 

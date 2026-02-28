@@ -502,3 +502,9 @@ npx ai-worker push --stage prod
 ```
 
 See the [CLI reference](../api-reference/ai-worker-cli) for deployment details. Use `npx ai-worker push` for build and deploy; `npx microfox compile` for build only, `npx microfox push` for deploy only.
+
+**Push parameters (multi-group):** When using multiple groups, you can deploy a single group or skip groups: `npx microfox push [groupname]` deploys only that group; `npx microfox push --skip-group "g1,g2,g3"` deploys all groups except the listed ones. From the ai-worker CLI, `npx ai-worker push --skip-core` deploys every group except core (it runs `npx microfox push --skip-group "core"`).
+
+**Cross-group dispatch:** Same-group workers get `WORKER_QUEUE_URL_*` and IAM automatically. For queue chains, the next-step worker's queue URL and IAM are injected even when that worker is in another group. For ad-hoc worker-to-worker across groups, add `WORKER_QUEUE_URL_<SANITIZED_ID>` and IAM in that stack's serverless.yml.
+
+**Project config (microfox.json):** Optional `worker` section in the project root configures bundling and per-group behavior: `externalDeps` (packages to keep external), `includeNodeModules` (bundle node_modules or not), and `groups` (e.g. `scraper: { includeNodeModules: true }` for heavy groups like Puppeteer). See [Worker Architecture – Project config](../advanced/worker-architecture#project-config-microfoxjson) for the full shape and examples.
