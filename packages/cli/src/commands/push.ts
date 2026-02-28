@@ -9,7 +9,7 @@ const FormData = require('form-data');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const archiver = require('archiver');
 import * as micromatch from 'micromatch';
-import { findServerlessWorkersDir, saveDeploymentRecord } from '../utils/deployment-records';
+import { findServerlessWorkersDir, getPerGroupNames, saveDeploymentRecord, saveDeploymentRecordToRoot } from '../utils/deployment-records';
 
 const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?: string, port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -90,21 +90,34 @@ async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Pr
   return zipPath;
 }
 
-async function pushAction(): Promise<void> {
+async function pushAction(groupname?: string, skipGroup?: string): Promise<void> {
   let cwd = process.cwd();
-  
-  // Check if .serverless-workers directory exists at same level with microfox.json
+
+  // If a build output exists in .serverless-workers, deploy from there (single-group or per-group).
   const serverlessDir = findServerlessWorkersDir(cwd);
   if (serverlessDir) {
     cwd = serverlessDir;
     process.chdir(cwd);
   }
-  
-  const microfoxConfigPath = path.join(cwd, 'microfox.json');
+
+  // Ensure microfox.json is available in the working directory.
+  // When deploying from .serverless-workers, the config often lives in the parent (agent root).
+  let microfoxConfigPath = path.join(cwd, 'microfox.json');
+  if (!fs.existsSync(microfoxConfigPath)) {
+    const parentConfigPath = path.join(path.dirname(cwd), 'microfox.json');
+    if (fs.existsSync(parentConfigPath)) {
+      try {
+        fs.copyFileSync(parentConfigPath, microfoxConfigPath);
+      } catch {
+        // If copy fails, we can still read from parentConfigPath below.
+      }
+      microfoxConfigPath = fs.existsSync(microfoxConfigPath) ? microfoxConfigPath : parentConfigPath;
+    }
+  }
 
   if (!fs.existsSync(microfoxConfigPath)) {
-    console.error(chalk.red('❌ Error: `microfox.json` not found in the current directory.'));
-    console.log(chalk.yellow('This command must be run from the root of an agent project.'));
+    console.error(chalk.red('❌ Error: `microfox.json` not found in the current directory or its parent.'));
+    console.log(chalk.yellow('Run this command from the root of an agent project, or from its `.serverless-workers` directory.'));
     process.exit(1);
   }
 
@@ -120,62 +133,102 @@ async function pushAction(): Promise<void> {
 
   try {
     if (isV2) {
-      const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(deploymentConfig.ignorePatterns || microfoxConfig.ignorePatterns || [])];
-
-      console.log(chalk.blue('📦 Bundling your agent as a ZIP archive...'));
-      const zipPath = await createZipArchive(cwd, ignorePatterns);
-
-      console.log(chalk.blue('🚚 Uploading archive to Microfox...'));
-      const form = new FormData();
-      form.append('archive', fs.createReadStream(zipPath), {
-        filename: 'archive.zip',
-        contentType: 'application/zip',
-      });
-      if (microfoxConfig.publish) {
-        form.append('publish', JSON.stringify(microfoxConfig.publish));
-      }
-
       const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
       if (!projectId) {
         console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json.'));
         process.exit(1);
       }
 
-      const headers = {
-        ...form.getHeaders(),
-        'x-project-id': projectId,
-      } as Record<string, string>;
+      const perGroupNames = getPerGroupNames(cwd);
+      const skipSet = skipGroup ? new Set(skipGroup.split(',').map((g: string) => g.trim()).filter(Boolean)) : null;
+      let groupsToPush: string[];
 
-      const response = await axios.post(
-        API_ENDPOINT_MAPPER({ mode: apiMode, version: 'v2', port: apiLocalPort }),
-        form,
-        {
-          headers,
-          maxBodyLength: Infinity,
-          maxContentLength: Infinity,
-        }
-      );
-
-      if (response.status >= 200 && response.status < 300) {
-        console.log(chalk.green('✅ Deployment request accepted!'));
-        if (response.data?.deploymentId) {
-          const deploymentId = response.data.deploymentId;
-          console.log(chalk.green(`   Deployment ID: ${deploymentId}`));
-          // Save deployment ID to records
-          saveDeploymentRecord(cwd, deploymentId);
-        } else if (response.data?.runId) {
-          const runId = response.data.runId;
-          console.log(chalk.green(`   Run ID: ${runId}`));
-          // Save run ID as deployment ID for v1
-          saveDeploymentRecord(cwd, runId);
-        }
-        if (response.data?.message) {
-          console.log(chalk.green(`   Message: ${response.data.message}`));
+      if (perGroupNames !== null) {
+        groupsToPush = groupname
+          ? (perGroupNames.includes(groupname) ? [groupname] : [])
+          : perGroupNames.filter((g) => !skipSet?.has(g));
+        if (groupsToPush.length === 0) {
+          if (groupname) {
+            console.error(chalk.red(`❌ No such group: ${groupname}. Available: ${perGroupNames.join(', ')}`));
+          } else {
+            console.error(chalk.red('❌ No groups to push (all skipped or none match).'));
+          }
+          process.exit(1);
         }
       } else {
-        console.error(chalk.red(`❌ Deployment failed with status: ${response.status}`));
-        console.error(response.data);
-        process.exit(1);
+        groupsToPush = [];
+      }
+
+      const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(deploymentConfig.ignorePatterns || microfoxConfig.ignorePatterns || [])];
+
+      const serverlessRoot = cwd;
+      const doOnePush = async (archiveCwd: string, group?: string): Promise<void> => {
+        console.log(chalk.blue(group ? `📦 Bundling group "${group}" as a ZIP archive...` : '📦 Bundling your agent as a ZIP archive...'));
+        const zipPath = await createZipArchive(archiveCwd, ignorePatterns);
+
+        console.log(chalk.blue(group ? `🚚 Uploading archive for group "${group}" to Microfox...` : '🚚 Uploading archive to Microfox...'));
+        const form = new FormData();
+        form.append('archive', fs.createReadStream(zipPath), {
+          filename: 'archive.zip',
+          contentType: 'application/zip',
+        });
+        const publish = microfoxConfig.publish ? { ...microfoxConfig.publish, ...(group ? { group } : {}) } : (group ? { group } : undefined);
+        if (publish) {
+          form.append('publish', JSON.stringify(publish));
+        }
+
+        const headers = {
+          ...form.getHeaders(),
+          'x-project-id': projectId,
+          ...(group ? { 'x-deployment-group': group } : {}),
+        } as Record<string, string>;
+
+        const response = await axios.post(
+          API_ENDPOINT_MAPPER({ mode: apiMode, version: 'v2', port: apiLocalPort }),
+          form,
+          {
+            headers,
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
+          }
+        );
+
+        if (response.status >= 200 && response.status < 300) {
+          console.log(chalk.green(group ? `✅ Deployment request accepted for group "${group}"!` : '✅ Deployment request accepted!'));
+          if (response.data?.deploymentId) {
+            const deploymentId = response.data.deploymentId;
+            console.log(chalk.green(`   Deployment ID: ${deploymentId}`));
+            if (group != null && group !== '') {
+              saveDeploymentRecordToRoot(serverlessRoot, deploymentId, group);
+            } else {
+              saveDeploymentRecord(archiveCwd, deploymentId);
+            }
+          } else if (response.data?.runId) {
+            const runId = response.data.runId;
+            console.log(chalk.green(`   Run ID: ${runId}`));
+            if (group != null && group !== '') {
+              saveDeploymentRecordToRoot(serverlessRoot, runId, group);
+            } else {
+              saveDeploymentRecord(archiveCwd, runId);
+            }
+          }
+          if (response.data?.message) {
+            console.log(chalk.green(`   Message: ${response.data.message}`));
+          }
+        } else {
+          console.error(chalk.red(`❌ Deployment failed with status: ${response.status}`));
+          console.error(response.data);
+          throw new Error(`Deployment failed: ${response.status}`);
+        }
+      };
+
+      if (groupsToPush.length > 0) {
+        for (const group of groupsToPush) {
+          const groupDir = path.join(cwd, group);
+          await doOnePush(groupDir, group);
+        }
+      } else {
+        await doOnePush(cwd);
       }
     } else {
       // v1: old behavior without ZIP
@@ -253,9 +306,11 @@ async function pushAction(): Promise<void> {
 
 export const pushCommand = new Command('push')
   .description('Deploy your agent to the Microfox platform')
-  .action(async () => {
+  .argument('[groupname]', 'Deploy only this group (when using per-group layout, e.g. core, default, workflows)')
+  .option('--skip-group <groups>', 'Comma-separated list of groups to skip (e.g. "core,workflows")')
+  .action(async (groupname: string | undefined, options: { skipGroup?: string } = {}) => {
     try {
-      await pushAction();
+      await pushAction(groupname, options.skipGroup);
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);

@@ -4,7 +4,7 @@ import axios from 'axios';
 import inquirer from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
-import { getLatestDeploymentId, findServerlessWorkersDir } from '../utils/deployment-records';
+import { getLatestDeploymentId, getLatestDeploymentIdFromRoot, getDeploymentRecordsFromRoot, findServerlessWorkersDir } from '../utils/deployment-records';
 
 const ENDPOINT_BASE = ({ mode, version, port }: { mode?: string; version?: string; port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -76,14 +76,21 @@ async function statusAction(idArg?: string, options?: { number?: number }): Prom
 
   // Handle "latest" keyword and -n option
   let idsToProcess: string[] = [];
+  let latestRecords: Array<{ deploymentId: string; group?: string }> | null = null;
   if (idArg === 'latest' || !idArg) {
     const n = options?.number || 1;
-    const latestIds = getLatestDeploymentId(cwd, n);
-    if (latestIds.length === 0) {
+    if (serverlessDir) {
+      const records = getDeploymentRecordsFromRoot(serverlessDir);
+      const sorted = [...records].sort((a, b) => b.timestamp - a.timestamp);
+      latestRecords = sorted.slice(0, n);
+      idsToProcess = latestRecords.map((r) => r.deploymentId);
+    } else {
+      idsToProcess = getLatestDeploymentId(cwd, n);
+    }
+    if (idsToProcess.length === 0) {
       console.error(chalk.red('❌ Error: No deployment records found. Run `npx microfox push` first.'));
       process.exit(1);
     }
-    idsToProcess = latestIds;
   } else {
     idsToProcess = [idArg];
   }
@@ -92,7 +99,8 @@ async function statusAction(idArg?: string, options?: { number?: number }): Prom
   if (idsToProcess.length > 1) {
     for (let i = 0; i < idsToProcess.length; i++) {
       const id = idsToProcess[i];
-      console.log(chalk.cyan(`\n[${i + 1}/${idsToProcess.length}] Deployment: ${id}`));
+      const groupLabel = latestRecords?.[i]?.group ? ` (group: ${latestRecords[i].group})` : '';
+      console.log(chalk.cyan(`\n[${i + 1}/${idsToProcess.length}] Deployment: ${id}${groupLabel}`));
       console.log(chalk.gray('────────────────────────────────────────────────'));
       await processSingleStatus(id, cwd, cfg, isV2);
       if (i < idsToProcess.length - 1) {
@@ -136,6 +144,9 @@ async function processSingleStatus(idArg: string, cwd: string, cfg: any, isV2: b
     console.log(chalk.gray('----------------------------------------'));
     console.log(`${chalk.bold('Deployment ID:')} ${dep._id || deploymentId}`);
     console.log(`${chalk.bold('Project ID:')}    ${dep.projectId || 'N/A'}`);
+    if (dep.group != null && dep.group !== '') {
+      console.log(`${chalk.bold('Group:')}         ${dep.group}`);
+    }
     console.log(`${chalk.bold('Status:')}        ${chalk.green(dep.status)}`);
     if (dep.error?.message) console.log(`${chalk.bold('Error:')}         ${dep.error.message}`);
     const start = dep.metrics?.timing?.startTime ? new Date(dep.metrics.timing.startTime).toLocaleString() : 'N/A';
@@ -175,7 +186,9 @@ async function logsAction(idArg?: string, options: LogsOptions = {}): Promise<vo
   let idsToProcess: string[] = [];
   if (idArg === 'latest' || !idArg) {
     const n = options?.number || 1;
-    const latestIds = getLatestDeploymentId(cwd, n);
+    const latestIds = serverlessDir
+      ? getLatestDeploymentIdFromRoot(serverlessDir, n)
+      : getLatestDeploymentId(cwd, n);
     if (latestIds.length === 0) {
       console.error(chalk.red('❌ Error: No deployment records found. Run `npx microfox push` first.'));
       process.exit(1);

@@ -1,8 +1,27 @@
 {
-  "extends": "@microfox/tsconfig/ts-library.json",
-  "include": ["."],
-  "exclude": ["*/dist", "dist", "build", "node_modules"],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "TypeScript Library",
   "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["@types/node"],
+    "lib": ["dom", "ES2018"],
+    "module": "ESNext",
+    "target": "ES2018",
+    "stripInternal": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["."],
+  "exclude": ["*/dist", "dist", "build", "node_modules"]
 }
