@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.2.0
+
+### Minor Changes
+
+- f81596c: grouped deployments of project
+
 ## 1.1.7
 
 ### Patch Changes
