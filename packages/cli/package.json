@@ -42,7 +42,6 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@microfox/tsconfig": "*",
     "@types/archiver": "^6.0.3",
     "@types/inquirer": "^9.0.8",
     "@types/micromatch": "^4.0.9",
