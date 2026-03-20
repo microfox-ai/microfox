@@ -14,6 +14,7 @@ import { version } from '../package.json';
 import { track } from './commands/track.js';
 import { trackCi } from './commands/track-ci.js';
 import { openapi } from './commands/openapi.js';
+import { deleteGroupCommand } from './commands/delete-group';
 
 const program = new Command();
 
@@ -36,6 +37,7 @@ program.addCommand(kickstartCommand);
 program.addCommand(track);
 program.addCommand(trackCi);
 program.addCommand(openapi);
+program.addCommand(deleteGroupCommand);
 program.addCommand(addCommand);
 
 program.action(() => {
