@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.2.1
+
+### Patch Changes
+
+- 012bbff: add new delete-group command
+
 ## 1.2.0
 
 ### Minor Changes
