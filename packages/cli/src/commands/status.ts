@@ -3,8 +3,8 @@ import chalk from 'chalk';
 import axios from 'axios';
 import inquirer from 'inquirer';
 import * as fs from 'fs';
-import * as path from 'path';
 import { getLatestDeploymentId, getLatestDeploymentIdFromRoot, getDeploymentRecordsFromRoot, findServerlessWorkersDir } from '../utils/deployment-records';
+import { resolveMicrofoxConfigPath, MICROFOX_CONFIG_FILENAMES } from '../utils/project-config';
 
 const ENDPOINT_BASE = ({ mode, version, port }: { mode?: string; version?: string; port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -15,9 +15,10 @@ const ENDPOINT_BASE = ({ mode, version, port }: { mode?: string; version?: strin
 };
 
 function readMicrofoxConfig(cwd: string) {
-  const configPath = path.join(cwd, 'microfox.json');
-  if (!fs.existsSync(configPath)) {
-    console.error(chalk.red('❌ Error: `microfox.json` not found in the current directory.'));
+  const configPath = resolveMicrofoxConfigPath(cwd);
+  if (!configPath || !fs.existsSync(configPath)) {
+    const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
+    console.error(chalk.red(`❌ Error: ${names} not found in the current directory or its parent.`));
     process.exit(1);
   }
   return JSON.parse(fs.readFileSync(configPath, 'utf-8')) as Record<string, any>;
@@ -52,9 +53,10 @@ async function fetchV2Deployment(deploymentId: string, cfg: any) {
   const port = deploymentConfig.port || cfg.port || cfg.PORT;
   const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}`;
-  const projectId: string | undefined = cfg.projectId || process.env.PROJECT_ID;
+  const projectId: string | undefined = cfg.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
   if (!projectId) {
-    console.error(chalk.red('❌ Error: `projectId` is required for v2. Add `projectId` to your microfox.json'));
+    const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
+    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Add \`projectId\` to ${names}.`));
     process.exit(1);
   }
   return axios.get(url, { headers: { 'x-project-id': projectId } });
@@ -243,9 +245,10 @@ async function processSingleLogs(idArg: string, cwd: string, cfg: any, isV2: boo
   const port = deploymentConfig.port || cfg.port || cfg.PORT;
   const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}/logs`;
-  const projectId: string | undefined = cfg.projectId || process.env.PROJECT_ID;
+  const projectId: string | undefined = cfg.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
   if (!projectId) {
-    console.error(chalk.red('❌ Error: `projectId` is required for v2. Add `projectId` to your microfox.json.'));
+    const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
+    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Add \`projectId\` to ${names}.`));
     process.exit(1);
   }
   try {
