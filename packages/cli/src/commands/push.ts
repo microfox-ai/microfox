@@ -10,6 +10,7 @@ const FormData = require('form-data');
 const archiver = require('archiver');
 import * as micromatch from 'micromatch';
 import { findServerlessWorkersDir, getPerGroupNames, saveDeploymentRecord, saveDeploymentRecordToRoot } from '../utils/deployment-records';
+import { ensureMicrofoxConfigInCwd, MICROFOX_CONFIG_FILENAMES } from '../utils/project-config';
 
 const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?: string, port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -100,23 +101,13 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
     process.chdir(cwd);
   }
 
-  // Ensure microfox.json is available in the working directory.
-  // When deploying from .serverless-workers, the config often lives in the parent (agent root).
-  let microfoxConfigPath = path.join(cwd, 'microfox.json');
-  if (!fs.existsSync(microfoxConfigPath)) {
-    const parentConfigPath = path.join(path.dirname(cwd), 'microfox.json');
-    if (fs.existsSync(parentConfigPath)) {
-      try {
-        fs.copyFileSync(parentConfigPath, microfoxConfigPath);
-      } catch {
-        // If copy fails, we can still read from parentConfigPath below.
-      }
-      microfoxConfigPath = fs.existsSync(microfoxConfigPath) ? microfoxConfigPath : parentConfigPath;
-    }
-  }
+  // Ensure microfox config is available in the working directory.
+  // When deploying from .serverless-workers, config often lives in the parent (agent root).
+  const microfoxConfigPath = ensureMicrofoxConfigInCwd(cwd);
 
-  if (!fs.existsSync(microfoxConfigPath)) {
-    console.error(chalk.red('❌ Error: `microfox.json` not found in the current directory or its parent.'));
+  if (!microfoxConfigPath || !fs.existsSync(microfoxConfigPath)) {
+    const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
+    console.error(chalk.red(`❌ Error: ${names} not found in the current directory or its parent.`));
     console.log(chalk.yellow('Run this command from the root of an agent project, or from its `.serverless-workers` directory.'));
     process.exit(1);
   }
@@ -133,9 +124,10 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
 
   try {
     if (isV2) {
-      const projectId: string | undefined = microfoxConfig.projectId || process.env.PROJECT_ID;
+      const projectId: string | undefined = microfoxConfig.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
       if (!projectId) {
-        console.error(chalk.red('❌ Error: `projectId` is required. Add `projectId` to your microfox.json.'));
+        const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
+        console.error(chalk.red(`❌ Error: \`projectId\` is required. Add \`projectId\` to ${names}.`));
         process.exit(1);
       }
 
