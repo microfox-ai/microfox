@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.2.2
+
+### Patch Changes
+
+- 1655fd9: fix cli not detecting projectId from microfox.config.ts
+
 ## 1.2.1
 
 ### Patch Changes
