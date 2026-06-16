@@ -10,6 +10,8 @@ import { installCommand } from './commands/install';
 import { updateCommand } from './commands/update';
 import { initCommand } from './commands/init';
 import { kickstartCommand } from './commands/kickstart';
+import { loginCommand } from './commands/login';
+import { logoutCommand } from './commands/logout';
 import { version } from '../package.json';
 import { track } from './commands/track.js';
 import { trackCi } from './commands/track-ci.js';
@@ -39,6 +41,8 @@ program.addCommand(trackCi);
 program.addCommand(openapi);
 program.addCommand(deleteGroupCommand);
 program.addCommand(addCommand);
+program.addCommand(loginCommand);
+program.addCommand(logoutCommand);
 
 program.action(() => {
   // Show help if no command is provided
