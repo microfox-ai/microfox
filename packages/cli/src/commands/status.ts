@@ -5,6 +5,7 @@ import inquirer from 'inquirer';
 import * as fs from 'fs';
 import { getLatestDeploymentId, getLatestDeploymentIdFromRoot, getDeploymentRecordsFromRoot, findServerlessWorkersDir } from '../utils/deployment-records';
 import { resolveMicrofoxConfigPath, MICROFOX_CONFIG_FILENAMES } from '../utils/project-config';
+import { authHeaders } from '../utils/auth';
 
 const ENDPOINT_BASE = ({ mode, version, port }: { mode?: string; version?: string; port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -53,13 +54,14 @@ async function fetchV2Deployment(deploymentId: string, cfg: any) {
   const port = deploymentConfig.port || cfg.port || cfg.PORT;
   const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}`;
-  const projectId: string | undefined = cfg.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
+  const projectId: string | undefined =
+    cfg.projectId || deploymentConfig.projectId || process.env.MICROFOX_PROJECT_ID || process.env.PROJECT_ID;
   if (!projectId) {
     const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
-    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Add \`projectId\` to ${names}.`));
+    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Set the \`MICROFOX_PROJECT_ID\` env var or add \`projectId\` to ${names}.`));
     process.exit(1);
   }
-  return axios.get(url, { headers: { 'x-project-id': projectId } });
+  return axios.get(url, { headers: { ...authHeaders(), 'x-project-id': projectId } });
 }
 
 async function statusAction(idArg?: string, options?: { number?: number }): Promise<void> {
@@ -245,14 +247,15 @@ async function processSingleLogs(idArg: string, cwd: string, cfg: any, isV2: boo
   const port = deploymentConfig.port || cfg.port || cfg.PORT;
   const base = ENDPOINT_BASE({ mode, version: 'v2', port });
   const url = `${base}/api/deployments/${deploymentId}/logs`;
-  const projectId: string | undefined = cfg.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
+  const projectId: string | undefined =
+    cfg.projectId || deploymentConfig.projectId || process.env.MICROFOX_PROJECT_ID || process.env.PROJECT_ID;
   if (!projectId) {
     const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
-    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Add \`projectId\` to ${names}.`));
+    console.error(chalk.red(`❌ Error: \`projectId\` is required for v2. Set the \`MICROFOX_PROJECT_ID\` env var or add \`projectId\` to ${names}.`));
     process.exit(1);
   }
   try {
-    const resp = await axios.get(url, { headers: { 'x-project-id': projectId } });
+    const resp = await axios.get(url, { headers: { ...authHeaders(), 'x-project-id': projectId } });
     const logs = resp.data?.logs || {};
 
     const printSection = (title: string, entries: any[]) => {
