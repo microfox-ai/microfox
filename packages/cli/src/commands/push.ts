@@ -11,6 +11,7 @@ const archiver = require('archiver');
 import * as micromatch from 'micromatch';
 import { findServerlessWorkersDir, getPerGroupNames, saveDeploymentRecord, saveDeploymentRecordToRoot } from '../utils/deployment-records';
 import { ensureMicrofoxConfigInCwd, MICROFOX_CONFIG_FILENAMES } from '../utils/project-config';
+import { authHeaders } from '../utils/auth';
 
 const API_ENDPOINT_MAPPER = ({ mode, version, port }: { mode?: string, version?: string, port?: number }) => {
   const normalizedMode = mode?.toLowerCase() === 'prod' || mode?.toLowerCase() === 'production' ? 'prod' : 'staging';
@@ -124,10 +125,14 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
 
   try {
     if (isV2) {
-      const projectId: string | undefined = microfoxConfig.projectId || deploymentConfig.projectId || process.env.PROJECT_ID;
+      const projectId: string | undefined =
+        microfoxConfig.projectId ||
+        deploymentConfig.projectId ||
+        process.env.MICROFOX_PROJECT_ID ||
+        process.env.PROJECT_ID;
       if (!projectId) {
         const names = MICROFOX_CONFIG_FILENAMES.map((name) => `\`${name}\``).join(' or ');
-        console.error(chalk.red(`❌ Error: \`projectId\` is required. Add \`projectId\` to ${names}.`));
+        console.error(chalk.red(`❌ Error: \`projectId\` is required. Set the \`MICROFOX_PROJECT_ID\` env var or add \`projectId\` to ${names}.`));
         process.exit(1);
       }
 
@@ -171,6 +176,7 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
 
         const headers = {
           ...form.getHeaders(),
+          ...authHeaders(),
           'x-project-id': projectId,
           ...(group ? { 'x-deployment-group': group } : {}),
         } as Record<string, string>;
@@ -289,6 +295,9 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
     if (axios.isAxiosError(error) && error.response) {
       console.error(chalk.red(`   Status: ${error.response.status}`));
       console.error(chalk.red(`   Data: ${JSON.stringify(error.response.data, null, 2)}`));
+      if (error.response.status === 401) {
+        console.error(chalk.yellow('   You are not authenticated. Run `microfox login` first.'));
+      }
     } else {
       console.error(error);
     }
