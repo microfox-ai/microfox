@@ -92,7 +92,7 @@ async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Pr
   return zipPath;
 }
 
-async function pushAction(groupname?: string, skipGroup?: string): Promise<void> {
+export async function pushAction(groupname?: string, skipGroup?: string): Promise<void> {
   let cwd = process.cwd();
 
   // If a build output exists in .serverless-workers, deploy from there (single-group or per-group).
@@ -306,9 +306,31 @@ async function pushAction(groupname?: string, skipGroup?: string): Promise<void>
 }
 
 export const pushCommand = new Command('push')
-  .description('Deploy your agent to the Microfox platform')
-  .argument('[groupname]', 'Deploy only this group (when using per-group layout, e.g. core, default, workflows)')
+  .description('Upload your agent to the Microfox platform for deployment (push only, no compile)')
+  .argument('[groupname]', 'Push only this group (when using per-group layout, e.g. core, default, workflows)')
   .option('--skip-group <groups>', 'Comma-separated list of groups to skip (e.g. "core,workflows")')
+  .addHelpText(
+    'after',
+    `
+Bundles the agent as a ZIP and uploads it to the Microfox platform, which
+deploys it. If a compiled build exists in .serverless-workers/, that build is
+pushed (per group when using the per-group layout); otherwise the current
+directory is pushed as-is. Run "microfox compile" first to build workers, or
+use "microfox deploy" to compile + push in one step.
+
+Requires microfox.json (or microfox.config.ts) with a projectId, and
+authentication via "microfox login".
+
+Examples:
+  $ microfox push                 push all groups (or the single build)
+  $ microfox push core            push only the "core" group
+  $ microfox push --skip-group core,workflows
+
+After pushing:
+  $ microfox status latest        check the deployment status
+  $ microfox logs latest          view the deployment logs
+`
+  )
   .action(async (groupname: string | undefined, options: { skipGroup?: string } = {}) => {
     try {
       await pushAction(groupname, options.skipGroup);
