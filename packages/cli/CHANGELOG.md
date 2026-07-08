@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.3.1
+
+### Patch Changes
+
+- 923cf25: improve helper docs and update dependency on ai worker cli
+
 ## 1.3.0
 
 ### Minor Changes
