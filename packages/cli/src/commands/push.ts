@@ -92,7 +92,18 @@ async function createZipArchive(sourceDir: string, ignorePatterns: string[]): Pr
   return zipPath;
 }
 
-export async function pushAction(groupname?: string, skipGroup?: string): Promise<void> {
+/** Reads the STAGE the build was compiled with from a build dir's env.json (null when unknown). */
+function readCompiledStage(buildDir: string): string | null {
+  try {
+    const envJson = JSON.parse(fs.readFileSync(path.join(buildDir, 'env.json'), 'utf-8'));
+    const stage = envJson?.STAGE || envJson?.ENVIRONMENT;
+    return typeof stage === 'string' && stage ? stage : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function pushAction(groupname?: string, skipGroup?: string, stageOption?: string): Promise<void> {
   let cwd = process.cwd();
 
   // If a build output exists in .serverless-workers, deploy from there (single-group or per-group).
@@ -159,9 +170,31 @@ export async function pushAction(groupname?: string, skipGroup?: string): Promis
       const ignorePatterns: string[] = ['node_modules/**', '.git/**', ...(deploymentConfig.ignorePatterns || microfoxConfig.ignorePatterns || [])];
 
       const serverlessRoot = cwd;
+      let stageWarningShown = false;
       const doOnePush = async (archiveCwd: string, group?: string): Promise<void> => {
         console.log(chalk.blue(group ? `📦 Bundling group "${group}" as a ZIP archive...` : '📦 Bundling your agent as a ZIP archive...'));
         const zipPath = await createZipArchive(archiveCwd, ignorePatterns);
+
+        // Deployment stage: explicit --stage wins, else the stage the build was compiled
+        // with (env.json STAGE), else prod. Sent to cicd as a header + publish.stage;
+        // older cicd versions ignore both and deploy as prod.
+        const compiledStage = readCompiledStage(archiveCwd);
+        const stage = stageOption || compiledStage || 'prod';
+        if (stageOption && compiledStage && stageOption !== compiledStage) {
+          console.warn(
+            chalk.yellow(
+              `⚠️  --stage ${stageOption} does not match the compiled build's stage "${compiledStage}"${group ? ` (group: ${group})` : ''}. Recompile with "microfox compile --stage ${stageOption}" to avoid a mixed deploy.`
+            )
+          );
+        }
+        if (stage !== 'prod' && !stageWarningShown) {
+          stageWarningShown = true;
+          console.warn(
+            chalk.yellow(
+              `⚠️  Deploying stage "${stage}": server-side stage support is rolling out — until the platform update lands, the deployment may be recorded/routed as prod in the console.`
+            )
+          );
+        }
 
         console.log(chalk.blue(group ? `🚚 Uploading archive for group "${group}" to Microfox...` : '🚚 Uploading archive to Microfox...'));
         const form = new FormData();
@@ -169,15 +202,28 @@ export async function pushAction(groupname?: string, skipGroup?: string): Promis
           filename: 'archive.zip',
           contentType: 'application/zip',
         });
-        const publish = microfoxConfig.publish ? { ...microfoxConfig.publish, ...(group ? { group } : {}) } : (group ? { group } : undefined);
-        if (publish) {
-          form.append('publish', JSON.stringify(publish));
-        }
+        // The publish payload carries the config this deploy was pushed with, so the console can
+        // persist + show the REAL deployed config (not a fabricated one). We now always send it:
+        // the publish block (subdomain/agentName/handles) + a `deployment` block from
+        // microfox.config (apiMode/apiVersion/port/ignorePatterns). Older cicd ignores unknown
+        // fields and reads the stage from the header, so this stays backward-compatible.
+        const deploymentMeta = {
+          apiMode,
+          apiVersion: apiVersion || 'v2',
+          ...(apiLocalPort ? { port: apiLocalPort } : {}),
+          ignorePatterns: deploymentConfig.ignorePatterns || microfoxConfig.ignorePatterns || [],
+        };
+        const publishBase = microfoxConfig.publish
+          ? { ...microfoxConfig.publish, ...(group ? { group } : {}) }
+          : (group ? { group } : {});
+        const publish = { ...publishBase, deployment: deploymentMeta, stage };
+        form.append('publish', JSON.stringify(publish));
 
         const headers = {
           ...form.getHeaders(),
           ...authHeaders(),
           'x-project-id': projectId,
+          'x-deployment-stage': stage,
           ...(group ? { 'x-deployment-group': group } : {}),
         } as Record<string, string>;
 
@@ -241,7 +287,7 @@ export async function pushAction(groupname?: string, skipGroup?: string): Promis
         }
       }
 
-      const stage = deploymentConfig.stage || microfoxConfig.stage || 'prod';
+      const stage = stageOption || deploymentConfig.stage || microfoxConfig.stage || 'prod';
       const defaultIgnore = [
         'node_modules/**',
         '.git/**',
@@ -309,6 +355,7 @@ export const pushCommand = new Command('push')
   .description('Upload your agent to the Microfox platform for deployment (push only, no compile)')
   .argument('[groupname]', 'Push only this group (when using per-group layout, e.g. core, default, workflows)')
   .option('--skip-group <groups>', 'Comma-separated list of groups to skip (e.g. "core,workflows")')
+  .option('-s, --stage <stage>', 'Deployment stage (default: the stage the build was compiled with, then "prod")')
   .addHelpText(
     'after',
     `
@@ -331,11 +378,11 @@ After pushing:
   $ microfox logs latest          view the deployment logs
 `
   )
-  .action(async (groupname: string | undefined, options: { skipGroup?: string } = {}) => {
+  .action(async (groupname: string | undefined, options: { skipGroup?: string; stage?: string } = {}) => {
     try {
-      await pushAction(groupname, options.skipGroup);
+      await pushAction(groupname, options.skipGroup, options.stage);
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
       process.exit(1);
     }
-  }); 
+  });

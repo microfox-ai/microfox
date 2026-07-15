@@ -45,7 +45,7 @@ After deploying:
           console.log(chalk.green('✅ Compilation complete!'));
           console.log(chalk.cyan('🚀 Step 2/2 — Pushing to the Microfox platform...'));
         }
-        await pushAction(groupname, options.skipGroup);
+        await pushAction(groupname, options.skipGroup, options.stage);
       } catch (error) {
         console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : String(error));
         process.exit(1);
