@@ -1,5 +1,11 @@
 # @microfox/cli
 
+## 1.3.2
+
+### Patch Changes
+
+- 25ab1a6: worker commands refactor
+
 ## 1.3.1
 
 ### Patch Changes
